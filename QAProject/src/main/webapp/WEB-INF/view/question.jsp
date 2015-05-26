@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: Minh
-  Date: 5/21/2015
-  Time: 8:31 AM
+  Date: 5/25/2015
+  Time: 1:08 PM
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -210,7 +210,7 @@
     <section class="container" style="height:70px; display: flex; align-items: center">
         <div class="row">
             <div class="col-md-12">
-                <h3>Advance Java Class</h3>
+                <h3>This is my question</h3>
             </div>
         </div><!-- End row -->
     </section><!-- End container -->
@@ -219,221 +219,164 @@
 <section class="container main-content page-left-sidebar">
 <div class="row">
 <div class="col-md-9">
-    <div class="clearfix"></div>
-    <div class="row">
-    <div class="col-md-6 col-sm-6">
-        <input type="text" aria-required="true" value="Search in Advance Java class" onfocus="if(this.value=='Search in Advance Java class')this.value='';"
-               onblur="if(this.value=='')this.value='Search in Advance Java class';" style="width: 100%">
+<article class="question single-question question-type-normal">
+    <h2>
+        <a href="single_question.html">This Is My first Question</a>
+    </h2>
+    <div class="question-inner">
+        <div class="clearfix"></div>
+        <div class="question-desc">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi adipiscing gravida odio, sit amet suscipit risus ultrices eu. Fusce viverra neque at purus laoreet consequat. Vivamus vulputate posuere nisl quis consequat. Donec congue commodo mi, sed commodo velit fringilla ac. Fusce placerat venenatis mi. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras ornare, dolor a aliquet rutrum, dolor turpis condimentum leo, a semper lacus purus in felis. Quisque blandit posuere turpis, eget auctor felis pharetra eu .</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi adipiscing gravida odio, sit amet suscipit risus ultrices eu. Fusce viverra neque at purus laoreet consequat. Vivamus vulputate posuere nisl quis consequat. Donec congue commodo mi, sed commodo velit fringilla ac. Fusce placerat venenatis mi. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras ornare, dolor a aliquet rutrum, dolor turpis condimentum leo, a semper lacus purus in felis. Quisque blandit posuere turpis, eget auctor felis pharetra eu .</p>
+        </div>
+        <div class="question-details">
+            <span class="question-answered question-answered-done"><i class="icon-ok"></i>solved</span>
+        </div>
+        <span class="question-date"><i class="icon-time"></i>January 15 , 2014 at 10:00 pm</span>
+        <span class="question-category"><a href="#"><i class="icon-group"></i>Class: Advance Java</a></span>
+        <span class="question-category"><a href="#"><i class="icon-user"></i>Teacher: Mr.Nguyen</a></span>
+        <div class="clearfix"></div>
     </div>
-    <div class="col-md-6 col-sm-6">
-        <a href="/createPost" class="button medium green-button" style="float: right"><i class="icon-pencil"></i> Create post</a>
-    </div>
-    </div>
+</article>
 
-<div class="tabs-warp question-tab">
-<ul class="tabs">
-    <li class="tab"><a href="#" class="current">Questions</a></li>
-    <li class="tab"><a href="#">Articles</a></li>
-    <li class="tab"><a href="#">Material</a></li>
-</ul>
-<div class="tab-inner-warp">
-    <div class="tab-inner">
-        <article class="question question-type-normal">
-            <h2>
-                <a href="/question">This is my first Question</a>
-            </h2>
-            <div class="question-author">
-                <a href="#" original-title="ahmed" class="question-author-img tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>
-            </div>
-            <div class="question-inner">
-                <div class="clearfix"></div>
-                <p class="question-desc">Duis dapibus aliquam mi, eget euismod sem scelerisque ut. Vivamus at elit quis urna adipiscing iaculis. Curabitur vitae velit in neque dictum blandit. Proin in iaculis neque. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur vitae velit in neque dictum blandit.</p>
-                <div class="question-details">
-                    <span class="question-answered question-answered-done"><i class="icon-ok"></i>solved</span>
-                </div>
-                <span class="question-date"><i class="icon-time"></i>4 mins ago</span>
-                <span class="question-category"><a href="#"><i class="icon-group"></i>Class: Advance Java</a></span>
-                <span class="question-comment"><a href="#"><i class="icon-comment"></i>5 Answer</a></span>
-                <div class="clearfix"></div>
-            </div>
-        </article>
-        <article class="question question-type-normal">
-            <h2>
-                <a href="/question">This is my 2nd Question</a>
-            </h2>
-            <div class="question-author">
-                <a href="#" original-title="ahmed" class="question-author-img tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>
-            </div>
-            <div class="question-inner">
-                <div class="clearfix"></div>
-                <p class="question-desc">Duis dapibus aliquam mi, eget euismod sem scelerisque ut. Vivamus at elit quis urna adipiscing iaculis. Curabitur vitae velit in neque dictum blandit. Proin in iaculis neque. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur vitae velit in neque dictum blandit.</p>
-                <div class="question-details">
-                    <span class="question-answered question-answered-done"><i class="icon-ok"></i>solved</span>
-                </div>
-                <span class="question-date"><i class="icon-time"></i>4 mins ago</span>
-                <span class="question-category"><a href="#"><i class="icon-group"></i>Class: Advance Java</a></span>
-                <span class="question-comment"><a href="#"><i class="icon-comment"></i>5 Answer</a></span>
-                <div class="clearfix"></div>
-            </div>
-        </article>
-        <article class="question question-type-normal">
-            <h2>
-                <a href="/question">This is my 3rd Question</a>
-            </h2>
-            <div class="question-author">
-                <a href="#" original-title="ahmed" class="question-author-img tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>
-            </div>
-            <div class="question-inner">
-                <div class="clearfix"></div>
-                <p class="question-desc">Duis dapibus aliquam mi, eget euismod sem scelerisque ut. Vivamus at elit quis urna adipiscing iaculis. Curabitur vitae velit in neque dictum blandit. Proin in iaculis neque. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur vitae velit in neque dictum blandit.</p>
-                <div class="question-details">
-                    <span class="question-answered question-answered-done"><i class="icon-ok"></i>solved</span>
-                </div>
-                <span class="question-date"><i class="icon-time"></i>4 mins ago</span>
-                <span class="question-category"><a href="#"><i class="icon-group"></i>Class: Advance Java</a></span>
-                <span class="question-comment"><a href="#"><i class="icon-comment"></i>5 Answer</a></span>
-                <div class="clearfix"></div>
-            </div>
-        </article>
-        <a href="#" class="post-read-more button color small" style="margin-bottom: 20px;">Continue reading</a>
+<div class="share-tags page-content">
+    <div class="question-tags"><i class="icon-tags"></i>
+        <a href="#">wordpress</a>, <a href="#">question</a>, <a href="#">developer</a>
     </div>
-</div>
-<div class="tab-inner-warp">
-    <div class="tab-inner">
-        <article class="post clearfix">
-            <div class="post-inner">
-                <h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a href="/article">Post Without Image.</a></h2>
-                <div class="post-meta">
-                    <span class="meta-author"><i class="icon-user"></i><a href="#">Teacher: Mr.Thang</a></span>
-                    <span class="meta-date"><i class="icon-time"></i>September 30 , 2013</span>
-                    <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">15 comments</a></span>
-                    <span class="question-category"><a href="#"><i class="icon-group"></i>Class: Advance Java</a></span>
+    <div class="clearfix"></div>
+</div><!-- End share-tags -->
+
+
+<div id="commentlist" class="page-content">
+    <div class="boxedtitle page-title"><h2>Answers ( <span class="color">5</span> )</h2></div>
+    <ol class="commentlist clearfix">
+        <li class="comment">
+            <div class="comment-body comment-body-answered clearfix">
+                <div class="avatar"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></div>
+                <div class="comment-text">
+                    <div class="author clearfix">
+                        <div class="comment-author"><a href="#">admin</a></div>
+                        <div class="comment-meta">
+                            <div class="date"><i class="icon-time"></i>January 15 , 2014 at 10:00 pm</div>
+                        </div>
+                        <a class="comment-reply" href="#"><i class="icon-reply"></i>Reply</a>
+                    </div>
+                    <div class="text"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi adipiscing gravida odio, sit amet suscipit risus ultrices eu. Fusce viverra neque at purus laoreet consequat. Vivamus vulputate posuere nisl quis consequat.</p>
+                    </div>
+                    <div class="question-answered question-answered-done"><i class="icon-ok"></i>Best Answer</div>
                 </div>
-                <div class="post-content">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi adipiscing gravida odio, sit amet suscipit risus ultrices eu. Fusce viverra neque at purus laoreet consequat. Vivamus vulputate posuere nisl quis consequat. Donec congue commodo mi, sed commodo velit fringilla ac. Fusce placerat venenatis mi.</p>
-                </div><!-- End post-content -->
-            </div><!-- End post-inner -->
-        </article>
-        <article class="post clearfix">
-            <div class="post-inner">
-                <h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a href="/article">Post Without Image.</a></h2>
-                <div class="post-meta">
-                    <span class="meta-author"><i class="icon-user"></i><a href="#">Teacher: Mr.Thang</a></span>
-                    <span class="meta-date"><i class="icon-time"></i>September 30 , 2013</span>
-                    <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">15 comments</a></span>
-                    <span class="question-category"><a href="#"><i class="icon-group"></i>Class: Advance Java</a></span>
+            </div>
+            <ul class="children">
+                <li class="comment">
+                    <div class="comment-body clearfix">
+                        <div class="avatar"><img alt="" src="../ask-me/images/demo/avatar.png"></div>
+                        <div class="comment-text">
+                            <div class="author clearfix">
+                                <div class="comment-author"><a href="#">vbegy</a></div>
+                                <div class="comment-meta">
+                                    <div class="date"><i class="icon-time"></i>January 15 , 2014 at 10:00 pm</div>
+                                </div>
+                                <a class="comment-reply" href="#"><i class="icon-reply"></i>Reply</a>
+                            </div>
+                            <div class="text"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi adipiscing gravida odio, sit amet suscipit risus ultrices eu. Fusce viverra neque at purus laoreet consequat. Vivamus vulputate posuere nisl quis consequat.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="children">
+                        <li class="comment">
+                            <div class="comment-body clearfix">
+                                <div class="avatar"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></div>
+                                <div class="comment-text">
+                                    <div class="author clearfix">
+                                        <div class="comment-author"><a href="#">admin</a></div>
+                                        <div class="comment-meta">
+                                            <div class="date"><i class="icon-time"></i>January 15 , 2014 at 10:00 pm</div>
+                                        </div>
+                                        <a class="comment-reply" href="#"><i class="icon-reply"></i>Reply</a>
+                                    </div>
+                                    <div class="text"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi adipiscing gravida odio, sit amet suscipit risus ultrices eu. Fusce viverra neque at purus laoreet consequat. Vivamus vulputate posuere nisl quis consequat.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul><!-- End children -->
+                </li>
+                <li class="comment">
+                    <div class="comment-body clearfix">
+                        <div class="avatar"><img alt="" src="../ask-me/images/demo/avatar.png"></div>
+                        <div class="comment-text">
+                            <div class="author clearfix">
+                                <div class="comment-author"><a href="#">ahmed</a></div>
+                                <div class="comment-meta">
+                                    <div class="date"><i class="icon-time"></i>January 15 , 2014 at 10:00 pm</div>
+                                </div>
+                                <a class="comment-reply" href="#"><i class="icon-reply"></i>Reply</a>
+                            </div>
+                            <div class="text"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi adipiscing gravida odio, sit amet suscipit risus ultrices eu. Fusce viverra neque at purus laoreet consequat. Vivamus vulputate posuere nisl quis consequat.</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul><!-- End children -->
+        </li>
+        <li class="comment">
+            <div class="comment-body clearfix">
+                <div class="avatar"><img alt="" src="../ask-me/images/demo/avatar.png"></div>
+                <div class="comment-text">
+                    <div class="author clearfix">
+                        <div class="comment-author"><a href="#">2code</a></div>
+                        <div class="comment-meta">
+                            <div class="date"><i class="icon-time"></i>January 15 , 2014 at 10:00 pm</div>
+                        </div>
+                        <a class="comment-reply" href="#"><i class="icon-reply"></i>Reply</a>
+                    </div>
+                    <div class="text"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi adipiscing gravida odio, sit amet suscipit risus ultrices eu. Fusce viverra neque at purus laoreet consequat. Vivamus vulputate posuere nisl quis consequat.</p>
+                    </div>
                 </div>
-                <div class="post-content">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi adipiscing gravida odio, sit amet suscipit risus ultrices eu. Fusce viverra neque at purus laoreet consequat. Vivamus vulputate posuere nisl quis consequat. Donec congue commodo mi, sed commodo velit fringilla ac. Fusce placerat venenatis mi.</p>
-                </div><!-- End post-content -->
-            </div><!-- End post-inner -->
-        </article>
-        <article class="post clearfix">
-            <div class="post-inner">
-                <h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a href="/article">Post Without Image.</a></h2>
-                <div class="post-meta">
-                    <span class="meta-author"><i class="icon-user"></i><a href="#">Teacher: Mr.Thang</a></span>
-                    <span class="meta-date"><i class="icon-time"></i>September 30 , 2013</span>
-                    <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">15 comments</a></span>
-                    <span class="question-category"><a href="#"><i class="icon-group"></i>Class: Advance Java</a></span>
-                </div>
-                <div class="post-content">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi adipiscing gravida odio, sit amet suscipit risus ultrices eu. Fusce viverra neque at purus laoreet consequat. Vivamus vulputate posuere nisl quis consequat. Donec congue commodo mi, sed commodo velit fringilla ac. Fusce placerat venenatis mi.</p>
-                </div><!-- End post-content -->
-            </div><!-- End post-inner -->
-        </article>
-        <article class="post clearfix">
-            <div class="post-inner">
-                <h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a href="/article">Post Without Image.</a></h2>
-                <div class="post-meta">
-                    <span class="meta-author"><i class="icon-user"></i><a href="#">Teacher: Mr.Thang</a></span>
-                    <span class="meta-date"><i class="icon-time"></i>September 30 , 2013</span>
-                    <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">15 comments</a></span>
-                    <span class="question-category"><a href="#"><i class="icon-group"></i>Class: Advance Java</a></span>
-                </div>
-                <div class="post-content">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi adipiscing gravida odio, sit amet suscipit risus ultrices eu. Fusce viverra neque at purus laoreet consequat. Vivamus vulputate posuere nisl quis consequat. Donec congue commodo mi, sed commodo velit fringilla ac. Fusce placerat venenatis mi.</p>
-                </div><!-- End post-content -->
-            </div><!-- End post-inner -->
-        </article>
-        <a href="#" class="post-read-more button color small" style="margin-bottom: 20px;">Continue reading</a>
-    </div>
-</div>
-<div class="tab-inner-warp">
-    <div class="tab-inner">
-        <table class="table table-hover">
-            <tr>
-                <th>No</th>
-                <th>File name</th>
-                <th>Uploaded Date</th>
-                <th>File size</th>
-                <th>Download</th>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td>Introduction to AJ</td>
-                <td>22-05-2015</td>
-                <td>1 MB</td>
-                <td></td>
-            </tr>
-        </table>
-    </div>
-</div>
+            </div>
+        </li>
+    </ol><!-- End commentlist -->
 </div><!-- End page-content -->
+
+<div id="respond" class="comment-respond page-content clearfix">
+    <div class="boxedtitle page-title"><h2>Leave a reply</h2></div>
+    <form action="#" method="post" id="commentform" class="comment-form">
+        <div id="form-textarea">
+            <textarea id="question-details" aria-required="true" cols="58" rows="8"></textarea>
+        </div>
+        <p class="form-submit">
+            <input name="submit" type="submit" id="submit" value="Post your answer" class="button small color">
+        </p>
+    </form>
+</div>
+
 </div><!-- End main -->
 <aside class="col-md-3 sidebar">
-    <div class="widget">
-        <h3 class="widget_title">About class</h3>
-        <ul class="related-posts">
-            <li class="related-item">
-                <p>This is introductio about class. This is introductio about class.
-                    This is introductio about class. </p>
-                <div class="clear"></div><span>Feb 22, 2014</span>
-            </li>
-        </ul>
-        <a href="#" class="button small color">Join</a>
-    </div>
-    <div class="widget widget_login">
-        <h3 class="widget_title">Invite someone</h3>
-        <div class="form-style form-style-2">
-            <form>
-                <div class="form-inputs clearfix">
-                    <p class="login-text">
-                        <input type="text" aria-required="true" value="Enter username..." onfocus="if(this.value=='Enter username...')this.value='';"
-                               onblur="if(this.value=='')this.value='Enter username...';" style="width: 100%">
-                        <i class="icon-user"></i>
-                    </p>
-                </div>
-            </form>
-            <div class="clearfix"></div>
-        </div>
-    </div>
+
     <div class="widget widget_highest_points">
-        <h3 class="widget_title">Class Owner</h3>
+        <h3 class="widget_title">Question Author</h3>
         <ul>
             <li>
                 <div class="author-img">
                     <a href="#"><img width="60" height="60" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" alt=""></a>
                 </div>
                 <h6><a href="#">Mr. Thang</a></h6>
-                <span class="comment">This is short instroduction of this teacher</span>
             </li>
         </ul>
     </div>
 
-
-
-    <div class="widget widget_tag_cloud">
-        <h3 class="widget_title">Tags</h3>
-        <a href="#">projects</a>
-        <a href="#">Portfolio</a>
-        <a href="#">Wordpress</a>
-        <a href="#">Html</a>
-        <a href="#">Css</a>
-        <a href="#">jQuery</a>
-        <a href="#">2code</a>
-        <a href="#">vbegy</a>
+    <div class="widget">
+        <h3 class="widget_title">Related Questions</h3>
+        <ul class="related-posts">
+            <li class="related-item">
+                <a href="#">This is my first Question</a>
+            </li>
+            <li class="related-item">
+                <a href="#">This Is My Second Poll Question</a>
+            </li>
+        </ul>
     </div>
+
 
 </aside><!-- End sidebar -->
 </div><!-- End row -->
@@ -456,6 +399,7 @@
 <div class="go-up"><i class="icon-chevron-up"></i></div>
 
 <!-- js -->
+<script src="/resource/assets/ckeditor/ckeditor.js"></script>
 <script src="/resource/assets/js/jquery.min.js"></script>
 <script src="/resource/assets/js/bootstrap.min.js"></script>
 <script src="/resource/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
@@ -474,7 +418,9 @@
 <script src="/resource/assets/js/tags.js"></script>
 <script src="/resource/assets/js/jquery.bxslider.min.js"></script>
 <script src="/resource/assets/js/custom.js"></script>
-
+<script>
+    CKEDITOR.replace('question-details');
+</script>
 <!-- End js -->
 
 </body>
