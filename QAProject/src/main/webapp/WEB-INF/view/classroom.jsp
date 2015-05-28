@@ -33,83 +33,13 @@
     <!-- Boostrap Style -->
     <link rel="stylesheet" href="/resource/assets/css/bootstrap.min.css">
 
-    <!-- Boostrap Theme Style -->
-    <link rel="stylesheet" href="/resource/assets/css/bootstrap-theme.min.css">
+    <!-- Notification Style -->
+    <link rel="stylesheet" href="/resource/assets/css/notification.css">
 
     <!-- Favicons -->
     <link rel="shortcut icon" href="http://2code.info/demo/html/ask-me/images/favicon.ico">
 
 </head>
-
-<style>
-    .dropdown-menu {
-        margin: -2px 0 0;
-        border-radius: 0px;
-    }
-    .scrollable-menu {
-        height: auto;
-        max-height: 300px;
-        overflow-x: hidden;
-    }
-    .mail-avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 24px;
-        float: left;
-
-    }
-    .notification-li {
-
-        border-bottom: 1px solid #DFDFDF;
-    }
-    .notification-all {
-        margin-top: 5px;
-        margin-bottom: 5px;
-        display: flex;
-        padding: 3px 20px;
-        clear: both;
-        white-space: nowrap;
-    }
-    .notification-user {
-        padding: 0;
-        overflow: inherit;
-        display: inline-block;
-        font-size: 14px;
-        color: #f68484;
-        font-weight: 700;
-    }
-    .notification-action {
-        color: #bfc5cf;
-        width: 300px;
-        word-wrap: break-word;
-        white-space: normal;
-        display: initial;
-    }
-
-    .notification-link {
-        font-weight: 700;
-        color: #71d398;
-
-    }
-    .notification .open>a, .notification .open>a:focus, .notification .open>a:hover {
-        background-color: #55A6BC;
-        border-color: #337ab7;
-    }
-    .notification>li>a:focus, .notification>li>a:hover {
-        text-decoration: none;
-        background-color: #55A6BC;
-    }
-    .notification {
-        float: right;
-        line-height: 1;
-        position: relative;
-        height: 100%;
-        font-size: 14px;
-        font-weight: bold;
-        margin-top: 22px;
-        margin-right: 5px;
-    }
-</style>
 
 <body>
 
