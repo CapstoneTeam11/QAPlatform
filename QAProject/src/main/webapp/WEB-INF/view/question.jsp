@@ -39,6 +39,9 @@
     <!-- Notification Style -->
     <link rel="stylesheet" href="/resource/assets/css/notification.css">
 
+    <!-- Left Notification style -->
+    <link rel="stylesheet" href="/resource/assets/css/jquery.growl.css"/>
+
     <!-- Favicons -->
     <link rel="shortcut icon" href="http://2code.info/demo/html/ask-me/images/favicon.ico">
 
@@ -109,19 +112,21 @@
         <nav class="">
             <ul class="nav nav-pills notification" >
                 <li class="dropdown pull-right">
-                    <a href="#" data-toggle="dropdown" class="dropdown-toggle" style="color : white;"><i class="icon-globe" style="font-size: 22px;"></i><span style="color: #ff7361">15</span></a>
+                    <a href="#" data-toggle="dropdown" class="dropdown-toggle" style="color : white;"><i class="icon-globe" style="font-size: 22px;"></i><span style="color: #ff7361" id="countNotifi">15</span></a>
                     <!--UPDATE ICON-->
-                    <ul class="dropdown-menu scrollable-menu" style="min-width : 414px;">
+                    <ul class="dropdown-menu" style="min-width : 414px;">
                         <li class="notification-li"><div class="notification-all"><div style="margin-left: 10px;"><a class="notification-user">Notification</a></div></div></li>
-                        <li class="notification-li"><div class="notification-all"><div style="min-width: 40px;"><img src="http://2code.info/demo/html/ask-me/images/demo/avatar.png" class="mail-avatar"></div><div style="margin-left: 10px;"><a href="#" class="notification-user">Khang</a><div class="notification-action" style="width: 300px;word-wrap: break-word; white-space: normal;"> Create a new post in ABC Class <a class="notification-link" style="display : inline-block;">user</a></div></div></div></li>
-                        <li class="notification-li"><div class="notification-all"><div style="min-width: 40px;"><img src="http://2code.info/demo/html/ask-me/images/demo/avatar.png" class="mail-avatar"></div><div style="margin-left: 10px;"><a href="#" class="notification-user">Khang</a><div class="notification-action" style="width: 300px;word-wrap: break-word; white-space: normal;"> Create a new post in ABC Class <a class="notification-link" style="display : inline-block;">user</a></div></div></div></li>
-                        <li class="notification-li"><div class="notification-all"><div style="min-width: 40px;"><img src="http://2code.info/demo/html/ask-me/images/demo/avatar.png" class="mail-avatar"></div><div style="margin-left: 10px;"><a href="#" class="notification-user">Khang</a><div class="notification-action" style="width: 300px;word-wrap: break-word; white-space: normal;"> Create a new post in ABC Class Create a new post in ABC Class Create a new post in ABC Class Create a new post in ABC Class <a class="notification-link" style="display : inline-block;">user</a></div></div></div></li>
-                        <li class="notification-li"><div class="notification-all"><div style="min-width: 40px;"><img src="http://2code.info/demo/html/ask-me/images/demo/avatar.png" class="mail-avatar"></div><div style="margin-left: 10px;"><a href="#" class="notification-user">Khang</a><div class="notification-action" style="width: 300px;word-wrap: break-word; white-space: normal;"> Want To join <a class="notification-link" style="display : inline-block;">ABC Class</a></div><div></div><a href="#" class="button small blue-button" style="">Approve</a><a href="#" class="button small red-button" style="">Reject</a></div></div></li>
-                        <li class="notification-li"><div class="notification-all"><div style="min-width: 40px;"><img src="http://2code.info/demo/html/ask-me/images/demo/avatar.png" class="mail-avatar"></div><div style="margin-left: 10px;"><a href="#" class="notification-user">Khang</a><div class="notification-action" style="width: 300px;word-wrap: break-word; white-space: normal;"> Create a new post in ABC Class <a class="notification-link" style="display : inline-block;">user</a></div></div></div></li>
-                        <li class="notification-li"><div class="notification-all"><div style="min-width: 40px;"><img src="http://2code.info/demo/html/ask-me/images/demo/avatar.png" class="mail-avatar"></div><div style="margin-left: 10px;"><a href="#" class="notification-user">Khang</a><div class="notification-action" style="width: 300px;word-wrap: break-word; white-space: normal;"> Create a new post in ABC Class <a class="notification-link" style="display : inline-block;">user</a></div></div></div></li>
-                        <li class="notification-li"><div class="notification-all"><div style="min-width: 40px;"><img src="http://2code.info/demo/html/ask-me/images/demo/avatar.png" class="mail-avatar"></div><div style="margin-left: 10px;"><a href="#" class="notification-user">Khang</a><div class="notification-action" style="width: 300px;word-wrap: break-word; white-space: normal;"> Create a new post in ABC Class Create a new post in ABC Class Create a new post in ABC Class Create a new post in ABC Class <a class="notification-link" style="display : inline-block;">user</a></div></div></div></li>
-                        <li class="notification-li"><div class="notification-all"><div style="min-width: 40px;"><img src="http://2code.info/demo/html/ask-me/images/demo/avatar.png" class="mail-avatar"></div><div style="margin-left: 10px;"><a href="#" class="notification-user">Khang</a><div class="notification-action" style="width: 300px;word-wrap: break-word; white-space: normal;"> Want To join <a class="notification-link" style="display : inline-block;">ABC Class</a></div><div></div><a href="#" class="button small blue-button" style="">Approve</a><a href="#" class="button small red-button" style="">Reject</a></div></div></li>
-                        <div class="notification-all"><div style="margin-left: 10px;"><a href="#" class="notification-user">See All</a></div></div>
+                        <ul class="scrollable-menu" style="min-width : 414px;">
+                            <li class="notification-li"><div class="notification-all"><div style="min-width: 40px;"><img src="http://2code.info/demo/html/ask-me/images/demo/avatar.png" class="mail-avatar"></div><div style="margin-left: 10px;"><a href="#" class="notification-user">Khang</a><div class="notification-action" style="width: 300px;word-wrap: break-word; white-space: normal;"> Create a new post in ABC Class <a class="notification-link" style="display : inline-block;">user</a></div></div></div></li>
+                            <li class="notification-li"><div class="notification-all"><div style="min-width: 40px;"><img src="http://2code.info/demo/html/ask-me/images/demo/avatar.png" class="mail-avatar"></div><div style="margin-left: 10px;"><a href="#" class="notification-user">Khang</a><div class="notification-action" style="width: 300px;word-wrap: break-word; white-space: normal;"> Create a new post in ABC Class <a class="notification-link" style="display : inline-block;">user</a></div></div></div></li>
+                            <li class="notification-li"><div class="notification-all"><div style="min-width: 40px;"><img src="http://2code.info/demo/html/ask-me/images/demo/avatar.png" class="mail-avatar"></div><div style="margin-left: 10px;"><a href="#" class="notification-user">Khang</a><div class="notification-action" style="width: 300px;word-wrap: break-word; white-space: normal;"> Create a new post in ABC Class Create a new post in ABC Class Create a new post in ABC Class Create a new post in ABC Class <a class="notification-link" style="display : inline-block;">user</a></div></div></div></li>
+                            <li class="notification-li"><div class="notification-all"><div style="min-width: 40px;"><img src="http://2code.info/demo/html/ask-me/images/demo/avatar.png" class="mail-avatar"></div><div style="margin-left: 10px;"><a href="#" class="notification-user">Khang</a><div class="notification-action" style="width: 300px;word-wrap: break-word; white-space: normal;"> Want To join <a class="notification-link" style="display : inline-block;">ABC Class</a></div><div></div><a href="#" class="button small blue-button" style="">Approve</a><a href="#" class="button small red-button" style="">Reject</a></div></div></li>
+                            <li class="notification-li"><div class="notification-all"><div style="min-width: 40px;"><img src="http://2code.info/demo/html/ask-me/images/demo/avatar.png" class="mail-avatar"></div><div style="margin-left: 10px;"><a href="#" class="notification-user">Khang</a><div class="notification-action" style="width: 300px;word-wrap: break-word; white-space: normal;"> Create a new post in ABC Class <a class="notification-link" style="display : inline-block;">user</a></div></div></div></li>
+                            <li class="notification-li"><div class="notification-all"><div style="min-width: 40px;"><img src="http://2code.info/demo/html/ask-me/images/demo/avatar.png" class="mail-avatar"></div><div style="margin-left: 10px;"><a href="#" class="notification-user">Khang</a><div class="notification-action" style="width: 300px;word-wrap: break-word; white-space: normal;"> Create a new post in ABC Class <a class="notification-link" style="display : inline-block;">user</a></div></div></div></li>
+                            <li class="notification-li"><div class="notification-all"><div style="min-width: 40px;"><img src="http://2code.info/demo/html/ask-me/images/demo/avatar.png" class="mail-avatar"></div><div style="margin-left: 10px;"><a href="#" class="notification-user">Khang</a><div class="notification-action" style="width: 300px;word-wrap: break-word; white-space: normal;"> Create a new post in ABC Class Create a new post in ABC Class Create a new post in ABC Class Create a new post in ABC Class <a class="notification-link" style="display : inline-block;">user</a></div></div></div></li>
+                            <li class="notification-li"><div class="notification-all"><div style="min-width: 40px;"><img src="http://2code.info/demo/html/ask-me/images/demo/avatar.png" class="mail-avatar"></div><div style="margin-left: 10px;"><a href="#" class="notification-user">Khang</a><div class="notification-action" style="width: 300px;word-wrap: break-word; white-space: normal;"> Want To join <a class="notification-link" style="display : inline-block;">ABC Class</a></div><div></div><a href="#" class="button small blue-button" style="">Approve</a><a href="#" class="button small red-button" style="">Reject</a></div></div></li>
+                            <div class="notification-all"><div style="margin-left: 10px;"><a href="#" class="notification-user">See All</a></div></div>
+                        </ul>
                     </ul>
 
                 </li>
@@ -182,7 +187,7 @@
 
 <div id="commentlist" class="page-content">
     <div class="boxedtitle page-title"><h2>Answers ( <span class="color">5</span> )</h2></div>
-    <ol class="commentlist clearfix">
+    <ol class="commentlist clearfix" id="commentList">
         <li class="comment">
             <div class="comment-body comment-body-answered clearfix">
                 <div class="avatar"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></div>
@@ -273,7 +278,7 @@
 
 <div id="respond" class="comment-respond page-content clearfix">
     <div class="boxedtitle page-title"><h2>Leave a reply</h2></div>
-    <form action="#" method="post" id="commentform" class="comment-form">
+    <form action="#" id="commentform" class="comment-form">
         <div id="form-textarea">
             <textarea id="question-details" aria-required="true" cols="58" rows="8"></textarea>
         </div>
@@ -351,8 +356,64 @@
 <script src="/resource/assets/js/tags.js"></script>
 <script src="/resource/assets/js/jquery.bxslider.min.js"></script>
 <script src="/resource/assets/js/custom.js"></script>
+<script src="/resource/assets/js/stomp.js"></script>
+<script src="http://cdn.sockjs.org/sockjs-0.3.min.js"></script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script src="/resource/assets/js/jquery.growl.js"></script>
 <script>
     CKEDITOR.replace('question-details');
+</script>
+<script>
+    //Create stomp client over sockJS protocol
+    var socket = new SockJS("/ws");
+    var stompClient = Stomp.over(socket);
+
+    // Callback function to be called when stomp client is connected to server
+    var connectCallback = function() {
+        stompClient.subscribe('/topic/addPost', post);
+    };
+
+    // Callback function to be called when stomp client could not connect to server
+    var errorCallback = function(error) {
+        alert(error.headers.message);
+    };
+
+    function post(post) {
+        var post = JSON.parse(post.body);
+        var currentCount = $('#countNotifi').html() * 1;
+        $('#countNotifi').html(currentCount + 1);
+        $('#commentList').append('<li class="comment">'+
+                '<div class="comment-body clearfix">'+
+                '<div class="avatar"><img alt="" src="../ask-me/images/demo/avatar.png"></div>'+
+                '<div class="comment-text">'+
+                '<div class="author clearfix">'+
+                '<div class="comment-author"><a href="#">2code</a></div>'+
+                '<div class="comment-meta">'+
+                '<div class="date"><i class="icon-time"></i>January 15 , 2014 at 10:00 pm</div>'+
+                '</div>'+
+                '<a class="comment-reply" href="#"><i class="icon-reply"></i>Reply</a>'+
+                '</div>'+
+                '<div class="text"><p>'+post.detail+'</p>'+
+                '</div></div></div> </li>');
+        MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+        $.growl.notice({
+            message: '<div class="activity-item"> <i class="fa fa-heart text-danger"></i> <div class="activity"> Khang <a href="#">Create post</a> in <a href="#">ABC Class</a> <span>few seconds ago</span> </div> </div>',
+            location: "bl"
+        });
+
+    }
+    // Connect to server via websocket
+    stompClient.connect("guest", "guest", connectCallback, errorCallback);
+
+    $(document).ready(function() {
+        $('#submit').click(function(e){
+            e.preventDefault();
+            var detail = CKEDITOR.instances['question-details'].getData()
+            var jsonstr = JSON.stringify({ 'creator': 'khang', 'detail': detail });
+            stompClient.send("/app/addPost", {}, jsonstr);
+            return false;
+        });
+    });
 </script>
 <!-- End js -->
 
