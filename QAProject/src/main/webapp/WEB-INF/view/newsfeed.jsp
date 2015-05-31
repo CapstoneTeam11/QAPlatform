@@ -7,6 +7,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -179,25 +180,30 @@
                     <div class="boxedtitle page-title"><h2>Question</h2></div>
                     <div style="display: block;">
                         <div class="tab-inner">
-                            <article class="question question-type-normal">
-                                <h2>
-                                    <a href="/question">This is my first Question</a>
-                                </h2>
-                                <div class="question-author">
-                                    <a href="#" original-title="ahmed" class="question-author-img tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>
-                                </div>
-                                <div class="question-inner">
-                                    <div class="clearfix"></div>
-                                    <p class="question-desc">Duis dapibus aliquam mi, eget euismod sem scelerisque ut. Vivamus at elit quis urna adipiscing iaculis. Curabitur vitae velit in neque dictum blandit. Proin in iaculis neque. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur vitae velit in neque dictum blandit.</p>
-                                    <div class="question-details">
-                                        <span class="question-answered question-answered-done"><i class="icon-ok"></i>solved</span>
+                            <c:forEach items="${posts}" var="post">
+                                <article class="question question-type-normal">
+                                    <h2>
+                                        <a href="/question">${post.title}</a>
+                                    </h2>
+                                    <div class="question-author">
+                                        <a href="#" original-title="ahmed" class="question-author-img tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>
                                     </div>
-                                    <span class="question-date"><i class="icon-time"></i>4 mins ago</span>
-                                    <span class="question-category"><a href="/classroom"><i class="icon-group"></i>Class: Advance Java</a></span>
-                                    <span class="question-comment"><a href="#"><i class="icon-comment"></i>5 Answer</a></span>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </article>
+                                    <div class="question-inner">
+                                        <div class="clearfix"></div>
+                                        <p class="question-desc">${post.body}</p>
+                                        <div class="question-details">
+                                            <span class="question-answered question-answered-done"><c:if test="${post.acceptedAnswerId} != null"><i class="icon-ok"></i>Resolved</c:if></span>
+                                        </div>
+                                        <span class="question-date"><i class="icon-time"></i>4 mins ago</span>
+                                        <span class="question-category"><a href="/classroom"><i class="icon-group"></i>Class: Advance Java</a></span>
+                                        <span class="question-comment"><a href="#"><i class="icon-comment"></i>${post.replyCount} Answer</a></span>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </article>
+                            </c:forEach>
+                            <%--<article class="question question-type-normal">--%>
+
+                            <%--</article>--%>
                             <article class="question question-type-normal">
                                 <h2>
                                     <a href="/question">This is my 2nd Question</a>
@@ -217,25 +223,25 @@
                                     <div class="clearfix"></div>
                                 </div>
                             </article>
-                            <article class="question question-type-normal">
-                                <h2>
-                                    <a href="/question">This is my 3rd Question</a>
-                                </h2>
-                                <div class="question-author">
-                                    <a href="#" original-title="ahmed" class="question-author-img tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>
-                                </div>
-                                <div class="question-inner">
-                                    <div class="clearfix"></div>
-                                    <p class="question-desc">Duis dapibus aliquam mi, eget euismod sem scelerisque ut. Vivamus at elit quis urna adipiscing iaculis. Curabitur vitae velit in neque dictum blandit. Proin in iaculis neque. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur vitae velit in neque dictum blandit.</p>
-                                    <div class="question-details">
-                                        <span class="question-answered question-answered-done"><i class="icon-ok"></i>solved</span>
-                                    </div>
-                                    <span class="question-date"><i class="icon-time"></i>4 mins ago</span>
-                                    <span class="question-category"><a href="/classroom"><i class="icon-group"></i>Class: Advance Java</a></span>
-                                    <span class="question-comment"><a href="#"><i class="icon-comment"></i>5 Answer</a></span>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </article>
+                            <%--<article class="question question-type-normal">--%>
+                                <%--<h2>--%>
+                                    <%--<a href="/question">This is my 3rd Question</a>--%>
+                                <%--</h2>--%>
+                                <%--<div class="question-author">--%>
+                                    <%--<a href="#" original-title="ahmed" class="question-author-img tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>--%>
+                                <%--</div>--%>
+                                <%--<div class="question-inner">--%>
+                                    <%--<div class="clearfix"></div>--%>
+                                    <%--<p class="question-desc">Duis dapibus aliquam mi, eget euismod sem scelerisque ut. Vivamus at elit quis urna adipiscing iaculis. Curabitur vitae velit in neque dictum blandit. Proin in iaculis neque. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur vitae velit in neque dictum blandit.</p>--%>
+                                    <%--<div class="question-details">--%>
+                                        <%--<span class="question-answered question-answered-done"><i class="icon-ok"></i>solved</span>--%>
+                                    <%--</div>--%>
+                                    <%--<span class="question-date"><i class="icon-time"></i>4 mins ago</span>--%>
+                                    <%--<span class="question-category"><a href="/classroom"><i class="icon-group"></i>Class: Advance Java</a></span>--%>
+                                    <%--<span class="question-comment"><a href="#"><i class="icon-comment"></i>5 Answer</a></span>--%>
+                                    <%--<div class="clearfix"></div>--%>
+                                <%--</div>--%>
+                            <%--</article>--%>
                             <a href="#" class="post-read-more button color small" style="margin-bottom: 5px;">Continue reading</a>
                         </div>
                     </div>

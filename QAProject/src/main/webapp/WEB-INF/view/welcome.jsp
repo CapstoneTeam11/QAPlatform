@@ -155,11 +155,11 @@
                             <div class="form-inputs clearfix">
                                 <p>
                                     <label class="required" style="width: 25%;">Username<span>*</span></label>
-                                    <input type="text" value="" aria-required="true" style="width: 70%">
+                                    <input type="text" value="" aria-required="true" style="width: 70%" id="username">
                                 </p>
                                 <p>
                                     <label class="required" style="width: 25%;">Password<span>*</span></label>
-                                    <input type="password" value="" aria-required="true" style="width: 70%">
+                                    <input type="password" value="" aria-required="true" style="width: 70%" id="password">
                                 </p>
                                 <p>
                                     <label class="required" style="width: 25%;">Confirm password<span>*</span></label>
@@ -167,7 +167,7 @@
                                 </p>
                                 <p>
                                     <label class="required" style="width: 25%;">Email<span>*</span></label>
-                                    <input type="text" value="" aria-required="true" style="width: 70%">
+                                    <input type="text" value="" aria-required="true" style="width: 70%" id="email">
                                 </p>
                                 <p>
                                     <label class="required" style="width: 25%;">Professional<span>*</span></label>
@@ -187,12 +187,12 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="radio">
-                                                    <label><input type="radio" name="optradio" style="width: auto;">Student</label>
+                                                    <label><input type="radio" name="role" style="width: auto;" value="student">Student</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="radio">
-                                                    <label><input type="radio" name="optradio" style="width: auto;">Teacher</label>
+                                                    <label><input type="radio" name="role" style="width: auto;" value="teacher">Teacher</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -200,7 +200,8 @@
                                 </div>
                             </div>
                             <p class="form-submit">
-                                <input name="submit" type="submit" value="Register" class="submit button medium color" style="width: 96%; float: left">
+                                <%--<input name="submit" type="submit" value="Register" class="submit button medium color" style="width: 96%; float: left">--%>
+                                    <a href="javascript:register();" class="submit button medium color text-center" style="width: 96%;">Register</a>
                             </p>
                         </form>
                     </div><!-- End page-content -->
@@ -245,6 +246,33 @@
 <script src="/resource/assets/js/jquery.bxslider.min.js"></script>
 <script src="/resource/assets/js/custom.js"></script>
 <!-- End js -->
+<script type="application/javascript">
+    function register(){
+        var username = $('#username').val();
+        var password = $('#password').val();
+        var email = $('#email').val();
+        var role = $("input[name='role']:checked").val();
+        var user = {username: username, password: password, email: email, role: role};
+        var url = "/register";
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: user,
+            success: function(){
+                window.location.href="/getAllPost";
+            }
+//            dataType: dataType
+        });
+    function validate(element){
 
+        var message = "<div class='col-md-2'>"
+                +"<label>"+messageCode+"</label>"
+                +"</div>";
+    }
+
+
+
+    }
+</script>
 </body>
 </html>
