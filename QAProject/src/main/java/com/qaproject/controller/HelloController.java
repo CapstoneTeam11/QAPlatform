@@ -14,20 +14,20 @@ import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 @Controller
 public class HelloController {
 
-    @Autowired
-    SimpMessagingTemplate template;
-//
 //    @Autowired
-//    SessionSubscribeEvent subscribeEvent;
-
-    private void updateAddUI(Post post) {
-        template.convertAndSend("/topic/addPost",post);
-    }
-
-    @MessageMapping("/addPost")
-    public void addStock(Post post) throws Exception {
-        updateAddUI(post);
-    }
+//    SimpMessagingTemplate template;
+////
+////    @Autowired
+////    SessionSubscribeEvent subscribeEvent;
+//
+//    private void updateAddUI(Post post) {
+//        template.convertAndSend("/topic/addPost",post);
+//    }
+//
+//    @MessageMapping("/addPost")
+//    public void addStock(Post post) throws Exception {
+//        updateAddUI(post);
+//    }
 
 	@RequestMapping(value = "/",method = RequestMethod.GET)
      public String printWelcome(ModelMap model) {
