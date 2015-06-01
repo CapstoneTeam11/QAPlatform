@@ -13,7 +13,8 @@ import java.util.List;
 @Repository
 public interface UserDao {
     public User find(Integer id);
-    List<User> findAll();
+
     @Transactional(propagation = Propagation.REQUIRED)
     public void persist(User entity);
+    public List<User> login(String username, String password);
 }

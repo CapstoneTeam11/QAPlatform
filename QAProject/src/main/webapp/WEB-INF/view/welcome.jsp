@@ -31,16 +31,22 @@
     <link rel="stylesheet" href="/resource/assets/css/responsive.css">
 
     <!-- Boostrap Style -->
-    <link rel="stylesheet" href="/resource/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/resource/assets/bootstrap-3.3.4/css/bootstrap.min.css">
 
     <!-- Boostrap Theme Style -->
-    <link rel="stylesheet" href="/resource/assets/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/resource/assets/bootstrap-3.3.4/css/bootstrap-theme.min.css">
 
     <!-- Notification Style -->
     <link rel="stylesheet" href="/resource/assets/css/notification.css">
 
     <!-- Favicons -->
     <link rel="shortcut icon" href="http://2code.info/demo/html/ask-me/images/favicon.ico">
+
+    <!-- Validator -->
+    <link rel="stylesheet" href="/resource/assets/css/bootstrapValidator.css">
+    <style>
+
+    </style>
 
 </head>
 
@@ -53,7 +59,7 @@
 <div class="panel-pop" id="signup">
     <h2>Register Now<i class="icon-remove"></i></h2>
     <div class="form-style form-style-3">
-        <form>
+        <form >
             <div class="form-inputs clearfix">
                 <p>
                     <label class="required">Username<span>*</span></label>
@@ -113,20 +119,20 @@
             <div class="col-md-4"></div>
             <div class="col-md-2">
                 <div class="row" style="color: #ffffff;padding-top: 10px;padding-left: 15px;">Username</div>
-                <input type="text" style="height: 30px; margin-bottom: 5px">
+                <input type="text" style="height: 30px; margin-bottom: 5px" id="username1" data-toggle="tooltip">
                 <div class="checkbox" style="color: white; margin-top: 5px;font-size: 13px;">
                     <label><input type="checkbox" value="" checked>Remember me</label>
                 </div>
             </div>
             <div class="col-md-2">
                 <div class="row" style="color: #ffffff;padding-top: 10px;padding-left: 15px;">Password</div>
-                <input type="text" style="height: 30px; margin-bottom: 4px">
+                <input type="password" style="height: 30px; margin-bottom: 4px" id="password1" data-toggle="tooltip">
                 <a href="#" style="color: white;font-size: 12px;" id="lost-password-click">
                     Forget ?
                 </a>
             </div>
             <div class="col-md-1" style="padding-top: 25px">
-                <a href="/newsfeed" class="button small color" style="height: 30px">Login</a>
+                <a href="javascript:checkLogin();" class="button small color" style="height: 30px">Login</a>
             </div>
         </div>
     </section><!-- End container -->
@@ -151,35 +157,53 @@
                 <div class="col-md-6">
                     <div class="page-content">
                         <h2>Register Now</h2>
-                        <form class="form-style form-style-3 form-style-5">
+                        <form class="form-style form-style-3 form-style-5" id="registrationForm">
                             <div class="form-inputs clearfix">
-                                <p>
-                                    <label class="required" style="width: 25%;">Username<span>*</span></label>
-                                    <input type="text" value="" aria-required="true" style="width: 70%" id="username">
-                                </p>
-                                <p>
-                                    <label class="required" style="width: 25%;">Password<span>*</span></label>
-                                    <input type="password" value="" aria-required="true" style="width: 70%" id="password">
-                                </p>
-                                <p>
-                                    <label class="required" style="width: 25%;">Confirm password<span>*</span></label>
-                                    <input type="password" value="" aria-required="true" style="width: 70%">
-                                </p>
-                                <p>
-                                    <label class="required" style="width: 25%;">Email<span>*</span></label>
-                                    <input type="text" value="" aria-required="true" style="width: 70%" id="email">
-                                </p>
-                                <p>
-                                    <label class="required" style="width: 25%;">Professional<span>*</span></label>
-									<span class="styled-select" style="width: 70%">
-										<select>
-                                            <option value="">Select a type</option>
-                                            <option value="1">Question</option>
-                                            <option value="2">Article</option>
-                                        </select>
-									</span>
-                                </p>
-                                <div class="row">
+                                <div class="row" style="margin-top: 10px;">
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">Username<span>*</span></label>
+                                        <div class="col-md-9">
+                                            <input type="text" value="" aria-required="true" id="username" name="username" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 10px;">
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">Password<span>*</span></label>
+                                        <div class="col-md-9">
+                                            <input type="password" value="" aria-required="true" id="password" name="password" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 10px;">
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">Confirm password<span>*</span></label>
+                                        <div class="col-md-9">
+                                            <input type="password" value="" aria-required="true" name="confirm-password" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 10px;">
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">Email<span>*</span></label>
+                                        <div class="col-md-9">
+                                            <input type="text" value="" aria-required="true" id="email" name="email" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 10px;">
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">Professional<span>*</span></label>
+                                        <div class="col-md-9">
+                                            <select class="form-control" style="width: 82%;">
+                                                <option value="">Select a type</option>
+                                                <option value="1">Question</option>
+                                                <option value="2">Article</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 10px;">
                                     <div class="col-md-3">
                                         <label class="required" style="width: auto">Your are<span>*</span></label>
                                     </div>
@@ -187,7 +211,7 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="radio">
-                                                    <label><input type="radio" name="role" style="width: auto;" value="student">Student</label>
+                                                    <label><input type="radio" name="role" style="width: auto;" value="student" checked>Student</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
@@ -200,8 +224,8 @@
                                 </div>
                             </div>
                             <p class="form-submit">
-                                <%--<input name="submit" type="submit" value="Register" class="submit button medium color" style="width: 96%; float: left">--%>
-                                    <a href="javascript:register();" class="submit button medium color text-center" style="width: 96%;">Register</a>
+                                <input name="submit" type="submit" value="Register" class="submit button medium color" style="width: 96%; float: left">
+                                    <%--<a href="javascript:register();" class="submit button medium color text-center" style="width: 96%;">Register</a>--%>
                             </p>
                         </form>
                     </div><!-- End page-content -->
@@ -228,7 +252,7 @@
 
 <!-- js -->
 <script src="/resource/assets/js/jquery.min.js"></script>
-<script src="/resource/assets/js/bootstrap.min.js"></script>
+<script src="/resource/assets/bootstrap-3.3.4/js/bootstrap.min.js"></script>
 <script src="/resource/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
 <script src="/resource/assets/js/jquery.easing.1.3.min.js"></script>
 <script src="/resource/assets/js/html5.js"></script>
@@ -245,9 +269,76 @@
 <script src="/resource/assets/js/tags.js"></script>
 <script src="/resource/assets/js/jquery.bxslider.min.js"></script>
 <script src="/resource/assets/js/custom.js"></script>
+<script src="/resource/assets/js/bootstrapValidator.js"></script>
+<script src="/resource/assets/js/validator.js"></script>
 <!-- End js -->
 <script type="application/javascript">
-    function register(){
+    $(document).ready(function() {
+        $('[data-toggle="tooltip"]').tooltip();
+        $('#registrationForm').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            err: {
+                // You can set it to popover
+                // The message then will be shown in Bootstrap popover
+                container: 'tooltip'
+            },
+            fields: {
+                username: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The username is required'
+                        },
+                        stringLength: {
+                            min: 6,
+                            max: 30,
+                            message: 'The username must be more than 6 and less than 30 characters long'
+                        },
+                        regexp: {
+                            regexp: /^[a-zA-Z0-9_\.]+$/,
+                            message: 'The username can only consist of alphabetical, number, dot and underscore'
+                        }
+                    }
+                },
+                email: {
+                    err: 'tooltip',
+                    validators: {
+                        notEmpty: {
+                            message: 'The email address is required'
+                        },
+                        emailAddress: {
+                            message: 'The input is not a valid email address'
+                        }
+                    }
+                },
+                password: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The password is required'
+                        },
+                        different: {
+                            field: 'username',
+                            message: 'The password cannot be the same as username'
+                        },
+                        identical: {
+                            field: 'confirm-password',
+                            message: 'The password and its confirm must be the same'
+                        }
+                    }
+                }
+            }
+        }).on('success.form.fv', function(e) {
+            e.preventDefault();
+            register();
+        });
+    });
+
+
+    function register() {
         var username = $('#username').val();
         var password = $('#password').val();
         var email = $('#email').val();
@@ -258,21 +349,47 @@
             type: "POST",
             url: url,
             data: user,
-            success: function(){
-                window.location.href="/getAllPost";
+            success: function () {
+                window.location.href = "/getAllPost";
             }
 //            dataType: dataType
         });
-    function validate(element){
+    }
+    function checkLogin(){
+        var username = $('#username1').val();
+        var password = $('#password1').val();
+        if(username == null || username == ""){
+            $('#username1').attr('placeholder', "Enter username!");
+            return;
+        }
+        if(password == null || password == ""){
+            $('#username1').attr('placeholder', "Enter password!");
+            return;
+        }
+        login();
+    }
+    function login(){
+        var username = $('#username1').val();
+        var password = $('#password1').val();
+        var url = "/login";
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: "username="+username+"&password="+password,
+            success: function(data){
+                if(data == "OK"){
+                    window.location.href="/getAllPost";
+                }else{
+                    alert("Username or password is incorrect!");
+                }
 
-        var message = "<div class='col-md-2'>"
-                +"<label>"+messageCode+"</label>"
-                +"</div>";
+            }
+        });
     }
 
 
 
-    }
+
 </script>
 </body>
 </html>

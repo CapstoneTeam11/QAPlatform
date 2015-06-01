@@ -2,9 +2,13 @@ package com.qaproject.dao.impl;
 
 import com.qaproject.dao.BaseDao;
 import com.qaproject.dao.UserDao;
+import com.qaproject.entity.Post;
 import com.qaproject.entity.User;
 import org.springframework.stereotype.Repository;
 
+import javax.jws.soap.SOAPBinding;
+import javax.persistence.NoResultException;
+import javax.persistence.Query;
 import java.util.List;
 
 /**
@@ -13,7 +17,18 @@ import java.util.List;
 @Repository
 public class UserDaoImpl extends BaseDao<User,Integer> implements UserDao {
     @Override
-    public List<User> findAll() {
-        return null;
+    public List<User> login(String username, String password) {
+        Query query = null;
+        query = entityManager.createQuery("select u from User u where u.email = :username and u.password = :password", User.class);
+
+        List<User> users = null;
+        try {
+            query.setParameter("username", username);
+            query.setParameter("password", password);
+            users =  query.getResultList();
+        } catch (NoResultException e) {
+            System.out.println("User null");
+        }
+        return users;
     }
 }

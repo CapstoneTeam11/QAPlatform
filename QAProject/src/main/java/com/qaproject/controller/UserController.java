@@ -5,12 +5,18 @@ import com.qaproject.dto.UserWithRoleDto;
 import com.qaproject.entity.Category;
 import com.qaproject.entity.Role;
 import com.qaproject.entity.User;
+import com.sun.javafx.sg.PGShape;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * Created by TADUCTUNG on 31-May-15.
@@ -35,5 +41,24 @@ public class UserController {
 
         userDao.persist(user);
         return "notification";
+    }
+    @RequestMapping(value = "/login",method = RequestMethod.POST)
+    @ResponseBody
+    public String login(@RequestParam("username") String username, @RequestParam("password") String password, Model model, HttpServletRequest request){
+        if (username == null || password == null){
+            return "NG";
+        }
+        List<User> users = userDao.login(username, password);
+        if(users.size()>0){
+            HttpSession session = request.getSession();
+            session.setAttribute("user", users.get(0));
+            return "OK";
+        }else{
+            return "NG";
+        }
+    }
+    @RequestMapping(value = "/a",method = RequestMethod.GET)
+    public String a() {
+        return "a";
     }
 }
