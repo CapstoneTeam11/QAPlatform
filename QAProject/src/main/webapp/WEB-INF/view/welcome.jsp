@@ -341,11 +341,11 @@
 
 
     function register() {
-        var username = $('#username').val();
+//        var username = $('#username').val();
         var password = $('#password').val();
         var email = $('#email').val();
         var role = $("input[name='role']:checked").val();
-        var user = {username: username, password: password, email: email, role: role};
+        var user = {email: email, password: password, role: role};
         var url = "/register";
         $.ajax({
             type: "POST",

@@ -1,5 +1,6 @@
 package com.qaproject.controller;
 
+import com.qaproject.dao.RoleDao;
 import com.qaproject.dao.impl.UserDaoImpl;
 import com.qaproject.dto.UserWithRoleDto;
 import com.qaproject.entity.Category;
@@ -25,18 +26,20 @@ import java.util.List;
 public class UserController {
     @Autowired
     UserDaoImpl userDao;
+    @Autowired
+    RoleDao roleDao;
+
     @RequestMapping(value = "/register",method = RequestMethod.POST)
     public String register(@ModelAttribute("userWithRole")UserWithRoleDto userRole) {
         System.out.print(userRole.toString());
         User user = new User();
         user.setAboutMe("hehe");
-
         user.setEmail(userRole.getEmail());
         user.setPassword(userRole.getPassword());
         if(userRole.getRole().equalsIgnoreCase("student")){
-           user.setRoleId(new Role(1));
+           user.setRoleId(roleDao.find(1));
         }else{
-            user.setRoleId(new Role(2));
+            user.setRoleId(roleDao.find(2));
         }
 
         userDao.persist(user);
