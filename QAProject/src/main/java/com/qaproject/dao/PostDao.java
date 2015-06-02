@@ -2,6 +2,8 @@ package com.qaproject.dao;
 
 import com.qaproject.entity.Post;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -11,4 +13,11 @@ import java.util.List;
 @Repository
 public interface PostDao {
     List<Post> findAll();
+    public Post find(Integer id);
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void persist(Post entity);
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void merge(Post entity);
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void remove(Post entity);
 }
