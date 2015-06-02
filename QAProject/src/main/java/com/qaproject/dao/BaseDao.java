@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.util.List;
 
 /**
  * Created by khangtnse60992 on 10/3/2014.
@@ -22,6 +23,10 @@ public abstract class BaseDao<T,ID extends Serializable> {
 
     public BaseDao() {
         this.persistentClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+    }
+
+    public List< T > findAll(){
+        return entityManager.createQuery( "from " + persistentClass.getName() ).getResultList();
     }
 
     public EntityManager getEntityManager() {
