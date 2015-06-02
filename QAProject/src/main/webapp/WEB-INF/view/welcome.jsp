@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: Minh
@@ -197,8 +198,9 @@
                                         <div class="col-md-9">
                                             <select class="form-control" style="width: 82%;">
                                                 <option value="">Select a type</option>
-                                                <option value="1">Question</option>
-                                                <option value="2">Article</option>
+                                                <c:forEach var="category" items="${categories}">
+                                                <option value="${category.id}">${category.categoryName}</option>
+                                                </c:forEach>
                                             </select>
                                         </div>
                                     </div>

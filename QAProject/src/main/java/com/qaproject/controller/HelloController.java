@@ -13,9 +13,9 @@ import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 /** **/
 @Controller
 public class HelloController {
-
-    @Autowired
-    SimpMessagingTemplate template;
+//
+//    @Autowired
+//    SimpMessagingTemplate template;
 //
 //    @Autowired
 //    SessionSubscribeEvent subscribeEvent;
@@ -29,10 +29,10 @@ public class HelloController {
 //        updateAddUI(post);
 //    }
 
-	@RequestMapping(value = "/",method = RequestMethod.GET)
-     public String printWelcome(ModelMap model) {
-        return "welcome";
-    }
+//	@RequestMapping(value = "/",method = RequestMethod.GET)
+//     public String printWelcome(ModelMap model) {
+//        return "welcome";
+//    }
     @RequestMapping(value = "/homepage",method = RequestMethod.GET)
     public String homepage(ModelMap model) {
     return "homepage";
