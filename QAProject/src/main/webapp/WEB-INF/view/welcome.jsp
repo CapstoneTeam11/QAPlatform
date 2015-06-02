@@ -315,12 +315,20 @@
                         emailAddress: {
                             message: 'The input is not a valid email address'
                         }
+//                        regexp: {
+//                            regex: /^[-0-9a-zA-Z.+_]+@[-0-9a-zA-Z.+_]+.[a-zA-Z]{2,4}/,
+//                            message: 'The email format incorrect'
+//                        }
                     }
                 },
                 password: {
                     validators: {
                         notEmpty: {
                             message: 'The password is required'
+                        },
+                        stringLength: {
+                            min: 8,
+                            message: 'The username must be more than 8 characters'
                         },
                         different: {
                             field: 'username',
