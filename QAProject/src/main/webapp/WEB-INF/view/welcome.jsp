@@ -118,7 +118,7 @@
             </div>
             <div class="col-md-4"></div>
             <div class="col-md-2">
-                <div class="row" style="color: #ffffff;padding-top: 10px;padding-left: 15px;">Username</div>
+                <div class="row" style="color: #ffffff;padding-top: 10px;padding-left: 15px;">Email</div>
                 <input type="text" style="height: 30px; margin-bottom: 5px" id="username1" data-toggle="tooltip">
                 <div class="checkbox" style="color: white; margin-top: 5px;font-size: 13px;">
                     <label><input type="checkbox" value="" checked>Remember me</label>
@@ -159,11 +159,19 @@
                         <h2>Register Now</h2>
                         <form class="form-style form-style-3 form-style-5" id="registrationForm">
                             <div class="form-inputs clearfix">
+                                <%--<div class="row" style="margin-top: 10px;">--%>
+                                    <%--<div class="form-group">--%>
+                                        <%--<label class="col-md-3 control-label">Username<span>*</span></label>--%>
+                                        <%--<div class="col-md-9">--%>
+                                            <%--<input type="text" value="" aria-required="true" id="username" name="username" class="form-control">--%>
+                                        <%--</div>--%>
+                                    <%--</div>--%>
+                                <%--</div>--%>
                                 <div class="row" style="margin-top: 10px;">
                                     <div class="form-group">
-                                        <label class="col-md-3 control-label">Username<span>*</span></label>
+                                        <label class="col-md-3 control-label">Email<span>*</span></label>
                                         <div class="col-md-9">
-                                            <input type="text" value="" aria-required="true" id="username" name="username" class="form-control">
+                                            <input type="text" value="" aria-required="true" id="email" name="email" class="form-control">
                                         </div>
                                     </div>
                                 </div>
@@ -185,15 +193,7 @@
                                 </div>
                                 <div class="row" style="margin-top: 10px;">
                                     <div class="form-group">
-                                        <label class="col-md-3 control-label">Email<span>*</span></label>
-                                        <div class="col-md-9">
-                                            <input type="text" value="" aria-required="true" id="email" name="email" class="form-control">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row" style="margin-top: 10px;">
-                                    <div class="form-group">
-                                        <label class="col-md-3 control-label">Professional<span>*</span></label>
+                                        <label class="col-md-3 control-label">Know About<span>*</span></label>
                                         <div class="col-md-9">
                                             <select class="form-control" style="width: 82%;">
                                                 <option value="">Select a type</option>
