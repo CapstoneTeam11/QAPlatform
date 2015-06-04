@@ -29,10 +29,10 @@ public class HelloController {
 //        updateAddUI(post);
 //    }
 
-//	@RequestMapping(value = "/",method = RequestMethod.GET)
-//     public String printWelcome(ModelMap model) {
-//        return "welcome";
-//    }
+	@RequestMapping(value = "/",method = RequestMethod.GET)
+     public String printWelcome(ModelMap model) {
+        return "welcome";
+    }
     @RequestMapping(value = "/homepage",method = RequestMethod.GET)
     public String homepage(ModelMap model) {
     return "homepage";
@@ -64,5 +64,9 @@ public class HelloController {
     @RequestMapping(value = "/profile",method = RequestMethod.GET)
     public String profile(ModelMap model) {
         return "profile";
+    }
+    @RequestMapping(value = "/material",method = RequestMethod.GET)
+    public String material(ModelMap model) {
+        return "material";
     }
 }
