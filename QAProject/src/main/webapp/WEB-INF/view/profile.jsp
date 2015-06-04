@@ -141,15 +141,7 @@
     </section><!-- End container -->
 </header><!-- End header -->
 
-<div class="breadcrumbs">
-    <section class="container" style="height:70px; display: flex; align-items: center">
-        <div class="row">
-            <div class="col-md-12">
-                <h3>User profile</h3>
-            </div>
-        </div><!-- End row -->
-    </section><!-- End container -->
-</div><!-- End breadcrumbs -->
+<%@include file="header.jsp" %>
 
 <section class="container main-content page-left-sidebar">
 <div class="row">
@@ -345,18 +337,7 @@
 </div><!-- End row -->
 </section><!-- End container -->
 
-<footer id="footer">
-    <section class="container">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="widget widget_contact">
-                    <h3 class="widget_title">Where We Are ?</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi adipiscing gravida odio, sit amet suscipit risus ultrices eu.</p>
-                </div>
-            </div>
-        </div><!-- End row -->
-    </section><!-- End container -->
-</footer><!-- End footer -->
+<%@include file="footer.jsp" %>
 </div><!-- End wrap -->
 
 <div class="go-up"><i class="icon-chevron-up"></i></div>

@@ -236,18 +236,7 @@
         </div><!-- End login -->
     </section>
 
-<footer id="footer">
-    <section class="container">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="widget widget_contact">
-                    <h3 class="widget_title">Where We Are ?</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi adipiscing gravida odio, sit amet suscipit risus ultrices eu.</p>
-                </div>
-            </div>
-        </div><!-- End row -->
-    </section><!-- End container -->
-</footer><!-- End footer -->
+
 </div><!-- End wrap -->
 <!-- End wrap -->
 <div class="go-up"><i class="icon-chevron-up"></i></div>
