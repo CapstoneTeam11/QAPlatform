@@ -1,7 +1,6 @@
 jQuery(document).ready(function($) {
 	
 	/* Menu */
-	
 	jQuery(".navigation  ul li ul").parent("li").addClass("parent-list");
 	jQuery(".parent-list").find("a:first").append(" <span class='menu-nav-arrow'><i class='icon-angle-down'></i></span>");
 	
@@ -9,17 +8,17 @@ jQuery(document).ready(function($) {
 	jQuery(".navigation ul ul").css({display: "none"});
 	jQuery(".navigation ul li").each(function() {	
 		var sub_menu = jQuery(this).find("ul:first");
-		jQuery(this).hover(function() {	
+		jQuery(this).hover(function() {
 			sub_menu.stop().css({overflow:"hidden", height:"auto", display:"none", paddingTop:0}).slideDown(250, function() {
 				jQuery(this).css({overflow:"visible", height:"auto"});
 			});	
-		},function() {	
-			sub_menu.stop().slideUp(250, function() {	
+		},function() {
+			sub_menu.stop().slideUp(250, function() {
 				jQuery(this).css({overflow:"hidden", display:"none"});
 			});
-		});	
+		});
 	});
-	
+
 	/* Header and footer fix mobile */
 	
 	jQuery(window).bind("resize", function () {
@@ -778,6 +777,26 @@ jQuery(document).ready(function($) {
 		wrap_pop();
 		return false;
 	});
+
+    /* Create folder */
+
+    jQuery("#create-folder-click").click(function () {
+        jQuery(".panel-pop").animate({"top":"-100%"},10).hide();
+        jQuery("#create-folder").show().animate({"top":"50%"},500);
+        jQuery("body").prepend("<div class='wrap-pop'></div>");
+        wrap_pop();
+        return false;
+    });
+
+    /* Add to folder */
+
+    jQuery("#add-to-folder-click").click(function () {
+        jQuery(".panel-pop").animate({"top":"-100%"},10).hide();
+        jQuery("#add-to-folder").show().animate({"top":"50%"},500);
+        jQuery("body").prepend("<div class='wrap-pop'></div>");
+        wrap_pop();
+        return false;
+    });
 	
 	/* Panel pop */
 	
@@ -925,9 +944,12 @@ jQuery(document).ready(function($) {
 	    var visibleHead = header - $window.scrollTop();
 	    var visibleFoot = footer - $window.scrollBottom();
 	    var scrollTop = $window.scrollTop();
-	    
+        if (visibleHead<70) {
+            visibleHead = visibleHead + 80
+        }
 	    if (scrollTop < header) {
 	        $widget_menu.css({
+
 	            top: visibleHead + "px",
 	            bottom: "auto"
 	        });
@@ -944,7 +966,7 @@ jQuery(document).ready(function($) {
 	            });
 	        }else {
 	        	$widget_menu.css({
-	        	    top: "40px",
+	        	    top: "120px",
 	        	    bottom: "auto"
 	        	});
 	        }
