@@ -47,55 +47,50 @@
 
 <div id="wrap">
 
-<div class="panel-pop" id="signup">
-    <h2>Register Now<i class="icon-remove"></i></h2>
-    <div class="form-style form-style-3">
-        <form>
-            <div class="form-inputs clearfix">
-                <p>
-                    <label class="required">Username<span>*</span></label>
-                    <input type="text">
-                </p>
-                <p>
-                    <label class="required">E-Mail<span>*</span></label>
-                    <input type="email">
-                </p>
-                <p>
-                    <label class="required">Password<span>*</span></label>
-                    <input type="password" value="">
-                </p>
-                <p>
-                    <label class="required">Confirm Password<span>*</span></label>
-                    <input type="password" value="">
-                </p>
-            </div>
-            <p class="form-submit">
-                <input type="submit" value="Signup" class="button color small submit">
-            </p>
-        </form>
-    </div>
-</div><!-- End signup -->
-
-<div class="panel-pop" id="lost-password">
-    <h2>Lost Password<i class="icon-remove"></i></h2>
-    <div class="form-style form-style-3">
-        <p>Lost your password? Please enter your username and email address. You will receive a link to create a new password via email.</p>
-        <form>
-            <div class="form-inputs clearfix">
-                <p>
-                    <label class="required">Username<span>*</span></label>
-                    <input type="text">
-                </p>
-                <p>
-                    <label class="required">E-Mail<span>*</span></label>
-                    <input type="email">
-                </p>
-            </div>
-            <p class="form-submit">
-                <input type="submit" value="Reset" class="button color small submit">
-            </p>
-        </form>
-        <div class="clearfix"></div>
+<div class="panel-pop" id="add-to-folder">
+    <h2>Add to folder<i class="icon-remove"></i></h2>
+    <div style="height: auto; max-height: 300px; overflow-x: hidden;">
+        <div class="list-group">
+            <a href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">Folder 1</h4>
+            </a>
+            <a href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">Folder 2</h4>
+            </a>
+            <a href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">Folder 3</h4>
+            </a>
+            <a href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">Folder 4</h4>
+            </a>
+            <a href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">Folder 5</h4>
+            </a>
+            <a href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">Folder 6</h4>
+            </a>
+            <a href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">Folder 7</h4>
+            </a>
+            <a href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">Folder 8</h4>
+            </a>
+            <a href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">Folder 9</h4>
+            </a>
+            <a href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">Folder 10</h4>
+            </a>
+            <a href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">Folder 11</h4>
+            </a>
+            <a href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">Folder 12</h4>
+            </a>
+            <a href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">Folder 13</h4>
+            </a>
+        </div>
     </div>
 </div><!-- End lost-password -->
 
@@ -299,6 +294,7 @@
                 <th>File name</th>
                 <th>Uploaded Date</th>
                 <th>File size</th>
+                <th>Add to folder</th>
                 <th>Download</th>
             </tr>
             <tr>
@@ -306,6 +302,7 @@
                 <td>Introduction to AJ</td>
                 <td>22-05-2015</td>
                 <td>1 MB</td>
+                <td><a id="add-to-folder-click" href="#">Add</a></td>
                 <td></td>
             </tr>
         </table>
