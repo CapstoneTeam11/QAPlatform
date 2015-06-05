@@ -14,6 +14,7 @@ import java.util.List;
 public interface TagDao {
     public Tag find(Integer id);
     List<Tag> findAll();
+    public List<Tag> TagsByName(String name);
     @Transactional(propagation = Propagation.REQUIRED)
     public void persist(Tag entity);
     @Transactional(propagation = Propagation.REQUIRED)

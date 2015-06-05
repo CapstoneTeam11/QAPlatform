@@ -36,6 +36,8 @@ public class Post {
     private Integer replyCount;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "postId")
     private List<TagPost> tagPostList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "postId")
+    private List<PostInvitation> postInvitationList;
     @JoinColumn(name = "OwnerUserId", referencedColumnName = "Id")
     @ManyToOne
     private User ownerUserId;
@@ -124,6 +126,14 @@ public class Post {
 
     public List<TagPost> getTagPostList() {
         return tagPostList;
+    }
+
+    public List<PostInvitation> getPostInvitationList() {
+        return postInvitationList;
+    }
+
+    public void setPostInvitationList(List<PostInvitation> postInvitationList) {
+        this.postInvitationList = postInvitationList;
     }
 
     public void setTagPostList(List<TagPost> tagPostList) {

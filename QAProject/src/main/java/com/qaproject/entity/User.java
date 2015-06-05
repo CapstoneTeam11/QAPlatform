@@ -42,6 +42,12 @@ public class User {
     private List<Notification> notificationReceiver;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
     private List<ClassroomUser> classroomUserList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "teacherId")
+    private List<PostInvitation> postInvitationList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "teacherId")
+    private List<Follower> ListTeacherFollow;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "followerId")
+    private List<Follower> ListFollower;
     @JoinColumn(name = "RoleId", referencedColumnName = "Id")
     @ManyToOne
     private Role roleId;
@@ -168,6 +174,30 @@ public class User {
 
     public void setClassroomUserList(List<ClassroomUser> classroomUserList) {
         this.classroomUserList = classroomUserList;
+    }
+
+    public List<PostInvitation> getPostInvitationList() {
+        return postInvitationList;
+    }
+
+    public void setPostInvitationList(List<PostInvitation> postInvitationList) {
+        this.postInvitationList = postInvitationList;
+    }
+
+    public List<Follower> getListTeacherFollow() {
+        return ListTeacherFollow;
+    }
+
+    public void setListTeacherFollow(List<Follower> listTeacherFollow) {
+        ListTeacherFollow = listTeacherFollow;
+    }
+
+    public List<Follower> getListFollower() {
+        return ListFollower;
+    }
+
+    public void setListFollower(List<Follower> listFollower) {
+        ListFollower = listFollower;
     }
 
     public Role getRoleId() {
