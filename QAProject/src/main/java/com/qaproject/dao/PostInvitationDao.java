@@ -1,6 +1,7 @@
 package com.qaproject.dao;
 
 import com.qaproject.entity.PostInvitation;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -9,6 +10,7 @@ import java.util.List;
 /**
  * Created by khangtnse60992 on 6/5/2015.
  */
+@Repository
 public interface PostInvitationDao {
     public PostInvitation find(Integer id);
     List<PostInvitation> findAll();
