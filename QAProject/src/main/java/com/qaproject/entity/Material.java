@@ -15,25 +15,23 @@ public class Material {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
     private Integer id;
+    @Column(name = "Name")
+    private String name;
+    @JoinColumn(name = "FolderId", referencedColumnName = "Id")
+    @ManyToOne
+    private Folder folderId;
+    @JoinColumn(name = "OwnerClassId", referencedColumnName = "Id")
+    @ManyToOne
+    private Classroom ownerClassId;
     @Column(name = "CreationDate")
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
-    @Column(name = "OwnerClassId")
-    private Integer ownerClassId;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "Size")
     private Double size;
     @Column(name = "FileURL")
     private String fileURL;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "materialId")
-    private List<Library> libraryList;
 
-    public Material() {
-    }
-
-    public Material(Integer id) {
-        this.id = id;
-    }
 
     public Integer getId() {
         return id;
@@ -43,20 +41,36 @@ public class Material {
         this.id = id;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Folder getFolderId() {
+        return folderId;
+    }
+
+    public void setFolderId(Folder folderId) {
+        this.folderId = folderId;
+    }
+
+    public Classroom getOwnerClassId() {
+        return ownerClassId;
+    }
+
+    public void setOwnerClassId(Classroom ownerClassId) {
+        this.ownerClassId = ownerClassId;
+    }
+
     public Date getCreationDate() {
         return creationDate;
     }
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
-    }
-
-    public Integer getOwnerClassId() {
-        return ownerClassId;
-    }
-
-    public void setOwnerClassId(Integer ownerClassId) {
-        this.ownerClassId = ownerClassId;
     }
 
     public Double getSize() {
@@ -74,38 +88,4 @@ public class Material {
     public void setFileURL(String fileURL) {
         this.fileURL = fileURL;
     }
-
-    public List<Library> getLibraryList() {
-        return libraryList;
-    }
-
-    public void setLibraryList(List<Library> libraryList) {
-        this.libraryList = libraryList;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Material)) {
-            return false;
-        }
-        Material other = (Material) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "com.qaproject.entity.Material[ id=" + id + " ]";
-    }
-
 }

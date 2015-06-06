@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: Minh
@@ -82,11 +83,11 @@
 <div class="panel-pop" id="create-folder">
     <h2>Create folder<i class="icon-remove"></i></h2>
     <div class="form-style form-style-3">
-        <form>
+        <form method="post" action="/folder/create">
             <div class="form-inputs clearfix">
                 <p>
                     <label class="required">Folder name<span></span></label>
-                    <input type="text">
+                    <input type="text" name="name">
                 </p>
             </div>
             <p class="form-submit">
@@ -129,78 +130,20 @@
                 <div class="tab-inner-warp">
                     <div class="tab-inner">
                         <div class="row">
+                            <c:forEach var="folder" items="${folders}">
                             <div class="col-md-3">
                                 <div class="page-content page-shortcode">
                                     <div class="box_icon">
                                         <span class="t_center icon_i"><span icon_size="120"><i i_color="#1abc9c" i_hover="#34495e" class="icon-folder-open-alt color_default" style="font-size: 60px; color: rgb(52, 73, 94);"></i></span></span>
                                         <div class="t_center">
-                                            <h3>Java</h3>
+                                            <h3><a href="/folder/${folder.id}">${folder.name}</a></h3>
                                             <p></p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="clearfix gap"></div>
                             </div>
-                            <div class="col-md-3">
-                                <div class="page-content page-shortcode">
-                                    <div class="box_icon">
-                                        <span class="t_center icon_i"><span icon_size="120"><i i_color="#1abc9c" i_hover="#34495e" class="icon-folder-open-alt color_default" style="font-size: 60px; color: rgb(52, 73, 94);"></i></span></span>
-                                        <div class="t_center">
-                                            <h3>Java</h3>
-                                            <p></p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="clearfix gap"></div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="page-content page-shortcode">
-                                    <div class="box_icon">
-                                        <span class="t_center icon_i"><span icon_size="120"><i i_color="#1abc9c" i_hover="#34495e" class="icon-folder-open-alt color_default" style="font-size: 60px; color: rgb(52, 73, 94);"></i></span></span>
-                                        <div class="t_center">
-                                            <h3>Java</h3>
-                                            <p></p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="clearfix gap"></div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="page-content page-shortcode">
-                                    <div class="box_icon">
-                                        <span class="t_center icon_i"><span icon_size="120"><i i_color="#1abc9c" i_hover="#34495e" class="icon-folder-open-alt color_default" style="font-size: 60px; color: rgb(52, 73, 94);"></i></span></span>
-                                        <div class="t_center">
-                                            <h3>Java</h3>
-                                            <p></p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="clearfix gap"></div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="page-content page-shortcode">
-                                    <div class="box_icon">
-                                        <span class="t_center icon_i"><span icon_size="120"><i i_color="#1abc9c" i_hover="#34495e" class="icon-folder-open-alt color_default" style="font-size: 60px; color: rgb(52, 73, 94);"></i></span></span>
-                                        <div class="t_center">
-                                            <h3>Java</h3>
-                                            <p></p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="clearfix gap"></div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="page-content page-shortcode">
-                                    <div class="box_icon">
-                                        <span class="t_center icon_i"><span icon_size="120"><i i_color="#1abc9c" i_hover="#34495e" class="icon-folder-open-alt color_default" style="font-size: 60px; color: rgb(52, 73, 94);"></i></span></span>
-                                        <div class="t_center">
-                                            <h3>Java</h3>
-                                            <p></p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="clearfix gap"></div>
-                            </div>
+                            </c:forEach>
                         </div>
                     </div>
                 </div>

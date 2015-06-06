@@ -30,6 +30,8 @@ public class Classroom {
     private List<TagClassroom> tagClassroomList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "classroomId",fetch = FetchType.LAZY,orphanRemoval = true)
     private List<ClassroomUser> classroomUserList;
+    @OneToMany(mappedBy = "ownerClassId",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<Material> materialList;
 
     public Classroom() {
     }
@@ -103,6 +105,17 @@ public class Classroom {
 
     public void setClassroomUserList(List<ClassroomUser> classroomUserList) {
         this.classroomUserList = classroomUserList;
+    }
+
+    public List<Material> getMaterialList() {
+        if(materialList==null) {
+            materialList = new ArrayList<Material>();
+        }
+        return materialList;
+    }
+
+    public void setMaterialList(List<Material> materialList) {
+        this.materialList = materialList;
     }
 
     @Override

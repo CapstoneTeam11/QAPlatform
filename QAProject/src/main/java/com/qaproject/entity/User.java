@@ -35,8 +35,8 @@ public class User {
     private List<Classroom> classroomList;
     @OneToMany(mappedBy = "ownerUserId")
     private List<Post> postList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "managerId")
-    private List<Library> libraryList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "managerId",fetch = FetchType.LAZY)
+    private List<Folder> folderList;
     @OneToMany(mappedBy = "senderId")
     private List<Notification> notificationSender;
     @OneToMany(mappedBy = "receiverId")
@@ -151,16 +151,17 @@ public class User {
         this.postList = postList;
     }
 
-    public List<Library> getLibraryList() {
-        if(libraryList==null) {
-            libraryList = new ArrayList<Library>();
+    public List<Folder> getFolderList() {
+        if(folderList==null) {
+            folderList = new ArrayList<Folder>();
         }
-        return libraryList;
+        return folderList;
     }
 
-    public void setLibraryList(List<Library> libraryList) {
-        this.libraryList = libraryList;
+    public void setFolderList(List<Folder> folderList) {
+        this.folderList = folderList;
     }
+
 
     public List<Notification> getNotificationSender() {
         if(notificationSender==null) {
