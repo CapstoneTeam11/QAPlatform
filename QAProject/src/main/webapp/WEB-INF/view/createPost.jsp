@@ -33,6 +33,9 @@
 
     <!-- Favicons -->
     <link rel="shortcut icon" href="http://2code.info/demo/html/ask-me/images/favicon.ico">
+    <!--TagInput-->
+    <link rel="stylesheet" href="/resource/assets/js/bootstrap-tagsinput.css">
+    <link rel="stylesheet" href="/resource/assets/css/tag.css">
 
 </head>
 
@@ -119,13 +122,20 @@
                 <div class="form-inputs clearfix">
                     <p>
                         <label class="required">Title<span>*</span></label>
-                        <input type="text" id="question-title">
+                        <input type="text" id="question-title" name="postname">
                         <span class="form-description">Please choose an appropriate title for the question to answer it even easier .</span>
                     </p>
+                    <div style="display: flex">
+                    <p style="width: 18% !important;">
+                        <label class="required">Tag<span>*</span></label>
+                    </p>
+                        <div style="width: 82%">
+                        <input type="text" class="input" name="tag" id="tagsuggest"/>
+                        </div>
+                    </div>
+                        <%--<input type="text" class="input" name="question_tags" id="question_tags" data-seperator=",">--%>
                     <p>
-                        <label>Tags</label>
-                        <input type="text" class="input" name="question_tags" id="question_tags" data-seperator=",">
-                        <span class="form-description">Please choose  suitable Keywords Ex : <span class="color">question , poll</span> .</span>
+                    <span class="form-description">Please choose  suitable Keywords Ex : <span class="color">question , poll</span> .</span>
                     </p>
                     <p>
                         <label class="required">Type<span>*</span></label>
@@ -247,8 +257,29 @@
 <script src="/resource/assets/js/tags.js"></script>
 <script src="/resource/assets/js/jquery.bxslider.min.js"></script>
 <script src="/resource/assets/js/custom.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.4/typeahead.bundle.min.js"></script>
+<script src="/resource/assets/js/bootstrap-tagsinput.js"></script>
+<script src="/resource/assets/js/bootstrap-tagsinput.min.js"></script>
 <script>
     CKEDITOR.replace('question-details');
+    var tag = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        remote: {
+            url : 'http://localhost:8080/tag/%QUERY'
+        }
+    });
+    tag.initialize();
+    elt = $('#tagsuggest');
+    elt.tagsinput({
+        itemValue: 'id',
+        itemText: 'name',
+        typeaheadjs: {
+            name: 'tag',
+            displayKey: 'name',
+            source: tag.ttAdapter()
+        }
+    });
 </script>
 <!-- End js -->
 

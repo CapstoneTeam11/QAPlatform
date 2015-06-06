@@ -1,5 +1,6 @@
 package com.qaproject.dao;
 
+import com.qaproject.dto.TagDto;
 import com.qaproject.entity.Tag;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -14,7 +15,8 @@ import java.util.List;
 public interface TagDao {
     public Tag find(Integer id);
     List<Tag> findAll();
-    public List<Tag> TagsByName(String name);
+    public List<Tag> tagsByName(String name);
+    public List<TagDto> tagDtosByName(String name);
     @Transactional(propagation = Propagation.REQUIRED)
     public void persist(Tag entity);
     @Transactional(propagation = Propagation.REQUIRED)
