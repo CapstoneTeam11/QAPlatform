@@ -2,6 +2,7 @@ package com.qaproject.controller;
 
 import com.qaproject.dao.RoleDao;
 import com.qaproject.dao.impl.UserDaoImpl;
+import com.qaproject.dto.ClassroomDto;
 import com.qaproject.dto.UserWithRoleDto;
 import com.qaproject.entity.Category;
 import com.qaproject.entity.Role;

@@ -1,5 +1,6 @@
 package com.qaproject.dao;
 
+import com.qaproject.entity.Tag;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -7,4 +8,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface TagDao {
+    public Tag find(Integer id);
+    public Tag find(String tagName);
 }

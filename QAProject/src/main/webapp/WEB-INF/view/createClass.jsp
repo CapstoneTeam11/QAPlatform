@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -164,12 +165,13 @@
                                 <span class="form-description">Please choose  suitable Keywords Ex : <span class="color">question , poll</span> .</span>
                             </p>
                             <p>
-                                <label class="required">Professional<span>*</span></label>
+                                <label class="required">Know about<span>*</span></label>
 									<span class="styled-select">
-										<select>
+										<select id="professional">
                                             <option value="">Select a type</option>
-                                            <option value="1">Question</option>
-                                            <option value="2">Article</option>
+                                            <c:forEach var="category" items="${categories}">
+                                            <option value="${category.id}">${category.categoryName}</option>
+                                            </c:forEach>
                                         </select>
 									</span>
                                 <span class="form-description">Please choose the appropriate section so easily search for your question .</span>
@@ -179,12 +181,12 @@
                         <div id="form-textarea">
                             <p>
                                 <label class="required">Class's Description<span>*</span></label>
-                                <textarea id="question-details" aria-required="true" cols="58" rows="8"></textarea>
+                                <textarea id="class-description" aria-required="true" cols="58" rows="8"></textarea>
                                 <span class="form-description">Type the description thoroughly and in detail .</span>
                             </p>
                         </div>
                         <p class="form-submit">
-                            <input type="submit" id="publish-question" value="Create Your Class" class="button color small submit">
+                            <a href="javascript:createClass();" id="publish-question" class="button color small submit">Create Your Class</a>
                         </p>
                     </form>
                 </div>
@@ -204,7 +206,7 @@
                 </ul>
             </div>
             <div class="widget widget_login">
-                <h3 class="widget_title">Invite someone</h3>
+                <h3 class="widget_title">Invite student</h3>
                 <div class="form-style form-style-2">
                     <form>
                         <div class="form-inputs clearfix">
@@ -272,6 +274,33 @@
 <script src="/resource/assets/js/jquery.bxslider.min.js"></script>
 <script src="/resource/assets/js/custom.js"></script>
 <!-- End js -->
+//Create Class
 
+<script>
+    function createClass(){
+        var classname = $("#question-title").val();
+        var tag = $("#tag").val();
+        var cate = $("#professional option:selected").val();
+        var classDescription = $("#class-description").val();
+        var classroom = {classroomName: classname,classroomDescription: classDescription, categoryId: 1, tag: [{id: 1}, {id: 2}]};
+        var li = $(".taglist li.tag");
+        var tagList = "";
+        for(i=0; i< li.length; i++){
+            tagList+=($($(li[i]).find("span")[0]).text());
+            tagList+=",";
+        }
+        var url = "/createClass1";
+        $.ajax({
+            type: "GET",
+            url: url,
+            data: "classroomName="+ classname + "&classroomDescription="+classDescription+"&categoryId="+cate+"&tag="+tagList,
+            success: function () {
+                window.location.href = "/getAllPost";
+            },
+            contentType: "application/json"
+        });
+
+    }
+</script>
 </body>
 </html>

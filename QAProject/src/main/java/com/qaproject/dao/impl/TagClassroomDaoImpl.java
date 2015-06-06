@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class TagClassroomDaoImpl extends BaseDao<TagClassroom,Integer> implements TagClassroomDao {
+
 }
