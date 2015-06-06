@@ -1,6 +1,7 @@
 package com.qaproject.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -11,7 +12,6 @@ import java.util.List;
 public class Classroom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
     @Column(name = "Id")
     private Integer id;
     @Column(name = "ClassroomName")
@@ -28,7 +28,7 @@ public class Classroom {
     private List<Post> postList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "classroomId")
     private List<TagClassroom> tagClassroomList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "classroomId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "classroomId",fetch = FetchType.LAZY,orphanRemoval = true)
     private List<ClassroomUser> classroomUserList;
 
     public Classroom() {
@@ -87,6 +87,9 @@ public class Classroom {
     }
 
     public List<TagClassroom> getTagClassroomList() {
+        if(tagClassroomList==null) {
+            tagClassroomList = new ArrayList<TagClassroom>();
+        }
         return tagClassroomList;
     }
 
@@ -125,5 +128,17 @@ public class Classroom {
     @Override
     public String toString() {
         return "com.qaproject.entity.Classroom[ id=" + id + " ]";
+    }
+
+    public boolean checkUserExist(User user) {
+        if(user.getId()==ownerUserId.getId()) {
+            return true;
+        }
+        for(int i = 0 ; i < classroomUserList.size();i++) {
+            if(classroomUserList.get(i).getId()==user.getId()){
+                return true;
+            }
+        }
+        return false;
     }
 }

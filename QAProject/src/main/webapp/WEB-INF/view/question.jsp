@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: Minh
@@ -123,27 +124,30 @@
 <div class="col-md-9">
 <article class="question single-question question-type-normal">
     <h2>
-        <a href="single_question.html">This Is My first Question</a>
+        <a href="single_question.html">${post.title}</a>
     </h2>
     <div class="question-inner">
         <div class="clearfix"></div>
         <div class="question-desc">
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi adipiscing gravida odio, sit amet suscipit risus ultrices eu. Fusce viverra neque at purus laoreet consequat. Vivamus vulputate posuere nisl quis consequat. Donec congue commodo mi, sed commodo velit fringilla ac. Fusce placerat venenatis mi. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras ornare, dolor a aliquet rutrum, dolor turpis condimentum leo, a semper lacus purus in felis. Quisque blandit posuere turpis, eget auctor felis pharetra eu .</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi adipiscing gravida odio, sit amet suscipit risus ultrices eu. Fusce viverra neque at purus laoreet consequat. Vivamus vulputate posuere nisl quis consequat. Donec congue commodo mi, sed commodo velit fringilla ac. Fusce placerat venenatis mi. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras ornare, dolor a aliquet rutrum, dolor turpis condimentum leo, a semper lacus purus in felis. Quisque blandit posuere turpis, eget auctor felis pharetra eu .</p>
+            <p>${post.body}</p>
         </div>
+        <c:if test="${post.acceptedAnswerId != null}">
         <div class="question-details">
             <span class="question-answered question-answered-done"><i class="icon-ok"></i>solved</span>
         </div>
-        <span class="question-date"><i class="icon-time"></i>January 15 , 2014 at 10:00 pm</span>
-        <span class="question-category"><a href="#"><i class="icon-group"></i>Class: Advance Java</a></span>
-        <span class="question-category"><a href="#"><i class="icon-user"></i>Teacher: Mr.Nguyen</a></span>
+        </c:if>
+        <span class="question-date"><i class="icon-time"></i>${post.lastEditedDate}</span>
+        <span class="question-category"><a href="#"><i class="icon-group"></i>Class: ${post.ownerClassId.classroomName}</a></span>
+        <span class="question-category"><a href="#"><i class="icon-user"></i>Teacher: ${post.ownerClassId.ownerUserId.displayName}</a></span>
         <div class="clearfix"></div>
     </div>
 </article>
 
 <div class="share-tags page-content">
     <div class="question-tags"><i class="icon-tags"></i>
-        <a href="#">wordpress</a>, <a href="#">question</a>, <a href="#">developer</a>
+        <c:forEach var="tag" items="${post.tagPostList}">
+        <a href="#">${tag.tagId.tagName},</a>
+        </c:forEach>
     </div>
     <div class="clearfix"></div>
 </div><!-- End share-tags -->
@@ -262,7 +266,7 @@
                 <div class="author-img">
                     <a href="#"><img width="60" height="60" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" alt=""></a>
                 </div>
-                <h6><a href="#">Mr. Thang</a></h6>
+                <h6><a href="#">${post.ownerUserId.displayName}</a></h6>
             </li>
         </ul>
     </div>
@@ -359,6 +363,7 @@
     stompClient.connect("guest", "guest", connectCallback, errorCallback);
 
     $(document).ready(function() {
+        MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
         $('#submit').click(function(e){
             e.preventDefault();
             var detail = CKEDITOR.instances['question-details'].getData()

@@ -2,6 +2,7 @@ package com.qaproject.entity;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -129,6 +130,9 @@ public class User {
     }
 
     public List<Classroom> getClassroomList() {
+        if(classroomList==null) {
+            classroomList = new ArrayList<Classroom>();
+        }
         return classroomList;
     }
 
@@ -137,6 +141,9 @@ public class User {
     }
 
     public List<Post> getPostList() {
+        if(postList==null) {
+            postList = new ArrayList<Post>();
+        }
         return postList;
     }
 
@@ -145,6 +152,9 @@ public class User {
     }
 
     public List<Library> getLibraryList() {
+        if(libraryList==null) {
+            libraryList = new ArrayList<Library>();
+        }
         return libraryList;
     }
 
@@ -153,6 +163,9 @@ public class User {
     }
 
     public List<Notification> getNotificationSender() {
+        if(notificationSender==null) {
+            notificationSender = new ArrayList<Notification>();
+        }
         return notificationSender;
     }
 
@@ -161,6 +174,9 @@ public class User {
     }
 
     public List<Notification> getNotificationReceiver() {
+        if(notificationReceiver==null) {
+            notificationReceiver = new ArrayList<Notification>();
+        }
         return notificationReceiver;
     }
 
@@ -169,6 +185,9 @@ public class User {
     }
 
     public List<ClassroomUser> getClassroomUserList() {
+        if(classroomUserList==null) {
+            classroomUserList = new ArrayList<ClassroomUser>();
+        }
         return classroomUserList;
     }
 
@@ -177,6 +196,9 @@ public class User {
     }
 
     public List<PostInvitation> getPostInvitationList() {
+        if(postInvitationList==null) {
+            postInvitationList = new ArrayList<PostInvitation>();
+        }
         return postInvitationList;
     }
 
@@ -185,6 +207,9 @@ public class User {
     }
 
     public List<Follower> getListTeacherFollow() {
+        if(ListTeacherFollow==null) {
+            ListTeacherFollow = new ArrayList<Follower>();
+        }
         return ListTeacherFollow;
     }
 
@@ -193,6 +218,9 @@ public class User {
     }
 
     public List<Follower> getListFollower() {
+        if(ListFollower==null) {
+            ListFollower = new ArrayList<Follower>();
+        }
         return ListFollower;
     }
 
@@ -217,6 +245,9 @@ public class User {
     }
 
     public List<TagUser> getTagUserList() {
+        if(tagUserList==null) {
+            tagUserList = new ArrayList<TagUser>();
+        }
         return tagUserList;
     }
 

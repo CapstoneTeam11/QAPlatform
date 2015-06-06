@@ -2,6 +2,7 @@ package com.qaproject.entity;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -125,10 +126,16 @@ public class Post {
     }
 
     public List<TagPost> getTagPostList() {
+        if(tagPostList==null) {
+            tagPostList = new ArrayList<TagPost>();
+        }
         return tagPostList;
     }
 
     public List<PostInvitation> getPostInvitationList() {
+        if(postInvitationList==null) {
+            postInvitationList = new ArrayList<PostInvitation>();
+        }
         return postInvitationList;
     }
 
