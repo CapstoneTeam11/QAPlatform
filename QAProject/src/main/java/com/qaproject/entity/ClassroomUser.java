@@ -18,6 +18,10 @@ public class ClassroomUser {
     @JoinColumn(name = "ClassroomId", referencedColumnName = "Id")
     @ManyToOne(optional = false)
     private Classroom classroomId;
+    @Column(name = "Type")
+    private Integer type;
+    @Column(name = "Approval")
+    private Integer approval;
 
     public ClassroomUser() {
     }
@@ -48,6 +52,22 @@ public class ClassroomUser {
 
     public void setClassroomId(Classroom classroomId) {
         this.classroomId = classroomId;
+    }
+
+    public Integer getApproval() {
+        return approval;
+    }
+
+    public void setApproval(Integer approval) {
+        this.approval = approval;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 
     @Override

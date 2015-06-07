@@ -124,7 +124,7 @@
         </div>
     </div>
     <div class="panel-pop" id="addMaterial">
-        <h2>Create folder<i class="icon-remove"></i></h2>
+        <h2>Upload Material<i class="icon-remove"></i></h2>
         <div class="form-style form-style-3">
             <form method="post" action="/folder/create" enctype="multipart/form-data">
                 <div class="form-inputs clearfix">
