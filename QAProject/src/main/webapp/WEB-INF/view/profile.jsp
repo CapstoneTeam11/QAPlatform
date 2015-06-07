@@ -41,6 +41,8 @@
 
     <!-- Favicons -->
     <link rel="shortcut icon" href="http://2code.info/demo/html/ask-me/images/favicon.ico">
+    <!-- Toast message Style -->
+    <link rel="stylesheet" href="/resource/assets/css/jquery.toastmessage.css">
 
 </head>
 
@@ -154,7 +156,7 @@
                     <div class="user-profile-img"><img width="60" height="60" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" alt="admin"></div>
                     <div class="ul_list ul_list-icon-ok about-user">
                         <ul>
-                            <li><i class="icon-user"></i>Teacher : <a target="_blank" href="http://2code.info/">Follow</a></li>
+                            <li id="follow"><i class="icon-user"></i>Teacher :<a href="javascript:followTeacher(1);">Follow</a></li>
                             <li><i class="icon-book"></i>Professional : <span>Information Technology</span></li>
                             <li><i class="icon-plus"></i>Registerd : <span>Jan 10, 2014</span></li>
                         </ul>
@@ -361,8 +363,46 @@
 <script src="/resource/assets/js/tags.js"></script>
 <script src="/resource/assets/js/jquery.bxslider.min.js"></script>
 <script src="/resource/assets/js/custom.js"></script>
+<script src="/resource/assets/js/jquery.toastmessage.js"></script>
 
 <!-- End js -->
+<script>
+    function followTeacher(id){
+        var url = "/followTeacher/";
+        $.ajax({
+            type: "GET",
+            url: url,
+            data: "teacherId="+id,
+            success: function(data){
+                if(data == "OK"){
+                    $().toastmessage('showSuccessToast', 'Follow teachcer!');
+                    $("#follow").html("<i class='icon-user'></i>Teacher : <a href='javascript:unfollowTeacher(1);'>Unfollow</a>");
+                }else{
+                    $().toastmessage('showErrorToast', "Error! Please try again late!");
+                }
+
+            }
+        });
+    }
+    function unfollowTeacher(id){
+        var url = "/unfollowTeacher/";
+        $.ajax({
+            type: "GET",
+            url: url,
+            data: "teacherId="+id,
+            success: function(data){
+                if(data == "OK"){
+                    $().toastmessage('showSuccessToast', 'Unfollow teacher!');
+//                    $("#follow").html("<a href='javascript:followTeacher(1);'>Follow</a>");
+                    $("#follow").html("<i class='icon-user'></i>Teacher : <a href='javascript:followTeacher(1);'>Follow</a>");
+                }else{
+                    $().toastmessage('showErrorToast', "Error! Please try again late!");
+                }
+
+            }
+        });
+    }
+</script>
 
 </body>
 </html>

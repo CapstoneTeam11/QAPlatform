@@ -200,7 +200,7 @@
                                 </p>
                             </div>
                             <p class="form-submit">
-                                <a href="javascript:editProfile();"  class="button color small login-submit submit">Update</a>
+                                <a href="javascript:editProfile();"  class="button color small login-submit submit text-center">Update</a>
                             </p>
                         </form>
                     </div>
