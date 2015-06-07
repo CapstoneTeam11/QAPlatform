@@ -13,7 +13,9 @@ import java.util.List;
 @Repository
 public interface UserDao {
     public User find(Integer id);
+    public User find(String name);
     List<User> findAll();
+    public List<User> findAllStudentNotInClass(int classId, String username);
     @Transactional(propagation = Propagation.REQUIRED)
     public void persist(User entity);
     @Transactional(propagation = Propagation.REQUIRED)
