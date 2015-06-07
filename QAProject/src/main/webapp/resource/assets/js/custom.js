@@ -787,7 +787,16 @@ jQuery(document).ready(function($) {
         wrap_pop();
         return false;
     });
-
+    /**
+     * Upload material
+     */
+    jQuery("#addMaterial-click").click(function () {
+        jQuery(".panel-pop").animate({"top":"-100%"},10).hide();
+        jQuery("#addMaterial").show().animate({"top":"50%"},500);
+        jQuery("body").prepend("<div class='wrap-pop'></div>");
+        wrap_pop();
+        return false;
+    });
     /* Add to folder */
 
     jQuery("#add-to-folder-click").click(function () {

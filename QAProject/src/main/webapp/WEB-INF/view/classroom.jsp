@@ -119,7 +119,27 @@
     <div class="col-md-6 col-sm-6">
         <a href="/post/create/1" class="button medium green-button" style="float: right"><i class="icon-pencil"></i> Create post</a>
     </div>
+        <div class="col-md-6 col-sm-6">
+            <a href="/post/create/1" class="button medium green-button" style="float: right" id="addMaterial-click"><i class="icon-pencil"></i> Upload material</a>
+        </div>
     </div>
+    <div class="panel-pop" id="addMaterial">
+        <h2>Create folder<i class="icon-remove"></i></h2>
+        <div class="form-style form-style-3">
+            <form method="post" action="/folder/create" enctype="multipart/form-data">
+                <div class="form-inputs clearfix">
+                    <p>
+                        <label class="required">Folder name<span></span></label>
+                        <input type="text" name="name">
+                    </p>
+                </div>
+                <p class="form-submit">
+                    <input type="submit" value="Create new folder" class="button color small submit">
+                </p>
+            </form>
+            <div class="clearfix"></div>
+        </div>
+    </div><!-- End create folder -->
 
 <div class="tabs-warp question-tab">
 <ul class="tabs">
