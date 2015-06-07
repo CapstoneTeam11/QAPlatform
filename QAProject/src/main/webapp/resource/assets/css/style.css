@@ -2716,7 +2716,7 @@ span.date i,span.comment i {
 	width: 80%;
 	display: inline-block;
 }
-#question-title,#question-details,.taglist .input input {
+#question-title,#question-details,#question_tags,.taglist .input input {
 	float: left;
 	width: 82%;
 }

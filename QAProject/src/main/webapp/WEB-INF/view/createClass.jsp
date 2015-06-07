@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,164 +43,176 @@
 
 <div id="wrap">
 
-<div class="panel-pop" id="signup">
-    <h2>Register Now<i class="icon-remove"></i></h2>
-    <div class="form-style form-style-3">
-        <form>
-            <div class="form-inputs clearfix">
-                <p>
-                    <label class="required">Username<span>*</span></label>
-                    <input type="text">
+    <div class="panel-pop" id="signup">
+        <h2>Register Now<i class="icon-remove"></i></h2>
+        <div class="form-style form-style-3">
+            <form>
+                <div class="form-inputs clearfix">
+                    <p>
+                        <label class="required">Username<span>*</span></label>
+                        <input type="text">
+                    </p>
+                    <p>
+                        <label class="required">E-Mail<span>*</span></label>
+                        <input type="email">
+                    </p>
+                    <p>
+                        <label class="required">Password<span>*</span></label>
+                        <input type="password" value="">
+                    </p>
+                    <p>
+                        <label class="required">Confirm Password<span>*</span></label>
+                        <input type="password" value="">
+                    </p>
+                </div>
+                <p class="form-submit">
+                    <input type="submit" value="Signup" class="button color small submit">
                 </p>
-                <p>
-                    <label class="required">E-Mail<span>*</span></label>
-                    <input type="email">
-                </p>
-                <p>
-                    <label class="required">Password<span>*</span></label>
-                    <input type="password" value="">
-                </p>
-                <p>
-                    <label class="required">Confirm Password<span>*</span></label>
-                    <input type="password" value="">
-                </p>
-            </div>
-            <p class="form-submit">
-                <input type="submit" value="Signup" class="button color small submit">
-            </p>
-        </form>
-    </div>
-</div><!-- End signup -->
+            </form>
+        </div>
+    </div><!-- End signup -->
 
-<div class="panel-pop" id="lost-password">
-    <h2>Lost Password<i class="icon-remove"></i></h2>
-    <div class="form-style form-style-3">
-        <p>Lost your password? Please enter your username and email address. You will receive a link to create a new password via email.</p>
-        <form>
-            <div class="form-inputs clearfix">
-                <p>
-                    <label class="required">Username<span>*</span></label>
-                    <input type="text">
+    <div class="panel-pop" id="lost-password">
+        <h2>Lost Password<i class="icon-remove"></i></h2>
+        <div class="form-style form-style-3">
+            <p>Lost your password? Please enter your username and email address. You will receive a link to create a new password via email.</p>
+            <form>
+                <div class="form-inputs clearfix">
+                    <p>
+                        <label class="required">Username<span>*</span></label>
+                        <input type="text">
+                    </p>
+                    <p>
+                        <label class="required">E-Mail<span>*</span></label>
+                        <input type="email">
+                    </p>
+                </div>
+                <p class="form-submit">
+                    <input type="submit" value="Reset" class="button color small submit">
                 </p>
-                <p>
-                    <label class="required">E-Mail<span>*</span></label>
-                    <input type="email">
-                </p>
-            </div>
-            <p class="form-submit">
-                <input type="submit" value="Reset" class="button color small submit">
-            </p>
-        </form>
-        <div class="clearfix"></div>
-    </div>
-</div><!-- End lost-password -->
+            </form>
+            <div class="clearfix"></div>
+        </div>
+    </div><!-- End lost-password -->
 
 
-<%@include file="header.jsp" %>
+    <%@include file="header.jsp" %>
 
-<div class="breadcrumbs">
-    <section class="container" style="height:70px; display: flex; align-items: center">
+    <div class="breadcrumbs">
+        <section class="container" style="height:70px; display: flex; align-items: center">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Create new class</h3>
+                </div>
+            </div><!-- End row -->
+        </section><!-- End container -->
+    </div><!-- End breadcrumbs -->
+
+    <section class="container main-content page-left-sidebar">
         <div class="row">
-            <div class="col-md-12">
-                <h3>Create new class</h3>
-            </div>
-        </div><!-- End row -->
-    </section><!-- End container -->
-</div><!-- End breadcrumbs -->
+            <div class="col-md-9">
 
-<section class="container main-content page-left-sidebar">
-    <div class="row">
-        <div class="col-md-9">
+                <div class="page-content ask-question">
+                    <div class="boxedtitle page-title"><h2>Create class</h2></div>
 
-            <div class="page-content ask-question">
-                <div class="boxedtitle page-title"><h2>Create class</h2></div>
+                    <div class="form-style form-style-3" id="question-submit">
+                        <form>
+                            <div class="form-inputs clearfix">
+                                <p>
+                                    <label class="required">Class name<span>*</span></label>
+                                    <input type="text" id="question-title">
+                                    <span class="form-description">Please choose an appropriate title for the question to answer it even easier .</span>
+                                </p>
+                                <p>
+                                    <label>Tags</label>
+                                    <input type="text" class="input" name="question_tags" id="question_tags" data-seperator=",">
+                                    <span class="form-description">Please choose  suitable Keywords Ex : <span class="color">question , poll</span> .</span>
+                                </p>
 
-                <div class="form-style form-style-3" id="question-submit">
-                    <form>
-                        <div class="form-inputs clearfix">
-                            <p>
-                                <label class="required">Class name<span>*</span></label>
-                                <input type="text" id="question-title">
-                                <span class="form-description">Please choose an appropriate title for the question to answer it even easier .</span>
-                            </p>
-                            <p>
-                                <label>Tags</label>
-                                <input type="text" class="input" name="question_tags" id="question_tags" data-seperator=",">
-                                <span class="form-description">Please choose  suitable Keywords Ex : <span class="color">question , poll</span> .</span>
-                            </p>
-                            <p>
-                                <label class="required">Professional<span>*</span></label>
+                                <div style="display: flex;height: 42px;">
+                                    <p style="width: 18% !important;">
+                                        <label class="required">Tag<span>*</span></label>
+                                    </p>
+
+                                    <div style="width: 82%">
+                                        <input type="text" class="input" name="tag" id="tagsuggest"/>
+                                    </div>
+                                    <div id="hiddenTag"></div>
+                                </div>
+                                <p>
+                                    <label class="required">Know about<span>*</span></label>
 									<span class="styled-select">
-										<select>
+										<select id="professional">
                                             <option value="">Select a type</option>
-                                            <option value="1">Question</option>
-                                            <option value="2">Article</option>
+                                            <c:forEach var="category" items="${categories}">
+                                                <option value="${category.id}">${category.categoryName}</option>
+                                            </c:forEach>
                                         </select>
 									</span>
-                                <span class="form-description">Please choose the appropriate section so easily search for your question .</span>
-                            </p>
+                                    <span class="form-description">Please choose the appropriate section so easily search for your question .</span>
+                                </p>
 
-                        </div>
-                        <div id="form-textarea">
-                            <p>
-                                <label class="required">Class's Description<span>*</span></label>
-                                <textarea id="question-details" aria-required="true" cols="58" rows="8"></textarea>
-                                <span class="form-description">Type the description thoroughly and in detail .</span>
+                            </div>
+                            <div id="form-textarea">
+                                <p>
+                                    <label class="required">Class's Description<span>*</span></label>
+                                    <textarea id="class-description" aria-required="true" cols="58" rows="8"></textarea>
+                                    <span class="form-description">Type the description thoroughly and in detail .</span>
+                                </p>
+                            </div>
+                            <p class="form-submit">
+                                <a href="javascript:createClass();" id="publish-question" class="button color small submit">Create Your Class</a>
                             </p>
-                        </div>
-                        <p class="form-submit">
-                            <input type="submit" id="publish-question" value="Create Your Class" class="button color small submit">
-                        </p>
-                    </form>
+                        </form>
+                    </div>
+                </div><!-- End page-content -->
+            </div><!-- End main -->
+            <aside class="col-md-3 sidebar">
+                <div class="widget widget_highest_points">
+                    <h3 class="widget_title">Class Owner</h3>
+                    <ul>
+                        <li>
+                            <div class="author-img">
+                                <a href="#"><img width="60" height="60" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" alt=""></a>
+                            </div>
+                            <h6><a href="#">Mr. Thang</a></h6>
+                            <span class="comment">This is short instroduction of this teacher</span>
+                        </li>
+                    </ul>
                 </div>
-            </div><!-- End page-content -->
-        </div><!-- End main -->
-        <aside class="col-md-3 sidebar">
-            <div class="widget widget_highest_points">
-                <h3 class="widget_title">Class Owner</h3>
-                <ul>
-                    <li>
-                        <div class="author-img">
-                            <a href="#"><img width="60" height="60" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" alt=""></a>
-                        </div>
-                        <h6><a href="#">Mr. Thang</a></h6>
-                        <span class="comment">This is short instroduction of this teacher</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="widget widget_login">
-                <h3 class="widget_title">Invite someone</h3>
-                <div class="form-style form-style-2">
-                    <form>
-                        <div class="form-inputs clearfix">
-                            <p class="login-text">
-                                <input type="text" aria-required="true" value="Enter username..." onfocus="if(this.value=='Enter username...')this.value='';"
-                                       onblur="if(this.value=='')this.value='Enter username...';" style="width: 100%">
-                                <i class="icon-user"></i>
-                            </p>
-                        </div>
-                    </form>
-                    <div class="clearfix"></div>
+                <div class="widget widget_login">
+                    <h3 class="widget_title">Invite student</h3>
+                    <div class="form-style form-style-2">
+                        <form>
+                            <div class="form-inputs clearfix">
+                                <p class="login-text">
+                                    <input type="text" aria-required="true" value="Enter username..." onfocus="if(this.value=='Enter username...')this.value='';"
+                                           onblur="if(this.value=='')this.value='Enter username...';" style="width: 100%">
+                                    <i class="icon-user"></i>
+                                </p>
+                            </div>
+                        </form>
+                        <div class="clearfix"></div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="widget widget_tag_cloud">
-                <h3 class="widget_title">Tags</h3>
-                <a href="#">projects</a>
-                <a href="#">Portfolio</a>
-                <a href="#">Wordpress</a>
-                <a href="#">Html</a>
-                <a href="#">Css</a>
-                <a href="#">jQuery</a>
-                <a href="#">2code</a>
-                <a href="#">vbegy</a>
-            </div>
+                <div class="widget widget_tag_cloud">
+                    <h3 class="widget_title">Tags</h3>
+                    <a href="#">projects</a>
+                    <a href="#">Portfolio</a>
+                    <a href="#">Wordpress</a>
+                    <a href="#">Html</a>
+                    <a href="#">Css</a>
+                    <a href="#">jQuery</a>
+                    <a href="#">2code</a>
+                    <a href="#">vbegy</a>
+                </div>
 
-        </aside><!-- End sidebar -->
-    </div><!-- End row -->
-</section><!-- End container -->
+            </aside><!-- End sidebar -->
+        </div><!-- End row -->
+    </section><!-- End container -->
 
-<%@include file="footer.jsp" %>
+    <%@include file="footer.jsp" %>
 </div><!-- End wrap -->
 <!-- End wrap -->
 <div class="go-up"><i class="icon-chevron-up"></i></div>
@@ -225,6 +238,33 @@
 <script src="/resource/assets/js/jquery.bxslider.min.js"></script>
 <script src="/resource/assets/js/custom.js"></script>
 <!-- End js -->
+//Create Class
 
+<script>
+    function createClass(){
+        var classname = $("#question-title").val();
+        var tag = $("#tag").val();
+        var cate = $("#professional option:selected").val();
+        var classDescription = $("#class-description").val();
+        var classroom = {classroomName: classname,classroomDescription: classDescription, categoryId: 1, tag: [{id: 1}, {id: 2}]};
+        var li = $(".taglist li.tag");
+        var tagList = "";
+        for(i=0; i< li.length; i++){
+            tagList+=($($(li[i]).find("span")[0]).text());
+            tagList+=",";
+        }
+        var url = "/createClass1";
+        $.ajax({
+            type: "GET",
+            url: url,
+            data: "classroomName="+ classname + "&classroomDescription="+classDescription+"&categoryId="+cate+"&tag="+tagList,
+            success: function () {
+                window.location.href = "/getAllPost";
+            },
+            contentType: "application/json"
+        });
+
+    }
+</script>
 </body>
 </html>

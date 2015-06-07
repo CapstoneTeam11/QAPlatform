@@ -64,4 +64,11 @@ public class UserController {
     public String a() {
         return "a";
     }
+    @RequestMapping(value = "/getProfile",method = RequestMethod.GET)
+    public String getProfile(Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        User user = (User)session.getAttribute("user");
+        model.addAttribute("userProfile", user);
+        return "profile";
+    }
 }
