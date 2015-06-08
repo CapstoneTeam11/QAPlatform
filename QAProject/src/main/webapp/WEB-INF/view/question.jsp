@@ -123,9 +123,7 @@
 <div class="row">
 <div class="col-md-9">
 <article class="question single-question question-type-normal">
-    <h2 class="post-title">
-        ${post.title}
-    </h2>
+    <h2 class="post-title">${post.title}</h2>
     <div class="question-inner">
         <div class="clearfix"></div>
         <div class="question-desc">
