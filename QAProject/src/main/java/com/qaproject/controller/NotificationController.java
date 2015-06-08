@@ -18,8 +18,4 @@ public class NotificationController {
     public String createPost(ModelMap model) {
         return "createPost";
     }
-    @RequestMapping(value = "/createClass",method = RequestMethod.GET)
-    public String createClass(ModelMap model) {
-        return "createClass";
-    }
 }

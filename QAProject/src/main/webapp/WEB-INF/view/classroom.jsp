@@ -34,11 +34,15 @@
     <link rel="stylesheet" href="/resource/assets/css/bootstrap.min.css">
 
     <!-- Notification Style -->
-    <link rel="stylesheet" href="/resource/assets/css/notification.css">
+    <link rel="stylesheet" href="/resource/assets/css/notification.css">jquery.toastmessage.css
 
     <!-- Favicons -->
     <link rel="shortcut icon" href="http://2code.info/demo/html/ask-me/images/favicon.ico">
-
+    <!-- Toast message Style -->
+    <link rel="stylesheet" href="/resource/assets/css/jquery.toastmessage.css">
+    <!--TagInput-->
+    <link rel="stylesheet" href="/resource/assets/js/bootstrap-tagsinput.css">
+    <link rel="stylesheet" href="/resource/assets/css/tag.css">
 </head>
 
 <body>
@@ -308,17 +312,30 @@
                 <div class="clear"></div><span>Feb 22, 2014</span>
             </li>
         </ul>
-        <a href="#" class="button small color">Join</a>
+        <a href="javascript:joinClass(1)" class="button small color">Join</a>
     </div>
     <div class="widget widget_login">
         <h3 class="widget_title">Invite someone</h3>
         <div class="form-style form-style-2">
             <form>
+                <div style="display: flex;height: 42px;">
+                    <p style="width: 18% !important;">
+                        <label class="required">Tag<span>*</span></label>
+                    </p>
+
+                    <div style="width: 82%">
+                        <input type="text" class="input" name="tag" id="tagsuggest"/>
+                    </div>
+                    <div id="hiddenTag"></div>
+                </div>
                 <div class="form-inputs clearfix">
+                    <i class="icon-user"></i>
                     <p class="login-text">
-                        <input type="text" aria-required="true" value="Enter username..." onfocus="if(this.value=='Enter username...')this.value='';"
-                               onblur="if(this.value=='')this.value='Enter username...';" style="width: 100%">
-                        <i class="icon-user"></i>
+                        <input type="text" aria-required="true" placeholder="Enter username..." style="width: 80%" id="studentName" data-role="tagsinput">
+                        <a href="javascript:inviteStudent(1)" class="button small color" style="float: right;">Invite</a>
+                    </p>
+                    <p>
+
                     </p>
                 </div>
             </form>
@@ -380,8 +397,94 @@
 <script src="/resource/assets/js/tags.js"></script>
 <script src="/resource/assets/js/jquery.bxslider.min.js"></script>
 <script src="/resource/assets/js/custom.js"></script>
+<script src="/resource/assets/js/jquery.toastmessage.js"></script>
+<script src="/resource/assets/js/bootstrap-tagsinput.js"></script>
+<script src="/resource/assets/js/bootstrap-tagsinput.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.4/typeahead.bundle.min.js"></script>
 
 <!-- End js -->
+<script>
+    var studentNameList = [];
+    $(document).ready(function () {
+        makeTag(1);
 
+    });
+    function joinClass(id){
+        var url = "/requestJoinClass/"+id;
+        $.ajax({
+            type: "GET",
+            url: url,
+//            data: "username="+username+"&password="+password,
+            success: function(data){
+                if(data == "OK"){
+                    $().toastmessage('showSuccessToast', 'Join class request sent!');
+                }else{
+                    $().toastmessage('showErrorToast', "Join class request fail! Please try again late!");
+                }
+
+            }
+        });
+    }
+    function inviteStudent(id){
+        var url = "/inviteJoinClass/"+id;
+        var name = $("#studentName").val();
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: "studentName="+name,
+            success: function(data){
+                if(data == "OK"){
+                    $().toastmessage('showSuccessToast', 'Join class request sent!');
+                }else{
+                    $().toastmessage('showErrorToast', "Join class request fail! Please try again late!");
+                }
+            }
+        });
+    }
+    function getStudentList(id){
+        var url = "/findAllStudentNotInClass/"+id;
+        $.ajax({
+            type: "POST",
+            url: url,
+//            data: "studentName="+name,
+            success: function(data, callback){
+                if(data != null && data.length >0){
+                    makeTag(data)
+                }else{
+                    $().toastmessage('showErrorToast', "Get student name fail! Please try again late!");
+                }
+            }
+        });
+    }
+    function makeTag(studentNameList){
+        var tag = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: 'http://localhost:8080/findAllStudentNotInClass/1/%QUERY'
+            }
+        });
+        tag.initialize();
+        elt = $('#tagsuggest');
+        var hiddenTag = $('#hiddenTag');
+        elt.tagsinput({
+            itemValue: 'id',
+            itemText: 'name',
+            typeaheadjs: {
+                name: 'tag',
+                displayKey: 'name',
+                source: tag.ttAdapter()
+            }
+        });
+        elt.on('itemAdded', function (event) {
+            var idTag = event.item.id;
+            hiddenTag.append("<input type='hidden' name='tagId' value=" + idTag + " id=tag" + idTag + ">");
+        });
+        elt.on('itemRemoved', function (event) {
+            var tagId = "#tag" + event.item.id;
+            $(tagId).remove();
+        });
+    }
+</script>
 </body>
 </html>

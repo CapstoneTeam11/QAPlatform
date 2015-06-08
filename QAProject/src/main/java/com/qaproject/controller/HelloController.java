@@ -1,5 +1,7 @@
 package com.qaproject.controller;
 
+import com.qaproject.dao.impl.CategoryDaoImpl;
+import com.qaproject.entity.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -9,6 +11,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
+
+import java.util.List;
 
 /** **/
 @Controller
@@ -28,9 +32,12 @@ public class HelloController {
 //    public void addStock(Post post) throws Exception {
 //        updateAddUI(post);
 //    }
-
+    @Autowired
+    CategoryDaoImpl categoryDao;
 	@RequestMapping(value = "/",method = RequestMethod.GET)
      public String printWelcome(ModelMap model) {
+        List<Category> categoryList = categoryDao.findAll();
+        model.addAttribute("categories",categoryList);
         return "welcome";
     }
     @RequestMapping(value = "/homepage",method = RequestMethod.GET)

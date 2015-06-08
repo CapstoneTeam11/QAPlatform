@@ -1,6 +1,7 @@
 package com.qaproject.controller;
 
 import com.qaproject.dao.RoleDao;
+import com.qaproject.dao.impl.CategoryDaoImpl;
 import com.qaproject.dao.impl.UserDaoImpl;
 import com.qaproject.dto.UserWithRoleDto;
 import com.qaproject.entity.Category;
@@ -15,8 +16,11 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import javax.jws.soap.SOAPBinding;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,7 +32,33 @@ public class UserController {
     UserDaoImpl userDao;
     @Autowired
     RoleDao roleDao;
-
+    @Autowired
+    CategoryDaoImpl categoryDao;
+    @RequestMapping(value = "/editProfile",method = RequestMethod.GET)
+    public String editProfile(Model model, HttpServletRequest request) {
+        HttpSession session =  request.getSession();
+        User user = (User) session.getAttribute("user");
+        List<Category> categoryList = categoryDao.findAll();
+        model.addAttribute("categories",categoryList);
+        model.addAttribute("user", user);
+        return "editProfile";
+    }
+    @RequestMapping(value = "/editProfileData",method = RequestMethod.POST)
+    @ResponseBody
+    public String editProfileData( @RequestParam("displayName") String displayName, @RequestParam("cate") String cate,
+                                   @RequestParam("aboutMe") String aboutMe, Model model, HttpServletRequest request) {
+        HttpSession session =  request.getSession();
+        User user = (User) session.getAttribute("user");
+        user.setCategoryId(new Category(Integer.parseInt(cate)));
+        user.setAboutMe(aboutMe);
+        user.setDisplayName(displayName);
+        try {
+            userDao.merge(user);
+        } catch (Exception e){
+            return "NG";
+        }
+        return "OK";
+    }
     @RequestMapping(value = "/register",method = RequestMethod.POST)
     public String register(@ModelAttribute("userWithRole")UserWithRoleDto userRole) {
         System.out.print(userRole.toString());
@@ -60,8 +90,30 @@ public class UserController {
             return "NG";
         }
     }
-    @RequestMapping(value = "/a",method = RequestMethod.GET)
-    public String a() {
-        return "a";
+
+    /**
+     *
+     * @param classroomId: class id
+     * @param username: student name to suggest email
+     * @param response
+     * @return list all student not in class
+     */
+    @RequestMapping(value = "/findAllStudentNotInClass/{id}/{username}",method = RequestMethod.POST)
+    @ResponseBody
+    public List<String> findAllStudentNotInClass(@PathVariable("id") String classroomId,@PathVariable("username") String username, HttpServletResponse response) {
+        List<User> userList = userDao.findAllStudentNotInClass(Integer.parseInt(classroomId), username);
+        List<String> userNameList = new ArrayList<String>();
+        for (int i = 0; i < userList.size(); i++) {
+            userNameList.add(userList.get(i).getEmail());
+        }
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        return userNameList;
+    }
+    @RequestMapping(value = "/getProfile",method = RequestMethod.GET)
+    public String getProfile(Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        User user = (User)session.getAttribute("user");
+        model.addAttribute("userProfile", user);
+        return "profile";
     }
 }
