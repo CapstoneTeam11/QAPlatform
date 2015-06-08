@@ -34,6 +34,8 @@
 
     <!-- Favicons -->
     <link rel="shortcut icon" href="http://2code.info/demo/html/ask-me/images/favicon.ico">
+    <link rel="stylesheet" href="/resource/assets/js/bootstrap-tagsinput.css">
+    <link rel="stylesheet" href="/resource/assets/css/tag.css">
 
 </head>
 
@@ -123,11 +125,11 @@
                                     <input type="text" id="question-title">
                                     <span class="form-description">Please choose an appropriate title for the question to answer it even easier .</span>
                                 </p>
-                                <p>
-                                    <label>Tags</label>
-                                    <input type="text" class="input" name="question_tags" id="question_tags" data-seperator=",">
-                                    <span class="form-description">Please choose  suitable Keywords Ex : <span class="color">question , poll</span> .</span>
-                                </p>
+                                <%--<p>--%>
+                                    <%--<label>Tags</label>--%>
+                                    <%--<input type="text" class="input" name="question_tags" id="question_tags" data-seperator=",">--%>
+                                    <%--<span class="form-description">Please choose  suitable Keywords Ex : <span class="color">question , poll</span> .</span>--%>
+                                <%--</p>--%>
 
                                 <div style="display: flex;height: 42px;">
                                     <p style="width: 18% !important;">
@@ -138,6 +140,16 @@
                                         <input type="text" class="input" name="tag" id="tagsuggest"/>
                                     </div>
                                     <div id="hiddenTag"></div>
+                                </div>
+                                <div style="display: flex;height: 42px;">
+                                    <p style="width: 18% !important;">
+                                        <label class="required">Student<span>*</span></label>
+                                    </p>
+
+                                    <div style="width: 82%">
+                                        <input type="text" class="input" name="tag" id="tagsuggest1"/>
+                                    </div>
+                                    <div id="hiddenTag1"></div>
                                 </div>
                                 <p>
                                     <label class="required">Know about<span>*</span></label>
@@ -161,7 +173,7 @@
                                 </p>
                             </div>
                             <p class="form-submit">
-                                <a href="javascript:createClass();" id="publish-question" class="button color small submit">Create Your Class</a>
+                                <a href="javascript:createClass();" id="publish-question" class="button color small submit text-center">Create Your Class</a>
                             </p>
                         </form>
                     </div>
@@ -190,6 +202,7 @@
                                            onblur="if(this.value=='')this.value='Enter username...';" style="width: 100%">
                                     <i class="icon-user"></i>
                                 </p>
+
                             </div>
                         </form>
                         <div class="clearfix"></div>
@@ -237,29 +250,125 @@
 <script src="/resource/assets/js/tags.js"></script>
 <script src="/resource/assets/js/jquery.bxslider.min.js"></script>
 <script src="/resource/assets/js/custom.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.4/typeahead.bundle.min.js"></script>
+<script src="/resource/assets/js/bootstrap-tagsinput.js"></script>
+<script src="/resource/assets/js/bootstrap-tagsinput.min.js"></script>
+<script src="/resource/assets/js/bootstrapValidator.js"></script>
+<script src="/resource/assets/js/validator.js"></script>
 <!-- End js -->
 //Create Class
 
 <script>
+    $(document).ready(function () {
+        var tag = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: 'http://localhost:8080/tag/%QUERY'
+            }
+        });
+        tag.initialize();
+        elt = $('#tagsuggest');
+        var hiddenTag = $('#hiddenTag');
+        elt.tagsinput({
+            itemValue: 'id',
+            itemText: 'name',
+            typeaheadjs: {
+                name: 'tag',
+                displayKey: 'name',
+                source: tag.ttAdapter()
+            }
+        });
+        elt.on('itemAdded', function (event) {
+            var idTag = event.item.id;
+            hiddenTag.append("<input type='hidden' name='tagId' value=" + idTag + " id=tag" + idTag + ">");
+        });
+        elt.on('itemRemoved', function (event) {
+            var tagId = "#tag" + event.item.id;
+            $(tagId).remove();
+        });
+        ///////////////////////////////////////////////
+        var student = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: 'http://localhost:8080/findAllStudent/%QUERY'
+            }
+        });
+        student.initialize();
+        var elt1 = $('#tagsuggest1');
+        var hiddenTag = $('#hiddenTag1');
+        elt1.tagsinput({
+            itemValue: 'studentId',
+            itemText: 'studentName',
+            typeaheadjs: {
+                name: 'student',
+                displayKey: 'studentName',
+                source: student.ttAdapter()
+            }
+        });
+        elt1.on('itemAdded', function (event) {
+            var studentId = event.item.id;
+            hiddenTag.append("<input type='hidden' name='tagId' value=" + studentId + " id=tag" + studentId + ">");
+        });
+        elt1.on('itemRemoved', function (event) {
+            var tagId = "#tag" + event.item.id;
+            $(tagId).remove();
+        });
+        ///////////////////////////////////////
+        var student1 = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: 'http://localhost:8080/findAllStudentNotInClass/3/%QUERY'
+            }
+        });
+        student1.initialize();
+        var elt2 = $('#tagsuggest2');
+        var hiddenTag = $('#hiddenTag2');
+        elt2.tagsinput({
+            itemValue: 'studentId',
+            itemText: 'studentName',
+            typeaheadjs: {
+                name: 'student',
+                displayKey: 'studentName',
+                source: student.ttAdapter()
+            }
+        });
+        elt2.on('itemAdded', function (event) {
+            var studentId = event.item.id;
+            hiddenTag.append("<input type='hidden' name='tagId' value=" + studentId + " id=tag" + studentId + ">");
+        });
+        elt2.on('itemRemoved', function (event) {
+            var tagId = "#tag" + event.item.id;
+            $(tagId).remove();
+        });
+    });
     function createClass(){
         var classname = $("#question-title").val();
         var tag = $("#tag").val();
         var cate = $("#professional option:selected").val();
         var classDescription = $("#class-description").val();
-        var classroom = {classroomName: classname,classroomDescription: classDescription, categoryId: 1, tag: [{id: 1}, {id: 2}]};
-        var li = $(".taglist li.tag");
-        var tagList = "";
-        for(i=0; i< li.length; i++){
-            tagList+=($($(li[i]).find("span")[0]).text());
-            tagList+=",";
-        }
+//        var classroom = {classroomName: classname,classroomDescription: classDescription, categoryId: 1, tag: [{id: 1}, {id: 2}]};
+//        var li = $(".taglist li.tag");
+        var tagList = $("#tagsuggest").val();
+        var student = $('#tagsuggest1').val();
+//        for(i=0; i< li.length; i++){
+//            tagList+=($($(li[i]).find("span")[0]).text());
+//            tagList+=",";
+//        }
         var url = "/createClass1";
         $.ajax({
             type: "GET",
             url: url,
-            data: "classroomName="+ classname + "&classroomDescription="+classDescription+"&categoryId="+cate+"&tag="+tagList,
-            success: function () {
-                window.location.href = "/getAllPost";
+            data: "classroomName="+ classname + "&classroomDescription="+classDescription+"&categoryId="+cate+"&tag="+tagList+"&studentList="+student,
+            success: function (data) {
+                if(data == "OK"){
+                    window.location.href = "/getAllPost";
+                }else{
+                    window.location.href = "/";
+                }
+
             },
             contentType: "application/json"
         });

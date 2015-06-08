@@ -158,15 +158,19 @@
                         <form>
                             <div class="form-inputs clearfix">
                                 <p>
-                                    <label class="col-md-3">Display Name</label>
-                                    <input type="text" style="width: 75% !important;" value="${user.displayName}" id="display-name">
+                                    <div class="form-group">
+                                        <label class="col-md-3">Display Name</label>
+                                        <div class="col-md-9">
+                                            <input type="text" style="width: 100% !important;" value="${user.displayName}" id="display-name">
+                                        </div>
+                                    </div>
                                 </p>
                                 <p>
-                                    <div class="row" style="margin-top: 10px;">
+
                                         <div class="form-group">
-                                            <label class="col-md-3 control-label">Know About<span>*</span></label>
+                                            <label class="col-md-3">Know About<span>*</span></label>
                                             <div class="col-md-9">
-                                                <select class="form-control" style="width: 82%;" id="cate">
+                                                <select class="form-control" style="width: 100%;" id="cate">
                                                     <option value="">Select a type</option>
                                                     <c:forEach var="category" items="${categories}">
                                                         <%--<c:if test="user.categoryId == category.id">--%>
@@ -177,26 +181,31 @@
 
                                                 </select>
                                             </div>
-                                        </div>
                                     </div>
                                 </p>
                             </div>
                             <div class="form-style form-style-2">
-                                <div class="user-profile-img"><img src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" alt="admin"></div>
+                                <div class="user-profile-img"><img src="${user.profileImageURL}" alt="admin"></div>
                                 <p class="user-profile-p">
                                     <label>Profile Picture</label>
-                                <div class="fileinputs">
-                                    <input type="file" class="file">
-                                    <div class="fakefile">
-                                        <button type="button" class="button small margin_0">Select file</button>
-                                        <span><i class="icon-arrow-up"></i>Browse</span>
+                                    <div class="col-md-9" style="  margin-left: 100px;">
+                                        <div class="fileinputs" style="width: 100%;">
+                                            <input type="file" class="file">
+                                            <div class="fakefile">
+                                                <button type="button" class="button small margin_0">Select file</button>
+                                                <span><i class="icon-arrow-up"></i>Browse</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
                                 <p></p>
                                 <div class="clearfix"></div>
                                 <p>
-                                    <label>About Yourself</label>
-                                    <textarea cols="58" rows="8" id="about-me">${user.aboutMe}</textarea>
+                                    <div class="form-group">
+                                        <label class="col-md-3">About Yourself</label>
+                                        <div class="col-md-9">
+                                            <textarea cols="58" rows="8" id="about-me">${user.aboutMe}</textarea>
+                                        </div>
+                                    </div>
                                 </p>
                             </div>
                             <p class="form-submit">

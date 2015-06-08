@@ -28,6 +28,9 @@ public class TeacherController {
                                 HttpServletRequest request) {
         HttpSession session =  request.getSession();
         User user = (User) session.getAttribute("user");
+        if(user == null){
+            return "NG";
+        }
         Follower follower = new Follower();
         follower.setFollowerId(user);
         follower.setTeacherId(new User(Integer.parseInt(teacherId)));
@@ -44,11 +47,12 @@ public class TeacherController {
                                 HttpServletRequest request) {
         HttpSession session =  request.getSession();
         User user = (User) session.getAttribute("user");
-        Follower follower = new Follower();
-        follower.setFollowerId(user);
-        follower.setTeacherId(new User(Integer.parseInt(teacherId)));
+        if(user == null){
+            return "NG";
+        }
+        Follower follower = followerDao.findByTeacherId(Integer.parseInt(teacherId), user);
         try {
-            followerDao.remove(follower);
+            followerDao.delete(follower);
         } catch (Exception e){
             return "NG";
         }

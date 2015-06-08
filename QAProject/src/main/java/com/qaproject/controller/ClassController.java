@@ -37,7 +37,12 @@ public class ClassController {
     @Autowired
     UserDaoImpl userDao;
     @RequestMapping(value = "/createClass",method = RequestMethod.GET)
-    public String createClass(ModelMap model) {
+    public String createClass(ModelMap model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        User user = (User)session.getAttribute("user");
+        if(user == null){
+            return "welcome";
+        }
         List<Category> categoryList = categoryDao.findAll();
         model.addAttribute("categories",categoryList);
         return "createClass";
@@ -45,34 +50,50 @@ public class ClassController {
     @RequestMapping(value= "/createClass1",method= RequestMethod.GET)
     @ResponseBody
     public String register(@RequestParam("classroomName") String classroomName,@RequestParam("classroomDescription") String classroomDescription,
-                           @RequestParam("categoryId") String categoryId, @RequestParam("tag") String tag, Model model) {
-
+                           @RequestParam("categoryId") String categoryId, @RequestParam("tag") String tag,
+                           @RequestParam("studentList") String studentList, Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        User user = (User)session.getAttribute("user");
+        if(user == null){
+            return "NG";
+        }
         Classroom room = new Classroom();
         Category category = new Category();
         category.setId(Integer.parseInt(categoryId));
         room.setCategoryId(category);
         room.setClassroomDescription(classroomDescription);
         room.setClassroomName(classroomName);
+        room.setOwnerUserId(user);
         classroomDao.persist(room);
         String[] tagList = tag.split(",");
         for (int i = 0; i<= tagList.length-1; i++){
             TagClassroom tagClassroom = new TagClassroom();
             tagClassroom.setClassroomId(room);
-            String tagName = tagList[i].trim();
-            Tag tagFind = tagDao.tagsByName(tagName).get(0);
-            if(tagFind == null){
-                Tag tagNew = new Tag();
-                tagNew.setTagName(tagName);
-                tagNew.setTagCount(0);
-                tagDao.persist(tagNew);
-                tagFind = tagNew;
-            }
+            String tagId = tagList[i].trim();
+            Tag tagFind = tagDao.find(Integer.parseInt(tagId));
+//            if(tagFind == null){
+//                Tag tagNew = new Tag();
+//                tagNew.setTagName(tagName);
+//                tagNew.setTagCount(0);
+//                tagDao.persist(tagNew);
+//                tagFind = tagNew;
+//            }
             tagClassroom.setTagId(tagFind);
             tagClassroomDao.persist(tagClassroom);
             tagFind.setTagCount(tagFind.getTagCount()+1);
             tagDao.merge(tagFind);
         }
-
+        String[] listStudentId = studentList.split(",");
+        boolean flag = false;
+        for (int i =0; i< listStudentId.length; i++){
+                ClassroomUser classroomUser = new ClassroomUser();
+                Classroom classroom = new Classroom();
+                classroom.setId(room.getId());
+                classroomUser.setClassroomId(classroom);
+                classroomUser.setUserId(new User(Integer.parseInt(listStudentId[i])));
+                classroomUser.setType(2);
+                classroomUserDao.persist(classroomUser);
+        }
         return "OK";
     }
     @RequestMapping(value= "/requestJoinClass/{id}",method= RequestMethod.GET)

@@ -3,6 +3,7 @@ package com.qaproject.controller;
 import com.qaproject.dao.RoleDao;
 import com.qaproject.dao.impl.CategoryDaoImpl;
 import com.qaproject.dao.impl.UserDaoImpl;
+import com.qaproject.dto.StudentDto;
 import com.qaproject.dto.UserWithRoleDto;
 import com.qaproject.entity.Category;
 import com.qaproject.entity.Role;
@@ -38,6 +39,9 @@ public class UserController {
     public String editProfile(Model model, HttpServletRequest request) {
         HttpSession session =  request.getSession();
         User user = (User) session.getAttribute("user");
+        if(user == null){
+            return "welcome";
+        }
         List<Category> categoryList = categoryDao.findAll();
         model.addAttribute("categories",categoryList);
         model.addAttribute("user", user);
@@ -49,6 +53,9 @@ public class UserController {
                                    @RequestParam("aboutMe") String aboutMe, Model model, HttpServletRequest request) {
         HttpSession session =  request.getSession();
         User user = (User) session.getAttribute("user");
+        if(user == null){
+            return "NG";
+        }
         user.setCategoryId(new Category(Integer.parseInt(cate)));
         user.setAboutMe(aboutMe);
         user.setDisplayName(displayName);
@@ -98,13 +105,24 @@ public class UserController {
      * @param response
      * @return list all student not in class
      */
-    @RequestMapping(value = "/findAllStudentNotInClass/{id}/{username}",method = RequestMethod.POST)
+    @RequestMapping(value = "/findAllStudentNotInClass/{id}/{username}",method = RequestMethod.GET)
     @ResponseBody
-    public List<String> findAllStudentNotInClass(@PathVariable("id") String classroomId,@PathVariable("username") String username, HttpServletResponse response) {
+    public List<StudentDto> findAllStudentNotInClass(@PathVariable("id") String classroomId,@PathVariable("username") String username, HttpServletResponse response) {
         List<User> userList = userDao.findAllStudentNotInClass(Integer.parseInt(classroomId), username);
-        List<String> userNameList = new ArrayList<String>();
+        List<StudentDto> userNameList = new ArrayList<StudentDto>();
         for (int i = 0; i < userList.size(); i++) {
-            userNameList.add(userList.get(i).getEmail());
+            userNameList.add(new StudentDto(userList.get(i).getEmail(), userList.get(i).getId()));
+        }
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        return userNameList;
+    }
+    @RequestMapping(value = "/findAllStudent/{username}",method = RequestMethod.GET)
+    @ResponseBody
+    public List<StudentDto> findAllStudent(@PathVariable("username") String username, HttpServletResponse response) {
+        List<User> userList = userDao.findAllStudent(username);
+        List<StudentDto> userNameList = new ArrayList<StudentDto>();
+        for (int i = 0; i < userList.size(); i++) {
+            userNameList.add(new StudentDto(userList.get(i).getEmail(), userList.get(i).getId()));
         }
         response.addHeader("Access-Control-Allow-Origin", "*");
         return userNameList;

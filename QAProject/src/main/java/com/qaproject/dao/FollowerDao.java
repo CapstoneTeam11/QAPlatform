@@ -1,6 +1,7 @@
 package com.qaproject.dao;
 
 import com.qaproject.entity.Follower;
+import com.qaproject.entity.User;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +14,7 @@ import java.util.List;
 @Repository
 public interface FollowerDao {
     public Follower find(Integer id);
+    public Follower findByTeacherId(Integer teacherId, User StudentId);
     List<Follower> findAll();
     @Transactional(propagation = Propagation.REQUIRED)
     public void persist(Follower entity);
@@ -20,4 +22,6 @@ public interface FollowerDao {
     public void merge(Follower entity);
     @Transactional(propagation = Propagation.REQUIRED)
     public void remove(Follower entity);
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void delete(Follower entity);
 }

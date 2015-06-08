@@ -39,6 +39,9 @@
     <!-- Notification Style -->
     <link rel="stylesheet" href="/resource/assets/css/notification.css">
 
+    <!-- Left Notification style -->
+    <link rel="stylesheet" href="/resource/assets/css/jquery.growl.css"/>
+
     <!-- Favicons -->
     <link rel="shortcut icon" href="http://2code.info/demo/html/ask-me/images/favicon.ico">
     <!-- Toast message Style -->
@@ -364,6 +367,7 @@
 <script src="/resource/assets/js/jquery.bxslider.min.js"></script>
 <script src="/resource/assets/js/custom.js"></script>
 <script src="/resource/assets/js/jquery.toastmessage.js"></script>
+<script src="/resource/assets/js/jquery.growl.js"></script>
 
 <!-- End js -->
 <script>
@@ -375,10 +379,15 @@
             data: "teacherId="+id,
             success: function(data){
                 if(data == "OK"){
-                    $().toastmessage('showSuccessToast', 'Follow teachcer!');
+//                    $().toastmessage('showSuccessToast', 'Follow teachcer!');
                     $("#follow").html("<i class='icon-user'></i>Teacher : <a href='javascript:unfollowTeacher(1);'>Unfollow</a>");
+
                 }else{
-                    $().toastmessage('showErrorToast', "Error! Please try again late!");
+                    $.growl.notice({
+                        message: '<div class="activity-item"> <i class="fa fa-heart text-success"></i> <div class="activity"> Error! Please try again late! </div> </div>',
+                        location: "tr"
+                    });
+//                    $().toastmessage('showErrorToast', "");
                 }
 
             }
@@ -392,11 +401,14 @@
             data: "teacherId="+id,
             success: function(data){
                 if(data == "OK"){
-                    $().toastmessage('showSuccessToast', 'Unfollow teacher!');
+//                    $().toastmessage('showSuccessToast', 'Unfollow teacher!');
 //                    $("#follow").html("<a href='javascript:followTeacher(1);'>Follow</a>");
                     $("#follow").html("<i class='icon-user'></i>Teacher : <a href='javascript:followTeacher(1);'>Follow</a>");
                 }else{
-                    $().toastmessage('showErrorToast', "Error! Please try again late!");
+                    $.growl.notice({
+                        message: '<div class="activity-item"> <i class="fa fa-heart text-success"></i> <div class="activity"> Error! Please try again late! </div> </div>',
+                        location: "tr"
+                    });
                 }
 
             }
