@@ -251,27 +251,25 @@
 </div>
 <div class="tab-inner-warp">
     <div class="tab-inner">
+        <div class="col-md-3 col-sm-6" style="float: right">
+            <a href="/post/create/1" class="button medium green-button" style="float: right;margin-top: -25px;margin-right: -10px;" id="addMaterial-click"><i class="icon-upload"></i> Upload</a>
+        </div>
         <table class="table table-hover">
             <tr>
                 <th>No</th>
                 <th>File name</th>
                 <th>Uploaded Date</th>
                 <th>File size</th>
-                <th>Add to folder</th>
-                <th></th>
+                <th>Save to</th>
             </tr>
             <tr>
                 <td>1</td>
                 <td>Introduction to AJ</td>
                 <td>22-05-2015</td>
                 <td>1 MB</td>
-                <td><a id="add-to-folder-click" href="#">Add</a></td>
-                <td><a href="/download/4" class="button small blue-button"><i class="icon-download"></i> Download</a></td>
+                <td><a id="add-to-folder-click" href="#">Folder</a> / <a href="/download/4"> Computer</a></td>
             </tr>
         </table>
-        <div class="col-md-3 col-sm-6" style="float: right">
-            <a href="/post/create/1" class="button medium green-button" style="float: right" id="addMaterial-click"><i class="icon-upload"></i> Upload</a>
-        </div>
     </div>
 </div>
 </div><!-- End page-content -->
