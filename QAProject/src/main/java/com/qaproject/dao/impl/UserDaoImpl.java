@@ -52,7 +52,7 @@ public class UserDaoImpl extends BaseDao<User,Integer> implements UserDao {
         Query query = null;
         query = entityManager.createQuery("select u from User u " +
                 "where u.id not in(select  cu.id from ClassroomUser  cu where cu.approval = 0 " +
-                "or cu.approval = null and cu.classroomId.id = :classId) and u.email like :username and u.roleId.id = 1", User.class);
+                "or cu.approval = null and cu.classroomId.id = :classId) and u.displayName like :username and u.roleId.id = 1", User.class);
 
         List<User> users = null;
         try {
@@ -69,7 +69,7 @@ public class UserDaoImpl extends BaseDao<User,Integer> implements UserDao {
     public List<User> findAllStudent(String username) {
         Query query = null;
         query = entityManager.createQuery("select u from User u " +
-                "where u.email like :username and u.roleId.id = 1", User.class);
+                "where u.displayName like :username and u.roleId.id = 1", User.class);
 
         List<User> users = null;
         try {

@@ -40,10 +40,6 @@ public class HelloController {
     public String homepage(ModelMap model) {
     return "homepage";
 }
-    @RequestMapping(value = "/classroom",method = RequestMethod.GET)
-    public String classroom(ModelMap model) {
-        return "classroom";
-    }
     @RequestMapping(value = "/question",method = RequestMethod.GET)
     public String question(ModelMap model) {
         return "question";

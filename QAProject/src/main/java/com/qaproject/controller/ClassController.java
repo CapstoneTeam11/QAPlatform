@@ -5,6 +5,7 @@ import com.qaproject.dao.ClassroomDao;
 import com.qaproject.dao.ClassroomUserDao;
 import com.qaproject.dao.TagClassroomDao;
 import com.qaproject.dao.impl.*;
+import com.qaproject.dto.ReturnObjectWithStatus;
 import com.qaproject.dto.UserWithRoleDto;
 import com.qaproject.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,17 +49,20 @@ public class ClassController {
         }
         List<Category> categoryList = categoryDao.findAll();
         model.addAttribute("categories",categoryList);
+        model.addAttribute("user",user);
         return "createClass";
     }
     @RequestMapping(value= "/createClass1",method= RequestMethod.GET)
     @ResponseBody
-    public String register(@RequestParam("classroomName") String classroomName,@RequestParam("classroomDescription") String classroomDescription,
+    public ReturnObjectWithStatus register(@RequestParam("classroomName") String classroomName,@RequestParam("classroomDescription") String classroomDescription,
                            @RequestParam("categoryId") String categoryId, @RequestParam("tag") String tag,
                            @RequestParam("studentList") String studentList, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         User user = (User)session.getAttribute("user");
+        ReturnObjectWithStatus objectWithStatus =new ReturnObjectWithStatus();
         if(user == null){
-            return "NG";
+            objectWithStatus.setStatus("NG");
+            return objectWithStatus;
         }
         Classroom room = new Classroom();
         Category category = new Category();
@@ -97,7 +101,10 @@ public class ClassController {
                 classroomUser.setType(2);
                 classroomUserDao.persist(classroomUser);
         }
-        return "OK";
+
+        objectWithStatus.setId(room.getId());
+        objectWithStatus.setStatus("OK");
+        return objectWithStatus;
     }
     @RequestMapping(value= "/requestJoinClass/{id}",method= RequestMethod.GET)
     @ResponseBody
@@ -125,10 +132,10 @@ public class ClassController {
     public String inviteJoinClass(@RequestParam("studentName") String studentName, @PathVariable("id") String classroomId,
                                   Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        String[] listStudentName = studentName.split(",");
+        String[] listStudentId = studentName.split(",");
         boolean flag = false;
-        for (int i =0; i< listStudentName.length; i++){
-            User user = userDao.find(studentName);
+        for (int i =0; i< listStudentId.length; i++){
+            User user = userDao.find(Integer.parseInt(listStudentId[i]));
             if( user!=null ){
                 ClassroomUser classroomUser = new ClassroomUser();
                 Classroom classroom = new Classroom();
@@ -166,4 +173,17 @@ public class ClassController {
         model.addAttribute("suggestedClassrooms",suggestedClassrooms);
         return "newsfeed";
     }
+    @RequestMapping(value = "/classroom/{id}",method = RequestMethod.GET)
+    public String classroom(ModelMap model, @PathVariable(value = "id") String id) {
+        Classroom classroom = classroomDao.find(Integer.parseInt(id));
+        int idOwner = classroom.getOwnerUserId().getId();
+        User user = userDao.find(idOwner);
+        model.addAttribute("class", classroom);
+        model.addAttribute("userOwner", user);
+        return "classroom";
+    }
+
 }
+
+
+

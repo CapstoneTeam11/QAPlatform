@@ -123,7 +123,7 @@
                                 <p>
                                     <label class="required">Class name<span>*</span></label>
                                     <input type="text" id="question-title">
-                                    <span class="form-description">Please choose an appropriate title for the question to answer it even easier .</span>
+                                    <span class="form-description">Please enter name of class you want to create.</span>
                                 </p>
                                 <%--<p>--%>
                                     <%--<label>Tags</label>--%>
@@ -135,24 +135,24 @@
                                     <p style="width: 18% !important;">
                                         <label class="required">Tag<span>*</span></label>
                                     </p>
-
                                     <div style="width: 82%">
                                         <input type="text" class="input" name="tag" id="tagsuggest"/>
                                     </div>
                                     <div id="hiddenTag"></div>
                                 </div>
+                                <p><span class="form-description form-inputs">Please choose an tag for class to find easier.</span></p>
                                 <div style="display: flex;height: 42px;">
                                     <p style="width: 18% !important;">
                                         <label class="required">Student<span>*</span></label>
                                     </p>
-
                                     <div style="width: 82%">
                                         <input type="text" class="input" name="tag" id="tagsuggest1"/>
                                     </div>
                                     <div id="hiddenTag1"></div>
                                 </div>
+                                <p><span class="form-description form-inputs">Please choose select students to join in class.</span></p>
                                 <p>
-                                    <label class="required">Know about<span>*</span></label>
+                                    <label class="required">Category<span>*</span></label>
 									<span class="styled-select">
 										<select id="professional">
                                             <option value="">Select a type</option>
@@ -161,9 +161,8 @@
                                             </c:forEach>
                                         </select>
 									</span>
-                                    <span class="form-description">Please choose the appropriate section so easily search for your question .</span>
+                                    <span class="form-description">Please select category os this class.</span>
                                 </p>
-
                             </div>
                             <div id="form-textarea">
                                 <p>
@@ -187,8 +186,8 @@
                             <div class="author-img">
                                 <a href="#"><img width="60" height="60" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" alt=""></a>
                             </div>
-                            <h6><a href="#">Mr. Thang</a></h6>
-                            <span class="comment">This is short instroduction of this teacher</span>
+                            <h6><a href="#">${user.displayName}</a></h6>
+                            <span class="comment">${user.aboutMe}</span>
                         </li>
                     </ul>
                 </div>
@@ -363,8 +362,8 @@
             url: url,
             data: "classroomName="+ classname + "&classroomDescription="+classDescription+"&categoryId="+cate+"&tag="+tagList+"&studentList="+student,
             success: function (data) {
-                if(data == "OK"){
-                    window.location.href = "/getAllPost";
+                if(data.status == "OK"){
+                    window.location.href = "/classroom/"+data.id;
                 }else{
                     window.location.href = "/";
                 }

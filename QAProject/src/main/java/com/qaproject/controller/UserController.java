@@ -111,7 +111,7 @@ public class UserController {
         List<User> userList = userDao.findAllStudentNotInClass(Integer.parseInt(classroomId), username);
         List<StudentDto> userNameList = new ArrayList<StudentDto>();
         for (int i = 0; i < userList.size(); i++) {
-            userNameList.add(new StudentDto(userList.get(i).getEmail(), userList.get(i).getId()));
+            userNameList.add(new StudentDto(userList.get(i).getDisplayName(), userList.get(i).getId()));
         }
         response.addHeader("Access-Control-Allow-Origin", "*");
         return userNameList;
@@ -122,7 +122,7 @@ public class UserController {
         List<User> userList = userDao.findAllStudent(username);
         List<StudentDto> userNameList = new ArrayList<StudentDto>();
         for (int i = 0; i < userList.size(); i++) {
-            userNameList.add(new StudentDto(userList.get(i).getEmail(), userList.get(i).getId()));
+            userNameList.add(new StudentDto(userList.get(i).getDisplayName(), userList.get(i).getId()));
         }
         response.addHeader("Access-Control-Allow-Origin", "*");
         return userNameList;

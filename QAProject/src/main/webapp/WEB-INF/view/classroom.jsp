@@ -5,6 +5,7 @@
   Time: 8:31 AM
   To change this template use File | Settings | File Templates.
 --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -38,8 +39,6 @@
 
     <!-- Favicons -->
     <link rel="shortcut icon" href="http://2code.info/demo/html/ask-me/images/favicon.ico">
-    <!-- Toast message Style -->
-    <link rel="stylesheet" href="/resource/assets/css/jquery.toastmessage.css">
     <!--TagInput-->
     <link rel="stylesheet" href="/resource/assets/js/bootstrap-tagsinput.css">
     <link rel="stylesheet" href="/resource/assets/css/tag.css">
@@ -97,7 +96,7 @@
     <section class="container" style="height:70px; display: flex; align-items: center">
         <div class="row">
             <div class="col-md-12">
-                <h3>AJ Class</h3>
+                <h3>${class.classroomName}</h3>
             </div>
         </div><!-- End row -->
     </section><!-- End container -->
@@ -109,8 +108,8 @@
     <div class="clearfix"></div>
     <div class="row">
     <div class="col-md-6 col-sm-6">
-        <input type="text" aria-required="true" value="Search in Advance Java class" onfocus="if(this.value=='Search in Advance Java class')this.value='';"
-               onblur="if(this.value=='')this.value='Search in Advance Java class';" style="width: 100%">
+        <input type="text" aria-required="true" value="Search in ${class.classroomName} class" onfocus="if(this.value=='Search in ${class.classroomName} class')this.value='';"
+               onblur="if(this.value=='')this.value='Search in ${class.id} class';" style="width: 100%">
     </div>
     <div class="col-md-6 col-sm-6">
         <a href="/post/create/1" class="button medium green-button" style="float: right"><i class="icon-pencil"></i> Create post</a>
@@ -278,39 +277,16 @@
         <h3 class="widget_title">About class</h3>
         <ul class="related-posts">
             <li class="related-item">
-                <p>This is introductio about class. This is introductio about class.
-                    This is introductio about class. </p>
+                <p>${class.classroomDescription}</p>
                 <div class="clear"></div><span>Feb 22, 2014</span>
             </li>
         </ul>
-        <a href="javascript:joinClass(1)" class="button small color">Join</a>
+        <a href="javascript:joinClass(${class.id})" class="button small color" id="join">Join</a>
     </div>
-    <div class="widget widget_login">
-        <h3 class="widget_title">Invite someone</h3>
-        <div class="form-style form-style-2">
-            <form>
-                <div style="display: flex;height: 42px;">
-                    <p style="width: 18% !important;">
-                        <label class="required">Tag<span>*</span></label>
-                    </p>
-
-                    <div style="width: 82%">
-                        <input type="text" class="input" name="tag" id="tagsuggest"/>
-                    </div>
-                    <div id="hiddenTag"></div>
-                </div>
-                <div class="form-inputs clearfix">
-                    <i class="icon-user"></i>
-                    <p class="login-text">
-                        <input type="text" aria-required="true" placeholder="Enter username..." style="width: 80%" id="studentName" data-role="tagsinput">
-                        <a href="javascript:inviteStudent(1)" class="button small color" style="float: right;">Invite</a>
-                    </p>
-                    <p>
-
-                    </p>
-                </div>
-            </form>
-            <div class="clearfix"></div>
+    <div class="widget widget_login" style="  min-height: 130px;">
+        <h3 class="widget_title">Invite student</h3>
+        <div class="pull-right" style="width: 100%;">
+            <a href="#" id="create-folder-click" class="button medium color" style="width: 100%;text-align: center;"><i class="icon-plus-sign"></i> Invite</a>
         </div>
     </div>
     <div class="widget widget_highest_points">
@@ -318,10 +294,10 @@
         <ul>
             <li>
                 <div class="author-img">
-                    <a href="#"><img width="60" height="60" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" alt=""></a>
+                    <a href="#"><img width="60" height="60" src="${userOwner.profileImageURL}" alt=""></a>
                 </div>
-                <h6><a href="#">Mr. Thang</a></h6>
-                <span class="comment">This is short instroduction of this teacher</span>
+                <h6><a href="#">${userOwner.displayName}</a></h6>
+                <span class="comment">${userOwner.aboutMe}</span>
             </li>
         </ul>
     </div>
@@ -348,7 +324,28 @@
 </div><!-- End wrap -->
 
 <div class="go-up"><i class="icon-chevron-up"></i></div>
-
+<div class="panel-pop" id="create-folder">
+    <h2>Invite student join to class<i class="icon-remove"></i></h2>
+    <div class="form-style form-style-3">
+        <form method="post" action="/folder/create">
+            <div class="form-inputs clearfix">
+                <div style="display: flex;height: 42px;">
+                    <p style="width: 18% !important;">
+                        <label class="required">Student<span>*</span></label>
+                    </p>
+                    <div style="width: 82%">
+                        <input type="text" class="input" name="tag" id="tagsuggest1"/>
+                    </div>
+                    <div id="hiddenTag1"></div>
+                </div>
+            </div>
+            <p class="form-submit">
+                <a href="javascript:inviteStudent(${class.id})" class="button color small submit">Invite</a>
+            </p>
+        </form>
+        <div class="clearfix"></div>
+    </div>
+</div><!-- End create folder -->
 <!-- js -->
 <script src="/resource/assets/js/jquery.min.js"></script>
 <script src="/resource/assets/js/bootstrap.min.js"></script>
@@ -377,7 +374,33 @@
 <script>
     var studentNameList = [];
     $(document).ready(function () {
-        makeTag(1);
+        var student = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: 'http://localhost:8080/findAllStudentNotInClass/${class.id}/%QUERY'
+            }
+        });
+        student.initialize();
+        var elt1 = $('#tagsuggest1');
+        var hiddenTag = $('#hiddenTag1');
+        elt1.tagsinput({
+            itemValue: 'studentId',
+            itemText: 'studentName',
+            typeaheadjs: {
+                name: 'student',
+                displayKey: 'studentName',
+                source: student.ttAdapter()
+            }
+        });
+        elt1.on('itemAdded', function (event) {
+            var studentId = event.item.id;
+            hiddenTag.append("<input type='hidden' name='tagId' value=" + studentId + " id=tag" + studentId + ">");
+        });
+        elt1.on('itemRemoved', function (event) {
+            var tagId = "#tag" + event.item.id;
+            $(tagId).remove();
+        });
 
     });
     function joinClass(id){
@@ -388,6 +411,7 @@
 //            data: "username="+username+"&password="+password,
             success: function(data){
                 if(data == "OK"){
+                    $("#join").text("Request sent!").attr("href", "#");
                     $().toastmessage('showSuccessToast', 'Join class request sent!');
                 }else{
                     $().toastmessage('showErrorToast', "Join class request fail! Please try again late!");
@@ -398,17 +422,17 @@
     }
     function inviteStudent(id){
         var url = "/inviteJoinClass/"+id;
-        var name = $("#studentName").val();
+        var name = $("#tagsuggest1").val();
         $.ajax({
             type: "POST",
             url: url,
             data: "studentName="+name,
             success: function(data){
-                if(data == "OK"){
-                    $().toastmessage('showSuccessToast', 'Join class request sent!');
-                }else{
-                    $().toastmessage('showErrorToast', "Join class request fail! Please try again late!");
-                }
+//                if(data == "OK"){
+//                    $().toastmessage('showSuccessToast', 'Invatition Sent!');
+//                }else{
+//                    $().toastmessage('showErrorToast', "Invatition Fails!");
+//                }
             }
         });
     }
@@ -427,35 +451,7 @@
             }
         });
     }
-    function makeTag(studentNameList){
-        var tag = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            remote: {
-                url: 'http://localhost:8080/findAllStudentNotInClass/1/%QUERY'
-            }
-        });
-        tag.initialize();
-        elt = $('#tagsuggest');
-        var hiddenTag = $('#hiddenTag');
-        elt.tagsinput({
-            itemValue: 'id',
-            itemText: 'name',
-            typeaheadjs: {
-                name: 'tag',
-                displayKey: 'name',
-                source: tag.ttAdapter()
-            }
-        });
-        elt.on('itemAdded', function (event) {
-            var idTag = event.item.id;
-            hiddenTag.append("<input type='hidden' name='tagId' value=" + idTag + " id=tag" + idTag + ">");
-        });
-        elt.on('itemRemoved', function (event) {
-            var tagId = "#tag" + event.item.id;
-            $(tagId).remove();
-        });
-    }
+
 </script>
 </body>
 </html>

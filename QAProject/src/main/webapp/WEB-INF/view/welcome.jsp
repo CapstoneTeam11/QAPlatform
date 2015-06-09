@@ -196,12 +196,20 @@
                                     <div class="form-group">
                                         <label class="col-md-3 control-label">Know About<span>*</span></label>
                                         <div class="col-md-9">
-                                            <select class="form-control" style="width: 82%;">
-                                                <option value="">Select a type</option>
-                                                <c:forEach var="category" items="${categories}">
-                                                <option value="${category.id}">${category.categoryName}</option>
-                                                </c:forEach>
-                                            </select>
+                                            <%--<select class="form-control" style="width: 82%;">--%>
+                                                <%--<option value="">Select a type</option>--%>
+                                                <%--<c:forEach var="category" items="${categories}">--%>
+                                                <%--<option value="${category.id}">${category.categoryName}</option>--%>
+                                                <%--</c:forEach>--%>
+                                            <%--</select>--%>
+                                            <span class="styled-select">
+										        <select id="professional">
+                                                    <option value="">Select a type</option>
+                                                    <c:forEach var="category" items="${categories}">
+                                                        <option value="${category.id}">${category.categoryName}</option>
+                                                    </c:forEach>
+                                                </select>
+									        </span>
                                         </div>
                                     </div>
                                 </div>
@@ -349,7 +357,7 @@
             url: url,
             data: user,
             success: function () {
-                window.location.href = "/getAllPost";
+                window.location.href = "/teacherdashboardWelcome";
             }
 //            dataType: dataType
         });
@@ -377,7 +385,7 @@
             data: "username="+username+"&password="+password,
             success: function(data){
                 if(data == "OK"){
-                    window.location.href="/getAllPost";
+                    window.location.href="/teacherdashboard";
                 }else{
                     alert("Username or password is incorrect!");
                 }
