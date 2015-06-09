@@ -101,15 +101,15 @@
 
 <%@include file="header.jsp" %>
 
-<div class="breadcrumbs">
-    <section class="container" style="height:70px; display: flex; align-items: center">
-        <div class="row">
-            <div class="col-md-12">
-                <h3>Manage material</h3>
-            </div>
-        </div><!-- End row -->
-    </section><!-- End container -->
-</div><!-- End breadcrumbs -->
+    <div class="breadcrumbs" style="margin-top: 86px">
+        <section class="container" style="height:70px; display: flex; align-items: center">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Manage Material</h3>
+                </div>
+            </div><!-- End row -->
+        </section><!-- End container -->
+    </div><!-- End breadcrumbs -->
 
 <section class="container main-content page-left-sidebar">
     <div class="row">
