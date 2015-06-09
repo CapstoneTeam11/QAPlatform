@@ -101,11 +101,11 @@
 
     <%@include file="header.jsp" %>
 
-    <div class="breadcrumbs">
+    <div class="breadcrumbs" style="margin-top: 86px">
         <section class="container" style="height:70px; display: flex; align-items: center">
             <div class="row">
                 <div class="col-md-12">
-                    <h3>Manage material</h3>
+                    <h3>Manage Material</h3>
                 </div>
             </div><!-- End row -->
         </section><!-- End container -->
@@ -125,7 +125,7 @@
 
                 <div class="tabs-warp question-tab">
                     <ul class="tabs">
-                        <li class="tab"><a href="#" class="current">${materials[0].folderId.name}</a></li>
+                        <li class="tab"><a href="#" class="current">${folderName}</a></li>
                     </ul>
                     <div class="tab-inner-warp">
                         <div class="tab-inner">
