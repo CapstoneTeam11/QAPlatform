@@ -272,12 +272,11 @@
     <div class="widget">
         <h3 class="widget_title">Related Questions</h3>
         <ul class="related-posts">
-            <li class="related-item">
-                <a href="#">This is my first Question</a>
-            </li>
-            <li class="related-item">
-                <a href="#">This Is My Second Poll Question</a>
-            </li>
+            <c:forEach var="relatedPost" items="${relatedPosts}">
+                <li class="related-item">
+                    <a href="${relatedPost.id}">${relatedPost.title}</a>
+                </li>
+            </c:forEach>
         </ul>
     </div>
 
