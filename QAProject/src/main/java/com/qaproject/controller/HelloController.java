@@ -3,14 +3,10 @@ package com.qaproject.controller;
 import com.qaproject.dao.impl.CategoryDaoImpl;
 import com.qaproject.entity.Category;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 
 import java.util.List;
 
@@ -75,5 +71,13 @@ public class HelloController {
     @RequestMapping(value = "/material",method = RequestMethod.GET)
     public String material(ModelMap model) {
         return "material";
+    }
+    @RequestMapping(value = "/teacherdashboardWelcome",method = RequestMethod.GET)
+    public String teacherdashboardWelcome(ModelMap model) {
+        return "teacherdashboardWelcome";
+    }
+    @RequestMapping(value = "/classroomWelcome",method = RequestMethod.GET)
+    public String classroomWelcome(ModelMap model) {
+        return "classroomWelcome";
     }
 }
