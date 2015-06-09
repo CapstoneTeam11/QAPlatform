@@ -109,11 +109,11 @@
 
 <%@include file="header.jsp" %>
 
-<div class="breadcrumbs">
+<div class="breadcrumbs" style="margin-top: 86px">
     <section class="container" style="height:70px; display: flex; align-items: center">
         <div class="row">
             <div class="col-md-12">
-                <h3>This is my question</h3>
+                <h3>Question</h3>
             </div>
         </div><!-- End row -->
     </section><!-- End container -->
@@ -272,12 +272,11 @@
     <div class="widget">
         <h3 class="widget_title">Related Questions</h3>
         <ul class="related-posts">
-            <li class="related-item">
-                <a href="#">This is my first Question</a>
-            </li>
-            <li class="related-item">
-                <a href="#">This Is My Second Poll Question</a>
-            </li>
+            <c:forEach var="relatedPost" items="${relatedPosts}">
+                <li class="related-item">
+                    <a href="${relatedPost.id}">${relatedPost.title}</a>
+                </li>
+            </c:forEach>
         </ul>
     </div>
 

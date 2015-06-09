@@ -100,11 +100,11 @@
 
     <%@include file="header.jsp" %>
 
-    <div class="breadcrumbs">
+    <div class="breadcrumbs" style="margin-top: 86px">
         <section class="container" style="height:70px; display: flex; align-items: center">
             <div class="row">
                 <div class="col-md-12">
-                    <h3>Create new class</h3>
+                    <h3>Class</h3>
                 </div>
             </div><!-- End row -->
         </section><!-- End container -->
@@ -192,7 +192,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="widget widget_login">
+                <%--<div class="widget widget_login">
                     <h3 class="widget_title">Invite student</h3>
                     <div class="form-style form-style-2">
                         <form>
@@ -207,7 +207,7 @@
                         </form>
                         <div class="clearfix"></div>
                     </div>
-                </div>
+                </div>--%>
 
                 <div class="widget widget_tag_cloud">
                     <h3 class="widget_title">Tags</h3>

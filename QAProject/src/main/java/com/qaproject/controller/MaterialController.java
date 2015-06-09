@@ -69,6 +69,7 @@ public class MaterialController {
             return "redirect:/";
         }
         List<Material> materials = folder.getMaterialList();
+        model.addAttribute("folderName",folder.getName());
         model.addAttribute("materials", materials);
         return "materialList";
     }

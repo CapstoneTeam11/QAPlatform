@@ -3,6 +3,7 @@ package com.qaproject.controller;
 import com.qaproject.dao.ClassroomDao;
 import com.qaproject.dao.PostDao;
 import com.qaproject.dao.TagDao;
+import com.qaproject.dao.TagPostDao;
 import com.qaproject.entity.Classroom;
 import com.qaproject.entity.Post;
 import com.qaproject.entity.TagPost;
@@ -33,13 +34,31 @@ public class PostController {
     @Autowired
     TagDao tagDao;
     @Autowired
+	TagPostDao tagPostDao;
+    @Autowired
     HttpSession session;
 
 
     @RequestMapping(value = "/post/view/{id}",method = RequestMethod.GET)
     public String view(@PathVariable Integer id, ModelMap model) {
         Post post = postDao.find(id);
+
+		//get related postId - MinhKH
+        List<Integer> tagIds = new ArrayList<Integer>();
+        for (int i= 0; i<post.getTagPostList().size(); i++) {
+            tagIds.add(post.getTagPostList().get(i).getTagId().getId());
+        }
+        List<Integer> relatedPostIds = tagPostDao.findRelatedPostIds(tagIds);
+        List<Post> relatedPosts = new ArrayList<Post>();
+        for(int i=0; i<relatedPostIds.size(); i++){
+            int currentRelatedPostId = relatedPostIds.get(i);
+            if (currentRelatedPostId!=post.getId()){
+                Post relatedPost = postDao.find(currentRelatedPostId);
+                relatedPosts.add(relatedPost);
+            }
+        }
         model.addAttribute("post",post);
+        model.addAttribute("relatedPosts", relatedPosts);
         return "question";
     }
     @RequestMapping(value = "/post/create/{id}",method = RequestMethod.GET)
