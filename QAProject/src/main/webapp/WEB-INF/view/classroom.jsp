@@ -34,7 +34,7 @@
     <link rel="stylesheet" href="/resource/assets/css/bootstrap.min.css">
 
     <!-- Notification Style -->
-    <link rel="stylesheet" href="/resource/assets/css/notification.css">jquery.toastmessage.css
+    <link rel="stylesheet" href="/resource/assets/css/notification.css">
 
     <!-- Favicons -->
     <link rel="shortcut icon" href="http://2code.info/demo/html/ask-me/images/favicon.ico">
@@ -57,7 +57,6 @@
         <form method="post" action="/upload" enctype="multipart/form-data">
             <div class="form-inputs clearfix">
                 <p>
-                    <label class="required">Upload Material<span></span></label>
                     <input type="file" name="fileUpload" size="50">
                 </p>
             </div>
@@ -68,7 +67,7 @@
         </form>
         <div class="clearfix"></div>
     </div>
-</div><!-- End create folder -->
+</div><!-- End upload material -->
 
 <div class="panel-pop" id="add-to-folder">
     <h2>Add to folder<i class="icon-remove"></i></h2>
@@ -88,17 +87,17 @@
             </a>
 
         </div>
-    </div>
-</div><!-- End lost-password -->
+    </div><!-- End add to folder -->
+
 
 
 <%@include file="header.jsp" %>
 
-<div class="breadcrumbs">
+<div class="breadcrumbs" style="margin-top: 86px">
     <section class="container" style="height:70px; display: flex; align-items: center">
         <div class="row">
             <div class="col-md-12">
-                <h3>Advance Java Class</h3>
+                <h3>AJ Class</h3>
             </div>
         </div><!-- End row -->
     </section><!-- End container -->
