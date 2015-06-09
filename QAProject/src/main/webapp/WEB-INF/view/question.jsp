@@ -109,11 +109,11 @@
 
 <%@include file="header.jsp" %>
 
-<div class="breadcrumbs">
+<div class="breadcrumbs" style="margin-top: 86px">
     <section class="container" style="height:70px; display: flex; align-items: center">
         <div class="row">
             <div class="col-md-12">
-                <h3>This is my question</h3>
+                <h3>Question</h3>
             </div>
         </div><!-- End row -->
     </section><!-- End container -->
