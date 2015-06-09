@@ -36,6 +36,9 @@ public class ClassController {
     ClassroomUserDaoImpl classroomUserDao;
     @Autowired
     UserDaoImpl userDao;
+    @Autowired
+    HttpSession session;
+
     @RequestMapping(value = "/createClass",method = RequestMethod.GET)
     public String createClass(ModelMap model, HttpServletRequest request) {
         HttpSession session = request.getSession();
@@ -142,5 +145,25 @@ public class ClassController {
             return "NG";
         }
         return "OK";
+    }
+
+    /**
+     * MinhKH
+     * Controller get suggested classrooms
+     * @param model
+     * @return String
+     */
+    @RequestMapping(value= "/newsfeed/welcomeFirst", method= RequestMethod.GET)
+    public String suggestClass(ModelMap model){
+        //Check is User
+        User user = (User) session.getAttribute("user");
+        if(user==null) {
+            return "redirect:/";
+        }
+
+        Category category = user.getCategoryId();
+        List<Classroom> suggestedClassrooms = classroomDao.findByCategory(category);
+        model.addAttribute("suggestedClassrooms",suggestedClassrooms);
+        return "newsfeed";
     }
 }
