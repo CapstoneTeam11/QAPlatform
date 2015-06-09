@@ -73,46 +73,20 @@
 <div class="panel-pop" id="add-to-folder">
     <h2>Add to folder<i class="icon-remove"></i></h2>
     <div style="height: auto; max-height: 300px; overflow-x: hidden;">
-        <div class="list-group">
-            <a href="#" class="list-group-item">
-                <h4 class="list-group-item-heading">Folder 1</h4>
+
+            <a href="/library/add/1/4" class="list-group-item">
+                <h4 class="list-group-item-heading">Java </h4>
             </a>
             <a href="#" class="list-group-item">
-                <h4 class="list-group-item-heading">Folder 2</h4>
+                <h4 class="list-group-item-heading">C# </h4>
             </a>
             <a href="#" class="list-group-item">
-                <h4 class="list-group-item-heading">Folder 3</h4>
+                <h4 class="list-group-item-heading">Document 4</h4>
             </a>
             <a href="#" class="list-group-item">
-                <h4 class="list-group-item-heading">Folder 4</h4>
+                <h4 class="list-group-item-heading">Piture 5</h4>
             </a>
-            <a href="#" class="list-group-item">
-                <h4 class="list-group-item-heading">Folder 5</h4>
-            </a>
-            <a href="#" class="list-group-item">
-                <h4 class="list-group-item-heading">Folder 6</h4>
-            </a>
-            <a href="#" class="list-group-item">
-                <h4 class="list-group-item-heading">Folder 7</h4>
-            </a>
-            <a href="#" class="list-group-item">
-                <h4 class="list-group-item-heading">Folder 8</h4>
-            </a>
-            <a href="#" class="list-group-item">
-                <h4 class="list-group-item-heading">Folder 9</h4>
-            </a>
-            <a href="#" class="list-group-item">
-                <h4 class="list-group-item-heading">Folder 10</h4>
-            </a>
-            <a href="#" class="list-group-item">
-                <h4 class="list-group-item-heading">Folder 11</h4>
-            </a>
-            <a href="#" class="list-group-item">
-                <h4 class="list-group-item-heading">Folder 12</h4>
-            </a>
-            <a href="#" class="list-group-item">
-                <h4 class="list-group-item-heading">Folder 13</h4>
-            </a>
+
         </div>
     </div>
 </div><!-- End lost-password -->
@@ -284,7 +258,7 @@
                 <th>Uploaded Date</th>
                 <th>File size</th>
                 <th>Add to folder</th>
-                <th>Download</th>
+                <th></th>
             </tr>
             <tr>
                 <td>1</td>
@@ -292,7 +266,7 @@
                 <td>22-05-2015</td>
                 <td>1 MB</td>
                 <td><a id="add-to-folder-click" href="#">Add</a></td>
-                <td></td>
+                <td><a href="/download/4" class="button small blue-button"><i class="icon-download"></i> Download</a></td>
             </tr>
         </table>
         <div class="col-md-3 col-sm-6" style="float: right">

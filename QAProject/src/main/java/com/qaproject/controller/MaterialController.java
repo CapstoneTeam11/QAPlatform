@@ -8,6 +8,9 @@ import com.qaproject.entity.Classroom;
 import com.qaproject.entity.Folder;
 import com.qaproject.entity.Material;
 import com.qaproject.entity.User;
+import com.qaproject.util.Utilities;
+import com.sun.deploy.net.HttpResponse;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -17,11 +20,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.FileAlreadyExistsException;
 import java.util.Date;
 import java.util.List;
 
@@ -72,7 +74,7 @@ public class MaterialController {
     }
 
     @RequestMapping(value = "/folder/create", method = RequestMethod.POST)
-    public String AddFolder(@RequestParam String name,
+    public String addFolder(@RequestParam String name,
                             ModelMap model) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
@@ -86,7 +88,7 @@ public class MaterialController {
     }
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public String Upload(@RequestParam Integer classId,
+    public String upload(@RequestParam Integer classId,
                          @RequestParam CommonsMultipartFile[] fileUpload,
                          ModelMap model) {
         Classroom classroom = classroomDao.find(classId);
@@ -132,4 +134,80 @@ public class MaterialController {
         return "redirect:/library";
     }
 
+    @RequestMapping(value = "/download/{materialId}", method = RequestMethod.GET)
+    public String downloadMaterialClass(@PathVariable Integer materialId,HttpServletResponse response ) {
+        //validate and authorize
+        Material material = materialDao.find(materialId);
+        File downloadFile = new File(material.getFileURL());
+        FileInputStream inputStream = null;
+        OutputStream outStream = null;
+        try {
+            inputStream = new FileInputStream(downloadFile);
+
+            response.setContentLength((int) downloadFile.length());
+            response.setContentType(material.getName());
+
+            // response header
+            String headerKey = "Content-Disposition";
+            String headerValue = String.format("attachment; filename=\"%s\"",downloadFile.getName());
+            response.setHeader(headerKey, headerValue);
+
+            // Write response
+            outStream = response.getOutputStream();
+            IOUtils.copy(inputStream, outStream);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (null != inputStream)
+                    inputStream.close();
+                if (null != inputStream)
+                    outStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        return "classroom";
+    }
+    @RequestMapping(value = "/library/add/{folderId}/{materialId}", method = RequestMethod.GET)
+    public String copyMaterial(@PathVariable Integer folderId,
+                                        @PathVariable Integer materialId) {
+        User user = (User) session.getAttribute("user");
+        Material material = materialDao.find(materialId);
+        int error = 0;
+        if (user == null) {
+            return "redirect:/";
+        }
+        //validate
+        String destPath = "C:\\User"+"\\"+user.getId()+"\\"+folderId;
+        String dest = "C:\\User"+"\\"+user.getId()+"\\"+folderId + "\\" + material.getName();
+        try {
+            File filePath = new File(destPath);
+            if(!filePath.exists()) {
+                filePath.mkdirs();
+            }
+            File fileDest = new File(dest);
+            File fileSource = new File(material.getFileURL());
+            Utilities.copyFileUsingJava7Files(fileSource, fileDest);
+        } catch (FileAlreadyExistsException f) {
+            f.printStackTrace();
+            System.out.println("Already Exists");
+            error = 1;
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Fall");
+            error = 1;
+        }
+        //Send error to User
+        Material materialCopy = new Material();
+        materialCopy.setName(material.getName());
+        materialCopy.setCreationDate(new Date());
+        materialCopy.setFolderId(folderDao.find(folderId));
+        materialCopy.setFileURL(dest);
+        materialCopy.setSize(material.getSize());
+        materialDao.persist(materialCopy);
+        return "classroom";
+    }
 }

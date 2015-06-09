@@ -137,7 +137,7 @@
                                     </tr>
                                     <c:forEach var="material" items="${materials}">
                                     <tr>
-                                        <td><a href=""><i class="icon-download"></i> ${material.name}</a></td>
+                                        <td><a href="/download/${material.id}"><i class="icon-download"></i> ${material.name}</a></td>
                                         <td>${material.size}</td>
                                         <td><a href="" class="button small red-button"><i class="icon-remove"></i> Delete</a></td>
                                     </tr>
