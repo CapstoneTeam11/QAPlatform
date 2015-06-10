@@ -2,12 +2,15 @@ package com.qaproject.controller;
 
 import com.qaproject.dao.impl.CategoryDaoImpl;
 import com.qaproject.entity.Category;
+import com.qaproject.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /** **/
@@ -52,14 +55,14 @@ public class HelloController {
     public String newsfeed(ModelMap model) {
         return "newsfeed";
     }
-    @RequestMapping(value = "/studentdashboard",method = RequestMethod.GET)
-    public String studentdashboard(ModelMap model) {
-        return "studentdashboard";
-    }
-    @RequestMapping(value = "/teacherdashboard",method = RequestMethod.GET)
-    public String teacherdashboard(ModelMap model) {
-        return "teacherdashboard";
-    }
+//    @RequestMapping(value = "/studentdashboard",method = RequestMethod.GET)
+//    public String studentdashboard(ModelMap model) {
+//        return "studentdashboard";
+//    }
+//    @RequestMapping(value = "/teacherdashboard",method = RequestMethod.GET)
+//    public String teacherdashboard(ModelMap model) {
+//        return "teacherdashboard";
+//    }
     @RequestMapping(value = "/profile",method = RequestMethod.GET)
     public String profile(ModelMap model) {
         return "profile";
@@ -69,11 +72,21 @@ public class HelloController {
         return "material";
     }
     @RequestMapping(value = "/teacherdashboardWelcome",method = RequestMethod.GET)
-    public String teacherdashboardWelcome(ModelMap model) {
+    public String teacherdashboardWelcome(ModelMap model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        if(user.getRoleId().getId()==1){
+            return "403";
+        }
         return "teacherdashboardWelcome";
     }
     @RequestMapping(value = "/classroomWelcome",method = RequestMethod.GET)
-    public String classroomWelcome(ModelMap model) {
+    public String classroomWelcome(ModelMap model, HttpServletRequest request) {
+        HttpSession session = request.getSession();// Phan quyen user
+        User user = (User) session.getAttribute("user");
+        if(user.getRoleId().getId()==1){
+            return "403";
+        }
         return "classroomWelcome";
     }
 }

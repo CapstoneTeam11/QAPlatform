@@ -7,6 +7,7 @@ import com.qaproject.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -58,4 +59,14 @@ public class TeacherController {
         }
         return "OK";
     }
+    @RequestMapping(value = "/teacherdashboard",method = RequestMethod.GET)
+        public String teacherdashboard(ModelMap model, HttpServletRequest request) {
+        HttpSession session = request.getSession();// Phan quyen user
+        User user = (User) session.getAttribute("user");
+        if(user.getRoleId().getId()==1){
+            return "403";
+        }
+        return "teacherdashboard";
+    }
+
 }

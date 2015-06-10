@@ -356,8 +356,14 @@
             type: "POST",
             url: url,
             data: user,
-            success: function () {
-                window.location.href = "/teacherdashboardWelcome";
+            success: function (data) {
+                if(data.status == "OK" && data.id == 2){
+                    window.location.href="/teacherdashboardWelcome";
+                }else  if(data.status == "OK" && data.id == 1){
+                    window.location.href="/newsfeed";
+                }else {
+                    alert("Username or password is incorrect!");
+                }
             }
 //            dataType: dataType
         });
@@ -384,9 +390,11 @@
             url: url,
             data: "username="+username+"&password="+password,
             success: function(data){
-                if(data == "OK"){
+                if(data.status == "OK" && data.id == 2){
                     window.location.href="/teacherdashboard";
-                }else{
+                }else  if(data.status == "OK" && data.id == 1){
+                    window.location.href="/studentdashboard";
+                }else {
                     alert("Username or password is incorrect!");
                 }
 

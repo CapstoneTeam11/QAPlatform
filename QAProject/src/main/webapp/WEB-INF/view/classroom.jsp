@@ -244,12 +244,14 @@
         </ul>
         <a href="javascript:joinClass(${classroom.id})" class="button small color" id="join">Join</a>
     </div>
-    <div class="widget widget_login" style="  min-height: 130px;">
-        <h3 class="widget_title">Invite student</h3>
-        <div class="pull-right" style="width: 100%;">
-            <a href="#" id="create-folder-click" class="button medium color" style="width: 100%;text-align: center;"><i class="icon-plus-sign"></i> Invite</a>
+    <c:if test="${user.roleId.id==2}">
+        <div class="widget widget_login" style="  min-height: 130px;">
+            <h3 class="widget_title">Invite student</h3>
+            <div class="pull-right" style="width: 100%;">
+                <a href="#" id="create-folder-click" class="button medium color" style="width: 100%;text-align: center;"><i class="icon-plus-sign"></i> Invite</a>
+            </div>
         </div>
-    </div>
+    </c:if>
     <div class="widget widget_highest_points">
         <h3 class="widget_title">Class Owner</h3>
         <ul>
