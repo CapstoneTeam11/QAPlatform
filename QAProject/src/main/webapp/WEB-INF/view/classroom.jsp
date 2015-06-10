@@ -209,21 +209,27 @@
 </div>
 <div class="tab-inner-warp">
         <div class="tab-inner">
-            <c:forEach var="requestStudent" items="${classroomUsers}">
-                <div class="about-author clearfix">
-                    <div class="author-image">
-                        <a href="#" original-title="${requestStudent.userId.displayName}" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
-                    </div>
-                    <a class="" href="#" style="float: right">Ignore</a>
-                    <a class="" href="#" style="float: right; margin-right: 15px">Confirm</a>
-                    <div class="author-bio">
-                        <h4><a href="#">${requestStudent.userId.displayName}</a></h4>
-                        Requested to join <a href="#" style="font-size: 15px">${classroom.classroomName}</a>
-                    </div>
-                </div>
-            </c:forEach>
-
-            <a href="#" class="load-questions"><i class="icon-refresh"></i>View more request</a>
+            <c:if test="${not empty requestStudents}">
+                <c:forEach var="requestStudent" items="${requestStudents}">
+                        <form id="acceptForm" method="post" action="/acceptRequest">
+                            <input type="hidden" name="requestId" value="${requestStudent.id}"/>
+                            <input type="hidden" name="ownerClassroomId" value="${classroom.ownerUserId.id}"/>
+                            <input type="hidden" name="currentClassroomId" value="${classroom.id}"/>
+                            <div class="about-author clearfix">
+                                <div class="author-image">
+                                    <a href="#" original-title="${requestStudent.userId.displayName}" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
+                                </div>
+                                <a class="" href="#" style="float: right">Ignore</a>
+                                <a class="" href="#" onclick="document.forms['acceptForm'].submit()" style="float: right; margin-right: 15px">Confirm</a>
+                                <div class="author-bio">
+                                    <h4><a href="#">${requestStudent.userId.displayName}</a></h4>
+                                    Requested to join <a href="/classroom/${classroom.id}" style="font-size: 15px">${classroom.classroomName}</a>
+                                </div>
+                            </div>
+                        </form>
+                </c:forEach>
+                <a href="#" class="load-questions"><i class="icon-refresh"></i>View more request</a>
+            </c:if>
         </div>
     </div>
 </div><!-- End page-content -->
