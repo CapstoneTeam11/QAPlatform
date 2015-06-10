@@ -31,7 +31,7 @@ public class PostDaoImpl extends BaseDao<Post,Integer> implements PostDao{
     @Override
     public List<Post> findPostChilds(Integer id,Integer page) {
         Query query = null;
-        query = entityManager.createQuery("select u from Post u where u.parentId =:id order by id asc", Post.class);
+        query = entityManager.createQuery("select u from Post u where u.parentId =:id order by id desc ", Post.class);
         query.setParameter("id", id);
         if (page < 1) {
             page = 1;
