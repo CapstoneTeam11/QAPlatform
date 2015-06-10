@@ -161,12 +161,28 @@ public class ClassController {
         int idOwner = classroom.getOwnerUserId().getId();
         User user = userDao.find(idOwner);
 
-        //get posts and materials - MinhKH
+        //get posts, materials, request to join - MinhKH
         List<Post> posts = classroom.getPostList();
         List<Material> materials = classroom.getMaterialList();
+        List<ClassroomUser> classroomUsers = classroomUserDao.findByTypeAndClassroom(1,classroom);
 
-        model.addAttribute("posts",posts);
+        //classify post - MinhKH
+        List<Post> questions = new ArrayList<Post>();
+        List<Post> articles = new ArrayList<Post>();
+        for (int i=0; i<posts.size();i++){
+            Post currentPost = posts.get(i);
+            if (currentPost.getPostType()==1){
+                questions.add(currentPost);
+            }
+            if (currentPost.getPostType()==2){
+                articles.add(currentPost);
+            }
+        }
+
+        model.addAttribute("questions",questions);
+        model.addAttribute("articles",articles);
         model.addAttribute("materials",materials);
+        model.addAttribute("classroomUsers",classroomUsers);
         model.addAttribute("classroom", classroom);
         model.addAttribute("userOwner", user);
         return "classroom";
