@@ -50,7 +50,7 @@ public class NewsFeedController {
             suggestedMaterials.addAll(currentSuggestedClassroom.getMaterialList());
             //classify posts
             for (int j=0; j<currentSuggestedPosts.size(); j++){
-                Post currentSuggestedPost = currentSuggestedPosts.get(i);
+                Post currentSuggestedPost = currentSuggestedPosts.get(j);
                 if (currentSuggestedPost.getPostType()==1) {
                     suggestedQuestions.add(currentSuggestedPost);
                 }
