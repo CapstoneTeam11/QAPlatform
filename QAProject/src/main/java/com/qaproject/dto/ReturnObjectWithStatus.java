@@ -22,4 +22,14 @@ public class ReturnObjectWithStatus {
     public void setId(int id) {
         this.id = id;
     }
+
+    public ReturnObjectWithStatus(String status) {
+        this.status = status;
+    }
+
+    public ReturnObjectWithStatus(String status, int id) {
+        this.status = status;
+        this.id = id;
+    }
+    public ReturnObjectWithStatus(){}
 }

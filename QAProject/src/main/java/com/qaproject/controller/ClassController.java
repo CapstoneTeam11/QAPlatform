@@ -175,11 +175,17 @@ public class ClassController {
     }
     @RequestMapping(value = "/classroom/{id}",method = RequestMethod.GET)
     public String classroom(ModelMap model, @PathVariable(value = "id") String id) {
+        User userSession = (User) session.getAttribute("user");
+        if(userSession==null) {
+            return "403";
+        }
         Classroom classroom = classroomDao.find(Integer.parseInt(id));
         int idOwner = classroom.getOwnerUserId().getId();
         User user = userDao.find(idOwner);
-        model.addAttribute("class", classroom);
+
+        model.addAttribute("classroom", classroom);
         model.addAttribute("userOwner", user);
+        model.addAttribute("user", userSession);
         return "classroom";
     }
 
