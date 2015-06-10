@@ -163,17 +163,18 @@
 									</span>
                                     <span class="form-description">Please select category os this class.</span>
                                 </p>
-                            </div>
-                            <div id="form-textarea">
-                                <p>
-                                    <label class="required">Class's Description<span>*</span></label>
-                                    <textarea id="class-description" aria-required="true" cols="58" rows="8"></textarea>
-                                    <span class="form-description">Type the description thoroughly and in detail .</span>
+                                <div id="form-textarea">
+                                    <p>
+                                        <label class="required">Class's Description<span>*</span></label>
+                                        <textarea id="class-description" aria-required="true" cols="58" rows="8" style="width: 82%;"></textarea>
+                                        <span class="form-description">Type the description thoroughly and in detail .</span>
+                                    </p>
+                                </div>
+                                <p class="form-submit">
+                                    <a href="javascript:createClass();" id="publish-question" class="button color small submit text-center">Create Your Class</a>
                                 </p>
                             </div>
-                            <p class="form-submit">
-                                <a href="javascript:createClass();" id="publish-question" class="button color small submit text-center">Create Your Class</a>
-                            </p>
+
                         </form>
                     </div>
                 </div><!-- End page-content -->

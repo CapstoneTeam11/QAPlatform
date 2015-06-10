@@ -6,7 +6,15 @@ package com.qaproject.dto;
 public class ReturnObjectWithStatus {
     private String status;
     private int id;
+    public ReturnObjectWithStatus(String status) {
+        this.status = status;
+    }
 
+    public ReturnObjectWithStatus(String status, int id) {
+        this.status = status;
+        this.id = id;
+    }
+    public ReturnObjectWithStatus(){}
     public String getStatus() {
         return status;
     }
@@ -22,4 +30,6 @@ public class ReturnObjectWithStatus {
     public void setId(int id) {
         this.id = id;
     }
+
+
 }

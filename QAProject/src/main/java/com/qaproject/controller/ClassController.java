@@ -1,9 +1,6 @@
 package com.qaproject.controller;
 
-import com.qaproject.dao.CategoryDao;
-import com.qaproject.dao.ClassroomDao;
-import com.qaproject.dao.ClassroomUserDao;
-import com.qaproject.dao.TagClassroomDao;
+import com.qaproject.dao.*;
 import com.qaproject.dao.impl.*;
 import com.qaproject.dto.ReturnObjectWithStatus;
 import com.qaproject.dto.UserWithRoleDto;
@@ -26,17 +23,17 @@ import java.util.List;
 @Controller
 public class ClassController {
     @Autowired
-    ClassroomDaoImpl classroomDao;
+    ClassroomDao classroomDao;
     @Autowired
-    TagClassroomDaoImpl tagClassroomDao;
+    TagClassroomDao tagClassroomDao;
     @Autowired
-    TagDaoImpl tagDao;
+    TagDao tagDao;
     @Autowired
-    CategoryDaoImpl categoryDao;
+    CategoryDao categoryDao;
     @Autowired
-    ClassroomUserDaoImpl classroomUserDao;
+    ClassroomUserDao classroomUserDao;
     @Autowired
-    UserDaoImpl userDao;
+    UserDao userDao;
     @Autowired
     HttpSession session;
 
@@ -157,11 +154,48 @@ public class ClassController {
 
     @RequestMapping(value = "/classroom/{id}",method = RequestMethod.GET)
     public String classroom(ModelMap model, @PathVariable(value = "id") String id) {
+        User userSession = (User) session.getAttribute("user");
+        if(userSession==null) {
+            return "403";
+        }
         Classroom classroom = classroomDao.find(Integer.parseInt(id));
         int idOwner = classroom.getOwnerUserId().getId();
         User user = userDao.find(idOwner);
+
+        //get posts, materials, request to join - MinhKH
+        List<Post> posts = classroom.getPostList();
+        List<Material> materials = classroom.getMaterialList();
+        List<ClassroomUser> classroomUsers = classroomUserDao.findByTypeAndClassroom(1,classroom);
+
+        //classify post - MinhKH
+        List<Post> questions = new ArrayList<Post>();
+        List<Post> articles = new ArrayList<Post>();
+        for (int i=0; i<posts.size();i++){
+            Post currentPost = posts.get(i);
+            if (currentPost.getPostType()==1){
+                questions.add(currentPost);
+            }
+            if (currentPost.getPostType()==2){
+                articles.add(currentPost);
+            }
+        }
+
+        //classify classroomUser - MinhKH
+        List<ClassroomUser> requestStudents = new ArrayList<ClassroomUser>();
+        for (int i=0;i<classroomUsers.size();i++){
+            ClassroomUser currentClassroomUser = classroomUsers.get(i);
+            if(currentClassroomUser.getApproval()==0){// cause null pointer exception because approval = null in database
+                requestStudents.add(currentClassroomUser);
+            }
+        }
+
+        model.addAttribute("questions",questions);
+        model.addAttribute("articles",articles);
+        model.addAttribute("materials",materials);
+        model.addAttribute("requestStudents",requestStudents);
         model.addAttribute("classroom", classroom);
         model.addAttribute("userOwner", user);
+        model.addAttribute("user", userSession);
         return "classroom";
     }
 

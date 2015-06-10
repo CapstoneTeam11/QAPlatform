@@ -1,8 +1,11 @@
 package com.qaproject.controller;
 
+import com.qaproject.dao.CategoryDao;
 import com.qaproject.dao.RoleDao;
+import com.qaproject.dao.UserDao;
 import com.qaproject.dao.impl.CategoryDaoImpl;
 import com.qaproject.dao.impl.UserDaoImpl;
+import com.qaproject.dto.ReturnObjectWithStatus;
 import com.qaproject.dto.StudentDto;
 import com.qaproject.dto.TeacherDto;
 import com.qaproject.dto.UserWithRoleDto;
@@ -31,11 +34,11 @@ import java.util.List;
 @Controller
 public class UserController {
     @Autowired
-    UserDaoImpl userDao;
+    UserDao userDao;
     @Autowired
     RoleDao roleDao;
     @Autowired
-    CategoryDaoImpl categoryDao;
+    CategoryDao categoryDao;
     @RequestMapping(value = "/editProfile",method = RequestMethod.GET)
     public String editProfile(Model model, HttpServletRequest request) {
         HttpSession session =  request.getSession();
@@ -68,10 +71,12 @@ public class UserController {
         return "OK";
     }
     @RequestMapping(value = "/register",method = RequestMethod.POST)
-    public String register(@ModelAttribute("userWithRole")UserWithRoleDto userRole) {
+    @ResponseBody
+    public ReturnObjectWithStatus register(@ModelAttribute("userWithRole")UserWithRoleDto userRole, HttpServletRequest request) {
         System.out.print(userRole.toString());
         User user = new User();
-        user.setAboutMe("hehe");
+        user.setAboutMe("");
+        user.setDisplayName(userRole.getEmail());
         user.setEmail(userRole.getEmail());
         user.setPassword(userRole.getPassword());
         if(userRole.getRole().equalsIgnoreCase("student")){
@@ -81,21 +86,23 @@ public class UserController {
         }
 
         userDao.persist(user);
-        return "notification";
+        HttpSession session = request.getSession();
+        session.setAttribute("user", user);
+        return new ReturnObjectWithStatus("OK", user.getRoleId().getId());
     }
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     @ResponseBody
-    public String login(@RequestParam("username") String username, @RequestParam("password") String password, Model model, HttpServletRequest request){
+    public ReturnObjectWithStatus login(@RequestParam("username") String username, @RequestParam("password") String password, Model model, HttpServletRequest request){
         if (username == null || password == null){
-            return "NG";
+            return new ReturnObjectWithStatus("NG");
         }
         List<User> users = userDao.login(username, password);
         if(users.size()>0){
             HttpSession session = request.getSession();
             session.setAttribute("user", users.get(0));
-            return "OK";
+            return new ReturnObjectWithStatus("OK", users.get(0).getRoleId().getId());
         }else{
-            return "NG";
+            return new ReturnObjectWithStatus("NG");
         }
     }
 

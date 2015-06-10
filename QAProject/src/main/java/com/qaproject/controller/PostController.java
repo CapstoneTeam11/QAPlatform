@@ -85,7 +85,10 @@ public class PostController {
         model.addAttribute("post",post);
         model.addAttribute("relatedPosts", relatedPosts);
         model.addAttribute("postAnswers", postAnswers);
-        return "question";
+        if (post.getPostType()==1){
+            return "question";
+        }
+        return "article";
     }
     @RequestMapping(value = "/post/create/{id}",method = RequestMethod.GET)
     public String createDispath(@PathVariable Integer id, ModelMap model) {

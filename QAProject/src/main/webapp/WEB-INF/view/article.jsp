@@ -3,8 +3,9 @@
   User: Minh
   Date: 5/25/2015
   Time: 2:34 PM
-  To change this template use File | Settings | File Templates.
+  To change this template use File | Settings | File Templates. 
 --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -105,11 +106,11 @@
 
 <%@include file="header.jsp" %>
 
-<div class="breadcrumbs">
+<div class="breadcrumbs" style="margin-top: 86px">
     <section class="container" style="height:70px; display: flex; align-items: center">
         <div class="row">
             <div class="col-md-12">
-                <h3>This is my article</h3>
+                <h3>Article</h3>
             </div>
         </div><!-- End row -->
     </section><!-- End container -->
@@ -120,21 +121,15 @@
         <div class="col-md-9">
             <article class="post single-post clearfix">
                 <div class="post-inner">
-                    <h2 class="post-title"><span class="post-type"><i class="icon-film"></i></span>Beautiful Gallery Post.</h2>
+                    <h2 class="post-title"><span class="post-type"><i class="icon-film"></i></span>${post.title}</h2>
                     <div class="post-meta">
-                        <span class="meta-author"><i class="icon-user"></i><a href="#">Teacher: Mr.Thang</a></span>
-                        <span class="meta-date"><i class="icon-time"></i>September 30 , 2013</span>
-                        <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">15 comments</a></span>
-                        <span class="question-category"><a href="#"><i class="icon-group"></i>Class: Advance Java</a></span>
+                        <span class="meta-author"><i class="icon-user"></i><a href="#">Teacher: ${post.ownerClassId.ownerUserId.displayName}</a></span>
+                        <span class="meta-date"><i class="icon-time"></i>${post.lastEditedDate}</span>
+                        <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">${post.replyCount} comment(s)</a></span>
+                        <span class="question-category"><a href="/classroom/${post.ownerClassId.id}"><i class="icon-group"></i>Class: ${post.ownerClassId.classroomName}</a></span>
                     </div>
                     <div class="post-content">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi adipiscing gravida odio, sit amet suscipit risus ultrices eu. Fusce viverra neque at purus laoreet consequat. Vivamus vulputate posuere nisl quis consequat. Donec congue commodo mi, sed commodo velit fringilla ac. Fusce placerat venenatis mi. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras ornare, dolor a aliquet rutrum, dolor turpis condimentum leo, a semper lacus purus in felis. Quisque blandit posuere turpis, eget auctor felis pharetra eu.</p>
-
-                        <blockquote>
-                            <p>Quisque ligulas ipsum, euismod atras vulputate iltricies etri elit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nulla nunc dui, tristique in semper vel, congue sed ligula.</p>
-                        </blockquote>
-
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi adipiscing gravida odio, sit amet suscipit risus ultrices eu. Fusce viverra neque at purus laoreet consequat. Vivamus vulputate posuere nisl quis consequat. Donec congue commodo mi, sed commodo velit fringilla ac. Fusce placerat venenatis mi. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
+                        ${post.body}
                     </div><!-- End post-content -->
                     <div class="clearfix"></div>
                 </div><!-- End post-inner -->
@@ -142,14 +137,16 @@
 
             <div class="share-tags page-content">
                 <div class="question-tags"><i class="icon-tags"></i>
-                    <a href="#">wordpress</a>, <a href="#">question</a>, <a href="#">developer</a>
+                    <c:forEach var="tag" items="${post.tagPostList}">
+                        <a href="#">${tag.tagId.tagName},</a>
+                    </c:forEach>
                 </div>
                 <div class="clearfix"></div>
             </div><!-- End share-tags -->
 
 
             <div id="commentlist" class="page-content">
-                <div class="boxedtitle page-title"><h2>Comment ( <span class="color">5</span> )</h2></div>
+                <div class="boxedtitle page-title"><h2>Comment ( <span class="color">${post.replyCount}</span> )</h2></div>
                 <ol class="commentlist clearfix">
                     <li class="comment">
                         <div class="comment-body comment-body-answered clearfix">
@@ -260,20 +257,19 @@
                         <div class="author-img">
                             <a href="#"><img width="60" height="60" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" alt=""></a>
                         </div>
-                        <h6><a href="#">Mr. Thang</a></h6>
+                        <h6><a href="#">${post.ownerUserId.displayName}</a></h6>
                     </li>
                 </ul>
             </div>
 
             <div class="widget">
-                <h3 class="widget_title">Related Articles</h3>
+                <h3 class="widget_title">Related Posts</h3>
                 <ul class="related-posts">
-                    <li class="related-item">
-                        <a href="#">This is my first Article</a>
-                    </li>
-                    <li class="related-item">
-                        <a href="#">This Is My Second Article</a>
-                    </li>
+                    <c:forEach var="relatedPost" items="${relatedPosts}">
+                        <li class="related-item">
+                            <a href="${relatedPost.id}">${relatedPost.title}</a>
+                        </li>
+                    </c:forEach>
                 </ul>
             </div>
 
