@@ -7,6 +7,7 @@ import com.qaproject.dao.impl.CategoryDaoImpl;
 import com.qaproject.dao.impl.UserDaoImpl;
 import com.qaproject.dto.ReturnObjectWithStatus;
 import com.qaproject.dto.StudentDto;
+import com.qaproject.dto.TeacherDto;
 import com.qaproject.dto.UserWithRoleDto;
 import com.qaproject.entity.Category;
 import com.qaproject.entity.Role;
@@ -136,6 +137,19 @@ public class UserController {
         List<StudentDto> userNameList = new ArrayList<StudentDto>();
         for (int i = 0; i < userList.size(); i++) {
             userNameList.add(new StudentDto(userList.get(i).getDisplayName(), userList.get(i).getId()));
+        }
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        return userNameList;
+    }
+    @RequestMapping(value = "/teacherInvitation/{username}/{postId}",method = RequestMethod.GET)
+    @ResponseBody
+    public List<TeacherDto> teacherInvitation(@PathVariable("username") String username,
+                                              @PathVariable("postId") Integer postId
+                                                , HttpServletResponse response) {
+        List<User> userList = userDao.findTeacherPostInvitation(username,postId);
+        List<TeacherDto> userNameList = new ArrayList<TeacherDto>();
+        for (int i = 0; i < userList.size(); i++) {
+            userNameList.add(new TeacherDto(userList.get(i).getId(), userList.get(i).getDisplayName()));
         }
         response.addHeader("Access-Control-Allow-Origin", "*");
         return userNameList;

@@ -94,4 +94,19 @@ public class UserDaoImpl extends BaseDao<User,Integer> implements UserDao {
         }
         return users;
     }
+
+    @Override
+    public List<User> findTeacherPostInvitation(String username,Integer postId) {
+        Query query = null;
+        query = entityManager.createQuery("select u from User u where u.displayName like :username and u.roleId.id = 2 and u not in (select p.teacherId from PostInvitation p where p.postId.id =:postId ) ", User.class);
+        List<User> users = null;
+        try {
+            query.setParameter("username", "%" + username + "%");
+            query.setParameter("postId",postId);
+            users =  query.getResultList();
+        } catch (NoResultException e) {
+            System.out.println("User null");
+        }
+        return users;
+    }
 }

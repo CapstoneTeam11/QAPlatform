@@ -14,6 +14,7 @@ import java.util.List;
 public interface PostDao {
     List<Post> findAll();
     public Post find(Integer id);
+    public List<Post> findPostChilds(Integer id,Integer page);
     @Transactional(propagation = Propagation.REQUIRED)
     public void persist(Post entity);
     @Transactional(propagation = Propagation.REQUIRED)
