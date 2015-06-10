@@ -22,7 +22,7 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class TeacherController {
     @Autowired
-    FollowerImpl followerDao;
+    FollowerDao followerDao;
     @RequestMapping(value = "/followTeacher/",method = RequestMethod.GET)
     @ResponseBody
     public String followTeacher(Model model, @RequestParam(value = "teacherId")String teacherId,

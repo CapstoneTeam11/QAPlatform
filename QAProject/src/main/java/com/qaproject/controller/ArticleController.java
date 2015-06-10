@@ -1,5 +1,6 @@
 package com.qaproject.controller;
 
+import com.qaproject.dao.PostDao;
 import com.qaproject.dao.impl.PostDaoImpl;
 import com.qaproject.dto.UserWithRoleDto;
 import com.qaproject.entity.Post;
@@ -19,7 +20,7 @@ import java.util.List;
 @Controller
 public class ArticleController {
     @Autowired
-    PostDaoImpl postDao;
+    PostDao postDao;
     @RequestMapping(value = "/getAllPost",method = RequestMethod.GET)
     public String loadPost(Model model) {
         List<Post> posts = postDao.findAll();

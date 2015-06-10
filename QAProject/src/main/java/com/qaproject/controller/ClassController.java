@@ -1,9 +1,6 @@
 package com.qaproject.controller;
 
-import com.qaproject.dao.CategoryDao;
-import com.qaproject.dao.ClassroomDao;
-import com.qaproject.dao.ClassroomUserDao;
-import com.qaproject.dao.TagClassroomDao;
+import com.qaproject.dao.*;
 import com.qaproject.dao.impl.*;
 import com.qaproject.dto.ReturnObjectWithStatus;
 import com.qaproject.dto.UserWithRoleDto;
@@ -26,17 +23,17 @@ import java.util.List;
 @Controller
 public class ClassController {
     @Autowired
-    ClassroomDaoImpl classroomDao;
+    ClassroomDao classroomDao;
     @Autowired
-    TagClassroomDaoImpl tagClassroomDao;
+    TagClassroomDao tagClassroomDao;
     @Autowired
-    TagDaoImpl tagDao;
+    TagDao tagDao;
     @Autowired
-    CategoryDaoImpl categoryDao;
+    CategoryDao categoryDao;
     @Autowired
-    ClassroomUserDaoImpl classroomUserDao;
+    ClassroomUserDao classroomUserDao;
     @Autowired
-    UserDaoImpl userDao;
+    UserDao userDao;
     @Autowired
     HttpSession session;
 
@@ -187,7 +184,7 @@ public class ClassController {
         List<ClassroomUser> requestStudents = new ArrayList<ClassroomUser>();
         for (int i=0;i<classroomUsers.size();i++){
             ClassroomUser currentClassroomUser = classroomUsers.get(i);
-            if(currentClassroomUser.getApproval()==0){
+            if(currentClassroomUser.getApproval()==0){// cause null pointer exception because approval = null in database
                 requestStudents.add(currentClassroomUser);
             }
         }

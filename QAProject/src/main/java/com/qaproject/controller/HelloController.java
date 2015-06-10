@@ -1,5 +1,6 @@
 package com.qaproject.controller;
 
+import com.qaproject.dao.CategoryDao;
 import com.qaproject.dao.impl.CategoryDaoImpl;
 import com.qaproject.entity.Category;
 import com.qaproject.entity.User;
@@ -32,7 +33,7 @@ public class HelloController {
 //        updateAddUI(post);
 //    }
     @Autowired
-    CategoryDaoImpl categoryDao;
+    CategoryDao categoryDao;
 	@RequestMapping(value = "/",method = RequestMethod.GET)
      public String printWelcome(ModelMap model) {
         List<Category> categoryList = categoryDao.findAll();

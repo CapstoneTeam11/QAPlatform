@@ -1,6 +1,8 @@
 package com.qaproject.controller;
 
+import com.qaproject.dao.CategoryDao;
 import com.qaproject.dao.RoleDao;
+import com.qaproject.dao.UserDao;
 import com.qaproject.dao.impl.CategoryDaoImpl;
 import com.qaproject.dao.impl.UserDaoImpl;
 import com.qaproject.dto.ReturnObjectWithStatus;
@@ -31,11 +33,11 @@ import java.util.List;
 @Controller
 public class UserController {
     @Autowired
-    UserDaoImpl userDao;
+    UserDao userDao;
     @Autowired
     RoleDao roleDao;
     @Autowired
-    CategoryDaoImpl categoryDao;
+    CategoryDao categoryDao;
     @RequestMapping(value = "/editProfile",method = RequestMethod.GET)
     public String editProfile(Model model, HttpServletRequest request) {
         HttpSession session =  request.getSession();
@@ -138,14 +140,5 @@ public class UserController {
         User user = (User)session.getAttribute("user");
         model.addAttribute("userProfile", user);
         return "profile";
-    }
-    @RequestMapping(value = "/studentdashboard",method = RequestMethod.GET)
-    public String studentdashboard(ModelMap model, HttpServletRequest request) {
-        HttpSession session = request.getSession();// Phan quyen user
-        User user = (User) session.getAttribute("user");
-        if(user.getRoleId().getId()==2){
-            return "403";
-        }
-        return "studentdashboard";
     }
 }
