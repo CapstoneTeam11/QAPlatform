@@ -154,25 +154,7 @@ public class ClassController {
         return "OK";
     }
 
-    /**
-     * MinhKH
-     * Controller get suggested classrooms
-     * @param model
-     * @return String
-     */
-    @RequestMapping(value= "/newsfeed/welcomeFirst", method= RequestMethod.GET)
-    public String suggestClass(ModelMap model){
-        //Check is User
-        User user = (User) session.getAttribute("user");
-        if(user==null) {
-            return "redirect:/";
-        }
 
-        Category category = user.getCategoryId();
-        List<Classroom> suggestedClassrooms = classroomDao.findByCategory(category);
-        model.addAttribute("suggestedClassrooms",suggestedClassrooms);
-        return "newsfeed";
-    }
     @RequestMapping(value = "/classroom/{id}",method = RequestMethod.GET)
     public String classroom(ModelMap model, @PathVariable(value = "id") String id) {
         Classroom classroom = classroomDao.find(Integer.parseInt(id));
