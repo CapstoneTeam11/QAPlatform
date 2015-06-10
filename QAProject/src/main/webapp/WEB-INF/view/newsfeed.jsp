@@ -104,69 +104,34 @@
                     <div class="boxedtitle page-title"><h2>Question</h2></div>
                     <div style="display: block;">
                         <div class="tab-inner">
-                            <c:forEach items="${posts}" var="post">
-                                <article class="question question-type-normal">
-                                    <h2>
-                                        <a href="/question">${post.title}</a>
-                                    </h2>
-                                    <div class="question-author">
-                                        <a href="#" original-title="ahmed" class="question-author-img tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>
-                                    </div>
-                                    <div class="question-inner">
-                                        <div class="clearfix"></div>
-                                        <p class="question-desc">${post.body}</p>
-                                        <div class="question-details">
-                                            <span class="question-answered question-answered-done"><c:if test="${post.acceptedAnswerId} != null"><i class="icon-ok"></i>Resolved</c:if></span>
+                            <c:if test="${not empty questions}">
+                                <c:forEach var="question" items="${questions}">
+                                    <article class="question question-type-normal">
+                                        <h2>
+                                            <a href="/post/view/${question.id}">${question.title}</a>
+                                        </h2>
+                                        <div class="question-author">
+                                            <a href="/profile/${question.ownerUserId.id}" original-title="${question.ownerUserId.displayName}" class="question-author-img tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>
                                         </div>
-                                        <span class="question-date"><i class="icon-time"></i>4 mins ago</span>
-                                        <span class="question-category"><a href="/classroom"><i class="icon-group"></i>Class: Advance Java</a></span>
-                                        <span class="question-comment"><a href="#"><i class="icon-comment"></i>${post.replyCount} Answer</a></span>
-                                        <div class="clearfix"></div>
-                                    </div>
-                                </article>
-                            </c:forEach>
-                            <%--<article class="question question-type-normal">--%>
-
-                            <%--</article>--%>
-                            <article class="question question-type-normal">
-                                <h2>
-                                    <a href="/question">This is my 2nd Question</a>
-                                </h2>
-                                <div class="question-author">
-                                    <a href="#" original-title="ahmed" class="question-author-img tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>
-                                </div>
-                                <div class="question-inner">
-                                    <div class="clearfix"></div>
-                                    <p class="question-desc">Duis dapibus aliquam mi, eget euismod sem scelerisque ut. Vivamus at elit quis urna adipiscing iaculis. Curabitur vitae velit in neque dictum blandit. Proin in iaculis neque. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur vitae velit in neque dictum blandit.</p>
-                                    <div class="question-details">
-                                        <span class="question-answered question-answered-done"><i class="icon-ok"></i>solved</span>
-                                    </div>
-                                    <span class="question-date"><i class="icon-time"></i>4 mins ago</span>
-                                    <span class="question-category"><a href="/classroom"><i class="icon-group"></i>Class: Advance Java</a></span>
-                                    <span class="question-comment"><a href="#"><i class="icon-comment"></i>5 Answer</a></span>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </article>
-                            <%--<article class="question question-type-normal">--%>
-                                <%--<h2>--%>
-                                    <%--<a href="/question">This is my 3rd Question</a>--%>
-                                <%--</h2>--%>
-                                <%--<div class="question-author">--%>
-                                    <%--<a href="#" original-title="ahmed" class="question-author-img tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>--%>
-                                <%--</div>--%>
-                                <%--<div class="question-inner">--%>
-                                    <%--<div class="clearfix"></div>--%>
-                                    <%--<p class="question-desc">Duis dapibus aliquam mi, eget euismod sem scelerisque ut. Vivamus at elit quis urna adipiscing iaculis. Curabitur vitae velit in neque dictum blandit. Proin in iaculis neque. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur vitae velit in neque dictum blandit.</p>--%>
-                                    <%--<div class="question-details">--%>
-                                        <%--<span class="question-answered question-answered-done"><i class="icon-ok"></i>solved</span>--%>
-                                    <%--</div>--%>
-                                    <%--<span class="question-date"><i class="icon-time"></i>4 mins ago</span>--%>
-                                    <%--<span class="question-category"><a href="/classroom"><i class="icon-group"></i>Class: Advance Java</a></span>--%>
-                                    <%--<span class="question-comment"><a href="#"><i class="icon-comment"></i>5 Answer</a></span>--%>
-                                    <%--<div class="clearfix"></div>--%>
-                                <%--</div>--%>
-                            <%--</article>--%>
-                            <a href="#" class="post-read-more button color small" style="margin-bottom: 5px;">Continue reading</a>
+                                        <div class="question-inner">
+                                            <div class="clearfix"></div>
+                                            <div class="question-desc short-text">${question.body}</div>
+                                            <div class="question-details">
+                                                <span class="question-answered question-answered-done">
+                                                    <c:if test="${question.acceptedAnswerId} != null">
+                                                        <i class="icon-ok"></i>Resolved
+                                                    </c:if>
+                                                </span>
+                                            </div>
+                                            <span class="question-date"><i class="icon-time"></i>${question.lastEditedDate}</span>
+                                            <span class="question-category"><a href="/classroom"><i class="icon-group"></i>Class: ${question.ownerClassId.classroomName}</a></span>
+                                            <span class="question-comment"><a href="#"><i class="icon-comment"></i>${question.replyCount} Answer(s)</a></span>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </article>
+                                </c:forEach>
+                                <a href="#" class="post-read-more button color small" style="margin-bottom: 5px;">Continue reading</a>
+                            </c:if>
                         </div>
                     </div>
                 </div>
@@ -181,63 +146,25 @@
                     <div class="boxedtitle page-title"><h2>Article</h2></div>
                     <div class="" style="display: block;">
                         <div class="tab-inner">
-                            <article class="post clearfix">
-                                <div class="post-inner">
-                                    <h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a href="/article">Post Without Image.</a></h2>
-                                    <div class="post-meta">
-                                        <span class="meta-author"><i class="icon-user"></i><a href="#">Teacher: Mr.Thang</a></span>
-                                        <span class="meta-date"><i class="icon-time"></i>September 30 , 2013</span>
-                                        <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">15 comments</a></span>
-                                        <span class="question-category"><a href="/classroom"><i class="icon-group"></i>Class: Advance Java</a></span>
-                                    </div>
-                                    <div class="post-content">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi adipiscing gravida odio, sit amet suscipit risus ultrices eu. Fusce viverra neque at purus laoreet consequat. Vivamus vulputate posuere nisl quis consequat. Donec congue commodo mi, sed commodo velit fringilla ac. Fusce placerat venenatis mi.</p>
-                                    </div><!-- End post-content -->
-                                </div><!-- End post-inner -->
-                            </article>
-                            <article class="post clearfix">
-                                <div class="post-inner">
-                                    <h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a href="/article">Post Without Image.</a></h2>
-                                    <div class="post-meta">
-                                        <span class="meta-author"><i class="icon-user"></i><a href="#">Teacher: Mr.Thang</a></span>
-                                        <span class="meta-date"><i class="icon-time"></i>September 30 , 2013</span>
-                                        <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">15 comments</a></span>
-                                        <span class="question-category"><a href="/classroom"><i class="icon-group"></i>Class: Advance Java</a></span>
-                                    </div>
-                                    <div class="post-content">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi adipiscing gravida odio, sit amet suscipit risus ultrices eu. Fusce viverra neque at purus laoreet consequat. Vivamus vulputate posuere nisl quis consequat. Donec congue commodo mi, sed commodo velit fringilla ac. Fusce placerat venenatis mi.</p>
-                                    </div><!-- End post-content -->
-                                </div><!-- End post-inner -->
-                            </article>
-                            <article class="post clearfix">
-                                <div class="post-inner">
-                                    <h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a href="/article">Post Without Image.</a></h2>
-                                    <div class="post-meta">
-                                        <span class="meta-author"><i class="icon-user"></i><a href="#">Teacher: Mr.Thang</a></span>
-                                        <span class="meta-date"><i class="icon-time"></i>September 30 , 2013</span>
-                                        <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">15 comments</a></span>
-                                        <span class="question-category"><a href="/classroom"><i class="icon-group"></i>Class: Advance Java</a></span>
-                                    </div>
-                                    <div class="post-content">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi adipiscing gravida odio, sit amet suscipit risus ultrices eu. Fusce viverra neque at purus laoreet consequat. Vivamus vulputate posuere nisl quis consequat. Donec congue commodo mi, sed commodo velit fringilla ac. Fusce placerat venenatis mi.</p>
-                                    </div><!-- End post-content -->
-                                </div><!-- End post-inner -->
-                            </article>
-                            <article class="post clearfix">
-                                <div class="post-inner">
-                                    <h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a href="/article">Post Without Image.</a></h2>
-                                    <div class="post-meta">
-                                        <span class="meta-author"><i class="icon-user"></i><a href="#">Teacher: Mr.Thang</a></span>
-                                        <span class="meta-date"><i class="icon-time"></i>September 30 , 2013</span>
-                                        <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">15 comments</a></span>
-                                        <span class="question-category"><a href="/classroom"><i class="icon-group"></i>Class: Advance Java</a></span>
-                                    </div>
-                                    <div class="post-content">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi adipiscing gravida odio, sit amet suscipit risus ultrices eu. Fusce viverra neque at purus laoreet consequat. Vivamus vulputate posuere nisl quis consequat. Donec congue commodo mi, sed commodo velit fringilla ac. Fusce placerat venenatis mi.</p>
-                                    </div><!-- End post-content -->
-                                </div><!-- End post-inner -->
-                            </article>
-                            <a href="#" class="post-read-more button color small" style="margin-bottom: 5px;">Continue reading</a>
+                            <c:if test="${not empty articles}">
+                                <c:forEach var="article" items="${articles}">
+                                    <article class="post clearfix">
+                                        <div class="post-inner">
+                                            <h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a href="/post/view/${article.id}">${article.title}</a></h2>
+                                            <div class="post-meta">
+                                                <span class="meta-author"><i class="icon-user"></i><a href="#">Author: ${article.ownerUserId.displayName}</a></span>
+                                                <span class="meta-date"><i class="icon-time"></i>${article.lastEditedDate}</span>
+                                                <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">${article.replyCount} comment(s)</a></span>
+                                                <span class="question-category"><a href="/classroom/${article.ownerClassId.id}"><i class="icon-group"></i>Class: ${article.ownerClassId.classroomName}</a></span>
+                                            </div>
+                                            <div class="post-content short-text">
+                                                <p>${article.body}</p>
+                                            </div><!-- End post-content -->
+                                        </div><!-- End post-inner -->
+                                    </article>
+                                </c:forEach>
+                                <a href="#" class="post-read-more button color small" style="margin-bottom: 5px;">Continue reading</a>
+                            </c:if>
                         </div>
                     </div>
                 </div>
@@ -256,15 +183,15 @@
                                     <th>File name</th>
                                     <th>Uploaded Date</th>
                                     <th>File size</th>
-                                    <th>Download</th>
                                 </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Introduction to AJ</td>
-                                    <td>22-05-2015</td>
-                                    <td>1 MB</td>
-                                    <td></td>
-                                </tr>
+                                <c:forEach var="material" items="${materials}" varStatus="counter">
+                                    <tr>
+                                        <td>${counter.count}</td>
+                                        <td>${material.name}</td>
+                                        <td>${material.creationDate}</td>
+                                        <td>${material.size}</td>
+                                    </tr>
+                                </c:forEach>
                             </table>
                         </div>
                     </div>
@@ -318,6 +245,14 @@
                     jQuery("#suggested-classrooms").show().animate({"top":"50%"},500);
                     jQuery("body").prepend("<div class='wrap-pop'></div>");
                     wrap_pop();
+
+                    /*short test for list of posts - MinhKH*/
+                    $(".short-text").each(function () {
+                        text = $(this).text();
+                        if (text.length > 400) {
+                            $(this).html(text.substr(0, 400) + '.......');
+                        }
+                    });
 
         });
         function wrap_pop() {

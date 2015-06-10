@@ -135,16 +135,20 @@
                             <a href="/post/view/${question.id}">${question.title}</a>
                         </h2>
                         <div class="question-author">
-                            <a href="#" original-title="${question.ownerUserId.displayName}" class="question-author-img tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>
+                            <a href="/profile/${question.ownerUserId.id}" original-title="${question.ownerUserId.displayName}" class="question-author-img tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>
                         </div>
                         <div class="question-inner">
                             <div class="clearfix"></div>
                             <div class="question-desc short-text">${question.body}</div>
                             <div class="question-details">
-                                <span class="question-answered question-answered-done"><i class="icon-ok"></i>solved</span>
+                                <span class="question-answered question-answered-done">
+                                    <c:if test="${question.acceptedAnswerId} != null">
+                                        <i class="icon-ok"></i>Resolved
+                                    </c:if>
+                                </span>
                             </div>
                             <span class="question-date"><i class="icon-time"></i>${question.lastEditedDate}</span>
-                            <span class="question-category"><a href="#"><i class="icon-group"></i>Class: ${question.ownerUserId.displayName}</a></span>
+                            <span class="question-category"><a href="#"><i class="icon-group"></i>Class: ${question.ownerClassId.classroomName}</a></span>
                             <span class="question-comment"><a href="#"><i class="icon-comment"></i>${question.replyCount} Answer(s)</a></span>
                             <div class="clearfix"></div>
                         </div>
@@ -158,27 +162,22 @@
     <div class="tab-inner">
         <c:if test="${not empty articles}">
             <c:forEach var="article" items="${articles}">
-                <article class="question question-type-normal">
-                    <h2>
-                        <a href="/post/view/${article.id}">${article.title}</a>
-                    </h2>
-                    <div class="question-author">
-                        <a href="#" original-title="${article.ownerUserId.displayName}" class="question-author-img tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>
-                    </div>
-                    <div class="question-inner">
-                        <div class="clearfix"></div>
-                        <div class="question-desc short-text">${article.body}</div>
-                        <div class="question-details">
-                            <span class="question-answered question-answered-done"><i class="icon-ok"></i>solved</span>
+                <article class="post clearfix">
+                    <div class="post-inner">
+                        <h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a href="/post/view/${article.id}">${article.title}</a></h2>
+                        <div class="post-meta">
+                            <span class="meta-author"><i class="icon-user"></i><a href="#">Author: ${article.ownerUserId.displayName}</a></span>
+                            <span class="meta-date"><i class="icon-time"></i>${article.lastEditedDate}</span>
+                            <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">${article.replyCount} comment(s)</a></span>
+                            <span class="question-category"><a href="/classroom/${article.ownerClassId.id}"><i class="icon-group"></i>Class: ${article.ownerClassId.classroomName}</a></span>
                         </div>
-                        <span class="question-date"><i class="icon-time"></i>${article.lastEditedDate}</span>
-                        <span class="question-category"><a href="#"><i class="icon-group"></i>Class: ${article.ownerUserId.displayName}</a></span>
-                        <span class="question-comment"><a href="#"><i class="icon-comment"></i>${article.replyCount} Answer(s)</a></span>
-                        <div class="clearfix"></div>
-                    </div>
+                        <div class="post-content short-text">
+                            <p>${article.body}</p>
+                        </div><!-- End post-content -->
+                    </div><!-- End post-inner -->
                 </article>
             </c:forEach>
-            <a href="#" class="post-read-more button color small" style="margin-bottom: 20px;">Continue reading</a>
+            <a href="#" class="post-read-more button color small" style="margin-bottom: 5px;">Continue reading</a>
         </c:if>
     </div>
 </div>
