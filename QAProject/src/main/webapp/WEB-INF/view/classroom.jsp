@@ -112,7 +112,7 @@
                onblur="if(this.value=='')this.value='Search in ${classroom.classroomName} class';" style="width: 100%">
     </div>
     <div class="col-md-6 col-sm-6">
-        <a href="/post/create/1" class="button medium green-button" style="float: right"><i class="icon-pencil"></i> Create post</a>
+        <a href="/post/create/${classroom.id}" class="button medium green-button" style="float: right"><i class="icon-pencil"></i> Create post</a>
     </div>
 
     </div>
@@ -319,6 +319,7 @@
             $(tagId).remove();
         });
 
+        /*short test for list of posts - MinhKH*/
         $(".short-text").each(function () {
             text = $(this).text();
             if (text.length > 400) {
