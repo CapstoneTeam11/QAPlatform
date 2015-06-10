@@ -160,7 +160,7 @@ public class ClassController {
         Classroom classroom = classroomDao.find(Integer.parseInt(id));
         int idOwner = classroom.getOwnerUserId().getId();
         User user = userDao.find(idOwner);
-        model.addAttribute("class", classroom);
+        model.addAttribute("classroom", classroom);
         model.addAttribute("userOwner", user);
         return "classroom";
     }
