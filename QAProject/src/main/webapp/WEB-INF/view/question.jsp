@@ -152,7 +152,7 @@
 
 
 <div id="commentlist" class="page-content">
-    <div class="boxedtitle page-title"><h2>Answers ( <span class="color">5</span> )</h2></div>
+    <div class="boxedtitle page-title"><h2>Answers ( <span class="color">${post.replyCount}</span> )</h2></div>
     <ol class="commentlist clearfix" id="commentList">
         <li class="comment">
             <div class="comment-body comment-body-answered clearfix">
@@ -270,7 +270,7 @@
     </div>
 
     <div class="widget">
-        <h3 class="widget_title">Related Questions</h3>
+        <h3 class="widget_title">Related Posts</h3>
         <ul class="related-posts">
             <c:forEach var="relatedPost" items="${relatedPosts}">
                 <li class="related-item">
