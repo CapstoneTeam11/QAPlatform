@@ -138,7 +138,7 @@
                     </div>
                     <div class="question-inner">
                         <div class="clearfix"></div>
-                        <p class="question-desc">${post.body}</p>
+                        <div class="question-desc short-text">${post.body}</div>
                         <div class="question-details">
                             <span class="question-answered question-answered-done"><i class="icon-ok"></i>solved</span>
                         </div>
@@ -163,10 +163,10 @@
                     <div class="post-meta">
                         <span class="meta-author"><i class="icon-user"></i><a href="#">Author: ${post.ownerUserId.displayName}</a></span>
                         <span class="meta-date"><i class="icon-time"></i>${post.lastEditedDate}</span>
-                        <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">${post.replyCount} comments</a></span>
+                        <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">${post.replyCount} comment(s)</a></span>
                         <span class="question-category"><a href="#"><i class="icon-group"></i>Class: ${post.ownerClassId.classroomName}</a></span>
                     </div>
-                    <div class="post-content">
+                    <div class="post-content short-text">
                         <p>${post.body}</p>
                     </div><!-- End post-content -->
                 </div><!-- End post-inner -->
@@ -231,20 +231,6 @@
                 <span class="comment">${userOwner.aboutMe}</span>
             </li>
         </ul>
-    </div>
-
-
-
-    <div class="widget widget_tag_cloud">
-        <h3 class="widget_title">Tags</h3>
-        <a href="#">projects</a>
-        <a href="#">Portfolio</a>
-        <a href="#">Wordpress</a>
-        <a href="#">Html</a>
-        <a href="#">Css</a>
-        <a href="#">jQuery</a>
-        <a href="#">2code</a>
-        <a href="#">vbegy</a>
     </div>
 
 </aside><!-- End sidebar -->
@@ -333,6 +319,12 @@
             $(tagId).remove();
         });
 
+        $(".short-text").each(function () {
+            text = $(this).text();
+            if (text.length > 400) {
+                $(this).html(text.substr(0, 400) + '.......');
+            }
+        });
     });
     function joinClass(id){
         var url = "/requestJoinClass/"+id;
