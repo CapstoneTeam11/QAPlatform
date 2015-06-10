@@ -96,7 +96,7 @@
     <section class="container" style="height:70px; display: flex; align-items: center">
         <div class="row">
             <div class="col-md-12">
-                <h3>${class.classroomName}</h3>
+                <h3>${classroom.classroomName}</h3>
             </div>
         </div><!-- End row -->
     </section><!-- End container -->
@@ -108,8 +108,8 @@
     <div class="clearfix"></div>
     <div class="row">
     <div class="col-md-6 col-sm-6">
-        <input type="text" aria-required="true" value="Search in ${class.classroomName} class" onfocus="if(this.value=='Search in ${class.classroomName} class')this.value='';"
-               onblur="if(this.value=='')this.value='Search in ${class.id} class';" style="width: 100%">
+        <input type="text" aria-required="true" value="Search in ${classroom.classroomName} class" onfocus="if(this.value=='Search in ${classroom.classroomName} class')this.value='';"
+               onblur="if(this.value=='')this.value='Search in ${classroom.classroomName} class';" style="width: 100%">
     </div>
     <div class="col-md-6 col-sm-6">
         <a href="/post/create/1" class="button medium green-button" style="float: right"><i class="icon-pencil"></i> Create post</a>
@@ -277,11 +277,11 @@
         <h3 class="widget_title">About class</h3>
         <ul class="related-posts">
             <li class="related-item">
-                <p>${class.classroomDescription}</p>
+                <p>${classroom.classroomDescription}</p>
                 <div class="clear"></div><span>Feb 22, 2014</span>
             </li>
         </ul>
-        <a href="javascript:joinClass(${class.id})" class="button small color" id="join">Join</a>
+        <a href="javascript:joinClass(${classroom.id})" class="button small color" id="join">Join</a>
     </div>
     <div class="widget widget_login" style="  min-height: 130px;">
         <h3 class="widget_title">Invite student</h3>
@@ -340,7 +340,7 @@
                 </div>
             </div>
             <p class="form-submit">
-                <a href="javascript:inviteStudent(${class.id})" class="button color small submit">Invite</a>
+                <a href="javascript:inviteStudent(${classroom.id})" class="button color small submit">Invite</a>
             </p>
         </form>
         <div class="clearfix"></div>
@@ -378,7 +378,7 @@
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             remote: {
-                url: 'http://localhost:8080/findAllStudentNotInClass/${class.id}/%QUERY'
+                url: 'http://localhost:8080/findAllStudentNotInClass/${classroom.id}/%QUERY'
             }
         });
         student.initialize();
