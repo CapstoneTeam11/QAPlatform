@@ -179,10 +179,19 @@ public class ClassController {
             }
         }
 
+        //classify classroomUser - MinhKH
+        List<ClassroomUser> requestStudents = new ArrayList<ClassroomUser>();
+        for (int i=0;i<classroomUsers.size();i++){
+            ClassroomUser currentClassroomUser = classroomUsers.get(i);
+            if(currentClassroomUser.getApproval()==0){
+                requestStudents.add(currentClassroomUser);
+            }
+        }
+
         model.addAttribute("questions",questions);
         model.addAttribute("articles",articles);
         model.addAttribute("materials",materials);
-        model.addAttribute("classroomUsers",classroomUsers);
+        model.addAttribute("requestStudents",requestStudents);
         model.addAttribute("classroom", classroom);
         model.addAttribute("userOwner", user);
         return "classroom";
