@@ -166,7 +166,7 @@ public class ClassController {
         List<Material> materials = classroom.getMaterialList();
 
         model.addAttribute("posts",posts);
-        model.addAttribute("material",materials);
+        model.addAttribute("materials",materials);
         model.addAttribute("classroom", classroom);
         model.addAttribute("userOwner", user);
         return "classroom";
