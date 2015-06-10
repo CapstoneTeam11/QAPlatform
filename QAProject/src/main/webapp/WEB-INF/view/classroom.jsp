@@ -123,57 +123,63 @@
     <li class="tab"><a href="#" class="current">Questions</a></li>
     <li class="tab"><a href="#">Articles</a></li>
     <li class="tab"><a href="#">Material</a></li>
+    <li class="tab"><a href="#">Join Requests</a></li>
 </ul>
 
 <div class="tab-inner-warp">
     <div class="tab-inner">
-        <c:forEach var="post" items="${posts}">
-            <c:if test="${post.postType == 1}">
-                <article class="question question-type-normal">
-                    <h2>
-                        <a href="/post/view/${post.id}">${post.title}</a>
-                    </h2>
-                    <div class="question-author">
-                        <a href="#" original-title="${post.ownerUserId.displayName}" class="question-author-img tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>
-                    </div>
-                    <div class="question-inner">
-                        <div class="clearfix"></div>
-                        <div class="question-desc short-text">${post.body}</div>
-                        <div class="question-details">
-                            <span class="question-answered question-answered-done"><i class="icon-ok"></i>solved</span>
+        <c:if test="${not empty questions}">
+            <c:forEach var="question" items="${questions}">
+                    <article class="question question-type-normal">
+                        <h2>
+                            <a href="/post/view/${question.id}">${question.title}</a>
+                        </h2>
+                        <div class="question-author">
+                            <a href="#" original-title="${question.ownerUserId.displayName}" class="question-author-img tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>
                         </div>
-                        <span class="question-date"><i class="icon-time"></i>${post.lastEditedDate}</span>
-                        <span class="question-category"><a href="#"><i class="icon-group"></i>Class: ${post.ownerUserId.displayName}</a></span>
-                        <span class="question-comment"><a href="#"><i class="icon-comment"></i>${post.replyCount} Answer(s)</a></span>
-                        <div class="clearfix"></div>
-                    </div>
-                </article>
-            </c:if>
-        </c:forEach>
-        <a href="#" class="post-read-more button color small" style="margin-bottom: 20px;">Continue reading</a>
+                        <div class="question-inner">
+                            <div class="clearfix"></div>
+                            <div class="question-desc short-text">${question.body}</div>
+                            <div class="question-details">
+                                <span class="question-answered question-answered-done"><i class="icon-ok"></i>solved</span>
+                            </div>
+                            <span class="question-date"><i class="icon-time"></i>${question.lastEditedDate}</span>
+                            <span class="question-category"><a href="#"><i class="icon-group"></i>Class: ${question.ownerUserId.displayName}</a></span>
+                            <span class="question-comment"><a href="#"><i class="icon-comment"></i>${question.replyCount} Answer(s)</a></span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </article>
+            </c:forEach>
+            <a href="#" class="post-read-more button color small" style="margin-bottom: 20px;">Continue reading</a>
+        </c:if>
     </div>
 </div>
 <div class="tab-inner-warp">
     <div class="tab-inner">
-        <c:forEach var="post" items="${posts}">
-            <c:if test="${post.postType == 2}">
-                <article class="post clearfix">
-                <div class="post-inner">
-                    <h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a href="/post/view/${post.id}">${post.title}</a></h2>
-                    <div class="post-meta">
-                        <span class="meta-author"><i class="icon-user"></i><a href="#">Author: ${post.ownerUserId.displayName}</a></span>
-                        <span class="meta-date"><i class="icon-time"></i>${post.lastEditedDate}</span>
-                        <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">${post.replyCount} comment(s)</a></span>
-                        <span class="question-category"><a href="#"><i class="icon-group"></i>Class: ${post.ownerClassId.classroomName}</a></span>
+        <c:if test="${not empty articles}">
+            <c:forEach var="article" items="${articles}">
+                <article class="question question-type-normal">
+                    <h2>
+                        <a href="/post/view/${article.id}">${article.title}</a>
+                    </h2>
+                    <div class="question-author">
+                        <a href="#" original-title="${article.ownerUserId.displayName}" class="question-author-img tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>
                     </div>
-                    <div class="post-content short-text">
-                        <p>${post.body}</p>
-                    </div><!-- End post-content -->
-                </div><!-- End post-inner -->
-            </article>
-            </c:if>
-        </c:forEach>
-        <a href="#" class="post-read-more button color small" style="margin-bottom: 20px;">Continue reading</a>
+                    <div class="question-inner">
+                        <div class="clearfix"></div>
+                        <div class="question-desc short-text">${article.body}</div>
+                        <div class="question-details">
+                            <span class="question-answered question-answered-done"><i class="icon-ok"></i>solved</span>
+                        </div>
+                        <span class="question-date"><i class="icon-time"></i>${article.lastEditedDate}</span>
+                        <span class="question-category"><a href="#"><i class="icon-group"></i>Class: ${article.ownerUserId.displayName}</a></span>
+                        <span class="question-comment"><a href="#"><i class="icon-comment"></i>${article.replyCount} Answer(s)</a></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </article>
+            </c:forEach>
+            <a href="#" class="post-read-more button color small" style="margin-bottom: 20px;">Continue reading</a>
+        </c:if>
     </div>
 </div>
 <div class="tab-inner-warp">
@@ -201,6 +207,25 @@
         </table>
     </div>
 </div>
+<div class="tab-inner-warp">
+        <div class="tab-inner">
+            <c:forEach var="requestStudent" items="${classroomUsers}">
+                <div class="about-author clearfix">
+                    <div class="author-image">
+                        <a href="#" original-title="${requestStudent.userId.displayName}" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
+                    </div>
+                    <a class="" href="#" style="float: right">Ignore</a>
+                    <a class="" href="#" style="float: right; margin-right: 15px">Confirm</a>
+                    <div class="author-bio">
+                        <h4><a href="#">${requestStudent.userId.displayName}</a></h4>
+                        Requested to join <a href="#" style="font-size: 15px">${classroom.classroomName}</a>
+                    </div>
+                </div>
+            </c:forEach>
+
+            <a href="#" class="load-questions"><i class="icon-refresh"></i>View more request</a>
+        </div>
+    </div>
 </div><!-- End page-content -->
 </div><!-- End main -->
 <aside class="col-md-3 sidebar">
