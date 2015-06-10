@@ -41,6 +41,6 @@ public class PostInvitationController {
             postInvitation.setTeacherId(user);
             postInvitationDao.persist(postInvitation);
         }
-        return "redirect:/post/view"+postId;
+        return "redirect:/post/view/"+postId;
     }
 }
