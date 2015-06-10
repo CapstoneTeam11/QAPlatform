@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Table(name = "post_invitation", schema = "", catalog = "qav2")
 public class PostInvitation {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(name = "Id")
     private Integer id;
     @JoinColumn(name = "TeacherId", referencedColumnName = "Id")

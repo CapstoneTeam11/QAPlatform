@@ -15,6 +15,7 @@ public interface UserDao {
     public User find(Integer id);
     public User find(String name);
     List<User> findAll();
+    public List<User> findTeacherPostInvitation(String name,Integer portId);
     public List<User> findAllStudentNotInClass(int classId, String username);
     public List<User> findAllStudent(String username);
     @Transactional(propagation = Propagation.REQUIRED)

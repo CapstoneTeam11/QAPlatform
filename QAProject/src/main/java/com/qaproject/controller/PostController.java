@@ -1,14 +1,16 @@
 package com.qaproject.controller;
 
-import com.qaproject.dao.ClassroomDao;
-import com.qaproject.dao.PostDao;
-import com.qaproject.dao.TagDao;
-import com.qaproject.dao.TagPostDao;
+import com.qaproject.dao.*;
+import com.qaproject.dto.AnswerDto;
+import com.qaproject.dto.PostDto;
 import com.qaproject.entity.Classroom;
 import com.qaproject.entity.Post;
 import com.qaproject.entity.TagPost;
 import com.qaproject.entity.User;
+import com.qaproject.util.ConvertEntityDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,10 +39,31 @@ public class PostController {
 	TagPostDao tagPostDao;
     @Autowired
     HttpSession session;
+    @Autowired
+    UserDao userDao;
+    @Autowired
+    SimpMessagingTemplate template;
 
+    @MessageMapping("/addPost")
+    public void addStock(AnswerDto answerDto) throws Exception {
+        //Need to edit subcrible
+        Post parentId = postDao.find(answerDto.getParentId());
+        Post post = new Post();
+        post.setBody(answerDto.getBody());
+        post.setLastEditedDate(new Date());
+        post.setCreationDate(new Date());
+        post.setPostType(3);
+        post.setParentId(answerDto.getParentId());
+        post.setOwnerClassId(parentId.getOwnerClassId());
+        post.setOwnerUserId(userDao.find(answerDto.getOwnerId()));
+        postDao.persist(post);
+        PostDto postDto = ConvertEntityDto.convertPostEntityToDto(post);
+        template.convertAndSend("/topic/addPost/"+answerDto.getParentId(),postDto);
+    }
 
     @RequestMapping(value = "/post/view/{id}",method = RequestMethod.GET)
     public String view(@PathVariable Integer id, ModelMap model) {
+        //check if not parent Post return 404.
         Post post = postDao.find(id);
 
 		//get related postId - MinhKH
@@ -57,8 +80,11 @@ public class PostController {
                 relatedPosts.add(relatedPost);
             }
         }
+        //get List Post answer
+        List<Post> postAnswers = postDao.findPostChilds(id,1);
         model.addAttribute("post",post);
         model.addAttribute("relatedPosts", relatedPosts);
+        model.addAttribute("postAnswers", postAnswers);
         return "question";
     }
     @RequestMapping(value = "/post/create/{id}",method = RequestMethod.GET)
