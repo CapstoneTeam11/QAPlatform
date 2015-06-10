@@ -90,4 +90,8 @@ public class HelloController {
         }
         return "classroomWelcome";
     }
+    @RequestMapping(value = "/403",method = RequestMethod.GET)
+    public String forbidden() {
+        return "403";
+    }
 }

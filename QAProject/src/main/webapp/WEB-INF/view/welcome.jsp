@@ -203,7 +203,7 @@
                                                 <%--</c:forEach>--%>
                                             <%--</select>--%>
                                             <span class="styled-select">
-										        <select id="professional">
+										        <select id="professional" name="role">
                                                     <option value="">Select a type</option>
                                                     <c:forEach var="category" items="${categories}">
                                                         <option value="${category.id}">${category.categoryName}</option>
@@ -350,7 +350,8 @@
         var password = $('#password').val();
         var email = $('#email').val();
         var role = $("input[name='role']:checked").val();
-        var user = {email: email, password: password, role: role};
+        var cate = $("#professional option:selected").val();
+        var user = {email: email, password: password, role: role, cate: cate};
         var url = "/register";
         $.ajax({
             type: "POST",
@@ -361,6 +362,9 @@
                     window.location.href="/teacherdashboardWelcome";
                 }else  if(data.status == "OK" && data.id == 1){
                     window.location.href="/newsfeed";
+                }
+                else  if(data.status == "Exist email"){
+                    alert("Exist email");
                 }else {
                     alert("Username or password is incorrect!");
                 }

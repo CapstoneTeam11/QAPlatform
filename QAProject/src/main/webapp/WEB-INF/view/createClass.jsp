@@ -364,9 +364,10 @@
             data: "classroomName="+ classname + "&classroomDescription="+classDescription+"&categoryId="+cate+"&tag="+tagList+"&studentList="+student,
             success: function (data) {
                 if(data.status == "OK"){
-                    window.location.href = "/classroom/"+data.id;
+//                    window.location.href = "/classroom/"+data.id;
+                    window.location.href = "/classroomWelcome";
                 }else{
-                    window.location.href = "/";
+                    window.location.href = "/403";
                 }
 
             },

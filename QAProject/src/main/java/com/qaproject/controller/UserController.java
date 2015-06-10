@@ -72,12 +72,18 @@ public class UserController {
     @RequestMapping(value = "/register",method = RequestMethod.POST)
     @ResponseBody
     public ReturnObjectWithStatus register(@ModelAttribute("userWithRole")UserWithRoleDto userRole, HttpServletRequest request) {
-        System.out.print(userRole.toString());
+        User userCheck = userDao.findByEmail(userRole.getEmail());
+        if(userCheck != null){
+            return new ReturnObjectWithStatus("Exist email");
+        }
         User user = new User();
         user.setAboutMe("");
-        user.setDisplayName(userRole.getEmail());
+        user.setDisplayName(userRole.getEmail().split("@")[0]);
         user.setEmail(userRole.getEmail());
         user.setPassword(userRole.getPassword());
+        Category category = new Category();
+        category.setId(Integer.parseInt(userRole.getCate()));
+        user.setCategoryId(category);
         if(userRole.getRole().equalsIgnoreCase("student")){
            user.setRoleId(roleDao.find(1));
         }else{

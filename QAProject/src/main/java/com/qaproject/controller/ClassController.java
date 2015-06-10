@@ -43,6 +43,8 @@ public class ClassController {
         User user = (User)session.getAttribute("user");
         if(user == null){
             return "welcome";
+        }else if(user.getRoleId().getId()==1){
+            return "redirect:403";
         }
         List<Category> categoryList = categoryDao.findAll();
         model.addAttribute("categories",categoryList);
@@ -51,7 +53,8 @@ public class ClassController {
     }
     @RequestMapping(value= "/createClass1",method= RequestMethod.GET)
     @ResponseBody
-    public ReturnObjectWithStatus register(@RequestParam("classroomName") String classroomName,@RequestParam("classroomDescription") String classroomDescription,
+    public ReturnObjectWithStatus register(@RequestParam("classroomName") String classroomName,
+                           @RequestParam("classroomDescription") String classroomDescription,
                            @RequestParam("categoryId") String categoryId, @RequestParam("tag") String tag,
                            @RequestParam("studentList") String studentList, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
@@ -59,6 +62,9 @@ public class ClassController {
         ReturnObjectWithStatus objectWithStatus =new ReturnObjectWithStatus();
         if(user == null){
             objectWithStatus.setStatus("NG");
+            return objectWithStatus;
+        }else if(user.getRoleId().getId()==1){
+            objectWithStatus.setStatus("403");
             return objectWithStatus;
         }
         Classroom room = new Classroom();
@@ -96,6 +102,7 @@ public class ClassController {
                 classroomUser.setClassroomId(classroom);
                 classroomUser.setUserId(new User(Integer.parseInt(listStudentId[i])));
                 classroomUser.setType(2);
+                classroomUser.setApproval(0);
                 classroomUserDao.persist(classroomUser);
         }
 
@@ -117,6 +124,7 @@ public class ClassController {
         classroomUser.setClassroomId(classroom);
         classroomUser.setUserId(user);
         classroomUser.setType(1);
+        classroomUser.setApproval(0);
         try{
             classroomUserDao.persist(classroomUser);
         }catch (Exception e){
@@ -140,6 +148,7 @@ public class ClassController {
                 classroomUser.setClassroomId(classroom);
                 classroomUser.setUserId(user);
                 classroomUser.setType(2);
+                classroomUser.setApproval(0);
                 classroomUserDao.persist(classroomUser);
             }else{
                 flag = true;
@@ -156,7 +165,7 @@ public class ClassController {
     public String classroom(ModelMap model, @PathVariable(value = "id") String id) {
         User userSession = (User) session.getAttribute("user");
         if(userSession==null) {
-            return "403";
+            return "redirect:403";
         }
         Classroom classroom = classroomDao.find(Integer.parseInt(id));
         int idOwner = classroom.getOwnerUserId().getId();

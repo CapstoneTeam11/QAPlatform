@@ -46,6 +46,20 @@ public class UserDaoImpl extends BaseDao<User,Integer> implements UserDao {
         }
         return users.size()>0?users.get(0):null;
     }
+    @Override
+    public User findByEmail(String name) {
+        Query query = null;
+        query = entityManager.createQuery("select u from User u where u.email = :username", User.class);
+
+        List<User> users = null;
+        try {
+            query.setParameter("username", name);
+            users =  query.getResultList();
+        } catch (NoResultException e) {
+            System.out.println("User null");
+        }
+        return users.size()>0?users.get(0):null;
+    }
 
     @Override
     public List<User> findAllStudentNotInClass(int classId, String username) {

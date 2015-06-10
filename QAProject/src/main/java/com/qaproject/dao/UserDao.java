@@ -14,6 +14,7 @@ import java.util.List;
 public interface UserDao {
     public User find(Integer id);
     public User find(String name);
+    public User findByEmail(String name);
     List<User> findAll();
     public List<User> findAllStudentNotInClass(int classId, String username);
     public List<User> findAllStudent(String username);

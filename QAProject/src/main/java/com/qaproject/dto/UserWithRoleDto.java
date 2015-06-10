@@ -11,6 +11,7 @@ public class UserWithRoleDto {
     private String password;
     private String email;
     private String role;
+    private String cate;
 
     public String getUsername() {
         return username;
@@ -42,6 +43,14 @@ public class UserWithRoleDto {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getCate() {
+        return cate;
+    }
+
+    public void setCate(String cate) {
+        this.cate = cate;
     }
 
     @Override
