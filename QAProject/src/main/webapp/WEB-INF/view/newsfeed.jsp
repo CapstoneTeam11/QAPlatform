@@ -52,57 +52,18 @@
 
 <div id="wrap">
 
-<div class="panel-pop" id="signup">
-    <h2>Register Now<i class="icon-remove"></i></h2>
-    <div class="form-style form-style-3">
-        <form>
-            <div class="form-inputs clearfix">
-                <p>
-                    <label class="required">Username<span>*</span></label>
-                    <input type="text">
-                </p>
-                <p>
-                    <label class="required">E-Mail<span>*</span></label>
-                    <input type="email">
-                </p>
-                <p>
-                    <label class="required">Password<span>*</span></label>
-                    <input type="password" value="">
-                </p>
-                <p>
-                    <label class="required">Confirm Password<span>*</span></label>
-                    <input type="password" value="">
-                </p>
-            </div>
-            <p class="form-submit">
-                <input type="submit" value="Signup" class="button color small submit">
-            </p>
-        </form>
+<div class="panel-pop" id="suggested-classrooms">
+    <input id="suggestedClassroomsVar" type="hidden" value="${suggestedClassrooms}"/>
+    <h2>Join your first class now!<i class="icon-remove"></i></h2>
+    <div style="height: auto; max-height: 300px; overflow-x: hidden;">
+        <c:forEach var="suggestedClassroom" items="${suggestedClassrooms}">
+            <a href="/classroom/${suggestedClassroom.id}" class="list-group-item">
+                <h4 class="list-group-item-heading">${suggestedClassroom.classroomName}</h4>
+            </a>
+        </c:forEach>
     </div>
-</div><!-- End signup -->
+</div><!-- End add to folder -->
 
-<div class="panel-pop" id="lost-password">
-    <h2>Lost Password<i class="icon-remove"></i></h2>
-    <div class="form-style form-style-3">
-        <p>Lost your password? Please enter your username and email address. You will receive a link to create a new password via email.</p>
-        <form>
-            <div class="form-inputs clearfix">
-                <p>
-                    <label class="required">Username<span>*</span></label>
-                    <input type="text">
-                </p>
-                <p>
-                    <label class="required">E-Mail<span>*</span></label>
-                    <input type="email">
-                </p>
-            </div>
-            <p class="form-submit">
-                <input type="submit" value="Reset" class="button color small submit">
-            </p>
-        </form>
-        <div class="clearfix"></div>
-    </div>
-</div><!-- End lost-password -->
 
 <%@include file="header.jsp" %>
 
@@ -350,6 +311,25 @@
 <script src="/resource/assets/js/jquery.bxslider.min.js"></script>
 <script src="/resource/assets/js/custom.js"></script>
 <!-- End js -->
+<c:if test="${not empty suggestedClassrooms}">
+    <script>
+        $(document).ready(function(){
+                    jQuery(".panel-pop").animate({"top":"-100%"},10).hide();
+                    jQuery("#suggested-classrooms").show().animate({"top":"50%"},500);
+                    jQuery("body").prepend("<div class='wrap-pop'></div>");
+                    wrap_pop();
+
+        });
+        function wrap_pop() {
+            jQuery(".wrap-pop").click(function () {
+                jQuery(".panel-pop").animate({"top":"-100%"},500).hide(function () {
+                    jQuery(this).animate({"top":"-100%"},500);
+                });
+                jQuery(this).remove();
+            });
+        }
+    </script>
+</c:if>
 
 </body>
 </html>
