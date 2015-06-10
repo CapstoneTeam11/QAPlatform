@@ -160,6 +160,13 @@ public class ClassController {
         Classroom classroom = classroomDao.find(Integer.parseInt(id));
         int idOwner = classroom.getOwnerUserId().getId();
         User user = userDao.find(idOwner);
+
+        //get posts and materials - MinhKH
+        List<Post> posts = classroom.getPostList();
+        List<Material> materials = classroom.getMaterialList();
+
+        model.addAttribute("posts",posts);
+        model.addAttribute("material",materials);
         model.addAttribute("classroom", classroom);
         model.addAttribute("userOwner", user);
         return "classroom";
