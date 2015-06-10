@@ -3,7 +3,7 @@
   User: Minh
   Date: 5/25/2015
   Time: 2:34 PM
-  To change this template use File | Settings | File Templates.
+  To change this template use File | Settings | File Templates. 
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
