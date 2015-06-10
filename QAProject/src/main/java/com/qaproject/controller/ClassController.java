@@ -154,25 +154,7 @@ public class ClassController {
         return "OK";
     }
 
-    /**
-     * MinhKH
-     * Controller get suggested classrooms
-     * @param model
-     * @return String
-     */
-    @RequestMapping(value= "/newsfeed/welcomeFirst", method= RequestMethod.GET)
-    public String suggestClass(ModelMap model){
-        //Check is User
-        User user = (User) session.getAttribute("user");
-        if(user==null) {
-            return "redirect:/";
-        }
 
-        Category category = user.getCategoryId();
-        List<Classroom> suggestedClassrooms = classroomDao.findByCategory(category);
-        model.addAttribute("suggestedClassrooms",suggestedClassrooms);
-        return "newsfeed";
-    }
     @RequestMapping(value = "/classroom/{id}",method = RequestMethod.GET)
     public String classroom(ModelMap model, @PathVariable(value = "id") String id) {
         User userSession = (User) session.getAttribute("user");
@@ -183,6 +165,37 @@ public class ClassController {
         int idOwner = classroom.getOwnerUserId().getId();
         User user = userDao.find(idOwner);
 
+        //get posts, materials, request to join - MinhKH
+        List<Post> posts = classroom.getPostList();
+        List<Material> materials = classroom.getMaterialList();
+        List<ClassroomUser> classroomUsers = classroomUserDao.findByTypeAndClassroom(1,classroom);
+
+        //classify post - MinhKH
+        List<Post> questions = new ArrayList<Post>();
+        List<Post> articles = new ArrayList<Post>();
+        for (int i=0; i<posts.size();i++){
+            Post currentPost = posts.get(i);
+            if (currentPost.getPostType()==1){
+                questions.add(currentPost);
+            }
+            if (currentPost.getPostType()==2){
+                articles.add(currentPost);
+            }
+        }
+
+        //classify classroomUser - MinhKH
+        List<ClassroomUser> requestStudents = new ArrayList<ClassroomUser>();
+        for (int i=0;i<classroomUsers.size();i++){
+            ClassroomUser currentClassroomUser = classroomUsers.get(i);
+            if(currentClassroomUser.getApproval()==0){
+                requestStudents.add(currentClassroomUser);
+            }
+        }
+
+        model.addAttribute("questions",questions);
+        model.addAttribute("articles",articles);
+        model.addAttribute("materials",materials);
+        model.addAttribute("requestStudents",requestStudents);
         model.addAttribute("classroom", classroom);
         model.addAttribute("userOwner", user);
         model.addAttribute("user", userSession);
