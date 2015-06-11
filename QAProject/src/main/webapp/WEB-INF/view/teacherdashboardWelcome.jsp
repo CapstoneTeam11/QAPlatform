@@ -140,7 +140,7 @@
             </div><!-- End main -->
             <aside class="col-md-3 sidebar">
                 <div class="widget widget_highest_points">
-                    <h3 class="widget_title">Hi, Teacher</h3>
+                    <h3 class="widget_title">Hi, ${sessionScope.user.displayName}</h3>
                     <ul>
                         <li>
                             <div class="author-img">

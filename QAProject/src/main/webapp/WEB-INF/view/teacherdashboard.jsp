@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: Minh
@@ -133,77 +134,44 @@
 <ul class="tabs">
     <li class="tab"><a href="#" class="current">Your Class</a></li>
     <li class="tab"><a href="#">Followed Teacher</a></li>
-    <li class="tab"><a href="#">Join Requests</a></li>
 </ul>
 <div class="tab-inner-warp">
     <div class="tab-inner">
-        <div class="about-author clearfix">
-            <div class="" style="float: left;padding-right: 20px;">
-                <a href="#" original-title="admin" class=""><img alt="" src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>
+        <c:forEach var="classroom" items="${classrooms}">
+            <div class="about-author clearfix">
+                <div class="" style="float: left;padding-right: 20px;">
+                    <a href="#" original-title="admin" class=""><img alt="" src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>
+                </div>
+                <a class="" href="#" style="float: right">Close class</a>
+                <div class="author-bio">
+                    <h4><a href="/classroom/${classroom.id}">${classroom.classroomName}</a></h4>
+                    ${classroom.classroomDescription}
+                </div>
             </div>
-            <a class="" href="#" style="float: right">Close class</a>
-            <div class="author-bio">
-                <h4><a href="#">Advance Java class</a></h4>
-                This is introduction of Advance Java class: advance java advance java advance java advance java advance java
-            </div>
-        </div>
-        <div class="about-author clearfix">
-            <div class="" style="float: left;padding-right: 20px;">
-                <a href="#" original-title="admin" class=""><img alt="" src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>
-            </div>
-            <a class="" href="#" style="float: right">Close class</a>
-            <div class="author-bio">
-                <h4><a href="#">Advance Java class</a></h4>
-                This is introduction of Advance Java class: advance java advance java advance java advance java advance java
-            </div>
-        </div>
+        </c:forEach>
     </div>
 </div>
 <div class="tab-inner-warp">
     <div class="tab-inner">
-        <div class="about-author clearfix">
-            <div class="author-image">
-                <a href="#" original-title="admin" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
+        <c:forEach var="follower" items="${followers}">
+            <div class="about-author clearfix">
+                <div class="author-image">
+                    <a href="#" original-title="admin" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
+                </div>
+                <a class="" href="#" style="float: right">Unfollow</a>
+                <div class="author-bio">
+                    <h4><a href="#">${follower.teacherId.displayName}</a></h4>
+                    ${follower.teacherId.aboutMe}
+                </div>
             </div>
-            <a class="" href="#" style="float: right">Unfollow</a>
-            <div class="author-bio">
-                <h4><a href="#">Johnny Walker</a></h4>
-                I'm teaching at FPT University. My professional are Java, C# and SQL
-            </div>
-        </div>
-        <div class="about-author clearfix">
-            <div class="author-image">
-                <a href="#" original-title="admin" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
-            </div>
-            <a class="" href="#" style="float: right">Unfollow</a>
-            <div class="author-bio">
-                <h4><a href="#">Paul Smith</a></h4>
-                I'm English teacher at Hoa Sen University. I can help you improve your speaking and writing for TOELF test.
-            </div>
-        </div>
-    </div>
-</div>
-<div class="tab-inner-warp">
-    <div class="tab-inner">
-        <div class="about-author clearfix">
-            <div class="author-image">
-                <a href="#" original-title="admin" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
-            </div>
-            <a class="" href="#" style="float: right">Ignore</a>
-            <a class="" href="#" style="float: right; margin-right: 15px">Confirm</a>
-            <div class="author-bio">
-                <h4><a href="#">Johnny Walker</a></h4>
-                Requested to join <a href="#" style="font-size: 15px">Advance Java Class</a>
-            </div>
-        </div>
-        <a href="#" class="load-questions"><i class="icon-refresh"></i>View more request</a>
+        </c:forEach>
     </div>
 </div>
 </div><!-- End page-content -->
 </div><!-- End main -->
 <aside class="col-md-3 sidebar">
     <div class="widget widget_highest_points">
-        <h3 class="widget_title">Hi, Teacher</h3>
+        <h3 class="widget_title">Hi, ${sessionScope.user.displayName}</h3>
         <ul>
             <li>
                 <div class="author-img">
