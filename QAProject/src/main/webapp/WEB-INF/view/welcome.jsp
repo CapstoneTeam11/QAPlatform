@@ -361,7 +361,7 @@
                 if(data.status == "OK" && data.id == 2){
                     window.location.href="/teacherdashboardWelcome";
                 }else  if(data.status == "OK" && data.id == 1){
-                    window.location.href="/newsfeed";
+                    window.location.href="/newsfeed/welcome";
                 }
                 else  if(data.status == "Exist email"){
                     alert("Exist email");

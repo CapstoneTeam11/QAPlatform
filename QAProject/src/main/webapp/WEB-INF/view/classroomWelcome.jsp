@@ -97,7 +97,7 @@
     <section class="container" style="height:70px; display: flex; align-items: center">
         <div class="row">
             <div class="col-md-12">
-                <h3>AJ Class</h3>
+                <h3>${classroom.classroomName}</h3>
             </div>
         </div><!-- End row -->
     </section><!-- End container -->
@@ -127,73 +127,38 @@
     </div><!-- End page-content -->
 </div><!-- End main -->
 <aside class="col-md-3 sidebar">
-    <div class="widget">
-        <h3 class="widget_title">About class</h3>
-        <ul class="related-posts">
-            <li class="related-item">
-                <p>This is introductio about class. This is introductio about class.
-                    This is introductio about class. </p>
-                <div class="clear"></div><span>Feb 22, 2014</span>
-            </li>
-        </ul>
-        <a href="javascript:joinClass(1)" class="button small color">Join</a>
-    </div>
-    <div class="widget widget_login">
-        <h3 class="widget_title">Invite someone</h3>
-        <div class="form-style form-style-2">
-            <form>
-                <div style="display: flex;height: 42px;">
-                    <p style="width: 18% !important;">
-                        <label class="required">Tag<span>*</span></label>
-                    </p>
-
-                    <div style="width: 82%">
-                        <input type="text" class="input" name="tag" id="tagsuggest"/>
-                    </div>
-                    <div id="hiddenTag"></div>
-                </div>
-                <div class="form-inputs clearfix">
-                    <i class="icon-user"></i>
-                    <p class="login-text">
-                        <input type="text" aria-required="true" placeholder="Enter username..." style="width: 80%" id="studentName" data-role="tagsinput">
-                        <a href="javascript:inviteStudent(1)" class="button small color" style="float: right;">Invite</a>
-                    </p>
-                    <p>
-
-                    </p>
-                </div>
-            </form>
-            <div class="clearfix"></div>
+        <div class="widget">
+            <h3 class="widget_title">About class</h3>
+            <ul class="related-posts">
+                <li class="related-item">
+                    <p>${classroom.classroomDescription}</p>
+                    <div class="clear"></div><span>Feb 22, 2014</span>
+                </li>
+            </ul>
+            <a href="javascript:joinClass(${classroom.id})" class="button small color" id="join">Join</a>
         </div>
-    </div>
-    <div class="widget widget_highest_points">
-        <h3 class="widget_title">Class Owner</h3>
-        <ul>
-            <li>
-                <div class="author-img">
-                    <a href="#"><img width="60" height="60" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" alt=""></a>
+        <c:if test="${user.roleId.id==2}">
+            <div class="widget widget_login" style="  min-height: 130px;">
+                <h3 class="widget_title">Invite student</h3>
+                <div class="pull-right" style="width: 100%;">
+                    <a href="#" id="create-folder-click" class="button medium color" style="width: 100%;text-align: center;"><i class="icon-plus-sign"></i> Invite</a>
                 </div>
-                <h6><a href="#">Mr. Thang</a></h6>
-                <span class="comment">This is short instroduction of this teacher</span>
-            </li>
-        </ul>
-    </div>
+            </div>
+        </c:if>
+        <div class="widget widget_highest_points">
+            <h3 class="widget_title">Class Owner</h3>
+            <ul>
+                <li>
+                    <div class="author-img">
+                        <a href="#"><img width="60" height="60" src="${userOwner.profileImageURL}" alt=""></a>
+                    </div>
+                    <h6><a href="#">${userOwner.displayName}</a></h6>
+                    <span class="comment">${userOwner.aboutMe}</span>
+                </li>
+            </ul>
+        </div>
 
-
-
-    <div class="widget widget_tag_cloud">
-        <h3 class="widget_title">Tags</h3>
-        <a href="#">projects</a>
-        <a href="#">Portfolio</a>
-        <a href="#">Wordpress</a>
-        <a href="#">Html</a>
-        <a href="#">Css</a>
-        <a href="#">jQuery</a>
-        <a href="#">2code</a>
-        <a href="#">vbegy</a>
-    </div>
-
-</aside><!-- End sidebar -->
+    </aside><!-- End sidebar -->
 </div><!-- End row -->
 </section><!-- End container -->
 
@@ -230,8 +195,41 @@
 <script>
     var studentNameList = [];
     $(document).ready(function () {
-        makeTag(1);
+        var student = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: 'http://localhost:8080/findAllStudentNotInClass/${classroom.id}/%QUERY'
+            }
+        });
+        student.initialize();
+        var elt1 = $('#tagsuggest1');
+        var hiddenTag = $('#hiddenTag1');
+        elt1.tagsinput({
+            itemValue: 'studentId',
+            itemText: 'studentName',
+            typeaheadjs: {
+                name: 'student',
+                displayKey: 'studentName',
+                source: student.ttAdapter()
+            }
+        });
+        elt1.on('itemAdded', function (event) {
+            var studentId = event.item.id;
+            hiddenTag.append("<input type='hidden' name='tagId' value=" + studentId + " id=tag" + studentId + ">");
+        });
+        elt1.on('itemRemoved', function (event) {
+            var tagId = "#tag" + event.item.id;
+            $(tagId).remove();
+        });
 
+        /*short test for list of posts - MinhKH*/
+        $(".short-text").each(function () {
+            text = $(this).text();
+            if (text.length > 400) {
+                $(this).html(text.substr(0, 400) + '.......');
+            }
+        });
     });
     function joinClass(id){
         var url = "/requestJoinClass/"+id;
@@ -241,6 +239,7 @@
 //            data: "username="+username+"&password="+password,
             success: function(data){
                 if(data == "OK"){
+                    $("#join").text("Request sent!").attr("href", "#");
                     $().toastmessage('showSuccessToast', 'Join class request sent!');
                 }else{
                     $().toastmessage('showErrorToast', "Join class request fail! Please try again late!");
@@ -251,17 +250,17 @@
     }
     function inviteStudent(id){
         var url = "/inviteJoinClass/"+id;
-        var name = $("#studentName").val();
+        var name = $("#tagsuggest1").val();
         $.ajax({
             type: "POST",
             url: url,
             data: "studentName="+name,
             success: function(data){
-                if(data == "OK"){
-                    $().toastmessage('showSuccessToast', 'Join class request sent!');
-                }else{
-                    $().toastmessage('showErrorToast', "Join class request fail! Please try again late!");
-                }
+//                if(data == "OK"){
+//                    $().toastmessage('showSuccessToast', 'Invatition Sent!');
+//                }else{
+//                    $().toastmessage('showErrorToast', "Invatition Fails!");
+//                }
             }
         });
     }
@@ -280,35 +279,7 @@
             }
         });
     }
-    function makeTag(studentNameList){
-        var tag = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            remote: {
-                url: 'http://localhost:8080/findAllStudentNotInClass/1/%QUERY'
-            }
-        });
-        tag.initialize();
-        elt = $('#tagsuggest');
-        var hiddenTag = $('#hiddenTag');
-        elt.tagsinput({
-            itemValue: 'id',
-            itemText: 'name',
-            typeaheadjs: {
-                name: 'tag',
-                displayKey: 'name',
-                source: tag.ttAdapter()
-            }
-        });
-        elt.on('itemAdded', function (event) {
-            var idTag = event.item.id;
-            hiddenTag.append("<input type='hidden' name='tagId' value=" + idTag + " id=tag" + idTag + ">");
-        });
-        elt.on('itemRemoved', function (event) {
-            var tagId = "#tag" + event.item.id;
-            $(tagId).remove();
-        });
-    }
+
 </script>
 </body>
 </html>
