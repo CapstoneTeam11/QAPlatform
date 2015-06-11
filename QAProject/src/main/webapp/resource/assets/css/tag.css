@@ -69,12 +69,18 @@
 .tt-suggestion .tt-cursor {
     line-height: 10;
 }
+
+#invite-teacher .tt-suggestion > p {
+
+}
 .tt-suggestion > p{
+    margin: 5px 0px;
+    padding: 0px;
     display: block;
-    padding: 3px 20px;
+    padding: 5px 20px;
     clear: both;
     font-weight: normal;
-    line-height: 1.428571429;
+    line-height: 1;
     color: #333333;
     white-space: nowrap;
 }

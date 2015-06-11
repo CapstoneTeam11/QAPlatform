@@ -99,11 +99,13 @@
         <form method="post" action="/teacherInvitation">
             <div id="hiddenTeacher"></div>
             <input type="hidden" name="postId" value="${post.id}">
-
-            <div class="form-inputs clearfix">
-                <p>
-                    <input type="text" name="name" id="teacherSuggest">
+            <div style="display: flex;height: 42px;">
+                <p style="width: 18% !important;">
+                    <label class="required">Teacher<span>*</span></label>
                 </p>
+                <div style="width: 82%">
+                    <input type="text" name="name" id="teacherSuggest">
+                </div>
             </div>
             <p class="form-submit">
                 <input type="submit" value="Invite" id="inviteTeacher-click" class="button color small submit">

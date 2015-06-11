@@ -161,7 +161,6 @@ body {
 	left: 50%;
 	margin-left: -290px;
 	z-index: 998;
-	overflow: hidden;
 	color: #2f3239;
 	display: none;
 }
