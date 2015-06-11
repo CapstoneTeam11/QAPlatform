@@ -212,7 +212,7 @@
                     <div class="row">
                         <div class="col-md-8"></div>
                         <div class="col-md-4">
-                            <a href="#" class="button small color">Join</a>
+
                         </div>
                     </div>
                 </div>
