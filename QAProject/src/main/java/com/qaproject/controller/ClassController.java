@@ -51,21 +51,23 @@ public class ClassController {
         model.addAttribute("user",user);
         return "createClass";
     }
-    @RequestMapping(value= "/createClass1",method= RequestMethod.GET)
-    @ResponseBody
-    public ReturnObjectWithStatus register(@RequestParam("classroomName") String classroomName,
+    @RequestMapping(value= "/createClass1",method= RequestMethod.POST)
+//    @ResponseBody
+    public String register(
+                           @RequestParam("classroomName") String classroomName,
                            @RequestParam("classroomDescription") String classroomDescription,
-                           @RequestParam("categoryId") String categoryId, @RequestParam("tag") String tag,
+                           @RequestParam("categoryId") String categoryId,
+                           @RequestParam("tag") String tag,
                            @RequestParam("studentList") String studentList, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         User user = (User)session.getAttribute("user");
-        ReturnObjectWithStatus objectWithStatus =new ReturnObjectWithStatus();
+//        ReturnObjectWithStatus objectWithStatus =new ReturnObjectWithStatus();
         if(user == null){
-            objectWithStatus.setStatus("NG");
-            return objectWithStatus;
+//            objectWithStatus.setStatus("NG");
+            return "redirect:403";
         }else if(user.getRoleId().getId()==1){
-            objectWithStatus.setStatus("403");
-            return objectWithStatus;
+//            objectWithStatus.setStatus("403");
+            return "redirect:403";
         }
         Classroom room = new Classroom();
         Category category = new Category();
@@ -106,9 +108,9 @@ public class ClassController {
                 classroomUserDao.persist(classroomUser);
         }
 
-        objectWithStatus.setId(room.getId());
-        objectWithStatus.setStatus("OK");
-        return objectWithStatus;
+//        objectWithStatus.setId(room.getId());
+//        objectWithStatus.setStatus("OK");
+        return "redirect:/classroom/"+room.getId();
     }
     @RequestMapping(value= "/requestJoinClass/{id}",method= RequestMethod.GET)
     @ResponseBody

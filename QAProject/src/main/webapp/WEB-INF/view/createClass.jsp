@@ -118,11 +118,11 @@
                     <div class="boxedtitle page-title"><h2>Create class</h2></div>
 
                     <div class="form-style form-style-3" id="question-submit">
-                        <form>
+                        <form method="post" action="/createClass1">
                             <div class="form-inputs clearfix">
                                 <p>
                                     <label class="required">Class name<span>*</span></label>
-                                    <input type="text" id="question-title">
+                                    <input type="text" id="question-title" name="classroomName">
                                     <span class="form-description">Please enter name of class you want to create.</span>
                                 </p>
                                 <%--<p>--%>
@@ -146,7 +146,7 @@
                                         <label class="required">Student<span>*</span></label>
                                     </p>
                                     <div style="width: 82%">
-                                        <input type="text" class="input" name="tag" id="tagsuggest1"/>
+                                        <input type="text" class="input" name="studentList" id="tagsuggest1"/>
                                     </div>
                                     <div id="hiddenTag1"></div>
                                 </div>
@@ -154,8 +154,8 @@
                                 <p>
                                     <label class="required">Category<span>*</span></label>
 									<span class="styled-select">
-										<select id="professional">
-                                            <option value="">Select a type</option>
+										<select id="professional" name="categoryId">
+                                            <option value="9">Select a type</option>
                                             <c:forEach var="category" items="${categories}">
                                                 <option value="${category.id}">${category.categoryName}</option>
                                             </c:forEach>
@@ -166,12 +166,14 @@
                                 <div id="form-textarea">
                                     <p>
                                         <label class="required">Class's Description<span>*</span></label>
-                                        <textarea id="class-description" aria-required="true" cols="58" rows="8" style="width: 82%;"></textarea>
+                                        <textarea id="class-description" aria-required="true" cols="58" rows="8" style="width: 82%;" name="classroomDescription"></textarea>
                                         <span class="form-description">Type the description thoroughly and in detail .</span>
                                     </p>
                                 </div>
                                 <p class="form-submit">
-                                    <a href="javascript:createClass();" id="publish-question" class="button color small submit text-center">Create Your Class</a>
+                                    <%--<a href="javascript:createClass();" id="publish-question" class="button color small submit text-center">Create Your Class</a>--%>
+                                        <input type="submit" id="publish-question" value="Create Class"
+                                               class="button color small submit">
                                 </p>
                             </div>
 

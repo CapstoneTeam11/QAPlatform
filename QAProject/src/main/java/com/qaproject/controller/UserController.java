@@ -71,21 +71,27 @@ public class UserController {
         return "OK";
     }
     @RequestMapping(value = "/register",method = RequestMethod.POST)
-    @ResponseBody
-    public ReturnObjectWithStatus register(@ModelAttribute("userWithRole")UserWithRoleDto userRole, HttpServletRequest request) {
-        User userCheck = userDao.findByEmail(userRole.getEmail());
+//    @ResponseBody
+    public String register(@RequestParam(value = "email") String email,
+                                           @RequestParam(value = "password")String password,
+                                           @RequestParam(value = "confirmpassword")String confirmpassword,
+                                           @RequestParam(value = "cate")String cate,
+                                           @RequestParam(value = "role")String role,
+                                           HttpServletRequest request) {
+
+        User userCheck = userDao.findByEmail(email);
         if(userCheck != null){
-            return new ReturnObjectWithStatus("Exist email");
+            return "redirect:/";
         }
         User user = new User();
         user.setAboutMe("");
-        user.setDisplayName(userRole.getEmail().split("@")[0]);
-        user.setEmail(userRole.getEmail());
-        user.setPassword(userRole.getPassword());
+        user.setDisplayName(email.split("@")[0]);
+        user.setEmail(email);
+        user.setPassword(password);
         Category category = new Category();
-        category.setId(Integer.parseInt(userRole.getCate()));
+        category.setId(Integer.parseInt(cate));
         user.setCategoryId(category);
-        if(userRole.getRole().equalsIgnoreCase("student")){
+        if(role.equalsIgnoreCase("student")){
            user.setRoleId(roleDao.find(1));
         }else{
             user.setRoleId(roleDao.find(2));
@@ -94,21 +100,31 @@ public class UserController {
         userDao.persist(user);
         HttpSession session = request.getSession();
         session.setAttribute("user", user);
-        return new ReturnObjectWithStatus("OK", user.getRoleId().getId());
+
+        if(user.getRoleId().getId() == 1){
+            return "redirect:studentdashboard";
+        }else {
+            return "redirect:teacherdashboard";
+        }
     }
     @RequestMapping(value = "/login",method = RequestMethod.POST)
-    @ResponseBody
-    public ReturnObjectWithStatus login(@RequestParam("username") String username, @RequestParam("password") String password, Model model, HttpServletRequest request){
-        if (username == null || password == null){
-            return new ReturnObjectWithStatus("NG");
+//    @ResponseBody
+    public String login(@RequestParam("username") String username, @RequestParam("password") String password, Model model, HttpServletRequest request){
+        if (username == null || username.length() == 0 || password == null || password.length() == 0){
+            return "welcome";
         }
         List<User> users = userDao.login(username, password);
         if(users.size()>0){
             HttpSession session = request.getSession();
             session.setAttribute("user", users.get(0));
-            return new ReturnObjectWithStatus("OK", users.get(0).getRoleId().getId());
+            if(users.get(0).getRoleId().getId() == 1){
+                return "redirect:studentdashboard";
+            }else {
+                return "redirect:teacherdashboard";
+            }
+
         }else{
-            return new ReturnObjectWithStatus("NG");
+            return "welcome";
         }
     }
 

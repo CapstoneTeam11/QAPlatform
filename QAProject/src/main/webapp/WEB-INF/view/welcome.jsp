@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%--
   Created by IntelliJ IDEA.
   User: Minh
@@ -112,30 +113,33 @@
 
 <header id="header" class="index-no-box">
     <section class="container clearfix">
-
-        <div class="row">
+        <form action="/login" method="post">
+            <div class="row">
             <div class="col-md-3">
                 <div class="logo"><a href="/"><img alt="" src="/resource/assets/images/logo.png"></a></div>
             </div>
             <div class="col-md-4"></div>
             <div class="col-md-2">
                 <div class="row" style="color: #ffffff;padding-top: 10px;padding-left: 15px;">Email</div>
-                <input type="text" style="height: 30px; margin-bottom: 5px" id="username1" data-toggle="tooltip">
+                <input type="text" style="height: 30px; margin-bottom: 5px" id="username1" data-toggle="tooltip" name="username">
                 <div class="checkbox" style="color: white; margin-top: 5px;font-size: 13px;">
                     <label><input type="checkbox" value="" checked>Remember me</label>
                 </div>
             </div>
             <div class="col-md-2">
                 <div class="row" style="color: #ffffff;padding-top: 10px;padding-left: 15px;">Password</div>
-                <input type="password" style="height: 30px; margin-bottom: 4px" id="password1" data-toggle="tooltip">
+                <input type="password" style="height: 30px; margin-bottom: 4px" id="password1" data-toggle="tooltip" name="password">
                 <a href="#" style="color: white;font-size: 12px;" id="lost-password-click">
                     Forget ?
                 </a>
             </div>
             <div class="col-md-1" style="padding-top: 25px">
-                <a href="javascript:checkLogin();" class="button small color" style="height: 30px">Login</a>
+                <%--<a href="javascript:checkLogin();" class="button small color" style="height: 30px">Login</a>--%>
+                <input type="submit" id="publish-question" value="Login"
+                           class="button color small submit">
             </div>
         </div>
+        </form>
     </section><!-- End container -->
 </header><!-- End header -->
 
@@ -158,7 +162,7 @@
                 <div class="col-md-6">
                     <div class="page-content">
                         <h2>Register Now</h2>
-                        <form class="form-style form-style-3 form-style-5" id="registrationForm">
+                        <form method="POST"  class="form-style form-style-3 form-style-5" id="registrationForm" action="/register">
                             <div class="form-inputs clearfix">
                                 <%--<div class="row" style="margin-top: 10px;">--%>
                                     <%--<div class="form-group">--%>
@@ -188,7 +192,7 @@
                                     <div class="form-group">
                                         <label class="col-md-3 control-label">Confirm password<span>*</span></label>
                                         <div class="col-md-9">
-                                            <input type="password" value="" aria-required="true" name="confirm-password" class="form-control">
+                                            <input type="password" value="" aria-required="true" name="confirmpassword" class="form-control">
                                         </div>
                                     </div>
                                 </div>
@@ -203,8 +207,8 @@
                                                 <%--</c:forEach>--%>
                                             <%--</select>--%>
                                             <span class="styled-select">
-										        <select id="professional" name="role">
-                                                    <option value="">Select a type</option>
+										        <select id="professional" name="cate">
+                                                    <option value="9">Select a type</option>
                                                     <c:forEach var="category" items="${categories}">
                                                         <option value="${category.id}">${category.categoryName}</option>
                                                     </c:forEach>
@@ -274,74 +278,83 @@
 <script type="application/javascript">
     $(document).ready(function() {
         $('[data-toggle="tooltip"]').tooltip();
-        $('#registrationForm').formValidation({
-            framework: 'bootstrap',
-            icon: {
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            err: {
-                // You can set it to popover
-                // The message then will be shown in Bootstrap popover
-                container: 'tooltip'
-            },
-            fields: {
-                username: {
-                    validators: {
-                        notEmpty: {
-                            message: 'The username is required'
-                        },
-                        stringLength: {
-                            min: 6,
-                            max: 30,
-                            message: 'The username must be more than 6 and less than 30 characters long'
-                        },
-                        regexp: {
-                            regexp: /^[a-zA-Z0-9_\.]+$/,
-                            message: 'The username can only consist of alphabetical, number, dot and underscore'
-                        }
-                    }
-                },
-                email: {
-                    err: 'tooltip',
-                    validators: {
-                        notEmpty: {
-                            message: 'The email address is required'
-                        },
-                        emailAddress: {
-                            message: 'The input is not a valid email address'
-                        }
+//        $('#registrationForm').formValidation({
+//            framework: 'bootstrap',
+//            icon: {
+//                valid: 'glyphicon glyphicon-ok',
+//                invalid: 'glyphicon glyphicon-remove',
+//                validating: 'glyphicon glyphicon-refresh'
+//            },
+//            err: {
+//                // You can set it to popover
+//                // The message then will be shown in Bootstrap popover
+//                container: 'tooltip'
+//            },
+//            fields: {
+//                username: {
+//                    validators: {
+//                        notEmpty: {
+//                            message: 'The username is required'
+//                        },
+//                        stringLength: {
+//                            min: 6,
+//                            max: 30,
+//                            message: 'The username must be more than 6 and less than 30 characters long'
+//                        },
 //                        regexp: {
-//                            regex: /^[-0-9a-zA-Z.+_]+@[-0-9a-zA-Z.+_]+.[a-zA-Z]{2,4}/,
-//                            message: 'The email format incorrect'
+//                            regexp: /^[a-zA-Z0-9_\.]+$/,
+//                            message: 'The username can only consist of alphabetical, number, dot and underscore'
 //                        }
-                    }
-                },
-                password: {
-                    validators: {
-                        notEmpty: {
-                            message: 'The password is required'
-                        },
-                        stringLength: {
-                            min: 8,
-                            message: 'The username must be more than 8 characters'
-                        },
-                        different: {
-                            field: 'username',
-                            message: 'The password cannot be the same as username'
-                        },
-                        identical: {
-                            field: 'confirm-password',
-                            message: 'The password and its confirm must be the same'
-                        }
-                    }
-                }
-            }
-        }).on('success.form.fv', function(e) {
-            e.preventDefault();
-            register();
-        });
+//                    }
+//                },
+//                email: {
+//                    err: 'tooltip',
+//                    validators: {
+//                        notEmpty: {
+//                            message: 'The email address is required'
+//                        },
+//                        emailAddress: {
+//                            message: 'The input is not a valid email address'
+//                        }
+////                        regexp: {
+////                            regex: /^[-0-9a-zA-Z.+_]+@[-0-9a-zA-Z.+_]+.[a-zA-Z]{2,4}/,
+////                            message: 'The email format incorrect'
+////                        }
+//                    }
+//                },
+//                password: {
+//                    validators: {
+//                        notEmpty: {
+//                            message: 'The password is required'
+//                        },
+//                        stringLength: {
+//                            min: 8,
+//                            message: 'The username must be more than 8 characters'
+//                        },
+//                        different: {
+//                            field: 'username',
+//                            message: 'The password cannot be the same as username'
+//                        },
+//                        identical: {
+//                            field: 'confirm-password',
+//                            message: 'The password and its confirm must be the same'
+//                        }
+//                    }
+//                }
+//            }
+//        })
+//        .on('success.form.fv', function(e) {
+//////            // Prevent form submission
+////                e.preventDefault();
+////
+////                var $form = $(e.target),
+////                fv    = $(e.target).data('formValidation');
+////
+////                // Do whatever you want here ...
+////
+////                // Then submit the form as usual
+////                fv.defaultSubmit();
+//        });
     });
 
 
