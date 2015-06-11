@@ -148,7 +148,7 @@ public class Classroom {
             return true;
         }
         for(int i = 0 ; i < classroomUserList.size();i++) {
-            if(classroomUserList.get(i).getId()==user.getId()){
+            if(classroomUserList.get(i).getUserId().getId()==user.getId()){
                 return true;
             }
         }
