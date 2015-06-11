@@ -179,7 +179,7 @@
                         </div>
                     </c:if>
                     <span class="question-date"><i class="icon-time"></i>${post.lastEditedDate}</span>
-                    <span class="question-category"><a href="#"><i
+                    <span class="question-category"><a href="/classroom/${post.ownerClassId.id}}"><i
                             class="icon-group"></i>Class: ${post.ownerClassId.classroomName}</a></span>
                     <span class="question-category"><a href="#"><i
                             class="icon-user"></i>Teacher: ${post.ownerClassId.ownerUserId.displayName}</a></span>
