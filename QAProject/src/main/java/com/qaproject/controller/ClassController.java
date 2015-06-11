@@ -176,6 +176,13 @@ public class ClassController {
         List<Material> materials = classroom.getMaterialList();
         List<ClassroomUser> classroomUsers = classroomUserDao.findByTypeAndClassroom(1,classroom);
 
+        if (posts.size()==0 && materials.size()==0 && classroomUsers.size()==0) {
+            model.addAttribute("classroom", classroom);
+            model.addAttribute("owner", user);
+            model.addAttribute("user", userSession);
+            return "classroomWelcome";
+        }
+
         //classify post - MinhKH
         List<Post> questions = new ArrayList<Post>();
         List<Post> articles = new ArrayList<Post>();
