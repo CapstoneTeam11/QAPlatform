@@ -242,7 +242,9 @@
                 <div class="clear"></div><span>Feb 22, 2014</span>
             </li>
         </ul>
+        <c:if test="${user.roleId.id==1}">
         <a href="javascript:joinClass(${classroom.id})" class="button small color" id="join">Join</a>
+        </c:if>
     </div>
     <c:if test="${user.roleId.id==2}">
         <div class="widget widget_login" style="  min-height: 130px;">
