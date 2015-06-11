@@ -2,6 +2,7 @@ package com.qaproject.controller;
 
 import com.qaproject.dao.FollowerDao;
 import com.qaproject.dao.impl.FollowerImpl;
+import com.qaproject.entity.Classroom;
 import com.qaproject.entity.Follower;
 import com.qaproject.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * Created by TADUCTUNG on 08-Jun-15.
@@ -66,6 +68,15 @@ public class TeacherController {
         if(user.getRoleId().getId()==1){
             return "403";
         }
+
+        //check if teacher have any post or following others
+        List<Classroom> classrooms = user.getClassroomList();
+        List<Follower> followers = user.getListTeacherFollow();
+        if (classrooms.size()==0 && followers.size()==0) {
+            return "teacherdashboardWelcome";
+        }
+        model.addAttribute("classrooms",classrooms);
+        model.addAttribute("followers",followers);
         return "teacherdashboard";
     }
 

@@ -178,7 +178,7 @@ public class ClassController {
 
         if (posts.size()==0 && materials.size()==0 && classroomUsers.size()==0) {
             model.addAttribute("classroom", classroom);
-            model.addAttribute("owner", user);
+            model.addAttribute("userOwner", user);
             model.addAttribute("user", userSession);
             return "classroomWelcome";
         }
