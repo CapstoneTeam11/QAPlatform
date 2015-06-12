@@ -231,6 +231,7 @@
                                         <div class="comment-meta">
                                             <div class="date"><i class="icon-time"></i>${postAnswer.creationDate}</div>
                                         </div>
+                                        <%--Add javascript to chang "<i class="icon-thumbs-up"></i>Accept" to "Unaccept"--%>
                                         <a class="comment-reply" href="#"><i class="icon-thumbs-up"></i>Accept</a>
                                     </div>
                                     <div class="text"><p>${postAnswer.body}</p>
