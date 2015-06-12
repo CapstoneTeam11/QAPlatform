@@ -132,7 +132,7 @@
                         <form method="post" action="/post/create">
                             <input type="hidden" name="classId" value="${classId}">
 
-                            <div class="form-inputs clearfix">
+                            <div>
                                 <p>
                                     <label class="required">Title<span>*</span></label>
                                     <input type="text" id="question-title" name="postName">
@@ -322,7 +322,14 @@
             typeaheadjs: {
                 name: 'tag',
                 displayKey: 'name',
-                source: tag.ttAdapter()
+                source: tag.ttAdapter(),
+                templates: {
+                    empty: [
+                        '<div>',
+                        'unable to find any Best Picture winners that match the current query',
+                        '</div>'
+                    ].join('\n')
+                }
             }
         });
         elt.on('itemAdded', function (event) {

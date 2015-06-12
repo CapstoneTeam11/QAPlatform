@@ -45,7 +45,10 @@ public class Post {
     @JoinColumn(name = "OwnerClassId", referencedColumnName = "Id")
     @ManyToOne
     private Classroom ownerClassId;
-
+    @Column(name = "Viewer")
+    private Integer viewer;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "postId")
+    private List<WantAnswerPost> wantAnswerPosts;
     public Post() {
     }
 
@@ -187,5 +190,22 @@ public class Post {
     public String toString() {
         return "com.qaproject.entity.Post[ id=" + id + " ]";
     }
+
+    public Integer getViewer() {
+        return viewer;
+    }
+
+    public void setViewer(Integer viewer) {
+        this.viewer = viewer;
+    }
+
+    public List<WantAnswerPost> getWantAnswerPosts() {
+        return wantAnswerPosts;
+    }
+
+    public void setWantAnswerPosts(List<WantAnswerPost> wantAnswerPosts) {
+        this.wantAnswerPosts = wantAnswerPosts;
+    }
+
 
 }

@@ -57,7 +57,8 @@ public class User {
     private Category categoryId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
     private List<TagUser> tagUserList;
-
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+    private List<WantAnswerPost> wantAnswerPost;
     public User() {
     }
 
