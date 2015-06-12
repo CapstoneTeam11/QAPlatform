@@ -101,11 +101,7 @@ public class UserController {
         HttpSession session = request.getSession();
         session.setAttribute("user", user);
 
-        if(user.getRoleId().getId() == 1){
-            return "redirect:studentdashboard";
-        }else {
-            return "redirect:teacherdashboard";
-        }
+        return "redirect:/dashboard";
     }
     @RequestMapping(value = "/login",method = RequestMethod.POST)
 //    @ResponseBody
@@ -117,11 +113,7 @@ public class UserController {
         if(users.size()>0){
             HttpSession session = request.getSession();
             session.setAttribute("user", users.get(0));
-            if(users.get(0).getRoleId().getId() == 1){
-                return "redirect:studentdashboard";
-            }else {
-                return "redirect:teacherdashboard";
-            }
+            return "redirect:/dashboard";
 
         }else{
             return "welcome";
