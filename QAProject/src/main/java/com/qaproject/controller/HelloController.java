@@ -72,15 +72,6 @@ public class HelloController {
     public String material(ModelMap model) {
         return "material";
     }
-    @RequestMapping(value = "/teacherdashboardWelcome",method = RequestMethod.GET)
-    public String teacherdashboardWelcome(ModelMap model, HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
-        if(user.getRoleId().getId()==1){
-            return "403";
-        }
-        return "teacherdashboardWelcome";
-    }
     @RequestMapping(value = "/classroomWelcome",method = RequestMethod.GET)
     public String classroomWelcome(ModelMap model, HttpServletRequest request) {
         HttpSession session = request.getSession();// Phan quyen user
