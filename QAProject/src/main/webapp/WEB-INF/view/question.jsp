@@ -167,7 +167,7 @@
         <div class="col-md-9">
             <article class="question single-question question-type-normal">
                 <h2 class="post-title">${post.title}</h2>
-
+                <a class="question-report" href="#">Want the answer</a>
                 <div class="question-inner">
                     <div class="clearfix"></div>
                     <div class="question-desc">
@@ -183,7 +183,8 @@
                             class="icon-group"></i>Class: ${post.ownerClassId.classroomName}</a></span>
                     <span class="question-category"><a href="#"><i
                             class="icon-user"></i>Teacher: ${post.ownerClassId.ownerUserId.displayName}</a></span>
-
+                    <span class="question-view"><i class="icon-eye-open"></i>70 view(s)</span>
+                    <span class="single-question-vote-result">Want the answer: 22</span>
                     <div class="clearfix"></div>
                 </div>
             </article>
@@ -230,6 +231,7 @@
                                         <div class="comment-meta">
                                             <div class="date"><i class="icon-time"></i>${postAnswer.creationDate}</div>
                                         </div>
+                                        <a class="comment-reply" href="#"><i class="icon-thumbs-up"></i>Accept</a>
                                     </div>
                                     <div class="text"><p>${postAnswer.body}</p>
                                     </div>
