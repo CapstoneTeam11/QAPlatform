@@ -1,5 +1,6 @@
 package com.qaproject.controller;
 
+import com.qaproject.dao.UserDao;
 import com.qaproject.entity.Classroom;
 import com.qaproject.entity.ClassroomUser;
 import com.qaproject.entity.Follower;
@@ -20,6 +21,9 @@ import java.util.List;
  */
 @Controller
 public class StudentController {
+    @Autowired
+    UserDao userDao;
+
     @RequestMapping(value = "/studentdashboard",method = RequestMethod.GET)
     public String studentdashboard(ModelMap model, HttpServletRequest request) {
         HttpSession session = request.getSession();// Phan quyen user
@@ -27,17 +31,30 @@ public class StudentController {
         if(user.getRoleId().getId()==2){
             return "403";
         }
-        List<Follower> followers = user.getListTeacherFollow();
-        List<Classroom> joinedClassrooms = new ArrayList<Classroom>();
-        List<ClassroomUser> classroomUsers = user.getClassroomUserList();
+
+        //get currentUser for updated classrooms, followers and invitation
+        User currentUser = userDao.find(user.getId());
+
+        List<Follower> followers = currentUser.getListTeacherFollow();
+        List<Classroom> classrooms = new ArrayList<Classroom>();
+        List<ClassroomUser> classroomUsers = currentUser.getClassroomUserList();
+        List<ClassroomUser> invitations = new ArrayList<ClassroomUser>();
+
         for (int i=0; i<classroomUsers.size();i++){
-            joinedClassrooms.add(classroomUsers.get(i).getClassroomId());
+            ClassroomUser currentClassroomUser = classroomUsers.get(i);
+            if (currentClassroomUser.getApproval()==0 && currentClassroomUser.getType()==2) {
+                invitations.add(currentClassroomUser);
+            }
+            if (currentClassroomUser.getApproval()==1){
+                classrooms.add(currentClassroomUser.getClassroomId());
+            }
         }
-        if (followers.size()==0 && joinedClassrooms.size()==0){
+        if (followers.size()==0 && classrooms.size()==0 && invitations.size()==0){
             return "studentdashboardWelcome";
         }
+        model.addAttribute("invitations",invitations);
         model.addAttribute("followers", followers);
-        model.addAttribute("joinedClassrooms", joinedClassrooms);
+        model.addAttribute("classrooms", classrooms);
         return "studentdashboard";
     }
 }

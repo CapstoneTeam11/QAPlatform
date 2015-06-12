@@ -1,9 +1,11 @@
 package com.qaproject.controller;
 
 import com.qaproject.dao.FollowerDao;
+import com.qaproject.dao.UserDao;
 import com.qaproject.dao.impl.FollowerImpl;
 import com.qaproject.entity.Classroom;
 import com.qaproject.entity.Follower;
+import com.qaproject.entity.PostInvitation;
 import com.qaproject.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,6 +27,8 @@ import java.util.List;
 public class TeacherController {
     @Autowired
     FollowerDao followerDao;
+    @Autowired
+    UserDao userDao;
     @RequestMapping(value = "/followTeacher/",method = RequestMethod.GET)
     @ResponseBody
     public String followTeacher(Model model, @RequestParam(value = "teacherId")String teacherId,
@@ -69,12 +73,17 @@ public class TeacherController {
             return "403";
         }
 
+        //get currentUser for updated classrooms, followers and invitation
+        User currentUser = userDao.find(user.getId());
+
         //check if teacher have any post or following others
-        List<Classroom> classrooms = user.getClassroomList();
-        List<Follower> followers = user.getListTeacherFollow();
-        if (classrooms.size()==0 && followers.size()==0) {
+        List<Classroom> classrooms = currentUser.getClassroomList();
+        List<Follower> followers = currentUser.getListTeacherFollow();
+        List<PostInvitation> invitations = currentUser.getPostInvitationList();
+        if (classrooms.size()==0 && followers.size()==0 && invitations.size()==0) {
             return "teacherdashboardWelcome";
         }
+        model.addAttribute("invitations",invitations);
         model.addAttribute("classrooms",classrooms);
         model.addAttribute("followers",followers);
         return "teacherdashboard";
