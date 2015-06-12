@@ -15,11 +15,9 @@ import java.util.List;
 @Repository
 public class ClassroomUserDaoImpl extends BaseDao<ClassroomUser,Integer> implements ClassroomUserDao{
     @Override
-    public List<ClassroomUser> findByTypeAndClassroom(Integer type, Classroom classroom) {
+    public List<ClassroomUser> findByClassroom(Classroom classroom) {
         List<ClassroomUser> classroomUsers = null;
-        Query query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.type=:type and " +
-                "cu.classroomId=:classroom ");
-        query.setParameter("type",type);
+        Query query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.classroomId=:classroom ");
         query.setParameter("classroom",classroom);
         try {
             classroomUsers = query.getResultList();
