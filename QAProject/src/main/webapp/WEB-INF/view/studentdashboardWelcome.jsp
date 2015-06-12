@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 
@@ -128,7 +129,7 @@
                                         <span class="t_center icon_i"><span class="icon_circle" icon_size="50" span_bg="#1abc9c" span_hover="#34495e" style="height: 50px; width: 50px; font-size: 25px; line-height: 50px; background-color: rgb(52, 73, 94);"><i class="icon-group"></i></span></span>
                                         <div class="t_center">
                                             <h3>Join your first class</h3>
-                                            <p>Hi, ${sessionScope.user.displayName}! You haven't joint any classroom yet. Join your first class to ask question now. </p>
+                                            <p>Hi, ${sessionScope.user.displayName}! You haven't joint any classroom yet. Join your first class to ask a question now. </p>
                                         </div>
                                     </div>
                                 </div>
@@ -197,3 +198,4 @@
 
 </body>
 </html>
+

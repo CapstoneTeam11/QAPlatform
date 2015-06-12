@@ -134,23 +134,24 @@
 <ul class="tabs">
     <li class="tab"><a href="#" class="current">Your Class</a></li>
     <li class="tab"><a href="#">Followed Teacher</a></li>
+    <li class="tab"><a href="#">Invitation</a></li>
 </ul>
 <div class="tab-inner-warp">
-    <div class="tab-inner">
-        <c:forEach var="classroom" items="${classrooms}">
-            <div class="about-author clearfix">
-                <div class="" style="float: left;padding-right: 20px;">
-                    <a href="#" original-title="admin" class=""><img alt="" src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>
+        <div class="tab-inner">
+            <c:forEach var="classroom" items="${classrooms}">
+                <div class="about-author clearfix">
+                    <div class="" style="float: left;padding-right: 20px;">
+                        <a href="#" original-title="admin" class=""><img alt="" src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>
+                    </div>
+                    <a class="" href="#" style="float: right">Close class</a>
+                    <div class="author-bio">
+                        <h4><a href="/classroom/${classroom.id}">${classroom.classroomName}</a></h4>
+                            ${classroom.classroomDescription}
+                    </div>
                 </div>
-                <a class="" href="#" style="float: right">Close class</a>
-                <div class="author-bio">
-                    <h4><a href="/classroom/${classroom.id}">${classroom.classroomName}</a></h4>
-                    ${classroom.classroomDescription}
-                </div>
-            </div>
-        </c:forEach>
+            </c:forEach>
+        </div>
     </div>
-</div>
 <div class="tab-inner-warp">
     <div class="tab-inner">
         <c:forEach var="follower" items="${followers}">
@@ -167,6 +168,20 @@
         </c:forEach>
     </div>
 </div>
+<div class="tab-inner-warp">
+        <div class="tab-inner">
+            <div class="about-author clearfix">
+                <div class="" style="float: left;padding-right: 20px;">
+                    <a href="#" original-title="admin" class=""><img alt="" src="https://askwarks.files.wordpress.com/2012/06/icon-conversation.png"></a>
+                </div>
+                <a class="" href="#" style="float: right">Remove</a>
+                <div class="author-bio">
+                    <h4><a href="/post/view/id">This is topic title</a></h4>
+                    You are invited to answer this question in <a href="/classroom/id">ABC class</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div><!-- End page-content -->
 </div><!-- End main -->
 <aside class="col-md-3 sidebar">

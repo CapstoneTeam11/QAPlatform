@@ -134,6 +134,7 @@
             <li class="tab"><a href="#" class="current">Joined Class</a></li>
             <li class="tab"><a href="#">Followed Teacher</a></li>
             <li class="tab"><a href="#">Your Material</a></li>
+            <li class="tab"><a href="#">Invitation</a></li>
         </ul>
         <div class="tab-inner-warp">
             <div class="tab-inner">
@@ -201,6 +202,20 @@
                         <td></td>
                     </tr>
                 </table>
+            </div>
+        </div>
+        <div class="tab-inner-warp">
+            <div class="tab-inner">
+                <div class="about-author clearfix">
+                    <div class="" style="float: left;padding-right: 20px;">
+                        <a href="#" original-title="admin" class=""><img alt="" src="http://consultoriaparacolegios.com/wp-content/uploads/2014/08/Classroom-Learning-Icon-150x150-e1427087330238.png"></a>
+                    </div>
+                    <a class="" href="#" style="float: right">Remove</a>
+                    <div class="author-bio">
+                        <h4><a href="/classroom/id">This is classroom name</a></h4>
+                        You are invited to join this class by <a href="/profile/id">teacher name</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div><!-- End page-content -->

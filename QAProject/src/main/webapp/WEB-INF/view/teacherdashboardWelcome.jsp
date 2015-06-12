@@ -129,7 +129,7 @@
                                         <span class="t_center icon_i"><span class="icon_circle" icon_size="50" span_bg="#1abc9c" span_hover="#34495e" style="height: 50px; width: 50px; font-size: 25px; line-height: 50px; background-color: rgb(52, 73, 94);"><i class="icon-group"></i></span></span>
                                         <div class="t_center">
                                             <h3>Create your first class</h3>
-                                            <p>Hi, ${sessionScope.user.displayName}! You haven't had any classroom yet. Create your first class class to discuss now. </p>
+                                            <p>Hi, ${sessionScope.user.displayName}! You haven't had any classroom yet. Create your first class to discuss now. </p>
                                         </div>
                                     </div>
                                 </div>
