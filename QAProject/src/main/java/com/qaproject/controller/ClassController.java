@@ -176,7 +176,7 @@ public class ClassController {
         //get posts, materials, request to join - MinhKH
         List<Post> posts = classroom.getPostList();
         List<Material> materials = classroom.getMaterialList();
-        List<ClassroomUser> classroomUsers = classroomUserDao.findByTypeAndClassroom(1,classroom);
+        List<ClassroomUser> classroomUsers = classroomUserDao.findByClassroom(classroom);
 
         if (posts.size()==0 && materials.size()==0 && classroomUsers.size()==0) {
             model.addAttribute("classroom", classroom);
@@ -199,18 +199,23 @@ public class ClassController {
         }
 
         //classify classroomUser - MinhKH
-        List<ClassroomUser> requestStudents = new ArrayList<ClassroomUser>();
+        List<ClassroomUser> joinRequests = new ArrayList<ClassroomUser>();
+        List<ClassroomUser> students = new ArrayList<ClassroomUser>();
         for (int i=0;i<classroomUsers.size();i++){
             ClassroomUser currentClassroomUser = classroomUsers.get(i);
-            if(currentClassroomUser.getApproval()==0){// cause null pointer exception because approval = null in database
-                requestStudents.add(currentClassroomUser);
+            if(currentClassroomUser.getType()==1&&currentClassroomUser.getApproval()==0){
+                joinRequests.add(currentClassroomUser);
+            }
+            if (currentClassroomUser.getApproval()==2) {
+                students.add(currentClassroomUser);
             }
         }
 
         model.addAttribute("questions",questions);
         model.addAttribute("articles",articles);
         model.addAttribute("materials",materials);
-        model.addAttribute("requestStudents",requestStudents);
+        model.addAttribute("joinRequests",joinRequests);
+        model.addAttribute("students",students);
         model.addAttribute("classroom", classroom);
         model.addAttribute("userOwner", user);
         model.addAttribute("user", userSession);
