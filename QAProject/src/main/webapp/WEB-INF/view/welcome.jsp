@@ -47,7 +47,6 @@
     <!-- Validator -->
     <link rel="stylesheet" href="/resource/assets/css/bootstrapValidator.css">
     <style>
-
     </style>
 
 </head>
@@ -58,90 +57,90 @@
 
 <div id="wrap">
 
-<div class="panel-pop" id="signup">
-    <h2>Register Now<i class="icon-remove"></i></h2>
-    <div class="form-style form-style-3">
-        <form >
-            <div class="form-inputs clearfix">
-                <p>
-                    <label class="required">Username<span>*</span></label>
-                    <input type="text">
-                </p>
-                <p>
-                    <label class="required">E-Mail<span>*</span></label>
-                    <input type="email">
-                </p>
-                <p>
-                    <label class="required">Password<span>*</span></label>
-                    <input type="password" value="">
-                </p>
-                <p>
-                    <label class="required">Confirm Password<span>*</span></label>
-                    <input type="password" value="">
-                </p>
-            </div>
-            <p class="form-submit">
-                <input type="submit" value="Signup" class="button color small submit">
-            </p>
-        </form>
-    </div>
-</div><!-- End signup -->
-
-<div class="panel-pop" id="lost-password">
-    <h2>Lost Password<i class="icon-remove"></i></h2>
-    <div class="form-style form-style-3">
-        <p>Lost your password? Please enter your username and email address. You will receive a link to create a new password via email.</p>
-        <form>
-            <div class="form-inputs clearfix">
-                <p>
-                    <label class="required">Username<span>*</span></label>
-                    <input type="text">
-                </p>
-                <p>
-                    <label class="required">E-Mail<span>*</span></label>
-                    <input type="email">
-                </p>
-            </div>
-            <p class="form-submit">
-                <input type="submit" value="Reset" class="button color small submit">
-            </p>
-        </form>
-        <div class="clearfix"></div>
-    </div>
-</div><!-- End lost-password -->
-
-
-<header id="header" class="index-no-box">
-    <section class="container clearfix">
-        <form action="/login" method="post">
-            <div class="row">
-            <div class="col-md-3">
-                <div class="logo"><a href="/"><img alt="" src="/resource/assets/images/logo.png"></a></div>
-            </div>
-            <div class="col-md-4"></div>
-            <div class="col-md-2">
-                <div class="row" style="color: #ffffff;padding-top: 10px;padding-left: 15px;">Email</div>
-                <input type="text" style="height: 30px; margin-bottom: 5px" id="username1" data-toggle="tooltip" name="username">
-                <div class="checkbox" style="color: white; margin-top: 5px;font-size: 13px;">
-                    <label><input type="checkbox" value="" checked>Remember me</label>
+    <div class="panel-pop" id="signup">
+        <h2>Register Now<i class="icon-remove"></i></h2>
+        <div class="form-style form-style-3">
+            <form >
+                <div class="form-inputs clearfix">
+                    <p>
+                        <label class="required">Username<span>*</span></label>
+                        <input type="text">
+                    </p>
+                    <p>
+                        <label class="required">E-Mail<span>*</span></label>
+                        <input type="email">
+                    </p>
+                    <p>
+                        <label class="required">Password<span>*</span></label>
+                        <input type="password" value="">
+                    </p>
+                    <p>
+                        <label class="required">Confirm Password<span>*</span></label>
+                        <input type="password" value="">
+                    </p>
                 </div>
-            </div>
-            <div class="col-md-2">
-                <div class="row" style="color: #ffffff;padding-top: 10px;padding-left: 15px;">Password</div>
-                <input type="password" style="height: 30px; margin-bottom: 4px" id="password1" data-toggle="tooltip" name="password">
-                <a href="#" style="color: white;font-size: 12px;" id="lost-password-click">
-                    Forget ?
-                </a>
-            </div>
-            <div class="col-md-1" style="padding-top: 25px">
-                <%--<a href="javascript:checkLogin();" class="button small color" style="height: 30px">Login</a>--%>
-                <input type="submit" id="publish-question" value="Login"
-                           class="button color small submit">
-            </div>
+                <p class="form-submit">
+                    <input type="submit" value="Signup" class="button color small submit">
+                </p>
+            </form>
         </div>
-        </form>
-    </section><!-- End container -->
-</header><!-- End header -->
+    </div><!-- End signup -->
+
+    <div class="panel-pop" id="lost-password">
+        <h2>Lost Password<i class="icon-remove"></i></h2>
+        <div class="form-style form-style-3">
+            <p>Lost your password? Please enter your username and email address. You will receive a link to create a new password via email.</p>
+            <form>
+                <div class="form-inputs clearfix">
+                    <p>
+                        <label class="required">Username<span>*</span></label>
+                        <input type="text">
+                    </p>
+                    <p>
+                        <label class="required">E-Mail<span>*</span></label>
+                        <input type="email">
+                    </p>
+                </div>
+                <p class="form-submit">
+                    <input type="submit" value="Reset" class="button color small submit">
+                </p>
+            </form>
+            <div class="clearfix"></div>
+        </div>
+    </div><!-- End lost-password -->
+
+
+    <header id="header" class="index-no-box">
+        <section class="container clearfix">
+            <form action="/login" method="post">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="logo"><a href="/"><img alt="" src="/resource/assets/images/logo.png"></a></div>
+                    </div>
+                    <div class="col-md-4"></div>
+                    <div class="col-md-2">
+                        <div class="row" style="color: #ffffff;padding-top: 10px;padding-left: 15px;">Email</div>
+                        <input type="text" style="height: 30px; margin-bottom: 5px" id="username1" data-toggle="tooltip" name="username">
+                        <div class="checkbox" style="color: white; margin-top: 5px;font-size: 13px;">
+                            <label><input type="checkbox" value="" checked>Remember me</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="row" style="color: #ffffff;padding-top: 10px;padding-left: 15px;">Password</div>
+                        <input type="password" style="height: 30px; margin-bottom: 4px" id="password1" data-toggle="tooltip" name="password">
+                        <a href="#" style="color: white;font-size: 12px;" id="lost-password-click">
+                            Forget ?
+                        </a>
+                    </div>
+                    <div class="col-md-1" style="padding-top: 25px">
+                        <%--<a href="javascript:checkLogin();" class="button small color" style="height: 30px">Login</a>--%>
+                        <input type="submit" id="publish-question" value="Login"
+                               class="button color small submit">
+                    </div>
+                </div>
+            </form>
+        </section><!-- End container -->
+    </header><!-- End header -->
 
 
 
@@ -165,12 +164,12 @@
                         <form method="POST"  class="form-style form-style-3 form-style-5" id="registrationForm" action="/register">
                             <div class="form-inputs clearfix">
                                 <%--<div class="row" style="margin-top: 10px;">--%>
-                                    <%--<div class="form-group">--%>
-                                        <%--<label class="col-md-3 control-label">Username<span>*</span></label>--%>
-                                        <%--<div class="col-md-9">--%>
-                                            <%--<input type="text" value="" aria-required="true" id="username" name="username" class="form-control">--%>
-                                        <%--</div>--%>
-                                    <%--</div>--%>
+                                <%--<div class="form-group">--%>
+                                <%--<label class="col-md-3 control-label">Username<span>*</span></label>--%>
+                                <%--<div class="col-md-9">--%>
+                                <%--<input type="text" value="" aria-required="true" id="username" name="username" class="form-control">--%>
+                                <%--</div>--%>
+                                <%--</div>--%>
                                 <%--</div>--%>
                                 <div class="row" style="margin-top: 10px;">
                                     <div class="form-group">
@@ -201,10 +200,10 @@
                                         <label class="col-md-3 control-label">Know About<span>*</span></label>
                                         <div class="col-md-9">
                                             <%--<select class="form-control" style="width: 82%;">--%>
-                                                <%--<option value="">Select a type</option>--%>
-                                                <%--<c:forEach var="category" items="${categories}">--%>
-                                                <%--<option value="${category.id}">${category.categoryName}</option>--%>
-                                                <%--</c:forEach>--%>
+                                            <%--<option value="">Select a type</option>--%>
+                                            <%--<c:forEach var="category" items="${categories}">--%>
+                                            <%--<option value="${category.id}">${category.categoryName}</option>--%>
+                                            <%--</c:forEach>--%>
                                             <%--</select>--%>
                                             <span class="styled-select">
 										        <select id="professional" name="cate">
@@ -239,7 +238,7 @@
                             </div>
                             <p class="form-submit">
                                 <input name="submit" type="submit" value="Register" class="submit button medium color" style="width: 96%; float: left">
-                                    <%--<a href="javascript:register();" class="submit button medium color text-center" style="width: 96%;">Register</a>--%>
+                                <%--<a href="javascript:register();" class="submit button medium color text-center" style="width: 96%;">Register</a>--%>
                             </p>
                         </form>
                     </div><!-- End page-content -->
@@ -356,8 +355,6 @@
 ////                fv.defaultSubmit();
 //        });
     });
-
-
     function register() {
 //        var username = $('#username').val();
         var password = $('#password').val();
@@ -414,14 +411,9 @@
                 }else {
                     alert("Username or password is incorrect!");
                 }
-
             }
         });
     }
-
-
-
-
 </script>
 </body>
 </html>
