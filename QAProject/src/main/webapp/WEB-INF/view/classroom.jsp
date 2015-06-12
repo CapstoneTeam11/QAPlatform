@@ -120,10 +120,11 @@
 
 <div class="tabs-warp question-tab">
 <ul class="tabs">
-    <li class="tab"><a href="#" class="current">Questions</a></li>
-    <li class="tab"><a href="#">Articles</a></li>
+    <li class="tab"><a href="#" class="current">Question</a></li>
+    <li class="tab"><a href="#">Article</a></li>
     <li class="tab"><a href="#">Material</a></li>
-    <li class="tab"><a href="#">Join Requests</a></li>
+    <li class="tab"><a href="#">Join Request</a></li>
+    <li class="tab"><a href="#">Student</a></li>
 </ul>
 
 <div class="tab-inner-warp">
@@ -207,28 +208,42 @@
     </div>
 </div>
 <div class="tab-inner-warp">
-        <div class="tab-inner">
-            <c:if test="${not empty requestStudents}">
-                <c:forEach var="requestStudent" items="${requestStudents}">
-                        <form id="acceptForm" method="post" action="/acceptRequest">
-                            <input type="hidden" name="requestId" value="${requestStudent.id}"/>
-                            <input type="hidden" name="ownerClassroomId" value="${classroom.ownerUserId.id}"/>
-                            <input type="hidden" name="currentClassroomId" value="${classroom.id}"/>
-                            <div class="about-author clearfix">
-                                <div class="author-image">
-                                    <a href="#" original-title="${requestStudent.userId.displayName}" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
-                                </div>
-                                <a class="" href="#" style="float: right">Ignore</a>
-                                <a class="" href="#" onclick="document.forms['acceptForm'].submit()" style="float: right; margin-right: 15px">Confirm</a>
-                                <div class="author-bio">
-                                    <h4><a href="#">${requestStudent.userId.displayName}</a></h4>
-                                    Requested to join <a href="/classroom/${classroom.id}" style="font-size: 15px">${classroom.classroomName}</a>
-                                </div>
+    <div class="tab-inner">
+        <c:if test="${not empty joinRequests}">
+            <c:forEach var="joinRequest" items="${joinRequests}">
+                    <form id="acceptForm" method="post" action="/acceptRequest">
+                        <input type="hidden" name="requestId" value="${joinRequest.id}"/>
+                        <input type="hidden" name="ownerClassroomId" value="${classroom.ownerUserId.id}"/>
+                        <input type="hidden" name="currentClassroomId" value="${classroom.id}"/>
+                        <div class="about-author clearfix">
+                            <div class="author-image">
+                                <a href="#" original-title="${joinRequest.userId.displayName}" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
                             </div>
-                        </form>
-                </c:forEach>
-                <a href="#" class="load-questions"><i class="icon-refresh"></i>View more request</a>
-            </c:if>
+                            <a class="" href="#" style="float: right">Ignore</a>
+                            <a class="" href="#" onclick="document.forms['acceptForm'].submit()" style="float: right; margin-right: 15px">Confirm</a>
+                            <div class="author-bio">
+                                <h4><a href="#">${joinRequest.userId.displayName}</a></h4>
+                                Requested to join <a href="/classroom/${classroom.id}" style="font-size: 15px">${classroom.classroomName}</a>
+                            </div>
+                        </div>
+                    </form>
+            </c:forEach>
+            <a href="#" class="load-questions"><i class="icon-refresh"></i>View more request</a>
+        </c:if>
+    </div>
+</div>
+    <div class="tab-inner-warp">
+        <div class="tab-inner">
+            <div class="about-author clearfix">
+                <div class="author-image">
+                    <a href="#" original-title="" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
+                </div>
+                <a class="" href="#" style="float: right">Remove</a>
+                <div class="author-bio" style="margin-top: 25px">
+                    <h4><a href="#">Student display name here</a></h4>
+                </div>
+            </div>
+            <a href="#" class="load-questions"><i class="icon-refresh"></i>View more students</a>
         </div>
     </div>
 </div><!-- End page-content -->
