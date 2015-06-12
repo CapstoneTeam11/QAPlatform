@@ -210,7 +210,8 @@
                     <div class="" style="float: left;padding-right: 20px;">
                         <a href="#" original-title="admin" class=""><img alt="" src="http://consultoriaparacolegios.com/wp-content/uploads/2014/08/Classroom-Learning-Icon-150x150-e1427087330238.png"></a>
                     </div>
-                    <a class="" href="#" style="float: right">Remove</a>
+                    <a class="" href="#" style="float: right">Ignore</a>
+                    <a class="" href="#" onclick="" style="float: right; margin-right: 15px">Confirm</a>
                     <div class="author-bio">
                         <h4><a href="/classroom/id">This is classroom name</a></h4>
                         You are invited to join this class by <a href="/profile/id">teacher name</a>
