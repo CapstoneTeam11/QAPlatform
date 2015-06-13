@@ -178,7 +178,21 @@ public class ClassController {
         List<Material> materials = classroom.getMaterialList();
         List<ClassroomUser> classroomUsers = classroomUserDao.findByClassroom(classroom);
 
-        if (posts.size()==0 && materials.size()==0 && classroomUsers.size()==0) {
+
+        //classify classroomUser - MinhKH
+        List<ClassroomUser> joinRequests = new ArrayList<ClassroomUser>();
+        List<ClassroomUser> students = new ArrayList<ClassroomUser>();
+        for (int i=0;i<classroomUsers.size();i++){
+            ClassroomUser currentClassroomUser = classroomUsers.get(i);
+            if(currentClassroomUser.getType()==1&&currentClassroomUser.getApproval()==0){
+                joinRequests.add(currentClassroomUser);
+            }
+            if (currentClassroomUser.getApproval()==2) {
+                students.add(currentClassroomUser);
+            }
+        }
+
+        if (posts.size()==0 && materials.size()==0 && joinRequests.size()==0 && students.size()==0) {
             model.addAttribute("classroom", classroom);
             model.addAttribute("userOwner", user);
             model.addAttribute("user", userSession);
@@ -195,19 +209,6 @@ public class ClassController {
             }
             if (currentPost.getPostType()==2){
                 articles.add(currentPost);
-            }
-        }
-
-        //classify classroomUser - MinhKH
-        List<ClassroomUser> joinRequests = new ArrayList<ClassroomUser>();
-        List<ClassroomUser> students = new ArrayList<ClassroomUser>();
-        for (int i=0;i<classroomUsers.size();i++){
-            ClassroomUser currentClassroomUser = classroomUsers.get(i);
-            if(currentClassroomUser.getType()==1&&currentClassroomUser.getApproval()==0){
-                joinRequests.add(currentClassroomUser);
-            }
-            if (currentClassroomUser.getApproval()==2) {
-                students.add(currentClassroomUser);
             }
         }
 
