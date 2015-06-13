@@ -246,8 +246,16 @@
                         </div>
                     </div>
                 </c:forEach>
+                <a href="#" class="load-questions"><i class="icon-refresh"></i>View more students</a>
             </c:if>
-            <a href="#" class="load-questions"><i class="icon-refresh"></i>View more students</a>
+
+        </div>
+        <div class="tab-inner">
+            <c:if test="${empty students}">
+                <div class="about-author clearfix">
+                    No student yet!
+                </div>
+            </c:if>
         </div>
     </div>
 </div><!-- End page-content -->
@@ -262,7 +270,8 @@
             </li>
         </ul>
         <c:if test="${user.roleId.id==1}">
-        <a href="javascript:joinClass(${classroom.id})" class="button small color" id="join">Join</a>
+
+            <a href="javascript:joinClass(${classroom.id})" class="button small color" id="join">Join</a>
         </c:if>
     </div>
     <c:if test="${user.roleId.id==2}">
