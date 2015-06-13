@@ -170,16 +170,25 @@
 </div>
 <div class="tab-inner-warp">
         <div class="tab-inner">
-            <div class="about-author clearfix">
-                <div class="" style="float: left;padding-right: 20px;">
-                    <a href="#" original-title="admin" class=""><img alt="" src="https://askwarks.files.wordpress.com/2012/06/icon-conversation.png"></a>
+            <c:if test="${not empty invitations}">
+                <c:forEach var="invitation" items="${invitations}">
+                    <div class="about-author clearfix">
+                        <div class="" style="float: left;padding-right: 20px;">
+                            <a href="#" original-title="admin" class=""><img alt="" src="https://askwarks.files.wordpress.com/2012/06/icon-conversation.png"></a>
+                        </div>
+                        <a class="" href="#" style="float: right">Remove</a>
+                        <div class="author-bio">
+                            <h4><a href="/post/view/${invitation.postId.id}">${invitation.postId.title}</a></h4>
+                            You are invited to answer this question in <a href="/classroom/${invitation.postId.ownerClassId.id}">${invitation.postId.ownerClassId.classroomName}</a>
+                        </div>
+                    </div>
+                </c:forEach>
+            </c:if>
+            <c:if test="${empty invitations}">
+                <div class="about-author clearfix">
+                    No invitation yet!
                 </div>
-                <a class="" href="#" style="float: right">Remove</a>
-                <div class="author-bio">
-                    <h4><a href="/post/view/id">This is topic title</a></h4>
-                    You are invited to answer this question in <a href="/classroom/id">ABC class</a>
-                </div>
-            </div>
+            </c:if>
         </div>
     </div>
 </div><!-- End page-content -->

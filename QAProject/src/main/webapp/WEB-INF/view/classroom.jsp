@@ -234,15 +234,19 @@
 </div>
     <div class="tab-inner-warp">
         <div class="tab-inner">
-            <div class="about-author clearfix">
-                <div class="author-image">
-                    <a href="#" original-title="" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
-                </div>
-                <a class="" href="#" style="float: right">Remove</a>
-                <div class="author-bio" style="margin-top: 25px">
-                    <h4><a href="#">Student display name here</a></h4>
-                </div>
-            </div>
+            <c:if test="${not empty students}">
+                <c:forEach var="student" items="${students}">
+                    <div class="about-author clearfix">
+                        <div class="author-image">
+                            <a href="#" original-title="" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
+                        </div>
+                        <a class="" href="#" style="float: right">Remove</a>
+                        <div class="author-bio" style="margin-top: 25px">
+                            <h4><a href="#">${student.userId.displayName}</a></h4>
+                        </div>
+                    </div>
+                </c:forEach>
+            </c:if>
             <a href="#" class="load-questions"><i class="icon-refresh"></i>View more students</a>
         </div>
     </div>

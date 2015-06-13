@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: Minh
@@ -138,50 +139,48 @@
         </ul>
         <div class="tab-inner-warp">
             <div class="tab-inner">
-                <div class="about-author clearfix">
-                    <div class="" style="float: left;padding-right: 20px;">
-                        <a href="#" original-title="admin" class=""><img alt="" src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>
+                <c:if test="${not empty classrooms}">
+                    <c:forEach var="classroom" items="${classrooms}">
+                        <div class="about-author clearfix">
+                            <div class="" style="float: left;padding-right: 20px;">
+                                <a href="#" original-title="admin" class=""><img alt="" src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>
+                            </div>
+                            <a class="" href="#" style="float: right">Leave</a>
+                            <div class="author-bio">
+                                <h4><a href="#">${classroom.classroomName}</a></h4>
+                                ${classroom.classroomDescription}
+                            </div>
+                        </div>
+                    </c:forEach>
+                </c:if>
+                <c:if test="${empty classrooms}">
+                    <div class="about-author clearfix">
+                        No classrooms joined yet
                     </div>
-                    <a class="" href="#" style="float: right">Leave</a>
-                    <div class="author-bio">
-                        <h4><a href="#">Advance Java class</a></h4>
-                        This is introduction of Advance Java class: advance java advance java advance java advance java advance java
-                    </div>
-                </div>
-                <div class="about-author clearfix">
-                    <div class="" style="float: left;padding-right: 20px;">
-                        <a href="#" original-title="admin" class=""><img alt="" src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>
-                    </div>
-                    <a class="" href="#" style="float: right">Leave</a>
-                    <div class="author-bio">
-                        <h4><a href="#">Advance Java class</a></h4>
-                        This is introduction of Advance Java class: advance java advance java advance java advance java advance java
-                    </div>
-                </div>
+                </c:if>
             </div>
         </div>
         <div class="tab-inner-warp">
             <div class="tab-inner">
-                <div class="about-author clearfix">
-                    <div class="author-image">
-                        <a href="#" original-title="admin" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
+                <c:if test="${not empty followers}">
+                    <c:forEach var="follower" items="${followers}">
+                        <div class="about-author clearfix">
+                            <div class="author-image">
+                                <a href="#" original-title="admin" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
+                            </div>
+                            <a class="" href="#" style="float: right">Unfollow</a>
+                            <div class="author-bio">
+                                <h4><a href="#">${follower.followerId.displayName}</a></h4>
+                                    ${follower.followerId.aboutMe}
+                            </div>
+                        </div>
+                    </c:forEach>
+                </c:if>
+                <c:if test="${empty followers}">
+                    <div class="about-author clearfix">
+                        No follower yet
                     </div>
-                    <a class="" href="#" style="float: right">Unfollow</a>
-                    <div class="author-bio">
-                        <h4><a href="#">Johnny Walker</a></h4>
-                        I'm teaching at FPT University. My professional are Java, C# and SQL
-                    </div>
-                </div>
-                <div class="about-author clearfix">
-                    <div class="author-image">
-                        <a href="#" original-title="admin" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
-                    </div>
-                    <a class="" href="#" style="float: right">Unfollow</a>
-                    <div class="author-bio">
-                        <h4><a href="#">Paul Smith</a></h4>
-                        I'm English teacher at Hoa Sen University. I can help you improve your speaking and writing for TOELF test.
-                    </div>
-                </div>
+                </c:if>
             </div>
         </div>
         <div class="tab-inner-warp">
@@ -206,17 +205,26 @@
         </div>
         <div class="tab-inner-warp">
             <div class="tab-inner">
-                <div class="about-author clearfix">
-                    <div class="" style="float: left;padding-right: 20px;">
-                        <a href="#" original-title="admin" class=""><img alt="" src="http://consultoriaparacolegios.com/wp-content/uploads/2014/08/Classroom-Learning-Icon-150x150-e1427087330238.png"></a>
+                <c:if test="${not empty invitations}">
+                    <c:forEach var="invitation" items="${invitations}">
+                        <div class="about-author clearfix">
+                            <div class="" style="float: left;padding-right: 20px;">
+                                <a href="#" original-title="admin" class=""><img alt="" src="http://consultoriaparacolegios.com/wp-content/uploads/2014/08/Classroom-Learning-Icon-150x150-e1427087330238.png"></a>
+                            </div>
+                            <a class="" href="#" style="float: right">Ignore</a>
+                            <a class="" href="#" onclick="" style="float: right; margin-right: 15px">Confirm</a>
+                            <div class="author-bio">
+                                <h4><a href="/classroom/${invitation.classroomId.id}">${invitation.classroomId.classroomName}</a></h4>
+                                You are invited to join this class by <a href="/profile/${invitation.userId.id}">${invitation.userId.displayName}</a>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </c:if>
+                <c:if test="${empty invitations}">
+                    <div class="about-author clearfix">
+                        No invitations yet
                     </div>
-                    <a class="" href="#" style="float: right">Ignore</a>
-                    <a class="" href="#" onclick="" style="float: right; margin-right: 15px">Confirm</a>
-                    <div class="author-bio">
-                        <h4><a href="/classroom/id">This is classroom name</a></h4>
-                        You are invited to join this class by <a href="/profile/id">teacher name</a>
-                    </div>
-                </div>
+                </c:if>
             </div>
         </div>
     </div><!-- End page-content -->
