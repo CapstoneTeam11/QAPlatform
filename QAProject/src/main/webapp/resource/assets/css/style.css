@@ -5155,3 +5155,10 @@ html[xmlns] .slides {
     height: 23px;
     line-height: 15px;
 }
+.acceptAnswerIcon {
+    margin-left: 15px;
+    width: 10%;
+    float: left;
+    font-size: 35px;
+    color: #318e08;
+}

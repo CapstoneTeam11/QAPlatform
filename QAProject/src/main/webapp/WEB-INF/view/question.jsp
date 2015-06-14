@@ -235,28 +235,32 @@
                                                          src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg">
                                 </div>
                                 <div class="comment-text">
-                                    <div class="author clearfix">
-                                        <div class="comment-author"><a
-                                                href="#">${postAnswer.ownerUserId.displayName}</a>
+                                    <div class="author clearfix"  style="display: flex">
+                                        <div style="width: 30%">
+                                        <div class="comment-author"><a href="#">${postAnswer.ownerUserId.displayName}</a>
                                         </div>
                                         <div class="comment-meta">
                                             <div class="date"><i class="icon-time"></i>${postAnswer.creationDate}</div>
                                         </div>
+                                        </div>
+                                        <div class="acceptAnswerIcon" id="answerIcon${postAnswer.id}">
+                                        <c:if test="${postAnswer.acceptedAnswerId==1}">
+                                            <i class="icon-ok"></i>
+                                        </c:if>
+                                        </div>
                                         <%--Add javascript to chang "<i class="icon-thumbs-up"></i>Accept" to "Unaccept"--%>
-                                        <c:if test="${postAnswer.acceptedAnswerId==1}">
-                                        <a class="comment-reply" href="#"><i class="icon-thumbs-up"></i>Accept</a>
+                                        <div style="width: 75%">
+                                        <input type="hidden" name="postAnswerId" value="${postAnswer.id}">
+                                        <c:if test="${postAnswer.acceptedAnswerId !=1 && sessionScope.user.id==post.ownerUserId.id}">
+                                        <a class="button small color acceptAnswer answerFlag" style="float: right">Accept</a>
                                         </c:if>
-                                        <c:if test="${postAnswer.acceptedAnswerId==1}">
-                                            <a class="comment-reply" href="#"><i class="icon-thumbs-down"></i>Unaccepted</a>
+                                        <c:if test="${postAnswer.acceptedAnswerId==1 && sessionScope.user.id==post.ownerUserId.id}">
+                                            <a class="button small color unacceptAnswer answerFlag" style="float: right">Unaccept</a>
                                         </c:if>
+                                        </div>
                                     </div>
                                     <div class="text"><p>${postAnswer.body}</p>
                                     </div>
-                                    <c:if test="${postAnswer.acceptedAnswerId==1}">
-                                        <div class="question-answered question-answered-done"><i class="icon-ok"></i>Accepted
-                                            Answer
-                                        </div>
-                                    </c:if>
                                 </div>
                             </div>
                         </li>
@@ -390,6 +394,47 @@
     stompClient.connect("guest", "guest", connectCallback, errorCallback);
 
     $(document).ready(function () {
+        $('.answerFlag').click(function (e) {
+            if($(this).hasClass('acceptAnswer')) {
+                var acceptAnswer = $(this);
+                var id =  $(this).prev('input').val();
+                var url = "/post/acceptAnswer/"+id;
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    success: function (data) {
+                        if(data != "NG" ){
+                            $(acceptAnswer).removeClass('acceptAnswer')
+                            $(acceptAnswer).addClass('unacceptAnswer')
+                            var iconDiv ='#answerIcon'+id;
+                            $(iconDiv).prepend('<i class="icon-ok"></i>')
+                            $(acceptAnswer).text('Unaccept')
+                        } else {
+                            console.log("Error");
+                        }
+                    }
+                });
+            } else {
+                var acceptAnswer = $(this);
+                var id =  $(this).prev('input').val();
+                var url = "/post/removeAcceptAnswer/"+id;
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    success: function (data) {
+                        if(data != "NG" ){
+                            $(acceptAnswer).removeClass('unacceptAnswer')
+                            $(acceptAnswer).addClass('acceptAnswer')
+                            var iconDiv ='#answerIcon'+id;
+                            $(iconDiv).empty();
+                            $(acceptAnswer).text('Accept')
+                        } else {
+                            console.log("Error");
+                        }
+                    }
+                });
+            }
+        });
         $('#wantAnswer').click(function (e) {
             if($('#wantAnswer').hasClass('wantAnswerId')) {
             var postId = ${post.id}

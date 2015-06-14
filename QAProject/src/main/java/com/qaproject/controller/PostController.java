@@ -31,7 +31,7 @@ public class PostController {
     @Autowired
     TagDao tagDao;
     @Autowired
-	TagPostDao tagPostDao;
+    TagPostDao tagPostDao;
     @Autowired
     HttpSession session;
     @Autowired
@@ -55,48 +55,53 @@ public class PostController {
         post.setOwnerUserId(userDao.find(answerDto.getOwnerId()));
         postDao.persist(post);
         PostDto postDto = ConvertEntityDto.convertPostEntityToDto(post);
-        template.convertAndSend("/topic/addPost/"+answerDto.getParentId(),postDto);
+        template.convertAndSend("/topic/addPost/" + answerDto.getParentId(), postDto);
     }
 
-    @RequestMapping(value = "/post/view/{id}",method = RequestMethod.GET)
+    @RequestMapping(value = "/post/view/{id}", method = RequestMethod.GET)
     public String view(@PathVariable Integer id, ModelMap model) {
         //check if not parent Post return 404.
         Post post = postDao.find(id);
         User user = (User) session.getAttribute("user");
-		//get related postId - MinhKH
+        //get related postId - MinhKH
         List<Integer> tagIds = new ArrayList<Integer>();
-        for (int i= 0; i<post.getTagPostList().size(); i++) {
+        for (int i = 0; i < post.getTagPostList().size(); i++) {
             tagIds.add(post.getTagPostList().get(i).getTagId().getId());
         }
         List<Integer> relatedPostIds = tagPostDao.findRelatedPostIds(tagIds);
         List<Post> relatedPosts = new ArrayList<Post>();
-        for(int i=0; i<relatedPostIds.size(); i++){
+        for (int i = 0; i < relatedPostIds.size(); i++) {
             int currentRelatedPostId = relatedPostIds.get(i);
-            if (currentRelatedPostId!=post.getId()){
+            if (currentRelatedPostId != post.getId()) {
                 Post relatedPost = postDao.find(currentRelatedPostId);
                 relatedPosts.add(relatedPost);
             }
         }
         //get List Post answer
-        List<Post> postAnswers = postDao.findPostChilds(id,1);
-        model.addAttribute("post",post);
+        List<Post> postAnswers = postDao.findPostChilds(id, 1);
+        model.addAttribute("post", post);
         model.addAttribute("relatedPosts", relatedPosts);
         model.addAttribute("postAnswers", postAnswers);
-        WantAnswerPost wantAnswerPost =post.checkWantToAnswer(user.getId());
-        if(wantAnswerPost!=null) {
-            model.addAttribute("wantAnswer",wantAnswerPost);
+        if (user != null) {
+
+            WantAnswerPost wantAnswerPost = post.checkWantToAnswer(user.getId());
+            if (wantAnswerPost != null) {
+                model.addAttribute("wantAnswer", wantAnswerPost);
+            }
         }
-        if (post.getPostType()==1){
+        if (post.getPostType() == 1) {
             return "question";
         }
         return "article";
     }
-    @RequestMapping(value = "/post/create/{id}",method = RequestMethod.GET)
+
+    @RequestMapping(value = "/post/create/{id}", method = RequestMethod.GET)
     public String createDispath(@PathVariable Integer id, ModelMap model) {
-        model.addAttribute("classId",id);
+        model.addAttribute("classId", id);
         return "createPost";
     }
-    @RequestMapping(value = "/post/create",method = RequestMethod.POST)
+
+    @RequestMapping(value = "/post/create", method = RequestMethod.POST)
     public String create(@RequestParam Integer classId,
                          @RequestParam List<Integer> tagId,
                          @RequestParam String postName,
@@ -106,11 +111,11 @@ public class PostController {
         //Check is User
         User user = (User) session.getAttribute("user");
         Classroom classroom = classroomDao.find(classId);
-        if(user==null) {
+        if (user == null) {
             return "redirect:/";
         }
         //Check User have joint to Class
-        if(classroom.checkUserExist(user)==false){
+        if (classroom.checkUserExist(user) == false) {
             return "redirect:/";
         }
         Post post = new Post();
@@ -123,7 +128,7 @@ public class PostController {
         post.setLastEditedDate(new Date());
         //Create List TagPost
         List<TagPost> tagPosts = new ArrayList<TagPost>();
-        for(int i = 0 ; i < tagId.size();i++) {
+        for (int i = 0; i < tagId.size(); i++) {
             TagPost tagPost = new TagPost();
             tagPost.setPostId(post);
             tagPost.setTagId(tagDao.find(tagId.get(i)));
@@ -131,10 +136,13 @@ public class PostController {
         }
         post.getTagPostList().addAll(tagPosts);
         postDao.persist(post);
-        return "redirect:/post/view/"+post.getId();
+        return "redirect:/post/view/" + post.getId();
     }
-    @RequestMapping(value = "/post/wantAnswer",method = RequestMethod.POST,produces = "application/json")
-    public @ResponseBody String addWantAnswer(@ModelAttribute("wantAnswerDto")WantAnswerDto wantAnswerDto) {
+
+    @RequestMapping(value = "/post/wantAnswer", method = RequestMethod.POST, produces = "application/json")
+    public
+    @ResponseBody
+    String addWantAnswer(@ModelAttribute("wantAnswerDto") WantAnswerDto wantAnswerDto) {
         //authorize
         WantAnswerPost wantAnswerPost = new WantAnswerPost();
         wantAnswerPost.setPostId(postDao.find(wantAnswerDto.getPostId()));
@@ -148,12 +156,48 @@ public class PostController {
         //Send notification
         return String.valueOf(wantAnswerPost.getId());
     }
-    @RequestMapping(value = "/post/dontWantAnswer",method = RequestMethod.POST,produces = "application/json")
-    public @ResponseBody String removeWantAnswer(@ModelAttribute("wantAnswerDto")WantAnswerDto wantAnswerDto) {
+
+    @RequestMapping(value = "/post/dontWantAnswer", method = RequestMethod.POST, produces = "application/json")
+    public
+    @ResponseBody
+    String removeWantAnswer(@ModelAttribute("wantAnswerDto") WantAnswerDto wantAnswerDto) {
         //authorize
         try {
             WantAnswerPost wantAnswerPost = wantAnswerDao.find(wantAnswerDto.getId());
             wantAnswerDao.remove(wantAnswerPost);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "NG";
+        }
+        //Send notification
+        return "OK";
+    }
+
+    @RequestMapping(value = "/post/acceptAnswer/{id}", method = RequestMethod.POST, produces = "application/json")
+    public
+    @ResponseBody
+    String acceptAnswer(@PathVariable Integer id) {
+        //authorize
+        try {
+            Post post = postDao.find(id);
+            post.setAcceptedAnswerId(1);
+            postDao.merge(post);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "NG";
+        }
+        //Send notification
+        return "OK";
+    }
+    @RequestMapping(value = "/post/removeAcceptAnswer/{id}", method = RequestMethod.POST, produces = "application/json")
+    public
+    @ResponseBody
+    String removeAcceptAnswer(@PathVariable Integer id) {
+        //authorize
+        try {
+            Post post = postDao.find(id);
+            post.setAcceptedAnswerId(0);
+            postDao.merge(post);
         } catch (Exception e) {
             e.printStackTrace();
             return "NG";
