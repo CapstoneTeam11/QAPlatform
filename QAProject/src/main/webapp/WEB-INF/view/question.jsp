@@ -167,8 +167,15 @@
         <div class="col-md-9">
             <article class="question single-question question-type-normal">
                 <h2 class="post-title">${post.title}</h2>
-                <a class="question-report" href="#">Want the answer</a>
-                <div class="question-inner">
+                <span class="wantAnswer"><a id="wantNumber">${fn:length(post.wantAnswerPosts)}</a> Want to answer</span>
+                <c:if test="${wantAnswer!=null}">
+                <a class="wantAnswer dontWantanswerId" href="#" style="right: 156px;" id="wantAnswer"><i class="icon-check"></i></a>
+                </c:if>
+                <input type="hidden" id="wantAnswerId" value="${wantAnswer.id}">
+                <c:if test="${wantAnswer==null}">
+                    <a class="wantAnswer wantAnswerId" href="#" style="right: 156px;" id="wantAnswer"><i class="icon-check-empty"></i></a>
+                </c:if>
+                <div class="question-inner" id="prvId">
                     <div class="clearfix"></div>
                     <div class="question-desc">
                         <p>${post.body}</p>
@@ -183,20 +190,24 @@
                             class="icon-group"></i>Class: ${post.ownerClassId.classroomName}</a></span>
                     <span class="question-category"><a href="#"><i
                             class="icon-user"></i>Teacher: ${post.ownerClassId.ownerUserId.displayName}</a></span>
-                    <span class="question-view"><i class="icon-eye-open"></i>70 view(s)</span>
-                    <span class="single-question-vote-result">Want the answer: 22</span>
+                    <span class="question-view"><i class="icon-eye-open"></i>${post.viewer} view(s)</span>
+                    <span class="question-tags"><i class="icon-tags"></i>
+                        <c:forEach var="tag" items="${post.tagPostList}">
+                            <a href="#">${tag.tagId.tagName},</a>
+                        </c:forEach>
+                    </span>
                     <div class="clearfix"></div>
                 </div>
             </article>
 
-            <div class="share-tags page-content">
-                <div class="question-tags"><i class="icon-tags"></i>
-                    <c:forEach var="tag" items="${post.tagPostList}">
-                        <a href="#">${tag.tagId.tagName},</a>
-                    </c:forEach>
-                </div>
-                <div class="clearfix"></div>
-            </div>
+            <%--<div class="share-tags page-content">--%>
+                <%--<div class="question-tags"><i class="icon-tags"></i>--%>
+                    <%--<c:forEach var="tag" items="${post.tagPostList}">--%>
+                        <%--<a href="#">${tag.tagId.tagName},</a>--%>
+                    <%--</c:forEach>--%>
+                <%--</div>--%>
+                <%--<div class="clearfix"></div>--%>
+            <%--</div>--%>
             <!-- End share-tags -->
             <c:if test="${sessionScope.user!=null}">
             <div id="respond" class="comment-respond page-content clearfix">
@@ -232,7 +243,12 @@
                                             <div class="date"><i class="icon-time"></i>${postAnswer.creationDate}</div>
                                         </div>
                                         <%--Add javascript to chang "<i class="icon-thumbs-up"></i>Accept" to "Unaccept"--%>
+                                        <c:if test="${postAnswer.acceptedAnswerId==1}">
                                         <a class="comment-reply" href="#"><i class="icon-thumbs-up"></i>Accept</a>
+                                        </c:if>
+                                        <c:if test="${postAnswer.acceptedAnswerId==1}">
+                                            <a class="comment-reply" href="#"><i class="icon-thumbs-down"></i>Unaccepted</a>
+                                        </c:if>
                                     </div>
                                     <div class="text"><p>${postAnswer.body}</p>
                                     </div>
@@ -374,6 +390,56 @@
     stompClient.connect("guest", "guest", connectCallback, errorCallback);
 
     $(document).ready(function () {
+        $('#wantAnswer').click(function (e) {
+            if($('#wantAnswer').hasClass('wantAnswerId')) {
+            var postId = ${post.id}
+            var userId = ${sessionScope.user.id}
+            var wantAnswerDto  = {postId: postId, userId: userId};
+            var url = "/post/wantAnswer"
+                $.ajax({
+                type: "POST",
+                url: url,
+                data: wantAnswerDto,
+                success: function (data) {
+                    if(data != "NG" ){
+                        var number = $('#wantNumber').html();
+                        number = number*1+1;
+                        $('#wantNumber').html(number);
+                        $('#wantAnswer').removeClass('wantAnswerId')
+                        $('#wantAnswer').addClass('dontWantanswerId')
+                        $('#wantAnswerId').val(data)
+                        var icon = $('.icon-check-empty');
+                        icon.attr('class', 'icon-check')
+                    } else {
+                        console.log("Error");
+                    }
+                }
+            });
+            } else {
+                var id = $('#wantAnswerId').val()
+                var url = "/post/dontWantAnswer"
+                var wantAnswerDto  = {id: id};
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data : wantAnswerDto,
+                    success: function (data) {
+                        if(data == "OK" ){
+                            var number = $('#wantNumber').html();
+                            number = number*1-1;
+                            $('#wantNumber').html(number);
+                            $('#wantAnswer').removeClass('dontWantanswerId')
+                            $('#wantAnswer').addClass('wantAnswerId')
+                            var icon = $('.icon-check');
+                            icon.attr('class', 'icon-check-empty')
+                        } else {
+                            console.log("Error");
+                        }
+                    }
+                });
+            }
+        });
+
         MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         $('#submit').click(function (e) {
             e.preventDefault();

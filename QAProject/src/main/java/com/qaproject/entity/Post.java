@@ -207,5 +207,12 @@ public class Post {
         this.wantAnswerPosts = wantAnswerPosts;
     }
 
-
+    public WantAnswerPost checkWantToAnswer(int userId) {
+        for (int i = 0; i < wantAnswerPosts.size(); i++) {
+            if(wantAnswerPosts.get(i).getUserId().getId()==userId) {
+                return wantAnswerPosts.get(i);
+            }
+        }
+        return null ;
+    }
 }

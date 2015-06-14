@@ -253,6 +253,14 @@ public class User {
         return tagUserList;
     }
 
+    public List<WantAnswerPost> getWantAnswerPost() {
+        return wantAnswerPost;
+    }
+
+    public void setWantAnswerPost(List<WantAnswerPost> wantAnswerPost) {
+        this.wantAnswerPost = wantAnswerPost;
+    }
+
     public void setTagUserList(List<TagUser> tagUserList) {
         this.tagUserList = tagUserList;
     }

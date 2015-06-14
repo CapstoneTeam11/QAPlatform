@@ -53,6 +53,10 @@ public abstract class BaseDao<T,ID extends Serializable> {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public void remove(T entity) {
-        entityManager.remove(entity);
+        T entityRemove = entity ;
+        if(entityManager.contains(entity)==false) {
+            entityRemove = entityManager.merge(entity);
+        }
+        entityManager.remove(entityRemove);
     }
 }

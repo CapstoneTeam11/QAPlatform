@@ -5145,3 +5145,13 @@ html[xmlns] .slides {
     /* IE 10+ */
     color: red;
 }
+.wantAnswer {
+    float: right;
+    font-size: 16px;
+    padding: 4px 10px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    height: 23px;
+    line-height: 15px;
+}

@@ -3,20 +3,15 @@ package com.qaproject.controller;
 import com.qaproject.dao.*;
 import com.qaproject.dto.AnswerDto;
 import com.qaproject.dto.PostDto;
-import com.qaproject.entity.Classroom;
-import com.qaproject.entity.Post;
-import com.qaproject.entity.TagPost;
-import com.qaproject.entity.User;
+import com.qaproject.dto.WantAnswerDto;
+import com.qaproject.entity.*;
 import com.qaproject.util.ConvertEntityDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
@@ -42,6 +37,8 @@ public class PostController {
     @Autowired
     UserDao userDao;
     @Autowired
+    WantAnswerDao wantAnswerDao;
+    @Autowired
     SimpMessagingTemplate template;
 
     @MessageMapping("/addPost")
@@ -65,7 +62,7 @@ public class PostController {
     public String view(@PathVariable Integer id, ModelMap model) {
         //check if not parent Post return 404.
         Post post = postDao.find(id);
-
+        User user = (User) session.getAttribute("user");
 		//get related postId - MinhKH
         List<Integer> tagIds = new ArrayList<Integer>();
         for (int i= 0; i<post.getTagPostList().size(); i++) {
@@ -85,6 +82,10 @@ public class PostController {
         model.addAttribute("post",post);
         model.addAttribute("relatedPosts", relatedPosts);
         model.addAttribute("postAnswers", postAnswers);
+        WantAnswerPost wantAnswerPost =post.checkWantToAnswer(user.getId());
+        if(wantAnswerPost!=null) {
+            model.addAttribute("wantAnswer",wantAnswerPost);
+        }
         if (post.getPostType()==1){
             return "question";
         }
@@ -132,5 +133,32 @@ public class PostController {
         postDao.persist(post);
         return "redirect:/post/view/"+post.getId();
     }
-
+    @RequestMapping(value = "/post/wantAnswer",method = RequestMethod.POST,produces = "application/json")
+    public @ResponseBody String addWantAnswer(@ModelAttribute("wantAnswerDto")WantAnswerDto wantAnswerDto) {
+        //authorize
+        WantAnswerPost wantAnswerPost = new WantAnswerPost();
+        wantAnswerPost.setPostId(postDao.find(wantAnswerDto.getPostId()));
+        wantAnswerPost.setUserId(userDao.find(wantAnswerDto.getUserId()));
+        try {
+            wantAnswerDao.persist(wantAnswerPost);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "NG";
+        }
+        //Send notification
+        return String.valueOf(wantAnswerPost.getId());
+    }
+    @RequestMapping(value = "/post/dontWantAnswer",method = RequestMethod.POST,produces = "application/json")
+    public @ResponseBody String removeWantAnswer(@ModelAttribute("wantAnswerDto")WantAnswerDto wantAnswerDto) {
+        //authorize
+        try {
+            WantAnswerPost wantAnswerPost = wantAnswerDao.find(wantAnswerDto.getId());
+            wantAnswerDao.remove(wantAnswerPost);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "NG";
+        }
+        //Send notification
+        return "OK";
+    }
 }
