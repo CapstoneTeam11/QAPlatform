@@ -1,6 +1,7 @@
 package com.qaproject.dao;
 
 import com.qaproject.entity.Post;
+import com.qaproject.entity.User;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,8 @@ public interface PostDao {
     List<Post> findAll();
     public Post find(Integer id);
     public List<Post> findPostChilds(Integer id,Integer page);
+    public List<Post> findQuestionsByOwnerUser(User ownerUser);
+    public List<Post> findRepliesByParentId(Integer parentId);
     @Transactional(propagation = Propagation.REQUIRED)
     public void persist(Post entity);
     @Transactional(propagation = Propagation.REQUIRED)
