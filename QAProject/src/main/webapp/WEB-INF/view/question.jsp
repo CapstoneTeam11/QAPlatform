@@ -99,7 +99,7 @@
         <form method="post" action="/teacherInvitation">
             <div id="hiddenTeacher"></div>
             <input type="hidden" name="postId" value="${post.id}">
-            <div style="display: flex;height: 42px;">
+            <div style="display: flex;">
                 <p style="width: 18% !important;">
                     <label class="required">Teacher<span>*</span></label>
                 </p>
@@ -349,6 +349,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.4/typeahead.bundle.min.js"></script>
 <script src="/resource/assets/js/bootstrap-tagsinput.js"></script>
 <script src="/resource/assets/js/bootstrap-tagsinput.min.js"></script>
+<script src="/resource/assets/js/handlebars-v3.0.3.js"></script>
 <script>
     CKEDITOR.replace('question-details');
 </script>
@@ -510,7 +511,15 @@
             typeaheadjs: {
                 name: 'teacherSuggest',
                 displayKey: 'name',
-                source: teacherSuggest.ttAdapter()
+                source: teacherSuggest.ttAdapter(),
+                templates: {
+                    empty: [
+                        '<div class="empty-message">',
+                        'unable to find any teacher',
+                        '</div>'
+                    ].join('\n'),
+                    suggestion: Handlebars.compile('<div><span><img src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" class="author-imgTag"></span> <span style="white-space: nowrap">{{name}}</span></div>')
+                }
             }
         });
         elt.on('itemAdded', function (event) {

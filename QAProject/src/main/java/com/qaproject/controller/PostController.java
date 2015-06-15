@@ -104,6 +104,7 @@ public class PostController {
     @RequestMapping(value = "/post/create", method = RequestMethod.POST)
     public String create(@RequestParam Integer classId,
                          @RequestParam List<Integer> tagId,
+                         @RequestParam(required = false) List<String> newTag,
                          @RequestParam String postName,
                          @RequestParam Integer postType,
                          @RequestParam String postDetail,
@@ -133,6 +134,17 @@ public class PostController {
             tagPost.setPostId(post);
             tagPost.setTagId(tagDao.find(tagId.get(i)));
             tagPosts.add(tagPost);
+        }
+        if(newTag!=null) {
+            for (int i = 0; i < newTag.size(); i++) {
+                TagPost tagPost = new TagPost();
+                tagPost.setPostId(post);
+                Tag tag = new Tag();
+                tag.setTagName(newTag.get(i));
+                tagDao.persist(tag);
+                tagPost.setTagId(tag);
+                tagPosts.add(tagPost);
+            }
         }
         post.getTagPostList().addAll(tagPosts);
         postDao.persist(post);

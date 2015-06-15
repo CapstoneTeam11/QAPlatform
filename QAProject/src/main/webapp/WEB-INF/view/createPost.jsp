@@ -296,6 +296,7 @@
 <script src="/resource/assets/js/bootstrap-tagsinput.min.js"></script>
 <script src="/resource/assets/js/bootstrapValidator.js"></script>
 <script src="/resource/assets/js/validator.js"></script>
+<script src="/resource/assets/js/handlebars-v3.0.3.js"></script>
 <script>
     $(document).ready(function () {
         $('#publish-question').click(function (e) {
@@ -325,22 +326,31 @@
                 source: tag.ttAdapter(),
                 templates: {
                     empty: [
-                        '<div>',
-                        'unable to find any Best Picture winners that match the current query',
-                        '</div>'
-                    ].join('\n')
+                        '<div style="display: flex"><span class="unableFind"> unable to find tag</span> <span><a class="button color small" id="createTag" onclick="createTag()" style="margin-left: 5px">Create Now</a></span></div>'
+                    ].join('\n'),
+                    suggestion: Handlebars.compile('<div><span style="white-space: nowrap">{{name}}</span></div>')
                 }
             }
         });
         elt.on('itemAdded', function (event) {
             var idTag = event.item.id;
+            if(idTag < 0) {
+            var name = event.item.name;
+            hiddenTag.append("<input type='hidden' name='newTag' value=" + name + " id=tag" + idTag + ">");
+            } else {
             hiddenTag.append("<input type='hidden' name='tagId' value=" + idTag + " id=tag" + idTag + ">");
+            }
         });
         elt.on('itemRemoved', function (event) {
             var tagId = "#tag" + event.item.id;
             $(tagId).remove();
         });
+
+
     });
+    var createTag = function(e){
+        $('#tagsuggest').tagsinput('add', { id: Math.round((Math.random()*10000))*-1, name: $('.tt-input').val() });
+    };
 </script>
 <!-- End js -->
 
