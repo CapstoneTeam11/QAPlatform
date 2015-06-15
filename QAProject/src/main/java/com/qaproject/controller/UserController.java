@@ -39,9 +39,11 @@ public class UserController {
     RoleDao roleDao;
     @Autowired
     CategoryDao categoryDao;
+    @Autowired
+    HttpSession session;
+
     @RequestMapping(value = "/editProfile",method = RequestMethod.GET)
     public String editProfile(Model model, HttpServletRequest request) {
-        HttpSession session =  request.getSession();
         User user = (User) session.getAttribute("user");
         if(user == null){
             return "welcome";
@@ -55,7 +57,6 @@ public class UserController {
     @ResponseBody
     public String editProfileData( @RequestParam("displayName") String displayName, @RequestParam("cate") String cate,
                                    @RequestParam("aboutMe") String aboutMe, Model model, HttpServletRequest request) {
-        HttpSession session =  request.getSession();
         User user = (User) session.getAttribute("user");
         if(user == null){
             return "NG";
@@ -98,7 +99,6 @@ public class UserController {
         }
 
         userDao.persist(user);
-        HttpSession session = request.getSession();
         session.setAttribute("user", user);
 
         return "redirect:/dashboard";
@@ -107,16 +107,15 @@ public class UserController {
 //    @ResponseBody
     public String login(@RequestParam("username") String username, @RequestParam("password") String password, Model model, HttpServletRequest request){
         if (username == null || username.length() == 0 || password == null || password.length() == 0){
-            return "welcome";
+            return "invalidLogin";
         }
         List<User> users = userDao.login(username, password);
         if(users.size()>0){
-            HttpSession session = request.getSession();
             session.setAttribute("user", users.get(0));
             return "redirect:/dashboard";
 
         }else{
-            return "welcome";
+            return "invalidLogin";
         }
     }
 
@@ -164,9 +163,16 @@ public class UserController {
     }
     @RequestMapping(value = "/getProfile",method = RequestMethod.GET)
     public String getProfile(Model model, HttpServletRequest request) {
-        HttpSession session = request.getSession();
         User user = (User)session.getAttribute("user");
         model.addAttribute("userProfile", user);
         return "profile";
+    }
+
+    @RequestMapping(value = "/logout",method = RequestMethod.GET)
+    public String logout(Model model, HttpServletRequest request){
+        if (session.getAttribute("user")!=null) {
+            session.removeAttribute("user");
+        }
+        return "redirect:/";
     }
 }
