@@ -1,12 +1,10 @@
 package com.qaproject.controller;
 
+import com.qaproject.dao.ClassroomUserDao;
 import com.qaproject.dao.FollowerDao;
 import com.qaproject.dao.UserDao;
 import com.qaproject.dao.impl.FollowerImpl;
-import com.qaproject.entity.Classroom;
-import com.qaproject.entity.Follower;
-import com.qaproject.entity.PostInvitation;
-import com.qaproject.entity.User;
+import com.qaproject.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,6 +27,8 @@ public class TeacherController {
     FollowerDao followerDao;
     @Autowired
     UserDao userDao;
+    @Autowired
+    ClassroomUserDao classroomUserDao;
     @RequestMapping(value = "/followTeacher/",method = RequestMethod.GET)
     @ResponseBody
     public String followTeacher(Model model, @RequestParam(value = "teacherId")String teacherId,
@@ -88,5 +88,4 @@ public class TeacherController {
         model.addAttribute("followers",followers);
         return "teacherdashboard";
     }
-
 }

@@ -187,7 +187,7 @@ public class ClassController {
             if(currentClassroomUser.getType()==1&&currentClassroomUser.getApproval()==0){
                 joinRequests.add(currentClassroomUser);
             }
-            if (currentClassroomUser.getApproval()==2) {
+            if (currentClassroomUser.getApproval()==1) {
                 students.add(currentClassroomUser);
             }
         }

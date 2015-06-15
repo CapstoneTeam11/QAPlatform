@@ -175,4 +175,14 @@ public class UserController {
         }
         return "redirect:/";
     }
+    @RequestMapping(value = "/getUserById",method = RequestMethod.POST)
+    @ResponseBody
+    public StudentDto studentdashboard(ModelMap model, HttpServletRequest request, @RequestParam(value = "id") String userId) {
+        User user = userDao.find(Integer.parseInt(userId));
+        StudentDto studentDto = new StudentDto();
+        studentDto.setStudentId(user.getId());
+        studentDto.setStudentName(user.getDisplayName());
+        studentDto.setImageStudent(user.getProfileImageURL());
+        return studentDto;
+    }
 }
