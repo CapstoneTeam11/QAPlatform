@@ -181,8 +181,16 @@
                                                 <span class="styled-select">
                                                     <select id="professional" name="cate" title="Please choose your knowledge" required>
                                                         <option value="">Select a type</option>
-                                                        <c:forEach var="category" items="${categories}">
-                                                            <option value="${category.id}">${category.categoryName}</option>
+                                                        <c:forEach var="parent" items="${categories}">
+                                                            <c:if test="${parent.parentId==0}">
+                                                                <optgroup label="${parent.categoryName}">
+                                                                    <c:forEach var="child" items="${categories}">
+                                                                        <c:if test="${child.parentId==parent.id}">
+                                                                            <option value="${child.id}">${child.categoryName}</option>
+                                                                        </c:if>
+                                                                    </c:forEach>
+                                                                </optgroup>
+                                                            </c:if>
                                                         </c:forEach>
                                                     </select>
                                                 </span>
