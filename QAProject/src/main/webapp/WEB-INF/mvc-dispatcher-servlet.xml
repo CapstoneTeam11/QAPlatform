@@ -6,6 +6,7 @@
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
 			http://www.springframework.org/schema/beans/spring-beans.xsd
 			http://www.springframework.org/schema/tx
@@ -15,7 +16,9 @@
 			http://www.springframework.org/schema/websocket
             http://www.springframework.org/schema/websocket/spring-websocket.xsd
 			http://www.springframework.org/schema/mvc
-			http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+			http://www.springframework.org/schema/mvc/spring-mvc.xsd
+			http://www.springframework.org/schema/task
+			http://www.springframework.org/schema/task/spring-task.xsd">
     <context:annotation-config/>
 
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
@@ -43,6 +46,7 @@
     <context:component-scan base-package="com.qaproject.controller"/>
     <context:component-scan base-package="com.qaproject.dao"/>
     <context:component-scan base-package="com.qaproject.entity"/>
+    <context:component-scan base-package="com.qaproject.util"/>
     <bean id="jspViewResolver"
           class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass"
@@ -91,10 +95,18 @@
             </props>
         </property>
     </bean>
+
+
     <websocket:message-broker application-destination-prefix="/app">
         <websocket:stomp-endpoint path="/ws">
             <websocket:sockjs/>
         </websocket:stomp-endpoint>
         <websocket:simple-broker prefix="/topic"/>
     </websocket:message-broker>
+
+    <context:component-scan base-package="com.qaproject.util" />
+    <task:scheduled-tasks>
+        <task:scheduled ref="scheduler" method="updateRedisDB" fixed-delay="1800000"/>
+    </task:scheduled-tasks>
+
 </beans>
