@@ -57,34 +57,6 @@
 
 <div id="wrap">
 
-    <div class="panel-pop" id="signup">
-        <h2>Register Now<i class="icon-remove"></i></h2>
-        <div class="form-style form-style-3">
-            <form >
-                <div class="form-inputs clearfix">
-                    <p>
-                        <label class="required">Username<span>*</span></label>
-                        <input type="text">
-                    </p>
-                    <p>
-                        <label class="required">E-Mail<span>*</span></label>
-                        <input type="email">
-                    </p>
-                    <p>
-                        <label class="required">Password<span>*</span></label>
-                        <input type="password" value="">
-                    </p>
-                    <p>
-                        <label class="required">Confirm Password<span>*</span></label>
-                        <input type="password" value="">
-                    </p>
-                </div>
-                <p class="form-submit">
-                    <input type="submit" value="Signup" class="button color small submit">
-                </p>
-            </form>
-        </div>
-    </div><!-- End signup -->
 
     <div class="panel-pop" id="lost-password">
         <h2>Lost Password<i class="icon-remove"></i></h2>
@@ -112,7 +84,7 @@
 
     <header id="header" class="index-no-box">
         <section class="container clearfix">
-            <form action="/login" method="post">
+            <form action="/login" method="post" id="loginForm">
                 <div class="row">
                     <div class="col-md-3">
                         <div class="logo"><a href="/"><img alt="" src="/resource/assets/images/logo.png"></a></div>
@@ -120,14 +92,14 @@
                     <div class="col-md-4"></div>
                     <div class="col-md-2">
                         <div class="row" style="color: #ffffff;padding-top: 10px;padding-left: 15px;">Email</div>
-                        <input type="text" style="height: 30px; margin-bottom: 5px" id="username1" data-toggle="tooltip" name="username">
+                        <input type="text" style="height: 30px; margin-bottom: 5px" id="username1" data-toggle="tooltip" name="username" tabindex="1">
                         <div class="checkbox" style="color: white; margin-top: 5px;font-size: 13px;">
                             <label><input type="checkbox" value="" checked>Remember me</label>
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="row" style="color: #ffffff;padding-top: 10px;padding-left: 15px;">Password</div>
-                        <input type="password" style="height: 30px; margin-bottom: 4px" id="password1" data-toggle="tooltip" name="password">
+                        <input type="password" style="height: 30px; margin-bottom: 4px" id="password1" data-toggle="tooltip" name="password" tabindex="2">
                         <a href="#" style="color: white;font-size: 12px;" id="lost-password-click">
                             Forget ?
                         </a>
@@ -135,7 +107,7 @@
                     <div class="col-md-1" style="padding-top: 25px">
                         <%--<a href="javascript:checkLogin();" class="button small color" style="height: 30px">Login</a>--%>
                         <input type="submit" id="publish-question" value="Login"
-                               class="button color small submit">
+                               class="button color small submit" tabindex="3">
                     </div>
                 </div>
             </form>
@@ -173,52 +145,54 @@
                                 <%--</div>--%>
                                 <div class="row" style="margin-top: 10px;">
                                     <div class="form-group">
-                                        <label class="col-md-3 control-label">Email<span>*</span></label>
+                                        <label class="col-md-3 control-label">Email<span style="color:red">*</span></label>
                                         <div class="col-md-9">
-                                            <input type="text" value="" aria-required="true" id="email" name="email" class="form-control">
+                                            <div class="row">
+                                                <input type="text" value="" aria-required="true" id="email" name="email" class="form-control">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row" style="margin-top: 10px;">
                                     <div class="form-group">
-                                        <label class="col-md-3 control-label">Password<span>*</span></label>
+                                        <label class="col-md-3 control-label">Password<span style="color:red">*</span></label>
                                         <div class="col-md-9">
-                                            <input type="password" value="" aria-required="true" id="password" name="password" class="form-control">
+                                            <div class="row">
+                                                <input type="password" value="" aria-required="true" id="password" name="password" class="form-control">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row" style="margin-top: 10px;">
                                     <div class="form-group">
-                                        <label class="col-md-3 control-label">Confirm password<span>*</span></label>
+                                        <label class="col-md-3 control-label">Confirm password<span style="color:red">*</span></label>
                                         <div class="col-md-9">
-                                            <input type="password" value="" aria-required="true" name="confirmpassword" class="form-control">
+                                            <div class="row">
+                                                <input type="password" value="" aria-required="true" id="confirm_password" name="confirmpassword" class="form-control">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row" style="margin-top: 10px;">
                                     <div class="form-group">
-                                        <label class="col-md-3 control-label">Know About<span>*</span></label>
+                                        <label class="col-md-3 control-label">Know About<span style="color:red">*</span></label>
                                         <div class="col-md-9">
-                                            <%--<select class="form-control" style="width: 82%;">--%>
-                                            <%--<option value="">Select a type</option>--%>
-                                            <%--<c:forEach var="category" items="${categories}">--%>
-                                            <%--<option value="${category.id}">${category.categoryName}</option>--%>
-                                            <%--</c:forEach>--%>
-                                            <%--</select>--%>
-                                            <span class="styled-select">
-										        <select id="professional" name="cate">
-                                                    <option value="9">Select a type</option>
-                                                    <c:forEach var="category" items="${categories}">
-                                                        <option value="${category.id}">${category.categoryName}</option>
-                                                    </c:forEach>
-                                                </select>
-									        </span>
+                                            <div class="row">
+                                                <span class="styled-select">
+                                                    <select id="professional" name="cate" title="Please choose your knowledge" required>
+                                                        <option value="">Select a type</option>
+                                                        <c:forEach var="category" items="${categories}">
+                                                            <option value="${category.id}">${category.categoryName}</option>
+                                                        </c:forEach>
+                                                    </select>
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row" style="margin-top: 10px;">
                                     <div class="col-md-3">
-                                        <label class="required" style="width: auto">Your are<span>*</span></label>
+                                        <label class="required" style="width: auto">Your are<span style="color:red">*</span></label>
                                     </div>
                                     <div class="col-md-9">
                                         <div class="row">
@@ -271,11 +245,42 @@
 <script src="/resource/assets/js/tags.js"></script>
 <script src="/resource/assets/js/jquery.bxslider.min.js"></script>
 <script src="/resource/assets/js/custom.js"></script>
-<script src="/resource/assets/js/bootstrapValidator.js"></script>
-<script src="/resource/assets/js/validator.js"></script>
+<script src="/resource/assets/js/jquery.validate.min.js"></script>
 <!-- End js -->
 <script type="application/javascript">
     $(document).ready(function() {
+        //Jquery validator for Register - MinhKH
+        $('#registrationForm').validate({
+            rules: {
+                email: {
+                    required: true,
+                    email: true
+                },
+                password: {
+                    required: true,
+                    minlength: 8
+                },
+                confirm_password: {
+                    required: true,
+                    minlength: 8,
+                    equalTo: "#password"
+                }
+            },
+            messages: {
+                email: "Please enter a valid email address",
+                password: {
+                    required: "Please provide a password",
+                    minlength: "Your password must be at least 8 characters long"
+                },
+                confirm_password: {
+                    required: "Please provide a password",
+                    minlength: "Your password must be at least 8 characters long",
+                    equalTo: "Please enter the same password as above"
+                }
+            }
+        });
+
+
         $('[data-toggle="tooltip"]').tooltip();
 //        $('#registrationForm').formValidation({
 //            framework: 'bootstrap',
