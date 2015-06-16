@@ -2,6 +2,7 @@ package com.qaproject.dao;
 
 import com.qaproject.entity.Classroom;
 import com.qaproject.entity.ClassroomUser;
+import com.qaproject.entity.User;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ public interface ClassroomUserDao {
     public ClassroomUser find(Integer id);
     List<ClassroomUser> findAll();
     List<ClassroomUser> findByClassroom(Classroom classroom);
+    List<ClassroomUser> findByUser(User user);
     @Transactional(propagation = Propagation.REQUIRED)
     public void persist(ClassroomUser entity);
     @Transactional(propagation = Propagation.REQUIRED)
