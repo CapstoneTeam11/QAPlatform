@@ -76,4 +76,27 @@ public class RequestInviteController {
 
         return new ReturnObjectWithStatus("OK", currentClassroomId);
     }
+    @RequestMapping(value = "/removeStudent",method = RequestMethod.POST)
+    @ResponseBody
+    public ReturnObjectWithStatus removeStudent(@RequestParam String requestId,
+                                                ModelMap model) {
+        //Check is User
+        User user = (User) session.getAttribute("user");
+        if(user==null) {
+            return new ReturnObjectWithStatus("NG", 0); //no session
+        }
+        ClassroomUser classroomUser = classroomUserDao.find(Integer.parseInt(requestId));
+        //Check current User is classroom's owner
+        if(classroomUser != null) {
+            if (user.getId() != classroomUser.getUserId().getId()) {
+                return new ReturnObjectWithStatus("NG", classroomUser.getClassroomId().getId()); //not owner
+            }
+            classroomUser.setApproval(2);
+            classroomUserDao.merge(classroomUser);
+            return new ReturnObjectWithStatus("OK", classroomUser.getClassroomId().getId());
+        }
+        else{
+            return new ReturnObjectWithStatus("NG", 0); //no session
+        }
+    }
 }

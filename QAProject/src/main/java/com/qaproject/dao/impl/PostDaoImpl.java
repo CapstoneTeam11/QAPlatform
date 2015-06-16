@@ -79,7 +79,7 @@ public class PostDaoImpl extends BaseDao<Post,Integer> implements PostDao{
     @Override
     public List<Post> findQuestionByOwnerClassroom(Classroom ownerClassroom) {
         Query query = entityManager.createQuery("Select p from Post p where p.postType=1 and" +
-                " p.ownerClassId=:ownerClassroom");
+                " p.ownerClassId=:ownerClassroom",Post.class);
         query.setParameter("ownerClassroom",ownerClassroom);
         List<Post> questions = null;
         try {

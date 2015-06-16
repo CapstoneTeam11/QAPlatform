@@ -21,7 +21,7 @@ public class Post {
     @Column(name = "ParentId")
     private Integer parentId;
     @Column(name = "CreationDate")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.TIME)
     private Date creationDate;
     @Column(name = "Title")
     private String title;
@@ -31,7 +31,7 @@ public class Post {
     @Column(name = "PostType")
     private Integer postType;
     @Column(name = "LastEditedDate")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.TIME)
     private Date lastEditedDate;
     @Column(name = "ReplyCount")
     private Integer replyCount;

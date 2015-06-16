@@ -26,7 +26,7 @@ public class Classroom {
     private Category categoryId;
     @Column(name = "Status")
     private Integer status;
-    @OneToMany(mappedBy = "ownerClassId")
+    @OneToMany(mappedBy = "ownerClassId",fetch = FetchType.LAZY)
     private List<Post> postList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "classroomId")
     private List<TagClassroom> tagClassroomList;
