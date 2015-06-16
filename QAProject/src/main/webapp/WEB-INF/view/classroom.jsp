@@ -236,11 +236,11 @@
         <div class="tab-inner">
             <c:if test="${not empty students}">
                 <c:forEach var="student" items="${students}">
-                    <div class="about-author clearfix">
+                    <div class="about-author clearfix" id="student${student.userId.id}">
                         <div class="author-image">
                             <a href="#" original-title="" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
                         </div>
-                        <a class="" href="#" style="float: right">Remove</a>
+                        <a class="" href="javascript:removeStudent(${student.userId.id});" style="float: right">Remove</a>
                         <div class="author-bio" style="margin-top: 25px">
                             <h4><a href="#">${student.userId.displayName}</a></h4>
                         </div>
@@ -252,7 +252,7 @@
         </div>
         <div class="tab-inner">
             <c:if test="${empty students}">
-                <div class="about-author clearfix">
+                <div class="about-author clearfix" id="no-student">
                     No student yet!
                 </div>
             </c:if>
@@ -487,13 +487,15 @@
             data: "id="+studentId,
             success: function(data){
                 if(data != null){
-                    var  html ="<div class='about-author clearfix'>"+
+                    var  html ="<div class='about-author clearfix' id='student"+studentId+"'>"+
                             "<div class='author-image'>"+
                             "<a href='#' original-title='' class='tooltip-n'><img alt='' src='http://2code.info/demo/html/ask-me/images/demo/admin.jpeg'></a>"+
-                            "</div><a class='' href='javascript:removeStudent("+ requestId +")' style='float: right'>Remove</a><div class='author-bio' style='margin-top: 25px'>"+
+                            "</div><a class='' href='javascript:removeStudent("+ studentId +")' style='float: right'>Remove</a><div class='author-bio' style='margin-top: 25px'>"+
                             "<h4><a href='#'>"+data.studentName+"</a></h4></div></div>";
                     var location = $("#studentTag").find('.about-author').last();
+
                     $(html).insertAfter(location);
+                    $("#no-student").remove();
                 }else if(data != null && data.status == "NG" && data.id == 0){
                     window.location.href="/";
                 }else if(data != null && data.status == "NG" && data.id != 0){
@@ -502,15 +504,17 @@
             }
         });
     }
-    function removeStudent(requestId){
+    function removeStudent(studentId){
         var url = "/removeStudent";
+        var classId = ${classroom.id};
+        var ownerId = ${classroom.ownerUserId.id}
         $.ajax({
             type: "POST",
             url: url,
-            data: "requestId="+requestId,
+            data: "studentId="+studentId +"&classId="+classId+"&ownerId="+ownerId,
             success: function(data){
                 if(data != null && data.status == "OK"){
-                    $("#"+el).remove();
+                    $("#student"+studentId).remove();
 
                 }else if(data != null && data.status == "NG" && data.id == 0){
                     window.location.href="/";
