@@ -1,8 +1,8 @@
 package com.qaproject.util;
 
-import com.qaproject.dao.PostDao;
-import com.qaproject.dao.UserDao;
-import com.qaproject.dao.WantAnswerDao;
+import com.qaproject.dao.*;
+import com.qaproject.entity.Classroom;
+import com.qaproject.entity.ClassroomUser;
 import com.qaproject.entity.Post;
 import com.qaproject.entity.User;
 import org.joda.time.DateTime;
@@ -28,6 +28,8 @@ public class NewsFeedUtilities {
     PostDao postDao;
     @Autowired
     WantAnswerDao wantAnswerDao;
+    @Autowired
+    ClassroomDao classroomDao;
 
     public void setNewsFeedQuestion() {
         try {
@@ -37,14 +39,31 @@ public class NewsFeedUtilities {
             }
             Jedis jedis = new Jedis("localhost");
             for (User user: users) {
-                List<Post> questions = postDao.findQuestionsByOwnerUser(user);
-                if(questions==null) {
-                    return;
-                }
-                for (Post question: questions) {
-                    jedis.zadd(Integer.toString(user.getId()),calculateScore(question,user),
-                            Integer.toString(question.getId()));
-
+                if (user.getRoleId().getId()==2) { //if user is teacher
+                    List<Classroom> classrooms = classroomDao.findByOwnerUser(user.getId());
+                    if (classrooms==null) {
+                        continue;
+                    }
+                    List<Post> questions = new ArrayList<Post>();
+                    for (Classroom classroom:classrooms) {
+                        if (classroom==null) {
+                            continue;
+                        }
+                        List<Post> currentQuestions = postDao.findQuestionByOwnerClassroom(classroom);
+                        if (currentQuestions==null) {
+                            continue;
+                        }
+                        for (Post currentQuestion :currentQuestions){
+                            if (currentQuestion==null) {
+                                continue;
+                            }
+                            questions.add(currentQuestion);
+                        }
+                    }
+                    for (Post question: questions) {
+                        jedis.zadd(Integer.toString(user.getId()),calculateScore(question,user),
+                                Integer.toString(question.getId()));
+                    }
                 }
             }
         } catch (Exception e){
@@ -54,15 +73,18 @@ public class NewsFeedUtilities {
         }
     }
 
-    public List<Integer> getNewsFeedQuestionIds(Integer userId, Integer start, Integer stop){
+    public List<Post> getNewsFeedQuestion(Integer userId, Integer start, Integer stop){
         Jedis jedis = new Jedis("localhost");
         Set<String> questionIdsSet = jedis.zrevrange(Integer.toString(userId),start,stop);
-        List<Integer> questionIds = new ArrayList<Integer>();
+        List<Post> questions = new ArrayList<Post>();
         for(String sId : questionIdsSet) {
             Integer iId = Integer.parseInt(sId);
-            questionIds.add(iId);
+            Post currentQuestion = postDao.find(iId);
+            if (currentQuestion!=null) {
+                questions.add(currentQuestion);
+            }
         }
-        return questionIds;
+        return questions;
     }
 
     private Double calculateScore(Post question, User user){
@@ -97,6 +119,7 @@ public class NewsFeedUtilities {
         iDay = Days.daysBetween(maxDate,toDate).getDays();
 
         Double score = 3.0*iWantAnswer + 2.0*iView + iAnswer - iDay - 3.0*iAcceptAnswer - iTeacherAcceptAnswer;
+        System.out.println("Question: " + question.getId() + " Score: " + score);
         return score;
     }
 }
