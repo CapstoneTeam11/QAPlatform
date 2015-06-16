@@ -1,5 +1,6 @@
 package com.qaproject.dao;
 
+import com.qaproject.entity.Classroom;
 import com.qaproject.entity.Post;
 import com.qaproject.entity.User;
 import org.springframework.stereotype.Repository;
@@ -18,6 +19,7 @@ public interface PostDao {
     public List<Post> findPostChilds(Integer id,Integer page);
     public List<Post> findQuestionsByOwnerUser(User ownerUser);
     public List<Post> findRepliesByParentId(Integer parentId);
+    public List<Post> findQuestionByOwnerClassroom(Classroom ownerClassroom);
     @Transactional(propagation = Propagation.REQUIRED)
     public void persist(Post entity);
     @Transactional(propagation = Propagation.REQUIRED)
