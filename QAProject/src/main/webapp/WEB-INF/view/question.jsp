@@ -180,11 +180,11 @@
                     <div class="question-desc">
                         <p>${post.body}</p>
                     </div>
-                    <c:if test="${post.acceptedAnswerId != null}">
-                        <div class="question-details">
-                            <span class="question-answered question-answered-done"><i class="icon-ok"></i>solved</span>
-                        </div>
-                    </c:if>
+                    <%--<c:if test="${post.acceptedAnswerId != null}">--%>
+                        <%--<div class="question-details">--%>
+                            <%--<span class="question-answered question-answered-done"><i class="icon-ok"></i>solved</span>--%>
+                        <%--</div>--%>
+                    <%--</c:if>--%>
                     <span class="question-date"><i class="icon-time"></i>${post.lastEditedDate}</span>
                     <span class="question-category"><a href="/classroom/${post.ownerClassId.id}}"><i
                             class="icon-group"></i>Class: ${post.ownerClassId.classroomName}</a></span>
@@ -414,20 +414,24 @@
                 var unacceptAnswer = $('.unacceptAnswer')
                 var idUnaccept = unacceptAnswer.prev('input').val();
                 var id =  $(this).prev('input').val();
-                var url = "/post/acceptAnswer/"+id+"/"+idUnaccept;
+                var url = "/post/acceptAnswer";
+                var acceptAnswerDto = {id: id, idUnaccept: idUnaccept};
                 $.ajax({
                     type: "POST",
                     url: url,
+                    data : acceptAnswerDto,
                     success: function (data) {
                         if(data != "NG" ){
+                            var iconDivUn ='#answerIcon'+idUnaccept;
+                            $(iconDivUn).empty();
+                            $(unacceptAnswer).removeClass('unacceptAnswer')
+                            $(unacceptAnswer).addClass('acceptAnswer')
+                            $(unacceptAnswer).text('Accept')
                             $(acceptAnswer).removeClass('acceptAnswer')
                             $(acceptAnswer).addClass('unacceptAnswer')
                             var iconDiv ='#answerIcon'+id;
                             $(iconDiv).prepend('<i class="icon-ok"></i>')
                             $(acceptAnswer).text('Unaccept')
-                            var iconDivUn ='#answerIcon'+idUnaccept;
-                            $(iconDiv).empty();
-                            $(unacceptAnswer).text('Accept')
                         } else {
                             console.log("Error");
                         }

@@ -1,6 +1,7 @@
 package com.qaproject.controller;
 
 import com.qaproject.dao.*;
+import com.qaproject.dto.AcceptAnswerDto;
 import com.qaproject.dto.AnswerDto;
 import com.qaproject.dto.PostDto;
 import com.qaproject.dto.WantAnswerDto;
@@ -192,11 +193,16 @@ public class PostController {
     @RequestMapping(value = "/post/acceptAnswer", method = RequestMethod.POST, produces = "application/json")
     public
     @ResponseBody
-    String acceptAnswer(@PathVariable Integer id,@PathVariable Integer idUnaccept) {
+    String acceptAnswer(@ModelAttribute("acceptAnswerDto") AcceptAnswerDto acceptAnswerDto) {
         //authorize
         try {
-            Post post = postDao.find(idUnaccept);
-            postDao.remove(post);
+            Post post;
+            Integer idUnaccept = acceptAnswerDto.getIdUnaccept();
+            Integer id = acceptAnswerDto.getId();
+            if(idUnaccept!=0) {
+            post = postDao.find(idUnaccept);
+            post.setAcceptedAnswerId(0);
+            }
             post = postDao.find(id);
             post.setAcceptedAnswerId(1);
             postDao.merge(post);
