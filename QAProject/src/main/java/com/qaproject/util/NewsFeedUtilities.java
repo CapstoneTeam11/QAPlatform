@@ -68,8 +68,6 @@ public class NewsFeedUtilities {
             }
         } catch (Exception e){
             e.printStackTrace();
-        } finally {
-            return;
         }
     }
 
@@ -87,11 +85,9 @@ public class NewsFeedUtilities {
             }
             return questions;
         } catch (Exception e){
-
-        } finally {
-            return questions;
+            e.printStackTrace();
         }
-
+        return questions;
     }
 
     private Double calculateScore(Post question, User user){
