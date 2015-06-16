@@ -191,10 +191,17 @@
                     <span class="question-category"><a href="#"><i
                             class="icon-user"></i>Teacher: ${post.ownerClassId.ownerUserId.displayName}</a></span>
                     <span class="question-view"><i class="icon-eye-open"></i>${post.viewer} view(s)</span>
-                    <span class="question-tags"><i class="icon-tags"></i>
-                        <c:forEach var="tag" items="${post.tagPostList}">
-                            <a href="#">${tag.tagId.tagName},</a>
-                        </c:forEach>
+                    <span class="question-tags">
+                        <div class="btn-group">
+                            <a data-toggle="dropdown" href="" aria-expanded="false"><i class="icon-cog" style="color: black;font-weight: bold;font-size: 20px;"></i><span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu" style="left: -127px;">
+                                <li><a href="#">Action</a></li>
+                                <li><a href="#">Another action</a></li>
+                                <li><a href="#">Something else here</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">Separated link</a></li>
+                            </ul>
+                        </div>
                     </span>
                     <div class="clearfix"></div>
                 </div>
@@ -306,7 +313,13 @@
             </c:if>
             <div class="widget">
                 <h3 class="widget_title">Invited Teacher</h3>
+            </div>
 
+            <div class="widget widget_tag_cloud">
+                <h3 class="widget_title">Tags</h3>
+                <c:forEach var="tag" items="${post.tagPostList}">
+                    <a href="#">${tag.tagId.tagName}</a>
+                </c:forEach>
             </div>
 
         </aside>
