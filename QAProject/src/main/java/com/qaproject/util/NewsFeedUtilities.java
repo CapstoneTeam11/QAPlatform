@@ -74,17 +74,24 @@ public class NewsFeedUtilities {
     }
 
     public List<Post> getNewsFeedQuestion(Integer userId, Integer start, Integer stop){
-        Jedis jedis = new Jedis("localhost");
-        Set<String> questionIdsSet = jedis.zrevrange(Integer.toString(userId),start,stop);
         List<Post> questions = new ArrayList<Post>();
-        for(String sId : questionIdsSet) {
-            Integer iId = Integer.parseInt(sId);
-            Post currentQuestion = postDao.find(iId);
-            if (currentQuestion!=null) {
-                questions.add(currentQuestion);
+        try{
+            Jedis jedis = new Jedis("localhost");
+            Set<String> questionIdsSet = jedis.zrevrange(Integer.toString(userId),start,stop);
+            for(String sId : questionIdsSet) {
+                Integer iId = Integer.parseInt(sId);
+                Post currentQuestion = postDao.find(iId);
+                if (currentQuestion!=null) {
+                    questions.add(currentQuestion);
+                }
             }
+            return questions;
+        } catch (Exception e){
+
+        } finally {
+            return questions;
         }
-        return questions;
+
     }
 
     private Double calculateScore(Post question, User user){
