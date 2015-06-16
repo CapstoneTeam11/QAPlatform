@@ -189,13 +189,15 @@ public class PostController {
         return "OK";
     }
 
-    @RequestMapping(value = "/post/acceptAnswer/{id}", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/post/acceptAnswer", method = RequestMethod.POST, produces = "application/json")
     public
     @ResponseBody
-    String acceptAnswer(@PathVariable Integer id) {
+    String acceptAnswer(@PathVariable Integer id,@PathVariable Integer idUnaccept) {
         //authorize
         try {
-            Post post = postDao.find(id);
+            Post post = postDao.find(idUnaccept);
+            postDao.remove(post);
+            post = postDao.find(id);
             post.setAcceptedAnswerId(1);
             postDao.merge(post);
         } catch (Exception e) {

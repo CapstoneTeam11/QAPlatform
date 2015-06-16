@@ -411,8 +411,10 @@
         $('.answerFlag').click(function (e) {
             if($(this).hasClass('acceptAnswer')) {
                 var acceptAnswer = $(this);
+                var unacceptAnswer = $('.unacceptAnswer')
+                var idUnaccept = unacceptAnswer.prev('input').val();
                 var id =  $(this).prev('input').val();
-                var url = "/post/acceptAnswer/"+id;
+                var url = "/post/acceptAnswer/"+id+"/"+idUnaccept;
                 $.ajax({
                     type: "POST",
                     url: url,
@@ -423,6 +425,9 @@
                             var iconDiv ='#answerIcon'+id;
                             $(iconDiv).prepend('<i class="icon-ok"></i>')
                             $(acceptAnswer).text('Unaccept')
+                            var iconDivUn ='#answerIcon'+idUnaccept;
+                            $(iconDiv).empty();
+                            $(unacceptAnswer).text('Accept')
                         } else {
                             console.log("Error");
                         }
