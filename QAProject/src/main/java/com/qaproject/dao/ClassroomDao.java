@@ -16,6 +16,7 @@ public interface ClassroomDao {
     public Classroom find(Integer id);
     List<Classroom> findAll();
     List<Classroom> findByCategory(Category category);
+    List<Classroom> findByOwnerUser(Integer ownerUserId);
     @Transactional(propagation = Propagation.REQUIRED)
     public void persist(Classroom entity);
     @Transactional(propagation = Propagation.REQUIRED)
