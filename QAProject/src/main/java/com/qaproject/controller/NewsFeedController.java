@@ -1,7 +1,11 @@
 package com.qaproject.controller;
 
 import com.qaproject.dao.ClassroomDao;
+import com.qaproject.dao.ClassroomUserDao;
+import com.qaproject.dao.PostDao;
+import com.qaproject.dao.UserDao;
 import com.qaproject.entity.*;
+import com.qaproject.util.NewsFeedUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -20,7 +24,15 @@ public class NewsFeedController {
     @Autowired
     HttpSession session;
     @Autowired
+    UserDao userDao;
+    @Autowired
     ClassroomDao classroomDao;
+    @Autowired
+    PostDao postDao;
+    @Autowired
+    ClassroomUserDao classroomUserDao;
+    @Autowired
+    NewsFeedUtilities newsFeedUtilities;
 
     /**
      * MinhKH
@@ -28,12 +40,21 @@ public class NewsFeedController {
      * @param model
      * @return String
      */
-    @RequestMapping(value= "/newsfeed/welcome", method= RequestMethod.GET)
+    @RequestMapping(value= "/newsfeed", method= RequestMethod.GET)
     public String suggestClass(ModelMap model){
         //Check is User
         User user = (User) session.getAttribute("user");
         if(user==null) {
             return "redirect:/";
+        }
+        User currentUser = userDao.find(user.getId());
+        List<ClassroomUser> classroomUsers = classroomUserDao.findByUser(currentUser);
+        boolean isJoined = false;
+        // Check if user have joined class
+        for (ClassroomUser classroomUser:classroomUsers) {
+            if (classroomUser.getApproval()==1){
+                isJoined=true;
+            }
         }
 
         //get suggested classrooms
@@ -41,9 +62,23 @@ public class NewsFeedController {
         List<Classroom> suggestedClassrooms = classroomDao.findByCategory(category);
 
         //get suggested posts - materials
+        List<Post> teacherQuestions = newsFeedUtilities.getNewsFeedQuestion(user.getId(),0,10);
         List<Post> suggestedQuestions = new ArrayList<Post>();
         List<Post> suggestedArticles = new ArrayList<Post>();
         List<Material> suggestedMaterials = new ArrayList<Material>();
+
+        //Check if User is teacher
+        if (user.getRoleId().getId()==2){
+            suggestedQuestions.addAll(teacherQuestions);
+        }
+
+        //Check if User is student
+        if (user.getRoleId().getId()==1){
+            if (!isJoined) {
+                model.addAttribute("suggestedClassrooms",suggestedClassrooms);
+            }
+        }
+
         for (int i =0;i<suggestedClassrooms.size(); i++){
             Classroom currentSuggestedClassroom = suggestedClassrooms.get(i);
             List<Post> currentSuggestedPosts = currentSuggestedClassroom.getPostList();
@@ -60,10 +95,7 @@ public class NewsFeedController {
             }
         }
 
-        //Check if User is student
-        if (user.getRoleId().getId()==1){
-            model.addAttribute("suggestedClassrooms",suggestedClassrooms);
-        }
+
 
         model.addAttribute("materials", suggestedMaterials);
         model.addAttribute("questions",suggestedQuestions);
