@@ -47,6 +47,8 @@ public class Post {
     private Classroom ownerClassId;
     @Column(name = "Viewer")
     private Integer viewer;
+    @Column(name = "Status")
+    private Integer status;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "postId")
     private List<WantAnswerPost> wantAnswerPosts;
     public Post() {
@@ -164,6 +166,14 @@ public class Post {
 
     public void setOwnerClassId(Classroom ownerClassId) {
         this.ownerClassId = ownerClassId;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     @Override

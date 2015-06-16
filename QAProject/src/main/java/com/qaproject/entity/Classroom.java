@@ -24,6 +24,8 @@ public class Classroom {
     @JoinColumn(name = "CategoryId", referencedColumnName = "Id")
     @ManyToOne
     private Category categoryId;
+    @Column(name = "Status")
+    private Integer status;
     @OneToMany(mappedBy = "ownerClassId")
     private List<Post> postList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "classroomId")
@@ -116,6 +118,14 @@ public class Classroom {
 
     public void setMaterialList(List<Material> materialList) {
         this.materialList = materialList;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     @Override
