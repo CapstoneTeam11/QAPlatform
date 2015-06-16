@@ -32,4 +32,17 @@ public class ClassroomDaoImpl extends BaseDao<Classroom,Integer> implements Clas
         }
         return classrooms;
     }
+
+    @Override
+    public List<Classroom> findByOwnerUser(Integer ownerUserId) {
+        List<Classroom> classrooms = null;
+        Query query = entityManager.createQuery("Select c from Classroom c where c.ownerUserId.id= :ownerUserId");
+        query.setParameter("ownerUserId",ownerUserId);
+        try {
+            classrooms = query.getResultList();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return classrooms;
+    }
 }
