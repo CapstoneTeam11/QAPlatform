@@ -50,6 +50,7 @@ public class PostController {
         post.setLastEditedDate(new Date());
         post.setCreationDate(new Date());
         post.setPostType(3);
+        post.setAcceptedAnswerId(0);
         post.setParentId(answerDto.getParentId());
         post.setOwnerClassId(parentId.getOwnerClassId());
         post.setOwnerUserId(userDao.find(answerDto.getOwnerId()));
@@ -125,6 +126,9 @@ public class PostController {
         post.setOwnerClassId(classroom);
         post.setOwnerUserId(user);
         post.setBody(postDetail);
+        post.setViewer(0);
+        post.setAcceptedAnswerId(0);
+        post.setParentId(0);
         post.setCreationDate(new Date());
         post.setLastEditedDate(new Date());
         //Create List TagPost
