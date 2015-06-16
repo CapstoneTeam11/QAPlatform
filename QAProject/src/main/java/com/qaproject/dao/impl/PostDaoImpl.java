@@ -2,6 +2,7 @@ package com.qaproject.dao.impl;
 
 import com.qaproject.dao.BaseDao;
 import com.qaproject.dao.PostDao;
+import com.qaproject.entity.Classroom;
 import com.qaproject.entity.Post;
 import com.qaproject.entity.User;
 import com.qaproject.util.Constant;
@@ -73,5 +74,19 @@ public class PostDaoImpl extends BaseDao<Post,Integer> implements PostDao{
 
         }
         return replies;
+    }
+
+    @Override
+    public List<Post> findQuestionByOwnerClassroom(Classroom ownerClassroom) {
+        Query query = entityManager.createQuery("Select p from Post p where p.postType=1 and" +
+                " p.ownerClassId=:ownerClassroom");
+        query.setParameter("ownerClassroom",ownerClassroom);
+        List<Post> questions = null;
+        try {
+            questions = query.getResultList();
+        } catch (NoResultException e){
+
+        }
+        return questions;
     }
 }
