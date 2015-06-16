@@ -18,6 +18,7 @@ public interface ClassroomUserDao {
     List<ClassroomUser> findAll();
     List<ClassroomUser> findByClassroom(Classroom classroom);
     List<ClassroomUser> findByUser(User user);
+    List<ClassroomUser> findByUserClassroom(int userId, int classId);
     @Transactional(propagation = Propagation.REQUIRED)
     public void persist(ClassroomUser entity);
     @Transactional(propagation = Propagation.REQUIRED)

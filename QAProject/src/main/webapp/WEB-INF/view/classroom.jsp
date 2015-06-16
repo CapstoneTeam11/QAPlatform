@@ -212,15 +212,15 @@
         <c:if test="${not empty joinRequests}">
             <c:forEach var="joinRequest" items="${joinRequests}">
                     <form id="acceptForm${joinRequest.id}" method="post" action="/acceptRequest">
-                        <input type="hidden" name="requestId" id ="requestId"  value="${joinRequest.id}"/>
-                        <input type="hidden" name="ownerClassroomId" id="ownerClassroomId" value="${classroom.ownerUserId.id}"/>
-                        <input type="hidden" name="currentClassroomId" id="currentClassroomId" value="${classroom.id}"/>
+                        <input type="hidden" name="requestId" id ="requestId${joinRequest.id}"  value="${joinRequest.id}"/>
+                        <input type="hidden" name="ownerClassroomId" id="ownerClassroomId${joinRequest.id}" value="${classroom.ownerUserId.id}"/>
+                        <input type="hidden" name="currentClassroomId" id="currentClassroomId${joinRequest.id}" value="${classroom.id}"/>
                         <div class="about-author clearfix">
                             <div class="author-image">
                                 <a href="#" original-title="${joinRequest.userId.displayName}" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
                             </div>
-                            <a class="" href="#" onclick="javascript:ignoreRequest('acceptForm${joinRequest.id}');" style="float: right">Ignore</a>
-                            <a class="" href="#" onclick="javascript:acceptRequest('acceptForm${joinRequest.id}', ${joinRequest.userId.id});" style="float: right; margin-right: 15px">Confirm</a>
+                            <a class="" href="#" onclick="javascript:ignoreRequest('acceptForm${joinRequest.id}', ${joinRequest.id});" style="float: right">Ignore</a>
+                            <a class="" href="#" onclick="javascript:acceptRequest('acceptForm${joinRequest.id}', ${joinRequest.userId.id}, ${joinRequest.id});" style="float: right; margin-right: 15px">Confirm</a>
                             <div class="author-bio">
                                 <h4><a href="#">${joinRequest.userId.displayName}</a></h4>
                                 Requested to join <a href="/classroom/${classroom.id}" style="font-size: 15px">${classroom.classroomName}</a>
@@ -236,11 +236,11 @@
         <div class="tab-inner">
             <c:if test="${not empty students}">
                 <c:forEach var="student" items="${students}">
-                    <div class="about-author clearfix">
+                    <div class="about-author clearfix" id="student${student.userId.id}">
                         <div class="author-image">
                             <a href="#" original-title="" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
                         </div>
-                        <a class="" href="#" style="float: right">Remove</a>
+                        <a class="" href="javascript:removeStudent(${student.userId.id});" style="float: right">Remove</a>
                         <div class="author-bio" style="margin-top: 25px">
                             <h4><a href="#">${student.userId.displayName}</a></h4>
                         </div>
@@ -252,7 +252,7 @@
         </div>
         <div class="tab-inner">
             <c:if test="${empty students}">
-                <div class="about-author clearfix">
+                <div class="about-author clearfix" id="no-student">
                     No student yet!
                 </div>
             </c:if>
@@ -437,11 +437,11 @@
             }
         });
     }
-    function acceptRequest(el, studentId){
+    function acceptRequest(el, studentId, requestId){
         var url = "/acceptRequest";
-        var id = $("#requestId").val();
-        var ownerClassroomId = $("#ownerClassroomId").val();
-        var currentClassroomId = $("#currentClassroomId").val();
+        var id = $("#requestId"+requestId).val();
+        var ownerClassroomId = $("#ownerClassroomId"+requestId).val();
+        var currentClassroomId = $("#currentClassroomId"+requestId).val();
         $.ajax({
             type: "POST",
             url: url,
@@ -458,11 +458,11 @@
             }
         });
     }
-    function ignoreRequest(el){
+    function ignoreRequest(el, requestId){
         var url = "/ignoreRequest";
-        var id = $("#requestId").val();
-        var ownerClassroomId = $("#ownerClassroomId").val();
-        var currentClassroomId = $("#currentClassroomId").val();
+        var id = $("#requestId"+requestId).val();
+        var ownerClassroomId = $("#ownerClassroomId"+requestId).val();
+        var currentClassroomId = $("#currentClassroomId"+requestId).val();
         $.ajax({
             type: "POST",
             url: url,
@@ -479,7 +479,7 @@
             }
         });
     }
-    function reloadStudent(studentId){
+    function reloadStudent(studentId, requestId){
         var url = "/getUserById";
         $.ajax({
             type: "POST",
@@ -487,13 +487,35 @@
             data: "id="+studentId,
             success: function(data){
                 if(data != null){
-                    var  html ="<div class='about-author clearfix'>"+
+                    var  html ="<div class='about-author clearfix' id='student"+studentId+"'>"+
                             "<div class='author-image'>"+
                             "<a href='#' original-title='' class='tooltip-n'><img alt='' src='http://2code.info/demo/html/ask-me/images/demo/admin.jpeg'></a>"+
-                            "</div><a class='' href='#' style='float: right'>Remove</a><div class='author-bio' style='margin-top: 25px'>"+
+                            "</div><a class='' href='javascript:removeStudent("+ studentId +")' style='float: right'>Remove</a><div class='author-bio' style='margin-top: 25px'>"+
                             "<h4><a href='#'>"+data.studentName+"</a></h4></div></div>";
                     var location = $("#studentTag").find('.about-author').last();
+
                     $(html).insertAfter(location);
+                    $("#no-student").remove();
+                }else if(data != null && data.status == "NG" && data.id == 0){
+                    window.location.href="/";
+                }else if(data != null && data.status == "NG" && data.id != 0){
+                    window.location.href="/classroom/"+data.id;
+                }
+            }
+        });
+    }
+    function removeStudent(studentId){
+        var url = "/removeStudent";
+        var classId = ${classroom.id};
+        var ownerId = ${classroom.ownerUserId.id}
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: "studentId="+studentId +"&classId="+classId+"&ownerId="+ownerId,
+            success: function(data){
+                if(data != null && data.status == "OK"){
+                    $("#student"+studentId).remove();
+
                 }else if(data != null && data.status == "NG" && data.id == 0){
                     window.location.href="/";
                 }else if(data != null && data.status == "NG" && data.id != 0){

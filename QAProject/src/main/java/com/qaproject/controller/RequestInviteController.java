@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * Created by Minh on 6/10/2015.
@@ -75,5 +76,30 @@ public class RequestInviteController {
         }
 
         return new ReturnObjectWithStatus("OK", currentClassroomId);
+    }
+    @RequestMapping(value = "/removeStudent",method = RequestMethod.POST)
+    @ResponseBody
+    public ReturnObjectWithStatus removeStudent(@RequestParam String studentId,
+                                                @RequestParam String classId,
+                                                @RequestParam String ownerId,
+                                                ModelMap model) {
+        //Check is User
+        User user = (User) session.getAttribute("user");
+        if(user==null) {
+            return new ReturnObjectWithStatus("NG", 0); //no session
+        }
+        List<ClassroomUser> classroomUsers = classroomUserDao.findByUserClassroom(Integer.parseInt(studentId), Integer.parseInt(classId));
+        //Check current User is classroom's owner
+        if(classroomUsers != null && classroomUsers.size()>0) {
+            if (user.getId() != Integer.parseInt(ownerId)) {
+                return new ReturnObjectWithStatus("NG", classroomUsers.get(0).getClassroomId().getId()); //not owner
+            }
+            classroomUsers.get(0).setApproval(2);
+            classroomUserDao.merge(classroomUsers.get(0));
+            return new ReturnObjectWithStatus("OK", classroomUsers.get(0).getClassroomId().getId());
+        }
+        else{
+            return new ReturnObjectWithStatus("NG", 0); //no session
+        }
     }
 }
