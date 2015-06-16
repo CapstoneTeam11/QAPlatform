@@ -4,6 +4,7 @@ import com.qaproject.dao.BaseDao;
 import com.qaproject.dao.ClassroomUserDao;
 import com.qaproject.entity.Classroom;
 import com.qaproject.entity.ClassroomUser;
+import com.qaproject.entity.User;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.Query;
@@ -19,6 +20,19 @@ public class ClassroomUserDaoImpl extends BaseDao<ClassroomUser,Integer> impleme
         List<ClassroomUser> classroomUsers = null;
         Query query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.classroomId=:classroom ");
         query.setParameter("classroom",classroom);
+        try {
+            classroomUsers = query.getResultList();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return classroomUsers;
+    }
+
+    @Override
+    public List<ClassroomUser> findByUser(User user) {
+        List<ClassroomUser> classroomUsers = null;
+        Query query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.userId=:user ");
+        query.setParameter("user",user);
         try {
             classroomUsers = query.getResultList();
         } catch (Exception e){
