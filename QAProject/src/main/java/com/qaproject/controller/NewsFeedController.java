@@ -69,7 +69,9 @@ public class NewsFeedController {
 
         //Check if User is teacher
         if (user.getRoleId().getId()==2){
-            suggestedQuestions.addAll(teacherQuestions);
+            if (teacherQuestions.size()>0){
+                suggestedQuestions.addAll(teacherQuestions);
+            }
         }
 
         //Check if User is student
