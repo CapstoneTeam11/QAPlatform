@@ -112,7 +112,7 @@ public class UserController {
         List<User> users = userDao.login(username, password);
         if(users.size()>0){
             session.setAttribute("user", users.get(0));
-            return "redirect:/dashboard";
+            return "redirect:/newsfeed";
 
         }else{
             return "invalidLogin";
