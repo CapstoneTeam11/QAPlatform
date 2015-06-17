@@ -7,6 +7,7 @@ import com.qaproject.dao.UserDao;
 import com.qaproject.entity.*;
 import com.qaproject.util.NewsFeedUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,16 +63,12 @@ public class NewsFeedController {
         List<Classroom> suggestedClassrooms = classroomDao.findByCategory(category);
 
         //get suggested posts - materials
-        List<Post> teacherQuestions = newsFeedUtilities.getNewsFeedQuestion(user.getId(),0,10);
-        List<Post> suggestedQuestions = new ArrayList<Post>();
+        List<Post> suggestedQuestions = newsFeedUtilities.getNewsFeedQuestions(user.getId(),0,10);
         List<Post> suggestedArticles = new ArrayList<Post>();
         List<Material> suggestedMaterials = new ArrayList<Material>();
 
         //Check if User is teacher
         if (user.getRoleId().getId()==2){
-            if (teacherQuestions.size()>0){
-                suggestedQuestions.addAll(teacherQuestions);
-            }
         }
 
         //Check if User is student
@@ -89,7 +86,7 @@ public class NewsFeedController {
             for (int j=0; j<currentSuggestedPosts.size(); j++){
                 Post currentSuggestedPost = currentSuggestedPosts.get(j);
                 if (currentSuggestedPost.getPostType()==1) {
-                    suggestedQuestions.add(currentSuggestedPost);
+                    //suggestedQuestions.add(currentSuggestedPost);
                 }
                 if (currentSuggestedPost.getPostType()==2) {
                     suggestedArticles.add(currentSuggestedPost);
