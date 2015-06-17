@@ -295,25 +295,25 @@
                 </ul>
             </div>
 
-            <div class="widget">
-                <h3 class="widget_title">Related Questions</h3>
-                <ul class="related-posts">
-                    <c:forEach var="relatedPost" items="${relatedPosts}">
-                        <li class="related-item">
-                            <a href="${relatedPost.id}">${relatedPost.title}</a>
-                        </li>
-                    </c:forEach>
-                </ul>
-            </div>
-            <c:if test="${sessionScope.user.roleId.id==2}">
+            <c:if test="${not empty relatedPosts}">
+                <div class="widget">
+                    <h3 class="widget_title">Related Questions</h3>
+                    <ul class="related-posts">
+                        <c:forEach var="relatedPost" items="${relatedPosts}">
+                            <li class="related-item">
+                                <a href="${relatedPost.id}">${relatedPost.title}</a>
+                            </li>
+                        </c:forEach>
+                    </ul>
+                </div>
+            </c:if>
+
+            <c:if test="${sessionScope.user.id==post.ownerClassId.ownerUserId.id}">
                 <div class="widget">
                     <h3 class="widget_title">Ask Teacher</h3>
                     <a href="" id="InviteTagClick" class="button small color"> Ask Someone</a>
                 </div>
             </c:if>
-            <div class="widget">
-                <h3 class="widget_title">Invited Teacher</h3>
-            </div>
 
             <div class="widget widget_tag_cloud">
                 <h3 class="widget_title">Tags</h3>
