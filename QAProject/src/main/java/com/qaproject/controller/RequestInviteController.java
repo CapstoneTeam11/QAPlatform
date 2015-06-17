@@ -2,7 +2,6 @@ package com.qaproject.controller;
 
 import com.qaproject.dao.ClassroomUserDao;
 import com.qaproject.dto.ReturnObjectWithStatus;
-import com.qaproject.entity.Classroom;
 import com.qaproject.entity.ClassroomUser;
 import com.qaproject.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,7 +87,7 @@ public class RequestInviteController {
         if(user==null) {
             return new ReturnObjectWithStatus("NG", 0); //no session
         }
-        List<ClassroomUser> classroomUsers = classroomUserDao.findByUserClassroom(Integer.parseInt(studentId), Integer.parseInt(classId));
+        List<ClassroomUser> classroomUsers = classroomUserDao.findByUserClassroomWithApprove(Integer.parseInt(studentId), Integer.parseInt(classId));
         //Check current User is classroom's owner
         if(classroomUsers != null && classroomUsers.size()>0) {
             if (user.getId() != Integer.parseInt(ownerId)) {
@@ -102,4 +101,46 @@ public class RequestInviteController {
             return new ReturnObjectWithStatus("NG", 0); //no session
         }
     }
+
+    /**
+     * TungTD: handelClass function
+     * @param type: type = 1: cancelJoinClass, type = 2: acceptInvitation, type =3: leaveClass
+     * @param classId
+     * @return
+     */
+    @RequestMapping(value = "/handleClass",method = RequestMethod.POST)
+    @ResponseBody
+    public ReturnObjectWithStatus leaveClass(@RequestParam Integer classId, @RequestParam Integer type) {
+        //Check is User
+        User user = (User) session.getAttribute("user");
+        if(user==null) {
+            return new ReturnObjectWithStatus("NG", 0); //no session
+        }
+        List<ClassroomUser> classroomUsers = classroomUserDao.findByUserClassroom(user.getId(), classId);
+        ClassroomUser classroomUser = null;
+        if(classroomUsers == null){
+            return new ReturnObjectWithStatus("NG", classId);
+        }
+        classroomUser = classroomUsers.get(0);
+        //Check current User is classroom's owner
+        if(user.getId()!= classroomUser.getUserId().getId()) {
+            return new ReturnObjectWithStatus("NG", classId); //not owner
+        }
+
+
+        if (classroomUser!=null) {
+            if (type == 1){ //type = 1: cancelJoinClass
+                classroomUserDao.remove(classroomUser);
+            } else if (type == 2){ //type = 2: acceptInvitation
+                classroomUser.setApproval(1);
+                classroomUserDao.merge(classroomUser);
+            } else if (type == 3){
+                classroomUser.setApproval(2);
+                classroomUserDao.merge(classroomUser);
+            }
+        }
+
+        return new ReturnObjectWithStatus("OK", classId);
+    }
+
 }

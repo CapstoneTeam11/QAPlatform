@@ -1,9 +1,7 @@
 package com.qaproject.controller;
 
 import com.qaproject.dao.*;
-import com.qaproject.dao.impl.*;
 import com.qaproject.dto.ReturnObjectWithStatus;
-import com.qaproject.dto.UserWithRoleDto;
 import com.qaproject.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -98,14 +96,23 @@ public class ClassController {
         String[] listStudentId = studentList.split(",");
         boolean flag = false;
         for (int i =0; i< listStudentId.length; i++){
-                ClassroomUser classroomUser = new ClassroomUser();
-                Classroom classroom = new Classroom();
-                classroom.setId(room.getId());
-                classroomUser.setClassroomId(classroom);
-                classroomUser.setUserId(new User(Integer.parseInt(listStudentId[i])));
-                classroomUser.setType(2);
-                classroomUser.setApproval(0);
-                classroomUserDao.persist(classroomUser);
+                // make unique row invite
+                List<ClassroomUser> checkClassromUsers = classroomUserDao.findByUserClassroom(user.getId(), room.getId());
+                if(checkClassromUsers == null) {
+                    ClassroomUser classroomUser = new ClassroomUser();
+                    Classroom classroom = new Classroom();
+                    classroom.setId(room.getId());
+                    classroomUser.setClassroomId(classroom);
+                    classroomUser.setUserId(new User(Integer.parseInt(listStudentId[i])));
+                    classroomUser.setType(2);
+                    classroomUser.setApproval(0);
+                    classroomUserDao.persist(classroomUser);
+                }else{
+                    ClassroomUser classroomUser = checkClassromUsers.get(0);
+                    classroomUser.setType(1);
+                    classroomUser.setApproval(0);
+                    classroomUserDao.merge(classroomUser);
+                }
         }
 
 //        objectWithStatus.setId(room.getId());
@@ -120,18 +127,28 @@ public class ClassController {
         if (user == null){
             return "NG";
         }
-        ClassroomUser classroomUser = new ClassroomUser();
-        Classroom classroom = new Classroom();
-        classroom.setId(Integer.parseInt(classroomId));
-        classroomUser.setClassroomId(classroom);
-        classroomUser.setUserId(user);
-        classroomUser.setType(1);
-        classroomUser.setApproval(0);
-        try{
-            classroomUserDao.persist(classroomUser);
-        }catch (Exception e){
-            return "NG";
+        // make unique row invite
+        List<ClassroomUser> checkClassromUsers = classroomUserDao.findByUserClassroom(user.getId(), Integer.parseInt(classroomId));
+        if(checkClassromUsers == null) {
+            ClassroomUser classroomUser = new ClassroomUser();
+            Classroom classroom = new Classroom();
+            classroom.setId(Integer.parseInt(classroomId));
+            classroomUser.setClassroomId(classroom);
+            classroomUser.setUserId(user);
+            classroomUser.setType(1);
+            classroomUser.setApproval(0);
+            try {
+                classroomUserDao.persist(classroomUser);
+            } catch (Exception e) {
+                return "NG";
+            }
+        } else {
+            ClassroomUser classroomUser = checkClassromUsers.get(0);
+            classroomUser.setType(1);
+            classroomUser.setApproval(0);
+            classroomUserDao.merge(classroomUser);
         }
+
         return "OK";
     }
     @RequestMapping(value= "/inviteJoinClass/{id}",method= RequestMethod.POST)
@@ -144,14 +161,23 @@ public class ClassController {
         for (int i =0; i< listStudentId.length; i++){
             User user = userDao.find(Integer.parseInt(listStudentId[i]));
             if( user!=null ){
-                ClassroomUser classroomUser = new ClassroomUser();
-                Classroom classroom = new Classroom();
-                classroom.setId(Integer.parseInt(classroomId));
-                classroomUser.setClassroomId(classroom);
-                classroomUser.setUserId(user);
-                classroomUser.setType(2);
-                classroomUser.setApproval(0);
-                classroomUserDao.persist(classroomUser);
+                // make unique row invite
+                List<ClassroomUser> checkClassromUsers = classroomUserDao.findByUserClassroom(user.getId(), Integer.parseInt(classroomId));
+                if(checkClassromUsers == null){
+                    ClassroomUser classroomUser = new ClassroomUser();
+                    Classroom classroom = new Classroom();
+                    classroom.setId(Integer.parseInt(classroomId));
+                    classroomUser.setClassroomId(classroom);
+                    classroomUser.setUserId(user);
+                    classroomUser.setType(2);
+                    classroomUser.setApproval(0);
+                    classroomUserDao.persist(classroomUser);
+                }else {
+                    ClassroomUser classroomUser = checkClassromUsers.get(0);
+                    classroomUser.setType(2);
+                    classroomUser.setApproval(0);
+                    classroomUserDao.merge(classroomUser);
+                }
             }else{
                 flag = true;
             }
@@ -211,7 +237,12 @@ public class ClassController {
                 articles.add(currentPost);
             }
         }
-
+        // check if acceptRequest or not
+        List<ClassroomUser> checkClassroomUsers = classroomUserDao.findByUserClassroom(userSession.getId(), Integer.parseInt(id));
+        ClassroomUser checkClassroomUser = null;
+        if(checkClassroomUsers != null && checkClassroomUsers.size()>0){
+            checkClassroomUser = checkClassroomUsers.get(0);
+        }
         model.addAttribute("questions",questions);
         model.addAttribute("articles",articles);
         model.addAttribute("materials",materials);
@@ -220,9 +251,40 @@ public class ClassController {
         model.addAttribute("classroom", classroom);
         model.addAttribute("userOwner", user);
         model.addAttribute("user", userSession);
+        model.addAttribute("checkClassroomUser", checkClassroomUser);
         return "classroom";
     }
 
+    /**
+     *
+     * @param model
+     * @param id
+     * @param type: 0 close class, 1 open class
+     * @return
+     */
+    @RequestMapping(value = "/openCloseClass",method = RequestMethod.POST)
+    @ResponseBody
+    public ReturnObjectWithStatus closeClass(ModelMap model, @RequestParam(value = "classId") String id,
+                                             @RequestParam(value = "type") String type) {
+        //Check is User
+        User user = (User) session.getAttribute("user");
+        if(user==null) {
+            return new ReturnObjectWithStatus("NG", 0); //no session
+        }
+        Classroom classroom = classroomDao.find(Integer.parseInt(id));
+
+        if(classroom.getOwnerUserId().getId() !=  user.getId()){
+            return new ReturnObjectWithStatus("NG", classroom.getId()); //not owner
+        }
+        if(Integer.parseInt(type) == 1){
+            classroom.setStatus(1);
+            classroomDao.merge(classroom);
+        }else{
+            classroom.setStatus(0);
+            classroomDao.merge(classroom);
+        }
+        return new ReturnObjectWithStatus("OK", classroom.getId());
+    }
 }
 
 
