@@ -140,7 +140,7 @@ public class PostController {
             tagPost.setTagId(tagDao.find(tagId.get(i)));
             tagPosts.add(tagPost);
         }
-        if(newTag!=null) {
+        if (newTag != null) {
             for (int i = 0; i < newTag.size(); i++) {
                 TagPost tagPost = new TagPost();
                 tagPost.setPostId(post);
@@ -199,9 +199,9 @@ public class PostController {
             Post post;
             Integer idUnaccept = acceptAnswerDto.getIdUnaccept();
             Integer id = acceptAnswerDto.getId();
-            if(idUnaccept!=0) {
-            post = postDao.find(idUnaccept);
-            post.setAcceptedAnswerId(0);
+            if (idUnaccept != 0) {
+                post = postDao.find(idUnaccept);
+                post.setAcceptedAnswerId(0);
             }
             post = postDao.find(id);
             post.setAcceptedAnswerId(1);
@@ -213,6 +213,7 @@ public class PostController {
         //Send notification
         return "OK";
     }
+
     @RequestMapping(value = "/post/removeAcceptAnswer/{id}", method = RequestMethod.POST, produces = "application/json")
     public
     @ResponseBody
