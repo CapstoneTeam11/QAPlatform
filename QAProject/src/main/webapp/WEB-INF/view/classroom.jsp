@@ -308,7 +308,7 @@
                     <p id="link-btn"><a href="javascript:handleClass('${classroom.id}', 2)" class="button small color" id="join">Accept Request</a></p>
                 </c:if>
                 <c:if test="${checkClassroomUser.approval == 1}">
-                    <p id="link-btn"><a href="javascript:handleClass('${classroom.id}', 3)" class="button small color" id="join">Leave</a></p>
+                    <p id="link-btn"><a href="javascript:handleClass(${classroom.id}, 3)" class="button small color" id="join">Leave</a></p>
                 </c:if>
             </c:if>
         </c:if>

@@ -74,6 +74,7 @@ public class ClassController {
         room.setClassroomDescription(classroomDescription);
         room.setClassroomName(classroomName);
         room.setOwnerUserId(user);
+        room.setStatus(1);
         classroomDao.persist(room);
         String[] tagList = tag.split(",");
         for (int i = 0; i<= tagList.length-1; i++){
@@ -98,7 +99,7 @@ public class ClassController {
         for (int i =0; i< listStudentId.length; i++){
                 // make unique row invite
                 List<ClassroomUser> checkClassromUsers = classroomUserDao.findByUserClassroom(user.getId(), room.getId());
-                if(checkClassromUsers == null) {
+                if(checkClassromUsers == null || checkClassromUsers.size()==0) {
                     ClassroomUser classroomUser = new ClassroomUser();
                     Classroom classroom = new Classroom();
                     classroom.setId(room.getId());
@@ -129,7 +130,7 @@ public class ClassController {
         }
         // make unique row invite
         List<ClassroomUser> checkClassromUsers = classroomUserDao.findByUserClassroom(user.getId(), Integer.parseInt(classroomId));
-        if(checkClassromUsers == null) {
+        if(checkClassromUsers == null || checkClassromUsers.size()==0) {
             ClassroomUser classroomUser = new ClassroomUser();
             Classroom classroom = new Classroom();
             classroom.setId(Integer.parseInt(classroomId));
@@ -163,7 +164,7 @@ public class ClassController {
             if( user!=null ){
                 // make unique row invite
                 List<ClassroomUser> checkClassromUsers = classroomUserDao.findByUserClassroom(user.getId(), Integer.parseInt(classroomId));
-                if(checkClassromUsers == null){
+                if(checkClassromUsers == null || checkClassromUsers.size()==0){
                     ClassroomUser classroomUser = new ClassroomUser();
                     Classroom classroom = new Classroom();
                     classroom.setId(Integer.parseInt(classroomId));
