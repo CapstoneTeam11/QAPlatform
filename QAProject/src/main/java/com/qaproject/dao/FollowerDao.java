@@ -16,6 +16,7 @@ public interface FollowerDao {
     public Follower find(Integer id);
     public Follower findByTeacherId(Integer teacherId, User StudentId);
     List<Follower> findAll();
+    List<Follower> findByFollowerUser(User user);
     @Transactional(propagation = Propagation.REQUIRED)
     public void persist(Follower entity);
     @Transactional(propagation = Propagation.REQUIRED)

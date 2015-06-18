@@ -60,7 +60,9 @@
                 </p>
             </div>
             <p class="form-submit">
-                <input type="submit" value="Upload" class="button color small submit">
+                <c:if test="${classroom.status == 1}">
+                    <input type="submit" value="Upload" class="button color small submit">
+                </c:if>
                 <input type="hidden" name="classId" value="1">
             </p>
         </form>
@@ -112,7 +114,27 @@
                onblur="if(this.value=='')this.value='Search in ${classroom.classroomName} class';" style="width: 100%">
     </div>
     <div class="col-md-6 col-sm-6">
-        <a href="/post/create/${classroom.id}" class="button medium green-button" style="float: right"><i class="icon-pencil"></i> Create post</a>
+        <div class="col-md-11 col-sm-9" id="createPost">
+            <c:if test="${classroom.status == 1}">
+                <a href="/post/create/${classroom.id}" class="button medium green-button" style="float: right"><i class="icon-pencil"></i> Create post</a>
+            </c:if>
+
+        </div>
+        <div class="" style="margin-top: 20px">
+            <c:if test="${userOwner.id == user.id}">
+                <div class="btn-group">
+                    <a data-toggle="dropdown" href="" aria-expanded="false"><i class="icon-cog" style="color: black;font-weight: bold;font-size: 20px;"></i><span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu" style="left: -127px;" id="activeBtn">
+                        <c:if test="${classroom.status == 1}">
+                            <li><a href="javascript:closeClass(${classroom.id}, 0);">Close class</a></li>
+                        </c:if>
+                        <c:if test="${classroom.status == 0}">
+                            <li><a href="javascript:closeClass(${classroom.id}, 1);">Open class</a></li>
+                        </c:if>
+                    </ul>
+                </div>
+            </c:if>
+        </div>
     </div>
 
     </div>
@@ -185,7 +207,9 @@
 <div class="tab-inner-warp">
     <div class="tab-inner">
         <div class="col-md-3 col-sm-6" style="float: right">
-            <a href="#" class="button medium green-button" style="float: right;margin-top: -25px;margin-right: -10px;" id="addMaterial-click"><i class="icon-upload"></i> Upload</a>
+            <c:if test="${classroom.status == 1}">
+                <a href="#" class="button medium green-button" style="float: right;margin-top: -25px;margin-right: -10px;" id="addMaterial-click"><i class="icon-upload"></i> Upload</a>
+            </c:if>
         </div>
         <table class="table table-hover">
             <tr>
@@ -240,7 +264,9 @@
                         <div class="author-image">
                             <a href="#" original-title="" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
                         </div>
-                        <a class="" href="javascript:removeStudent(${student.userId.id});" style="float: right">Remove</a>
+                        <c:if test="${classroom.status == 1}">
+                            <a class="" href="javascript:removeStudent(${student.userId.id});" style="float: right">Remove</a>
+                        </c:if>
                         <div class="author-bio" style="margin-top: 25px">
                             <h4><a href="#">${student.userId.displayName}</a></h4>
                         </div>
@@ -270,17 +296,32 @@
             </li>
         </ul>
         <c:if test="${user.roleId.id==1}">
-
-            <a href="javascript:joinClass(${classroom.id})" class="button small color" id="join">Join</a>
+            <c:if test="${classroom.status == 1}">
+                <c:if test="${empty checkClassroomUser || checkClassroomUser.approval == 2}">
+                    <p id="link-btn"></p><a href="javascript:joinClass(${classroom.id})" class="button small color" id="join">Join</a></p>
+                </c:if>
+                <c:if test="${checkClassroomUser.approval == 0 && checkClassroomUser.type == 1}">
+                    <a href="#" class="button small color" id="join">Request Send</a>
+                    <%--<a href="javascript:handleClass('${classroom.id}', 1)" class="button small color" id="join">Cancel Request</a>--%>
+                </c:if>
+                <c:if test="${checkClassroomUser.approval == 0 && checkClassroomUser.type == 2}">
+                    <p id="link-btn"><a href="javascript:handleClass('${classroom.id}', 2)" class="button small color" id="join">Accept Request</a></p>
+                </c:if>
+                <c:if test="${checkClassroomUser.approval == 1}">
+                    <p id="link-btn"><a href="javascript:handleClass(${classroom.id}, 3)" class="button small color" id="join">Leave</a></p>
+                </c:if>
+            </c:if>
         </c:if>
     </div>
     <c:if test="${user.roleId.id==2}">
-        <div class="widget widget_login" style="  min-height: 130px;">
-            <h3 class="widget_title">Invite student</h3>
-            <div class="pull-right" style="width: 100%;">
-                <a href="#" id="create-folder-click" class="button medium color" style="width: 100%;text-align: center;"><i class="icon-plus-sign"></i> Invite</a>
+        <c:if test="${classroom.status == 1}">
+            <div class="widget widget_login" style="  min-height: 130px;">
+                <h3 class="widget_title">Invite student</h3>
+                <div class="pull-right" style="width: 100%;">
+                    <a href="#" id="create-folder-click" class="button medium color" style="width: 100%;text-align: center;"><i class="icon-plus-sign"></i> Invite</a>
+                </div>
             </div>
-        </div>
+        </c:if>
     </c:if>
     <div class="widget widget_highest_points">
         <h3 class="widget_title">Class Owner</h3>
@@ -398,7 +439,7 @@
             success: function(data){
                 if(data == "OK"){
                     $("#join").text("Request sent!").attr("href", "#");
-                    $().toastmessage('showSuccessToast', 'Join class request sent!');
+//                    $().toastmessage('showSuccessToast', 'Join class request sent!');
                 }else{
                     $().toastmessage('showErrorToast', "Join class request fail! Please try again late!");
                 }
@@ -520,6 +561,50 @@
                     window.location.href="/";
                 }else if(data != null && data.status == "NG" && data.id != 0){
                     window.location.href="/classroom/"+data.id;
+                }
+            }
+        });
+    }
+    function handleClass(id, type){
+        var url = "/handleClass";
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: "classId="+id +"&type="+ type,
+            success: function(data){
+                if(data != null && data.status == "OK"){
+                    if(type == 3){
+                        var btn = "<a href='javascript:joinClass(${classroom.id})' class='button small color' id='join'>Join</a>";
+                        $("#link-btn").html(btn);
+                    }else if(type==2){
+                        var btn = "<a href='javascript:handleClass('${classroom.id}', 3)' class='button small color' id='join'>Leave</a>";
+                        $("#link-btn").html(btn);
+                    }
+
+                }else if(data != null && data.status == "NG" && data.id == 0){
+                    window.location.href="/";
+                }else if(data != null && data.status == "NG" && data.id != 0){
+                    window.location.href="/classroom/"+data.id;
+                }
+            }
+        });
+    }
+    function closeClass(classId, type) {
+        var url = "/openCloseClass";
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: "classId=" + classId+"&type="+ type,
+            success: function (data) {
+                if (data != null && data.status == "OK") {
+                    <%--var createPost = "<a href='/post/create/${classroom.id}' class='button medium green-button' style='float: right'><i class='icon-pencil'></i> Create post</a>";--%>
+                    <%--$("#createPost").html(createPost);--%>
+                    <%----%>
+                    window.location.href = "/classroom/" + data.id;
+                } else if (data != null && data.status == "NG" && data.id == 0) {
+                    window.location.href = "/";
+                } else if (data != null && data.status == "NG" && data.id != 0) {
+                    window.location.href = "/classroom/" + data.id;
                 }
             }
         });

@@ -3,6 +3,7 @@ package com.qaproject.controller;
 import com.qaproject.dao.CategoryDao;
 import com.qaproject.dao.impl.CategoryDaoImpl;
 import com.qaproject.entity.Category;
+import com.qaproject.entity.Classroom;
 import com.qaproject.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,8 @@ import java.util.List;
 /** **/
 @Controller
 public class HelloController {
+    @Autowired
+    HttpSession session;
 //
 //    @Autowired
 //    SimpMessagingTemplate template;
@@ -36,6 +39,10 @@ public class HelloController {
     CategoryDao categoryDao;
 	@RequestMapping(value = "/",method = RequestMethod.GET)
      public String printWelcome(ModelMap model) {
+        User user = (User) session.getAttribute("user");
+        if (user != null) {
+            return "redirect:/newsfeed";
+        }
         List<Category> categoryList = categoryDao.findAll();
         model.addAttribute("categories",categoryList);
         return "welcome";
