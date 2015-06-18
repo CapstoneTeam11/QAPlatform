@@ -124,8 +124,8 @@
                                                 </span>
                                             </div>
                                             <span class="question-date"><i class="icon-time"></i>${question.lastEditedDate}</span>
-                                            <span class="question-category"><a href="/classroom"><i class="icon-group"></i>Class: ${question.ownerClassId.classroomName}</a></span>
-                                            <span class="question-comment"><a href="#"><i class="icon-comment"></i>${question.replyCount} Answer(s)</a></span>
+                                            <span class="question-category"><a href="/classroom/${question.ownerClassId.id}"><i class="icon-group"></i>Class: ${question.ownerClassId.classroomName}</a></span>
+                                            <span class="question-comment"><a href="#"><i class="icon-comment"></i>0 Answer(s)</a></span>
                                             <div class="clearfix"></div>
                                         </div>
                                     </article>

@@ -114,13 +114,13 @@
                onblur="if(this.value=='')this.value='Search in ${classroom.classroomName} class';" style="width: 100%">
     </div>
     <div class="col-md-6 col-sm-6">
-        <div class="col-md-9 col-sm-9" id="createPost">
+        <div class="col-md-11 col-sm-9" id="createPost">
             <c:if test="${classroom.status == 1}">
                 <a href="/post/create/${classroom.id}" class="button medium green-button" style="float: right"><i class="icon-pencil"></i> Create post</a>
             </c:if>
 
         </div>
-        <div class="col-md-3 col-sm-3" style="margin-top: 10px;">
+        <div class="" style="margin-top: 20px">
             <c:if test="${userOwner.id == user.id}">
                 <div class="btn-group">
                     <a data-toggle="dropdown" href="" aria-expanded="false"><i class="icon-cog" style="color: black;font-weight: bold;font-size: 20px;"></i><span class="caret"></span></a>
