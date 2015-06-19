@@ -167,7 +167,7 @@
         <div class="col-md-9">
             <article class="question single-question question-type-normal">
                 <h2 class="post-title">${post.title}</h2>
-                <span class="wantAnswer"><a id="wantNumber">${fn:length(post.wantAnswerPosts)}</a> Want to answer</span>
+                <span class="wantAnswer"><a id="wantNumber">${fn:length(post.wantAnswerPosts)}</a> Want answer(s)</span>
                 <c:if test="${wantAnswer!=null && sessionScope.user!=null}">
                 <a class="wantAnswer dontWantanswerId" href="#" style="right: 156px;" id="wantAnswer"><i class="icon-check"></i></a>
                 </c:if>
