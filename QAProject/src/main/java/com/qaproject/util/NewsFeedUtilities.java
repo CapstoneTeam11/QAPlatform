@@ -27,6 +27,8 @@ public class NewsFeedUtilities {
     ClassroomDao classroomDao;
     @Autowired
     FollowerDao followerDao;
+    @Autowired
+    ClassroomUserDao classroomUserDao;
 
     private final String QUESTION_IN_KNOW = "QIK_";
     private final String QUESTION_IN_CLASS = "QIC_";
@@ -35,9 +37,21 @@ public class NewsFeedUtilities {
     private final Integer TEACHER = 2;
     private final Integer ACCEPTED = 1;
 
-    /*set user news feed question in their class*/
+    /*set user news feed question in their class for all question*/
     private void setQuestionsInClass(User user, Jedis jedis) {
-        List<Classroom> classrooms = classroomDao.findByOwnerUser(user.getId());
+        List<Classroom> classrooms = new ArrayList<Classroom>();
+        if (user.getRoleId().getId()==TEACHER){
+            classrooms = classroomDao.findByOwnerUser(user.getId());
+        }
+        if (user.getRoleId().getId()==STUDENT){
+            List<ClassroomUser> classroomUsers = classroomUserDao.findByUserWithApproved(user);
+            if (classroomUsers==null) {
+                return;
+            }
+            for (ClassroomUser classroomUser:classroomUsers) {
+                classrooms.add(classroomUser.getClassroomId());
+            }
+        }
         if (classrooms == null) {
             return;
         }
@@ -67,18 +81,53 @@ public class NewsFeedUtilities {
         }
     }
 
-    /*set user news feed question in their follower*/
+    /*set user news feed question in their class for specific question*/
+    private void setQuestionInClass(User user, Jedis jedis, Post question){
+        boolean isSet = false;
+        Classroom classroomOfQuestion = question.getOwnerClassId();
+        if (user.getRoleId().getId()==TEACHER) {
+            List<Classroom> classroomsOfOwner = classroomDao.findByOwnerUser(user.getId());
+            if (classroomsOfOwner==null) {
+                return;
+            }
+            if (classroomsOfOwner.contains(classroomOfQuestion)) {
+                isSet = true;
+            }
+
+        }
+        if (user.getRoleId().getId()==STUDENT) {
+            List<ClassroomUser> classroomUsers = classroomUserDao.findByUserWithApproved(user);
+            if (classroomUsers==null) {
+                return;
+            }
+            for (ClassroomUser classroomUser:classroomUsers) {
+                if (classroomUser.getClassroomId().equals(classroomOfQuestion)){
+                    isSet = true;
+                }
+            }
+        }
+        if (isSet){
+            try {
+                jedis.zadd(QUESTION_IN_CLASS + Integer.toString(user.getId()),
+                        calculateScore(user, question), Integer.toString(question.getId()));
+            } catch (Exception e) {
+
+            }
+        }
+    }
+
+    /*set user news feed question in their follower for all question*/
     private void setQuestionsInFollower(User user, Jedis jedis) {
-        List<Follower> followers = followerDao.findByFollowerUser(user);
-        if (followers == null) {
+        List<Follower> followedTeachers = followerDao.findByFollower(user);
+        if (followedTeachers == null) {
             return;
         }
         List<Post> questions = new ArrayList<Post>();
-        for (Follower follower : followers) {
-            if (follower == null) {
+        for (Follower followedTeacher : followedTeachers) {
+            if (followedTeacher == null) {
                 continue;
             }
-            List<Post> currentQuestions = postDao.findQuestionsByOwnerUser(follower.getFollowerId());
+            List<Post> currentQuestions = postDao.findQuestionsByOwnerUser(followedTeacher.getTeacherId());
             if (currentQuestions == null) {
                 continue;
             }
@@ -99,16 +148,44 @@ public class NewsFeedUtilities {
         }
     }
 
-    /*set user's news feed questions in their knowledge and not in their class, not in their follower*/
+    /*set user news feed question in their follower for specific question*/
+    private void setQuestionsInFollower(User user, Jedis jedis, Post question){
+        List<Follower> followedTeachers = followerDao.findByFollower(user);
+        boolean isSet = false;
+        if (followedTeachers == null) {
+            return;
+        }
+        for (Follower followedTeacher : followedTeachers) {
+            if (followedTeacher == null) {
+                continue;
+            }
+            List<Post> currentQuestions = postDao.findQuestionsByOwnerUser(followedTeacher.getTeacherId());
+            if (currentQuestions == null) {
+                continue;
+            }
+            if (currentQuestions.contains(question)) {
+                isSet = true;
+            }
+        }
+        if (isSet) {
+            try {
+                jedis.zadd(QUESTION_IN_FOLLOWER + Integer.toString(user.getId()),
+                        calculateScore(user, question), Integer.toString(question.getId()));
+            } catch (Exception e){
+
+            }
+        }
+    }
+
+    /*set user's news feed questions in their knowledge for all question*/
     private void setQuestionsInKnow(User user, Jedis jedis) {
         List<Classroom> classrooms = classroomDao.findByCategory(user.getCategoryId());
         if (classrooms == null) {
             return;
         }
-        List<Follower> followers = followerDao.findByFollowerUser(user);
         List<Post> questions = new ArrayList<Post>();
         for (Classroom classroom : classrooms) {
-            if (classroom == null || classroom.getOwnerUserId().equals(user)) {
+            if (classroom == null) {
                 continue;
             }
             List<Post> currentQuestions = postDao.findQuestionByOwnerClassroom(classroom);
@@ -118,13 +195,6 @@ public class NewsFeedUtilities {
             for (Post currentQuestion : currentQuestions) {
                 if (currentQuestion == null) {
                     continue;
-                }
-                if (currentQuestion.getOwnerUserId().getRoleId().getId() == 2) { //if currentOwner is teacher
-                    if (followers != null) {
-                        if (followers.contains(currentQuestion.getOwnerUserId())) { //if currentOwner in follower list
-                            continue;
-                        }
-                    }
                 }
                 questions.add(currentQuestion);
             }
@@ -136,6 +206,48 @@ public class NewsFeedUtilities {
             } catch (Exception e) {
 
             }
+        }
+    }
+
+    /*set user's news feed questions in their knowledge and not in their class, not in their follower for specific question*/
+    private void setQuestionsInKnow(User user, Jedis jedis, Post question){
+        List<Classroom> classrooms = classroomDao.findByCategory(user.getCategoryId());
+        boolean isSet = false;
+        if (classrooms == null) {
+            return;
+        }
+        List<Post> questions = new ArrayList<Post>();
+        for (Classroom classroom : classrooms) {
+            if (classroom == null) {
+                continue;
+            }
+            List<Post> currentQuestions = postDao.findQuestionByOwnerClassroom(classroom);
+            if (currentQuestions == null) {
+                continue;
+            }
+            if (currentQuestions.contains(question)){
+                isSet = true;
+            }
+        }
+        if (isSet) {
+            try {
+                jedis.zadd(QUESTION_IN_KNOW + Integer.toString(user.getId())
+                        , calculateScore(user, question), Integer.toString(question.getId()));
+            } catch (Exception e) {
+
+            }
+        }
+    }
+
+    /*Use this to instead duplicate element in list*/
+    private void addToQuestionList(List<Post> list, Post question){
+        if (list==null || question == null){
+            return;
+        }
+        if (list.contains(question)){
+            return;
+        } else {
+            list.add(question);
         }
     }
 
@@ -152,26 +264,47 @@ public class NewsFeedUtilities {
         }
     }
 
+    public void setNewsFeedQuestionAfterRegister(User user) {
+        Jedis jedis = new Jedis("localhost");
+        setQuestionsInKnow(user,jedis);
+    }
+
+    public void setNewsFeedQuestionAfterCreatePost(Post question){
+        List<User> users = userDao.findAll();
+        if (users==null) {
+            return;
+        }
+        Jedis jedis = new Jedis("localhost");
+        for (User user: users){
+            setQuestionInClass(user,jedis,question);
+            setQuestionsInFollower(user,jedis,question);
+            setQuestionsInKnow(user,jedis,question);
+        }
+    }
+
     public List<Post> getNewsFeedQuestions(Integer userId, Integer start, Integer stop) {
         List<Post> inClass = getQuestionsByPrefixKey(QUESTION_IN_CLASS, userId, start, stop);
         List<Post> inFollower = getQuestionsByPrefixKey(QUESTION_IN_FOLLOWER, userId, start, stop);
         List<Post> inKnow = getQuestionsByPrefixKey(QUESTION_IN_KNOW, userId, start, stop);
 
-        List<Post> teacherNewsFeedQuestions = new ArrayList<Post>();
+        List<Post> newsFeedQuestions = new ArrayList<Post>();
         if (inClass.size()>0) {
-            teacherNewsFeedQuestions.addAll(inClass);
+            for(Post question : inClass){
+                addToQuestionList(newsFeedQuestions,question);
+            }
         }
         if (inFollower.size()>0) {
-            teacherNewsFeedQuestions.addAll(inFollower);
+            for(Post question : inFollower){
+                addToQuestionList(newsFeedQuestions,question);
+            }
         }
         if (inKnow.size()>0) {
-            teacherNewsFeedQuestions.addAll(inKnow);
+            for(Post question : inKnow){
+                addToQuestionList(newsFeedQuestions,question);
+            }
         }
-        return teacherNewsFeedQuestions;
+        return newsFeedQuestions;
     }
-
-
-
 
     private List<Post> getQuestionsByPrefixKey(String prefixKey, Integer userId, Integer start, Integer stop) {
         List<Post> questions = new ArrayList<Post>();
