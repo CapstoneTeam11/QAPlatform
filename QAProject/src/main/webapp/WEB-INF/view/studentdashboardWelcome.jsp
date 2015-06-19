@@ -123,7 +123,7 @@
                     <div class="row" style="margin-top: 65px; margin-bottom: 65px">
                         <div class="col-md-2"></div>
                         <div class="col-md-8">
-                            <a href="/newsfeed/welcome">
+                            <a href="/newsfeed">
                                 <div class="page-content page-shortcode">
                                     <div class="box_icon">
                                         <span class="t_center icon_i"><span class="icon_circle" icon_size="50" span_bg="#1abc9c" span_hover="#34495e" style="height: 50px; width: 50px; font-size: 25px; line-height: 50px; background-color: rgb(52, 73, 94);"><i class="icon-group"></i></span></span>

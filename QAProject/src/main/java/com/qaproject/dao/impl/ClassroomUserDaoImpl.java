@@ -42,6 +42,19 @@ public class ClassroomUserDaoImpl extends BaseDao<ClassroomUser,Integer> impleme
     }
 
     @Override
+    public List<ClassroomUser> findByUserWithApproved(User user) {
+        List<ClassroomUser> classroomUsers = null;
+        Query query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.userId=:user and cu.approval=1");
+        query.setParameter("user",user);
+        try {
+            classroomUsers = query.getResultList();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return classroomUsers;
+    }
+
+    @Override
     public List<ClassroomUser> findByUserClassroomWithApprove(int userId, int classId) {
         List<ClassroomUser> classroomUsers = null;
         Query query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.userId.id=:userId and cu.classroomId.id = :classId and cu.approval = 1");
