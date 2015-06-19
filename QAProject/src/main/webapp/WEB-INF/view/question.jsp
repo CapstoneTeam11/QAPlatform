@@ -570,7 +570,7 @@
                     } else {
                         $('#loadMore').hide();
                     }
-                    for(var i = 0 ; i < post.length-1 ; i++ ) {
+                    for(var i = 0 ; i < length ; i++ ) {
                         if(postOwnerId==userId) {
                             if(post[i].acceptedAnswerId==1) {
                                 $('#commentListDetail').append('<li class="comment">'+
