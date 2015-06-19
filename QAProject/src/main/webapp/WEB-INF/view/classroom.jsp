@@ -130,7 +130,7 @@
                             <li><a href="javascript:closeClass(${classroom.id}, 0);">Close class</a></li>
                         </c:if>
                         <c:if test="${classroom.status == 0}">
-                            <li><a href="javascript:closeClass(${classroom.id}, 1);">Open class</a></li>
+                            <li><a href="javascript:closeClass(${classroom.id}, 1);">Reopen class</a></li>
                         </c:if>
                     </ul>
                 </div>
