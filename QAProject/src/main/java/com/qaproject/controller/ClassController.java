@@ -1,7 +1,9 @@
 package com.qaproject.controller;
 
 import com.qaproject.dao.*;
+import com.qaproject.dto.ClassDto;
 import com.qaproject.dto.ReturnObjectWithStatus;
+import com.qaproject.dto.StudentDto;
 import com.qaproject.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -255,7 +257,62 @@ public class ClassController {
         model.addAttribute("checkClassroomUser", checkClassroomUser);
         return "classroom";
     }
+    @RequestMapping(value = "/classroom/loadMoreStudent/{id}",method = RequestMethod.POST)
+    @ResponseBody
+    public List<StudentDto> loadMoreStudent(ModelMap model, @PathVariable(value = "id") String id) {
+        User userSession = (User) session.getAttribute("user");
+        if(userSession==null) {
+            return null;
+        }
+        Classroom classroom = classroomDao.find(Integer.parseInt(id));
+        int idOwner = classroom.getOwnerUserId().getId();
+        User user = userDao.find(idOwner);
 
+        //get posts, materials, request to join - MinhKH
+        List<Post> posts = classroom.getPostList();
+        List<Material> materials = classroom.getMaterialList();
+        List<ClassroomUser> classroomUsers = classroomUserDao.findByClassroom(classroom);
+
+
+        //classify classroomUser - MinhKH
+        List<ClassroomUser> joinRequests = new ArrayList<ClassroomUser>();
+        List<ClassroomUser> students = new ArrayList<ClassroomUser>();
+        for (int i=0;i<classroomUsers.size();i++){
+            ClassroomUser currentClassroomUser = classroomUsers.get(i);
+            if(currentClassroomUser.getType()==1&&currentClassroomUser.getApproval()==0){
+                joinRequests.add(currentClassroomUser);
+            }
+            if (currentClassroomUser.getApproval()==1) {
+                students.add(currentClassroomUser);
+            }
+        }
+
+        //classify post - MinhKH
+        List<Post> questions = new ArrayList<Post>();
+        List<Post> articles = new ArrayList<Post>();
+        for (int i=0; i<posts.size();i++){
+            Post currentPost = posts.get(i);
+            if (currentPost.getPostType()==1){
+                questions.add(currentPost);
+            }
+            if (currentPost.getPostType()==2){
+                articles.add(currentPost);
+            }
+        }
+        // check if acceptRequest or not
+        List<ClassroomUser> checkClassroomUsers = classroomUserDao.findByUserClassroom(userSession.getId(), Integer.parseInt(id));
+        ClassroomUser checkClassroomUser = null;
+        if(checkClassroomUsers != null && checkClassroomUsers.size()>0){
+            checkClassroomUser = checkClassroomUsers.get(0);
+        }
+        List<StudentDto> list = new ArrayList<StudentDto>();
+        for(int i=0; i< students.size(); i++){
+            StudentDto studentDto = new StudentDto(students.get(i).getUserId().getDisplayName(), students.get(i).getUserId().getId());
+            list.add(studentDto);
+        }
+
+        return list;
+    }
     /**
      *
      * @param model
