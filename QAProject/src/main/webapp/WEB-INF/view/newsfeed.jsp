@@ -111,7 +111,7 @@
                                             <a href="/post/view/${question.id}">${question.title}</a>
                                         </h2>
                                         <div class="question-author">
-                                            <a href="/profile/${question.ownerUserId.id}" original-title="${question.ownerUserId.displayName}" class="question-author-img tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>
+                                            <a href="/profile/view/${question.ownerUserId.id}" original-title="${question.ownerUserId.displayName}" class="question-author-img tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>
                                         </div>
                                         <div class="question-inner">
                                             <div class="clearfix"></div>
@@ -152,7 +152,7 @@
                                         <div class="post-inner">
                                             <h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a href="/post/view/${article.id}">${article.title}</a></h2>
                                             <div class="post-meta">
-                                                <span class="meta-author"><i class="icon-user"></i><a href="#">Author: ${article.ownerUserId.displayName}</a></span>
+                                                <span class="meta-author"><i class="icon-user"></i><a href="/profile/view/${article.ownerUserId.id}">Author: ${article.ownerUserId.displayName}</a></span>
                                                 <span class="meta-date"><i class="icon-time"></i>${article.lastEditedDate}</span>
                                                 <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">${article.replyCount} comment(s)</a></span>
                                                 <span class="question-category"><a href="/classroom/${article.ownerClassId.id}"><i class="icon-group"></i>Class: ${article.ownerClassId.classroomName}</a></span>
