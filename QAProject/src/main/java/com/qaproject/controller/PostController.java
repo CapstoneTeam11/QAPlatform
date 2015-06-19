@@ -61,7 +61,7 @@ public class PostController {
     }
 
     @RequestMapping(value = "/post/view/{id}", method = RequestMethod.GET)
-    public String view(@PathVariable Integer id, ModelMap model) {
+     public String view(@PathVariable Integer id, ModelMap model) {
         //check if not parent Post return 404.
         Post post = postDao.find(id);
         User user = (User) session.getAttribute("user");
@@ -95,6 +95,16 @@ public class PostController {
             return "question";
         }
         return "article";
+    }
+    @RequestMapping(value = "post/view/{id}/{page}",produces = "application/json",method = RequestMethod.GET)
+    public @ResponseBody List<PostDto> loadMoreAnswer(@PathVariable Integer id,@PathVariable Integer page) {
+        List<PostDto> postDtos = null;
+        try {
+            postDtos = postDao.loadMoreAnswer(id,page);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return postDtos;
     }
 
     @RequestMapping(value = "/post/create/{id}", method = RequestMethod.GET)
@@ -161,9 +171,10 @@ public class PostController {
     @ResponseBody
     String addWantAnswer(@ModelAttribute("wantAnswerDto") WantAnswerDto wantAnswerDto) {
         //authorize
+        User user = (User) session.getAttribute("user");
         WantAnswerPost wantAnswerPost = new WantAnswerPost();
         wantAnswerPost.setPostId(postDao.find(wantAnswerDto.getPostId()));
-        wantAnswerPost.setUserId(userDao.find(wantAnswerDto.getUserId()));
+        wantAnswerPost.setUserId(user);
         try {
             wantAnswerDao.persist(wantAnswerPost);
         } catch (Exception e) {
@@ -202,6 +213,7 @@ public class PostController {
             if (idUnaccept != 0) {
                 post = postDao.find(idUnaccept);
                 post.setAcceptedAnswerId(0);
+                postDao.merge(post);
             }
             post = postDao.find(id);
             post.setAcceptedAnswerId(1);

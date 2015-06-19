@@ -16,6 +16,7 @@ public class PostDto {
     private String lastEditedDate;
     private String ownerId;
     private String className;
+    private String ownerName;
 
     public String getClassName() {
         return className;
@@ -87,5 +88,13 @@ public class PostDto {
 
     public void setOwnerId(String ownerId) {
         this.ownerId = ownerId;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
     }
 }

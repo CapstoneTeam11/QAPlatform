@@ -1,5 +1,6 @@
 package com.qaproject.dao;
 
+import com.qaproject.dto.PostDto;
 import com.qaproject.entity.Classroom;
 import com.qaproject.entity.Post;
 import com.qaproject.entity.User;
@@ -20,6 +21,7 @@ public interface PostDao {
     public List<Post> findQuestionsByOwnerUser(User ownerUser);
     public List<Post> findRepliesByParentId(Integer parentId);
     public List<Post> findQuestionByOwnerClassroom(Classroom ownerClassroom);
+    public List<PostDto> loadMoreAnswer(Integer id,Integer page);
     @Transactional(propagation = Propagation.REQUIRED)
     public void persist(Post entity);
     @Transactional(propagation = Propagation.REQUIRED)

@@ -62,7 +62,7 @@
 
 <div class="panel-pop" id="signup">
     <h2>Register Now<i class="icon-remove"></i></h2>
-
+    <input type="hidden" value="${sessionScope.user.id}" id="userIdFlag">
     <div class="form-style form-style-3">
         <form>
             <div class="form-inputs clearfix">
@@ -168,11 +168,11 @@
             <article class="question single-question question-type-normal">
                 <h2 class="post-title">${post.title}</h2>
                 <span class="wantAnswer"><a id="wantNumber">${fn:length(post.wantAnswerPosts)}</a> Want to answer</span>
-                <c:if test="${wantAnswer!=null}">
+                <c:if test="${wantAnswer!=null && sessionScope.user!=null}">
                 <a class="wantAnswer dontWantanswerId" href="#" style="right: 156px;" id="wantAnswer"><i class="icon-check"></i></a>
                 </c:if>
                 <input type="hidden" id="wantAnswerId" value="${wantAnswer.id}">
-                <c:if test="${wantAnswer==null}">
+                <c:if test="${wantAnswer==null && sessionScope.user!=null}">
                     <a class="wantAnswer wantAnswerId" href="#" style="right: 156px;" id="wantAnswer"><i class="icon-check-empty"></i></a>
                 </c:if>
                 <div class="question-inner" id="prvId">
@@ -235,7 +235,47 @@
                 <div class="boxedtitle page-title"><h2>Answers ( <span class="color">${fn:length(postAnswers)}</span> )
                 </h2></div>
                 <ol class="commentlist clearfix" id="commentListDetail">
-                    <c:forEach var="postAnswer" items="${postAnswers}">
+                    <c:if test="${fn:length(postAnswers) > 10}">
+                        <c:forEach var="postAnswer" items="${postAnswers}" end="9">
+                            <li class="comment">
+                                <div class="comment-body comment-body-answered clearfix">
+                                    <div class="avatar"><img alt=""
+                                                             src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg">
+                                    </div>
+                                    <div class="comment-text">
+                                        <div class="author clearfix"  style="display: flex">
+                                            <div style="width: 30%">
+                                                <div class="comment-author"><a href="#">${postAnswer.ownerUserId.displayName}</a>
+                                                </div>
+                                                <div class="comment-meta">
+                                                    <div class="date"><i class="icon-time"></i>${postAnswer.creationDate}</div>
+                                                </div>
+                                            </div>
+                                            <div class="acceptAnswerIcon" id="answerIcon${postAnswer.id}">
+                                                <c:if test="${postAnswer.acceptedAnswerId==1}">
+                                                    <i class="icon-ok"></i>
+                                                </c:if>
+                                            </div>
+                                                <%--Add javascript to chang "<i class="icon-thumbs-up"></i>Accept" to "Unaccept"--%>
+                                            <div style="width: 75%">
+                                                <input type="hidden" name="postAnswerId" value="${postAnswer.id}">
+                                                <c:if test="${postAnswer.acceptedAnswerId !=1 && sessionScope.user.id==post.ownerUserId.id}">
+                                                    <a class="button small color acceptAnswer answerFlag" style="float: right" onclick="answerFlag(this)">Accept</a>
+                                                </c:if>
+                                                <c:if test="${postAnswer.acceptedAnswerId==1 && sessionScope.user.id==post.ownerUserId.id}">
+                                                    <a class="button small color unacceptAnswer answerFlag" style="float: right" onclick="answerFlag(this)">Unaccept</a>
+                                                </c:if>
+                                            </div>
+                                        </div>
+                                        <div class="text"><p>${postAnswer.body}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </c:forEach>
+                    </c:if>
+                    <c:if test="${fn:length(postAnswers) <= 10}">
+                        <c:forEach var="postAnswer" items="${postAnswers}">
                         <li class="comment">
                             <div class="comment-body comment-body-answered clearfix">
                                 <div class="avatar"><img alt=""
@@ -272,11 +312,14 @@
                             </div>
                         </li>
                     </c:forEach>
+                    </c:if>
                 </ol>
                 <!-- End commentlist -->
             </div>
+            <c:if test="${fn:length(postAnswers) > 10}">
+            <div><a class="post-read-more button color small" style="margin-bottom: 20px;" id="loadMore">Continue reading</a></div>
+            </c:if>
             <!-- End page-content -->
-
 
         </div>
         <!-- End main -->
@@ -406,63 +449,67 @@
     }
     // Connect to server via websocket
     stompClient.connect("guest", "guest", connectCallback, errorCallback);
-
+    var answerFlag = function(e){
+        if($(e).hasClass('acceptAnswer')) {
+            var acceptAnswer = $(e);
+            var unacceptAnswer = $('.unacceptAnswer')
+            var idUnaccept = unacceptAnswer.prev('input').val();
+            var id =  $(e).prev('input').val();
+            var url = "/post/acceptAnswer";
+            var acceptAnswerDto = {id: id, idUnaccept: idUnaccept};
+            $.ajax({
+                type: "POST",
+                url: url,
+                data : acceptAnswerDto,
+                success: function (data) {
+                    if(data != "NG" ){
+                        var iconDivUn ='#answerIcon'+idUnaccept;
+                        $(iconDivUn).empty();
+                        $(unacceptAnswer).removeClass('unacceptAnswer')
+                        $(unacceptAnswer).addClass('acceptAnswer')
+                        $(unacceptAnswer).text('Accept')
+                        $(acceptAnswer).removeClass('acceptAnswer')
+                        $(acceptAnswer).addClass('unacceptAnswer')
+                        var iconDiv ='#answerIcon'+id;
+                        $(iconDiv).prepend('<i class="icon-ok"></i>')
+                        $(acceptAnswer).text('Unaccept')
+                    } else {
+                        console.log("Error");
+                    }
+                }
+            });
+        } else {
+            var acceptAnswer = $(e);
+            var id =  $(e).prev('input').val();
+            var url = "/post/removeAcceptAnswer/"+id;
+            $.ajax({
+                type: "POST",
+                url: url,
+                success: function (data) {
+                    if(data != "NG" ){
+                        $(acceptAnswer).removeClass('unacceptAnswer')
+                        $(acceptAnswer).addClass('acceptAnswer')
+                        var iconDiv ='#answerIcon'+id;
+                        $(iconDiv).empty();
+                        $(acceptAnswer).text('Accept')
+                    } else {
+                        console.log("Error");
+                    }
+                }
+            });
+        }
+    };
     $(document).ready(function () {
-        $('.answerFlag').click(function (e) {
-            if($(this).hasClass('acceptAnswer')) {
-                var acceptAnswer = $(this);
-                var unacceptAnswer = $('.unacceptAnswer')
-                var idUnaccept = unacceptAnswer.prev('input').val();
-                var id =  $(this).prev('input').val();
-                var url = "/post/acceptAnswer";
-                var acceptAnswerDto = {id: id, idUnaccept: idUnaccept};
-                $.ajax({
-                    type: "POST",
-                    url: url,
-                    data : acceptAnswerDto,
-                    success: function (data) {
-                        if(data != "NG" ){
-                            var iconDivUn ='#answerIcon'+idUnaccept;
-                            $(iconDivUn).empty();
-                            $(unacceptAnswer).removeClass('unacceptAnswer')
-                            $(unacceptAnswer).addClass('acceptAnswer')
-                            $(unacceptAnswer).text('Accept')
-                            $(acceptAnswer).removeClass('acceptAnswer')
-                            $(acceptAnswer).addClass('unacceptAnswer')
-                            var iconDiv ='#answerIcon'+id;
-                            $(iconDiv).prepend('<i class="icon-ok"></i>')
-                            $(acceptAnswer).text('Unaccept')
-                        } else {
-                            console.log("Error");
-                        }
-                    }
-                });
-            } else {
-                var acceptAnswer = $(this);
-                var id =  $(this).prev('input').val();
-                var url = "/post/removeAcceptAnswer/"+id;
-                $.ajax({
-                    type: "POST",
-                    url: url,
-                    success: function (data) {
-                        if(data != "NG" ){
-                            $(acceptAnswer).removeClass('unacceptAnswer')
-                            $(acceptAnswer).addClass('acceptAnswer')
-                            var iconDiv ='#answerIcon'+id;
-                            $(iconDiv).empty();
-                            $(acceptAnswer).text('Accept')
-                        } else {
-                            console.log("Error");
-                        }
-                    }
-                });
-            }
-        });
+
+        var page = 2;
+//        $('.answerFlag').delegate('click',function (e) {
+//
+//        });
+
         $('#wantAnswer').click(function (e) {
             if($('#wantAnswer').hasClass('wantAnswerId')) {
             var postId = ${post.id}
-            var userId = ${sessionScope.user.id}
-            var wantAnswerDto  = {postId: postId, userId: userId};
+            var wantAnswerDto  = {postId: postId};
             var url = "/post/wantAnswer"
                 $.ajax({
                 type: "POST",
@@ -507,7 +554,143 @@
                 });
             }
         });
+        $('#loadMore').click(function (e) {
+            var url = "/post/view/${post.id}/"+page;
+            $.ajax({
+                type : "GET",
+                url : url,
+                success : function(data) {
+                    var post = new Array();
+                    post = data;
+                    var postOwnerId = ${post.ownerUserId.id}
+                    var userId =$('#userIdFlag').val()
+                    var length = post.length;
+                    if(length > 10) {
+                        length = post.length-1;
+                    } else {
+                        $('#loadMore').hide();
+                    }
+                    for(var i = 0 ; i < post.length-1 ; i++ ) {
+                        if(postOwnerId==userId) {
+                            if(post[i].acceptedAnswerId==1) {
+                                $('#commentListDetail').append('<li class="comment">'+
+                                        '<div class="comment-body comment-body-answered clearfix">'+
+                                        '<div class="avatar"><img alt=""'+
+                                        'src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg">'+
+                                        '</div>'+
+                                        '<div class="comment-text">'+
+                                        '<div class="author clearfix"  style="display: flex">'+
+                                        '<div style="width: 30%">'+
+                                        '<div class="comment-author"><a href="#">' + post[i].ownerName +'</a>'+
+                                        '</div>'+
+                                        '<div class="comment-meta">'+
+                                        '<div class="date"><i class="icon-time"></i>' + post[i].lastEditedDate +'</div>' +
+                                        '</div>' +
+                                        '</div>' +
+                                        '<div class="acceptAnswerIcon" id="answerIcon' + post[i].id +'">'+
+                                        '<i class="icon-ok"></i>' +
+                                        '</div>' +
+                                        '<div style="width: 75%">' +
+                                        '<input type="hidden" name="postAnswerId" value="' + post[i].id +'">' +
+                                        '<a class="button small color unacceptAnswer answerFlag" style="float: right" onclick="answerFlag(this)">Unaccept</a>'+
+                                        '</div>' +
+                                        '</div>' +
+                                        '<div class="text"><p>' + post[i].body +'</p>' +
+                                        '</div>' +
+                                        '</div>' +
+                                        '</div>' +
+                                        '</li>');
+                            } else {
+                                $('#commentListDetail').append('<li class="comment">'+
+                                        '<div class="comment-body comment-body-answered clearfix">'+
+                                        '<div class="avatar"><img alt=""'+
+                                        'src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg">'+
+                                        '</div>'+
+                                        '<div class="comment-text">'+
+                                        '<div class="author clearfix"  style="display: flex">'+
+                                        '<div style="width: 30%">'+
+                                        '<div class="comment-author"><a href="#">' + post[i].ownerName +'</a>'+
+                                        '</div>'+
+                                        '<div class="comment-meta">'+
+                                        '<div class="date"><i class="icon-time"></i>' + post[i].lastEditedDate +'</div>' +
+                                        '</div>' +
+                                        '</div>' +
+                                        '<div class="acceptAnswerIcon" id="answerIcon' + post[i].id +'">'+
+                                        '</div>' +
+                                        '<div style="width: 75%">' +
+                                        '<input type="hidden" name="postAnswerId" value="' + post[i].id +'">' +
+                                        '<a class="button small color acceptAnswer answerFlag" style="float: right" onclick="answerFlag(this)">Accept</a>'+
+                                        '</div>' +
+                                        '</div>' +
+                                        '<div class="text"><p>' + post[i].body +'</p>' +
+                                        '</div>' +
+                                        '</div>' +
+                                        '</div>' +
+                                        '</li>');
+                            }
 
+                        } else {
+                            if(post[i].acceptedAnswerId==1) {
+                                $('#commentListDetail').append('<li class="comment">'+
+                                        '<div class="comment-body comment-body-answered clearfix">'+
+                                        '<div class="avatar"><img alt=""'+
+                                        'src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg">'+
+                                        '</div>'+
+                                        '<div class="comment-text">'+
+                                        '<div class="author clearfix"  style="display: flex">'+
+                                        '<div style="width: 30%">'+
+                                        '<div class="comment-author"><a href="#">' + post[i].ownerName +'</a>'+
+                                        '</div>'+
+                                        '<div class="comment-meta">'+
+                                        '<div class="date"><i class="icon-time"></i>' + post[i].lastEditedDate +'</div>' +
+                                        '</div>' +
+                                        '</div>' +
+                                        '<div class="acceptAnswerIcon" id="answerIcon' + post[i].id +'">'+
+                                        '<i class="icon-ok"></i>' +
+                                        '</div>' +
+                                        '<div style="width: 75%">' +
+                                        '<input type="hidden" name="postAnswerId" value="' + post[i].id +'">' +
+                                        '</div>' +
+                                        '</div>' +
+                                        '<div class="text"><p>' + post[i].body +'</p>' +
+                                        '</div>' +
+                                        '</div>' +
+                                        '</div>' +
+                                        '</li>');
+                            } else {
+                                $('#commentListDetail').append('<li class="comment">'+
+                                        '<div class="comment-body comment-body-answered clearfix">'+
+                                        '<div class="avatar"><img alt=""'+
+                                        'src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg">'+
+                                        '</div>'+
+                                        '<div class="comment-text">'+
+                                        '<div class="author clearfix"  style="display: flex">'+
+                                        '<div style="width: 30%">'+
+                                        '<div class="comment-author"><a href="#">' + post[i].ownerName +'</a>'+
+                                        '</div>'+
+                                        '<div class="comment-meta">'+
+                                        '<div class="date"><i class="icon-time"></i>' + post[i].lastEditedDate +'</div>' +
+                                        '</div>' +
+                                        '</div>' +
+                                        '<div class="acceptAnswerIcon" id="answerIcon' + post[i].id +'">'+
+                                        '</div>' +
+                                        '<div style="width: 75%">' +
+                                        '<input type="hidden" name="postAnswerId" value="' + post[i].id +'">' +
+                                        '</div>' +
+                                        '</div>' +
+                                        '<div class="text"><p>' + post[i].body +'</p>' +
+                                        '</div>' +
+                                        '</div>' +
+                                        '</div>' +
+                                        '</li>');
+                            }
+                        }
+
+                    }
+                    page++;
+                }
+            });
+        });
         MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         $('#submit').click(function (e) {
             e.preventDefault();
