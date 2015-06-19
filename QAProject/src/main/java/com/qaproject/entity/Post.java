@@ -35,7 +35,7 @@ public class Post {
     private Date lastEditedDate;
     @Column(name = "ReplyCount")
     private Integer replyCount;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "postId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "postId",orphanRemoval = true)
     private List<TagPost> tagPostList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "postId")
     private List<PostInvitation> postInvitationList;

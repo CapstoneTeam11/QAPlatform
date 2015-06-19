@@ -55,7 +55,7 @@ public class User {
     @JoinColumn(name = "CategoryId", referencedColumnName = "Id")
     @ManyToOne
     private Category categoryId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId",fetch = FetchType.LAZY,orphanRemoval = true)
     private List<TagUser> tagUserList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
     private List<WantAnswerPost> wantAnswerPost;

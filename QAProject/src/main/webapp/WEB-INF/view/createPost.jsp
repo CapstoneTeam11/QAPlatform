@@ -1,3 +1,5 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -126,6 +128,7 @@
             <div class="col-md-9">
 
                 <div class="page-content ask-question">
+                    <c:if test="${post==null}">
                     <div class="boxedtitle page-title"><h2>Create post</h2></div>
 
                     <div class="form-style form-style-3" id="question-submit">
@@ -193,6 +196,77 @@
                             </p>
                         </form>
                     </div>
+                    </c:if>
+                    <c:if test="${post!=null}">
+                        <div class="boxedtitle page-title"><h2>Create post</h2></div>
+
+                        <div class="form-style form-style-3" id="question-submit">
+                            <form method="post" action="/post/update">
+                                <input type="hidden" name="id" value="${post.id}">
+                                <c:forEach var="tag" items="${post.tagPostList}">
+                                    <input type="hidden" name="tagUpdateId" value="${tag.tagId.id}">
+                                    <input type="hidden" name="tagUpdateName" value="${tag.tagId.tagName}">
+                                </c:forEach>
+                                <div>
+                                    <p>
+                                        <label class="required">Title<span>*</span></label>
+                                        <input type="text" id="question-title" name="postName" value="${post.title}">
+                                        <span class="form-description">Please choose an appropriate title for the question to answer it even easier .</span>
+                                    </p>
+
+                                    <div style="display: flex;height: 42px;">
+                                        <p style="width: 18% !important;">
+                                            <label class="required">Tag<span>*</span></label>
+                                        </p>
+
+                                        <div style="width: 82%">
+                                            <input type="text" class="input" name="tag" id="tagsuggest"/>
+                                        </div>
+                                        <div id="hiddenTag"></div>
+                                    </div>
+                                        <%--<input type="text" class="input" name="question_tags" id="question_tags" data-seperator=",">--%>
+                                    <p>
+                                    <span class="form-description">Please choose  suitable Keywords Ex : <span
+                                            class="color">java , javascript</span> .</span>
+                                    </p>
+
+                                    <p>
+                                        <label class="required">Type<span>*</span></label>
+									<span class="styled-select" >
+										<select name="postType">
+                                            <option value="">Select a type</option>
+                                            <c:if test="${post.postType==1}">
+                                            <option value="1" selected>Question</option>
+                                                <option value="2">Article</option>
+                                            </c:if>
+                                            <c:if test="${post.postType==2}">
+                                                <option value="1">Question</option>
+                                                <option value="2" selected>Article</option>
+                                            </c:if>
+                                        </select>
+									</span>
+                                        <span class="form-description">Please choose the appropriate section so easily search for your question .</span>
+                                    </p>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="required">Details<span>*</span></label>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <div id="form-textarea">
+                                            <textarea id="question-details" aria-required="true" cols="58"
+                                                      rows="8">${post.body}</textarea>
+                                        </div>
+                                        <input type="hidden" name="postDetail" id="postDetail">
+                                    </div>
+                                </div>
+                                <p class="form-submit">
+                                    <input type="submit" id="publish-question" value="Save"
+                                           class="button color small submit">
+                                </p>
+                            </form>
+                        </div>
+                    </c:if>
                 </div>
                 <!-- End page-content -->
             </div>
@@ -202,8 +276,7 @@
                     <h3 class="widget_title">About class</h3>
                     <ul class="related-posts">
                         <li class="related-item">
-                            <p>This is introductio about class. This is introductio about class.
-                                This is introductio about class. </p>
+                            <p>${post.ownerClassId.classroomDescription}</p>
 
                             <div class="clear"></div>
                             <span>Feb 22, 2014</span>
@@ -224,23 +297,23 @@
                                 <a href="#"><img width="60" height="60"
                                                  src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" alt=""></a>
                             </div>
-                            <h6><a href="#">Mr. Thang</a></h6>
-                            <span class="comment">This is short instroduction of this teacher</span>
+                            <h6><a href="#">${post.ownerClassId.ownerUserId.displayName}</a></h6>
+                            <span class="comment">${post.ownerClassId.ownerUserId.aboutMe}</span>
                         </li>
                     </ul>
                 </div>
 
-                <div class="widget widget_tag_cloud">
-                    <h3 class="widget_title">Tags</h3>
-                    <a href="#">projects</a>
-                    <a href="#">Portfolio</a>
-                    <a href="#">Wordpress</a>
-                    <a href="#">Html</a>
-                    <a href="#">Css</a>
-                    <a href="#">jQuery</a>
-                    <a href="#">2code</a>
-                    <a href="#">vbegy</a>
-                </div>
+                <%--<div class="widget widget_tag_cloud">--%>
+                    <%--<h3 class="widget_title">Tags</h3>--%>
+                    <%--<a href="#">projects</a>--%>
+                    <%--<a href="#">Portfolio</a>--%>
+                    <%--<a href="#">Wordpress</a>--%>
+                    <%--<a href="#">Html</a>--%>
+                    <%--<a href="#">Css</a>--%>
+                    <%--<a href="#">jQuery</a>--%>
+                    <%--<a href="#">2code</a>--%>
+                    <%--<a href="#">vbegy</a>--%>
+                <%--</div>--%>
 
             </aside>
             <!-- End sidebar -->
@@ -297,6 +370,7 @@
 <script src="/resource/assets/js/bootstrapValidator.js"></script>
 <script src="/resource/assets/js/validator.js"></script>
 <script src="/resource/assets/js/handlebars-v3.0.3.js"></script>
+<c:if test="${post==null}">
 <script>
     $(document).ready(function () {
         $('#publish-question').click(function (e) {
@@ -352,6 +426,85 @@
         $('#tagsuggest').tagsinput('add', { id: Math.round((Math.random()*10000))*-1, name: $('.tt-input').val() });
     };
 </script>
+</c:if>
+<c:if test="${post!=null}">
+    <script>
+        $(document).ready(function () {
+            $('#publish-question').click(function (e) {
+                var detail = CKEDITOR.instances['question-details'].getData()
+                var postDetail = $('#postDetail')
+                postDetail.val(detail) ;
+                $('#question-submit').submit();
+            });
+
+            CKEDITOR.replace('question-details');
+            var tag = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: 'http://localhost:8080/tag/%QUERY'
+                }
+            });
+            tag.initialize();
+            elt = $('#tagsuggest');
+            var hiddenTag = $('#hiddenTag');
+            elt.tagsinput({
+                itemValue: 'id',
+                itemText: 'name',
+                typeaheadjs: {
+                    name: 'tag',
+                    displayKey: 'name',
+                    source: tag.ttAdapter(),
+                    templates: {
+                        empty: [
+                            '<div style="display: flex"><span class="unableFind"> unable to find tag</span> <span><a class="button color small" id="createTag" onclick="createTag()" style="margin-left: 5px">Create Now</a></span></div>'
+                        ].join('\n'),
+                        suggestion: Handlebars.compile('<div><span style="white-space: nowrap">{{name}}</span></div>')
+                    }
+                }
+            });
+            elt.on('itemAdded', function (event) {
+                var idTag = event.item.id;
+                if(idTag < 0) {
+                    var name = event.item.name;
+                    hiddenTag.append("<input type='hidden' name='newTag' value=" + name + " id=tag" + idTag + ">");
+                } else {
+                    hiddenTag.append("<input type='hidden' name='tagId' value=" + idTag + " id=tag" + idTag + ">");
+                }
+            });
+            elt.on('itemRemoved', function (event) {
+                var tagId = "#tag" + event.item.id;
+                $(tagId).remove();
+            });
+            var tagIdUpdate = new Array();
+            $("input[name=tagUpdateId]").each(function() {
+                tagIdUpdate.push($(this).val());
+            });
+            var tagNameUpdate = new Array();
+            $("input[name=tagUpdateName]").each(function() {
+                tagNameUpdate.push($(this).val());
+            });
+            for(var i = 0 ; i < tagIdUpdate.length ; i++) {
+                elt.tagsinput('add', { id: tagIdUpdate[i], name: tagNameUpdate[i] });
+            }
+
+        });
+        var createTag = function(e){
+            var flag = 0;
+            for( var i = 0 ; i < elt.tagsinput('items').length ; i ++) {
+                if($('.tt-input').val()==elt.tagsinput('items')[i].name) {
+                    flag = 1;
+                }
+            }
+            if(flag==0) {
+            $('#tagsuggest').tagsinput('add', { id: Math.round((Math.random()*10000))*-1, name: $('.tt-input').val() });
+            $('.tt-input').val("");
+            }
+        };
+    </script>
+
+</c:if>
+
 <!-- End js -->
 
 </body>

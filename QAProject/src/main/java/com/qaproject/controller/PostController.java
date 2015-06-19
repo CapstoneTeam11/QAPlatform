@@ -112,6 +112,23 @@ public class PostController {
         model.addAttribute("classId", id);
         return "createPost";
     }
+    @RequestMapping(value = "/post/update/{id}", method = RequestMethod.GET)
+    public String updateDispath(@PathVariable Integer id, ModelMap model) {
+        Post post = postDao.find(id);
+        User user = (User) session.getAttribute("user");
+        //validate authorize
+        if(post==null) {
+            return "error";
+        }
+        if(user==null) {
+            return "/";
+        }
+        if(post.getOwnerUserId().getId()!=user.getId()) {
+            return "403";
+        }
+        model.addAttribute("post",post);
+        return "createPost";
+    }
 
     @RequestMapping(value = "/post/create", method = RequestMethod.POST)
     public String create(@RequestParam Integer classId,
@@ -163,6 +180,56 @@ public class PostController {
         }
         post.getTagPostList().addAll(tagPosts);
         postDao.persist(post);
+        return "redirect:/post/view/" + post.getId();
+    }
+
+
+    @RequestMapping(value = "/post/update", method = RequestMethod.POST)
+    public String update(@RequestParam Integer id,
+                         @RequestParam List<Integer> tagId,
+                         @RequestParam(required = false) List<String> newTag,
+                         @RequestParam String postName,
+                         @RequestParam Integer postType,
+                         @RequestParam String postDetail,
+                         ModelMap model) {
+        //Check is User
+        User user = (User) session.getAttribute("user");
+        Post post  = postDao.find(id);
+        if (user == null) {
+            return "redirect:/";
+        }
+        if(post==null) {
+            return "404";
+        }
+        post.setTitle(postName);
+        post.setPostType(postType);
+        post.setBody(postDetail);
+        post.setViewer(0);
+        post.setAcceptedAnswerId(0);
+        post.setParentId(0);
+        post.setLastEditedDate(new Date());
+        //Create List TagPost
+        List<TagPost> tagPosts = new ArrayList<TagPost>();
+        for (int i = 0; i < tagId.size(); i++) {
+            TagPost tagPost = new TagPost();
+            tagPost.setPostId(post);
+            tagPost.setTagId(tagDao.find(tagId.get(i)));
+            tagPosts.add(tagPost);
+        }
+        if (newTag != null) {
+            for (int i = 0; i < newTag.size(); i++) {
+                TagPost tagPost = new TagPost();
+                tagPost.setPostId(post);
+                Tag tag = new Tag();
+                tag.setTagName(newTag.get(i));
+                tagDao.persist(tag);
+                tagPost.setTagId(tag);
+                tagPosts.add(tagPost);
+            }
+        }
+        post.getTagPostList().clear();
+        post.getTagPostList().addAll(tagPosts);
+        postDao.merge(post);
         return "redirect:/post/view/" + post.getId();
     }
 
