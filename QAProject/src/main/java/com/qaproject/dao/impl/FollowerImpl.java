@@ -33,7 +33,7 @@ public class FollowerImpl extends BaseDao<Follower,Integer> implements FollowerD
     }
 
     @Override
-    public List<Follower> findByFollowerUser(User user) {
+    public List<Follower> findByFollower(User user) {
         Query query = entityManager.createQuery("Select f from Follower f where f.followerId=:user");
         query.setParameter("user",user);
         List<Follower> followers = null;
