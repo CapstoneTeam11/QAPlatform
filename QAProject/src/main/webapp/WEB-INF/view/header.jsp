@@ -38,7 +38,7 @@
                         <ul style="overflow: hidden; height: auto; padding-top: 0px; margin-top: 0px; padding-bottom: 0px; margin-bottom: 0px; display: none;">
                             <li><a href="/dashboard">Dashboard</a></li>
                             <li><a href="/material">Material</a></li>
-                            <li><a href="/profile">Profile</a></li>
+                            <li><a href="/profile/view/${sessionScope.user.id}">Profile</a></li>
                             <li><a href="/logout">Logout</a></li>
                         </ul>
                     </li>

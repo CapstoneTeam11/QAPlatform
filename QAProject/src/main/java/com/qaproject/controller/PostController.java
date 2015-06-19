@@ -64,6 +64,11 @@ public class PostController {
      public String view(@PathVariable Integer id, ModelMap model) {
         //check if not parent Post return 404.
         Post post = postDao.find(id);
+
+        if (post==null || post.getParentId()!=0) {
+            return "404";
+        }
+
         User user = (User) session.getAttribute("user");
         //get related postId - MinhKH
         List<Integer> tagIds = new ArrayList<Integer>();

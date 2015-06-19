@@ -13,6 +13,7 @@ public class ClassDto {
     private String categoryId;
     private String classDescription;
     private List<String> studentList;
+    private int id;
 
     public ClassDto(String className, List<String> tagList, String categoryId, String classDescription, List<String> studentList) {
         this.className = className;
@@ -60,5 +61,13 @@ public class ClassDto {
 
     public void setStudentList(List<String> studentList) {
         this.studentList = studentList;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

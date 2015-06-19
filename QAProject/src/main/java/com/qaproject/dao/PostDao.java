@@ -19,6 +19,7 @@ public interface PostDao {
     public Post find(Integer id);
     public List<Post> findPostChilds(Integer id,Integer page);
     public List<Post> findQuestionsByOwnerUser(User ownerUser);
+    public List<Post> findArticlesByOwnerUser(User ownerUser);
     public List<Post> findRepliesByParentId(Integer parentId);
     public List<Post> findQuestionByOwnerClassroom(Classroom ownerClassroom);
     public List<PostDto> loadMoreAnswer(Integer id,Integer page);

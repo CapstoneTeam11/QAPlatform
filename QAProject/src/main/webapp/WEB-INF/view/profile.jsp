@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: Minh
@@ -55,57 +56,6 @@
 
 <div id="wrap">
 
-<div class="panel-pop" id="signup">
-    <h2>Register Now<i class="icon-remove"></i></h2>
-    <div class="form-style form-style-3">
-        <form>
-            <div class="form-inputs clearfix">
-                <p>
-                    <label class="required">Username<span>*</span></label>
-                    <input type="text">
-                </p>
-                <p>
-                    <label class="required">E-Mail<span>*</span></label>
-                    <input type="email">
-                </p>
-                <p>
-                    <label class="required">Password<span>*</span></label>
-                    <input type="password" value="">
-                </p>
-                <p>
-                    <label class="required">Confirm Password<span>*</span></label>
-                    <input type="password" value="">
-                </p>
-            </div>
-            <p class="form-submit">
-                <input type="submit" value="Signup" class="button color small submit">
-            </p>
-        </form>
-    </div>
-</div><!-- End signup -->
-
-<div class="panel-pop" id="lost-password">
-    <h2>Lost Password<i class="icon-remove"></i></h2>
-    <div class="form-style form-style-3">
-        <p>Lost your password? Please enter your username and email address. You will receive a link to create a new password via email.</p>
-        <form>
-            <div class="form-inputs clearfix">
-                <p>
-                    <label class="required">Username<span>*</span></label>
-                    <input type="text">
-                </p>
-                <p>
-                    <label class="required">E-Mail<span>*</span></label>
-                    <input type="email">
-                </p>
-            </div>
-            <p class="form-submit">
-                <input type="submit" value="Reset" class="button color small submit">
-            </p>
-        </form>
-        <div class="clearfix"></div>
-    </div>
-</div><!-- End lost-password -->
 
 <%@include file="header.jsp" %>
 <div class="breadcrumbs" style="margin-top: 86px">
@@ -125,16 +75,34 @@
         <div class="user-profile">
             <div class="col-md-12">
                 <div class="page-content">
-                    <h2>About user</h2>
+                    <h2>About ${userProfile.displayName}</h2>
+                    <c:if test="${sessionScope.user.id==userProfile.id}">
+                        <a class="comment-reply" href="#" style="margin-right: 10px;">
+                            <i class="icon-pencil"></i>Edit profile
+                        </a>
+                    </c:if>
+                    <c:if test="${userProfile.roleId.id==2 and sessionScope.user.id!=userProfile.id and !isFollow}">
+                        <div id="follow"><a class="question-report" href="javascript:followTeacher(${userProfile.id});" style="margin-right: 20px;">Follow</a></div>
+                    </c:if>
+                    <c:if test="${isFollow}">
+                        <div id="follow"><a class="question-report" href="javascript:unfollowTeacher(${userProfile.id});" style="margin-right: 20px;">Unfollow</a></div>
+                    </c:if>
                     <div class="user-profile-img"><img width="60" height="60" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" alt="admin"></div>
                     <div class="ul_list ul_list-icon-ok about-user">
                         <ul>
-                            <li id="follow"><i class="icon-user"></i>Teacher :<a href="javascript:followTeacher(1);">Follow</a></li>
-                            <li><i class="icon-book"></i>Professional : <span>Information Technology</span></li>
-                            <li><i class="icon-plus"></i>Registerd : <span>Jan 10, 2014</span></li>
+                            <li><i class="icon-user"></i>Type : ${userProfile.roleId.roleName}</li>
+                            <li><i class="icon-book"></i>Know about : <span>${userProfile.categoryId.categoryName}</span></li>
+                            <li><i class="icon-plus"></i>Registered : <span>${userProfile.creationDate}</span></li>
                         </ul>
                     </div>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi adipiscing gravida odio, sit amet suscipit risus ultrices eu. Fusce viverra neque at purus laoreet consequat. Vivamus vulputate posuere nisl quis consequat. Donec congue commodo mi, sed commodo velit fringilla ac. Fusce placerat venenatis mi. Pellentesque habitant morbi tristique senectus et netus et malesuada .</p>
+                    <p>
+                        <c:if test="${not empty userProfile.aboutMe}">
+                            ${userProfile.aboutMe}
+                        </c:if>
+                        <c:if test="${empty userProfile.aboutMe}">
+                            ${userProfile.displayName} have not introduced about him or her yet.
+                        </c:if>
+                    </p>
                     <div class="clearfix"></div>
                 </div><!-- End page-content -->
             </div><!-- End col-md-12 -->
@@ -145,153 +113,101 @@
         <ul class="tabs">
             <li class="tab"><a href="#" class="current">Questions</a></li>
             <li class="tab"><a href="#">Articles</a></li>
-            <li class="tab"><a href="#">Class</a></li>
+            <c:if test="${userProfile.roleId.id==1}">
+                <li class="tab"><a href="#">Joined Classrooms</a></li>
+            </c:if>
+            <c:if test="${userProfile.roleId.id==2}">
+                <li class="tab"><a href="#">Owned Classrooms</a></li>
+            </c:if>
+
         </ul>
         <div class="tab-inner-warp">
             <div class="tab-inner">
-                <article class="question question-type-normal">
-                    <h2>
-                        <a href="/question">This is my first Question</a>
-                    </h2>
-                    <div class="question-author">
-                        <a href="#" original-title="ahmed" class="question-author-img tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>
+                <c:if test="${not empty questions}">
+                    <c:forEach var="question" items="${questions}">
+                        <article class="question question-type-normal">
+                            <h2>
+                                <a href="/post/view/${question.id}">${question.title}</a>
+                            </h2>
+                            <div class="question-author">
+                                <a href="/profile/view/${question.ownerUserId.id}" original-title="${question.ownerUserId.displayName}" class="question-author-img tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>
+                            </div>
+                            <div class="question-inner">
+                                <div class="clearfix"></div>
+                                <div class="question-desc short-text">${question.body}</div>
+                                <div class="question-details">
+                                                <span class="question-answered question-answered-done">
+                                                    <c:if test="${question.acceptedAnswerId} != null">
+                                                        <i class="icon-ok"></i>Resolved
+                                                    </c:if>
+                                                </span>
+                                </div>
+                                <span class="question-date"><i class="icon-time"></i>${question.lastEditedDate}</span>
+                                <span class="question-category"><a href="/classroom/${question.ownerClassId.id}"><i class="icon-group"></i>Class: ${question.ownerClassId.classroomName}</a></span>
+                                <span class="question-comment"><a href="#"><i class="icon-comment"></i>0 Answer(s)</a></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </article>
+                    </c:forEach>
+                    <a href="#" class="post-read-more button color small" style="margin-bottom: 5px;">Continue reading</a>
+                </c:if>
+                <c:if test="${empty questions}">
+                    <div class="about-author clearfix" id="no-question">
+                        No question.
                     </div>
-                    <div class="question-inner">
-                        <div class="clearfix"></div>
-                        <p class="question-desc">Duis dapibus aliquam mi, eget euismod sem scelerisque ut. Vivamus at elit quis urna adipiscing iaculis. Curabitur vitae velit in neque dictum blandit. Proin in iaculis neque. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur vitae velit in neque dictum blandit.</p>
-                        <div class="question-details">
-                            <span class="question-answered question-answered-done"><i class="icon-ok"></i>solved</span>
-                        </div>
-                        <span class="question-date"><i class="icon-time"></i>4 mins ago</span>
-                        <span class="question-category"><a href="#"><i class="icon-group"></i>Class: Advance Java</a></span>
-                        <span class="question-comment"><a href="#"><i class="icon-comment"></i>5 Answer</a></span>
-                        <div class="clearfix"></div>
-                    </div>
-                </article>
-                <article class="question question-type-normal">
-                    <h2>
-                        <a href="/question">This is my 2nd Question</a>
-                    </h2>
-                    <div class="question-author">
-                        <a href="#" original-title="ahmed" class="question-author-img tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>
-                    </div>
-                    <div class="question-inner">
-                        <div class="clearfix"></div>
-                        <p class="question-desc">Duis dapibus aliquam mi, eget euismod sem scelerisque ut. Vivamus at elit quis urna adipiscing iaculis. Curabitur vitae velit in neque dictum blandit. Proin in iaculis neque. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur vitae velit in neque dictum blandit.</p>
-                        <div class="question-details">
-                            <span class="question-answered question-answered-done"><i class="icon-ok"></i>solved</span>
-                        </div>
-                        <span class="question-date"><i class="icon-time"></i>4 mins ago</span>
-                        <span class="question-category"><a href="#"><i class="icon-group"></i>Class: Advance Java</a></span>
-                        <span class="question-comment"><a href="#"><i class="icon-comment"></i>5 Answer</a></span>
-                        <div class="clearfix"></div>
-                    </div>
-                </article>
-                <article class="question question-type-normal">
-                    <h2>
-                        <a href="/question">This is my 3rd Question</a>
-                    </h2>
-                    <div class="question-author">
-                        <a href="#" original-title="ahmed" class="question-author-img tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>
-                    </div>
-                    <div class="question-inner">
-                        <div class="clearfix"></div>
-                        <p class="question-desc">Duis dapibus aliquam mi, eget euismod sem scelerisque ut. Vivamus at elit quis urna adipiscing iaculis. Curabitur vitae velit in neque dictum blandit. Proin in iaculis neque. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur vitae velit in neque dictum blandit.</p>
-                        <div class="question-details">
-                            <span class="question-answered question-answered-done"><i class="icon-ok"></i>solved</span>
-                        </div>
-                        <span class="question-date"><i class="icon-time"></i>4 mins ago</span>
-                        <span class="question-category"><a href="#"><i class="icon-group"></i>Class: Advance Java</a></span>
-                        <span class="question-comment"><a href="#"><i class="icon-comment"></i>5 Answer</a></span>
-                        <div class="clearfix"></div>
-                    </div>
-                </article>
-                <a href="#" class="post-read-more button color small" style="margin-bottom: 20px;">Continue reading</a>
+                </c:if>
             </div>
         </div>
         <div class="tab-inner-warp">
             <div class="tab-inner">
-                <article class="post clearfix">
-                    <div class="post-inner">
-                        <h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a href="/article">Post Without Image.</a></h2>
-                        <div class="post-meta">
-                            <span class="meta-author"><i class="icon-user"></i><a href="#">Teacher: Mr.Thang</a></span>
-                            <span class="meta-date"><i class="icon-time"></i>September 30 , 2013</span>
-                            <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">15 comments</a></span>
-                            <span class="question-category"><a href="#"><i class="icon-group"></i>Class: Advance Java</a></span>
-                        </div>
-                        <div class="post-content">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi adipiscing gravida odio, sit amet suscipit risus ultrices eu. Fusce viverra neque at purus laoreet consequat. Vivamus vulputate posuere nisl quis consequat. Donec congue commodo mi, sed commodo velit fringilla ac. Fusce placerat venenatis mi.</p>
-                        </div><!-- End post-content -->
-                    </div><!-- End post-inner -->
-                </article>
-                <article class="post clearfix">
-                    <div class="post-inner">
-                        <h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a href="/article">Post Without Image.</a></h2>
-                        <div class="post-meta">
-                            <span class="meta-author"><i class="icon-user"></i><a href="#">Teacher: Mr.Thang</a></span>
-                            <span class="meta-date"><i class="icon-time"></i>September 30 , 2013</span>
-                            <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">15 comments</a></span>
-                            <span class="question-category"><a href="#"><i class="icon-group"></i>Class: Advance Java</a></span>
-                        </div>
-                        <div class="post-content">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi adipiscing gravida odio, sit amet suscipit risus ultrices eu. Fusce viverra neque at purus laoreet consequat. Vivamus vulputate posuere nisl quis consequat. Donec congue commodo mi, sed commodo velit fringilla ac. Fusce placerat venenatis mi.</p>
-                        </div><!-- End post-content -->
-                    </div><!-- End post-inner -->
-                </article>
-                <article class="post clearfix">
-                    <div class="post-inner">
-                        <h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a href="/article">Post Without Image.</a></h2>
-                        <div class="post-meta">
-                            <span class="meta-author"><i class="icon-user"></i><a href="#">Teacher: Mr.Thang</a></span>
-                            <span class="meta-date"><i class="icon-time"></i>September 30 , 2013</span>
-                            <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">15 comments</a></span>
-                            <span class="question-category"><a href="#"><i class="icon-group"></i>Class: Advance Java</a></span>
-                        </div>
-                        <div class="post-content">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi adipiscing gravida odio, sit amet suscipit risus ultrices eu. Fusce viverra neque at purus laoreet consequat. Vivamus vulputate posuere nisl quis consequat. Donec congue commodo mi, sed commodo velit fringilla ac. Fusce placerat venenatis mi.</p>
-                        </div><!-- End post-content -->
-                    </div><!-- End post-inner -->
-                </article>
-                <article class="post clearfix">
-                    <div class="post-inner">
-                        <h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a href="/article">Post Without Image.</a></h2>
-                        <div class="post-meta">
-                            <span class="meta-author"><i class="icon-user"></i><a href="#">Teacher: Mr.Thang</a></span>
-                            <span class="meta-date"><i class="icon-time"></i>September 30 , 2013</span>
-                            <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">15 comments</a></span>
-                            <span class="question-category"><a href="#"><i class="icon-group"></i>Class: Advance Java</a></span>
-                        </div>
-                        <div class="post-content">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi adipiscing gravida odio, sit amet suscipit risus ultrices eu. Fusce viverra neque at purus laoreet consequat. Vivamus vulputate posuere nisl quis consequat. Donec congue commodo mi, sed commodo velit fringilla ac. Fusce placerat venenatis mi.</p>
-                        </div><!-- End post-content -->
-                    </div><!-- End post-inner -->
-                </article>
-                <a href="#" class="post-read-more button color small" style="margin-bottom: 20px;">Continue reading</a>
+                <c:if test="${not empty articles}">
+                    <c:forEach var="article" items="${articles}">
+                        <article class="post clearfix">
+                            <div class="post-inner">
+                                <h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a href="/post/view/${article.id}">${article.title}</a></h2>
+                                <div class="post-meta">
+                                    <span class="meta-author"><i class="icon-user"></i><a href="/profile/view/${article.ownerUserId.id}">Author: ${article.ownerUserId.displayName}</a></span>
+                                    <span class="meta-date"><i class="icon-time"></i>${article.lastEditedDate}</span>
+                                    <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">${article.replyCount} comment(s)</a></span>
+                                    <span class="question-category"><a href="/classroom/${article.ownerClassId.id}"><i class="icon-group"></i>Class: ${article.ownerClassId.classroomName}</a></span>
+                                </div>
+                                <div class="post-content short-text">
+                                    <p>${article.body}</p>
+                                </div><!-- End post-content -->
+                            </div><!-- End post-inner -->
+                        </article>
+                    </c:forEach>
+                    <a href="#" class="post-read-more button color small" style="margin-bottom: 5px;">Continue reading</a>
+                </c:if>
+                <c:if test="${empty articles}">
+                    <div class="about-author clearfix" id="no-article">
+                        No article.
+                    </div>
+                </c:if>
             </div>
         </div>
         <div class="tab-inner-warp">
             <div class="tab-inner">
-                <div class="about-author clearfix">
-                    <div class="" style="float: left;padding-right: 20px;">
-                        <a href="#" original-title="admin" class=""><img alt="" src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>
+                <c:if test="${not empty classrooms}">
+                    <c:forEach var="classroom" items="${classrooms}">
+                        <div class="about-author clearfix">
+                            <div class="" style="float: left;padding-right: 20px;">
+                                <a href="#" original-title="admin" class=""><img alt="" src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>
+                            </div>
+                            <a class="" href="#" style="float: right">Close class</a>
+                            <div class="author-bio">
+                                <h4><a href="/classroom/${classroom.id}">${classroom.classroomName}</a></h4>
+                                    ${classroom.classroomDescription}
+                            </div>
+                        </div>
+                    </c:forEach>
+                    <a href="#" class="post-read-more button color small" style="margin-bottom: 5px;">Continue reading</a>
+                </c:if>
+                <c:if test="${empty classrooms}">
+                    <div class="about-author clearfix" id="no-classroom">
+                        No classroom.
                     </div>
-                    <a class="" href="#" style="float: right">Join class</a>
-                    <div class="author-bio">
-                        <h4><a href="#">Advance Java class</a></h4>
-                        This is introduction of Advance Java class: advance java advance java advance java advance java advance java
-                    </div>
-                </div>
-                <div class="about-author clearfix">
-                    <div class="" style="float: left;padding-right: 20px;">
-                        <a href="#" original-title="admin" class=""><img alt="" src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>
-                    </div>
-                    <a class="" href="#" style="float: right">Join class</a>
-                    <div class="author-bio">
-                        <h4><a href="#">Advance Java class</a></h4>
-                        This is introduction of Advance Java class: advance java advance java advance java advance java advance java
-                    </div>
-                </div>
+                </c:if>
             </div>
         </div>
     </div><!-- End page-content -->
@@ -301,9 +217,9 @@
         <h3 class="widget_title">Stats</h3>
         <div class="ul_list ul_list-icon-ok">
             <ul>
-                <li><i class="icon-question-sign"></i>Questions ( <span>20</span> )</li>
-                <li><i class="icon-edit"></i>Article ( <span>50</span> )</li>
-                <li><i class="icon-group"></i>Class ( <span>7</span> )</li>
+                <li><i class="icon-question-sign"></i>Questions ( <span>${questionCount}</span> )</li>
+                <li><i class="icon-edit"></i>Articles ( <span>${articleCount}</span> )</li>
+                <li><i class="icon-group"></i>Classrooms ( <span>${classroomCount}</span> )</li>
             </ul>
         </div>
     </div>
@@ -350,7 +266,7 @@
             success: function(data){
                 if(data == "OK"){
 //                    $().toastmessage('showSuccessToast', 'Follow teachcer!');
-                    $("#follow").html("<i class='icon-user'></i>Teacher : <a href='javascript:unfollowTeacher(1);'>Unfollow</a>");
+                    $("#follow").html("<a class='question-report' href='javascript:unfollowTeacher(${userProfile.id});' style='margin-right: 20px;'>Unfollow</a>");
 
                 }else{
                     $.growl.notice({
@@ -373,7 +289,7 @@
                 if(data == "OK"){
 //                    $().toastmessage('showSuccessToast', 'Unfollow teacher!');
 //                    $("#follow").html("<a href='javascript:followTeacher(1);'>Follow</a>");
-                    $("#follow").html("<i class='icon-user'></i>Teacher : <a href='javascript:followTeacher(1);'>Follow</a>");
+                    $("#follow").html("<a class='question-report' href='javascript:followTeacher(${userProfile.id});' style='margin-right: 20px;'>Follow</a>");
                 }else{
                     $.growl.notice({
                         message: '<div class="activity-item"> <i class="fa fa-heart text-success"></i> <div class="activity"> Error! Please try again late! </div> </div>',

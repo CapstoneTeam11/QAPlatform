@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -129,7 +130,7 @@
                             <li><a href="javascript:closeClass(${classroom.id}, 0);">Close class</a></li>
                         </c:if>
                         <c:if test="${classroom.status == 0}">
-                            <li><a href="javascript:closeClass(${classroom.id}, 1);">Open class</a></li>
+                            <li><a href="javascript:closeClass(${classroom.id}, 1);">Reopen class</a></li>
                         </c:if>
                     </ul>
                 </div>
@@ -234,7 +235,10 @@
 <div class="tab-inner-warp">
     <div class="tab-inner">
         <c:if test="${not empty joinRequests}">
-            <c:forEach var="joinRequest" items="${joinRequests}">
+            <c:set var="total" value="${fn:length(joinRequests)}" />
+
+            <c:forEach var="joinRequest" items="${joinRequests}" varStatus="counter">
+                <c:if test="${counter.count <2}">
                     <form id="acceptForm${joinRequest.id}" method="post" action="/acceptRequest">
                         <input type="hidden" name="requestId" id ="requestId${joinRequest.id}"  value="${joinRequest.id}"/>
                         <input type="hidden" name="ownerClassroomId" id="ownerClassroomId${joinRequest.id}" value="${classroom.ownerUserId.id}"/>
@@ -243,36 +247,46 @@
                             <div class="author-image">
                                 <a href="#" original-title="${joinRequest.userId.displayName}" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
                             </div>
-                            <a class="" href="#" onclick="javascript:ignoreRequest('acceptForm${joinRequest.id}', ${joinRequest.id});" style="float: right">Ignore</a>
-                            <a class="" href="#" onclick="javascript:acceptRequest('acceptForm${joinRequest.id}', ${joinRequest.userId.id}, ${joinRequest.id});" style="float: right; margin-right: 15px">Confirm</a>
+                            <c:if test="${user.roleId.id==2}">
+                                <a class="" href="#" onclick="javascript:ignoreRequest('acceptForm${joinRequest.id}', ${joinRequest.id});" style="float: right">Ignore</a>
+                                <a class="" href="#" onclick="javascript:acceptRequest('acceptForm${joinRequest.id}', ${joinRequest.userId.id}, ${joinRequest.id});" style="float: right; margin-right: 15px">Confirm</a>
+                            </c:if>
                             <div class="author-bio">
-                                <h4><a href="#">${joinRequest.userId.displayName}</a></h4>
-                                Requested to join <a href="/classroom/${classroom.id}" style="font-size: 15px">${classroom.classroomName}</a>
+                            <h4><a href="#">${joinRequest.userId.displayName}</a></h4>
+                            Requested to join <a href="/classroom/${classroom.id}" style="font-size: 15px">${classroom.classroomName}</a>
                             </div>
                         </div>
                     </form>
+                </c:if>
             </c:forEach>
-            <a href="#" class="load-questions"><i class="icon-refresh"></i>View more request</a>
+            <c:if test="${total >15}">
+                <a href="javascript:loadMoreRequest()" class="load-questions-1"><i class="icon-refresh"></i>View more request</a>
+            </c:if>
         </c:if>
     </div>
 </div>
     <div class="tab-inner-warp" id="studentTag">
         <div class="tab-inner">
             <c:if test="${not empty students}">
-                <c:forEach var="student" items="${students}">
-                    <div class="about-author clearfix" id="student${student.userId.id}">
-                        <div class="author-image">
-                            <a href="#" original-title="" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
+                <c:set var="total" value="${fn:length(students)}" />
+                <c:forEach var="student" items="${students}" varStatus="counter">
+                    <c:if test="${counter.count <2}">
+                        <div class="about-author clearfix" id="student${student.userId.id}">
+                            <div class="author-image">
+                                <a href="#" original-title="" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
+                            </div>
+                            <c:if test="${classroom.status == 1}">
+                                <a class="removeBtn" href="javascript:removeStudent(${student.userId.id});" style="float: right">Remove</a>
+                            </c:if>
+                            <div class="author-bio" style="margin-top: 25px">
+                                <h4><a href="#">${student.userId.displayName}</a></h4>
+                            </div>
                         </div>
-                        <c:if test="${classroom.status == 1}">
-                            <a class="" href="javascript:removeStudent(${student.userId.id});" style="float: right">Remove</a>
-                        </c:if>
-                        <div class="author-bio" style="margin-top: 25px">
-                            <h4><a href="#">${student.userId.displayName}</a></h4>
-                        </div>
-                    </div>
+                    </c:if>
                 </c:forEach>
-                <a href="#" class="load-questions"><i class="icon-refresh"></i>View more students</a>
+                <c:if test="${total >15}">
+                    <a href="javascript:loadMoreStudent(${classroom.id});" class="load-questions"><i class="icon-refresh"></i>View more students</a>
+                </c:if>
             </c:if>
 
         </div>
@@ -305,7 +319,7 @@
                     <%--<a href="javascript:handleClass('${classroom.id}', 1)" class="button small color" id="join">Cancel Request</a>--%>
                 </c:if>
                 <c:if test="${checkClassroomUser.approval == 0 && checkClassroomUser.type == 2}">
-                    <p id="link-btn"><a href="javascript:handleClass('${classroom.id}', 2)" class="button small color" id="join">Accept Request</a></p>
+                    <p id="link-btn"><a href="javascript:handleClass('${classroom.id}', 2)" class="button small color" id="join">Accept Invitation</a></p>
                 </c:if>
                 <c:if test="${checkClassroomUser.approval == 1}">
                     <p id="link-btn"><a href="javascript:handleClass(${classroom.id}, 3)" class="button small color" id="join">Leave</a></p>
@@ -609,6 +623,39 @@
             }
         });
     }
+    function loadMoreStudent(classroomId){
+    var url = "/classroom/loadMoreStudent/"+classroomId;
+    $.ajax({
+        type: "POST",
+        url: url,
+//        data: "classId=" + classId+"&type="+ type,
+        success: function (data) {
+            if (data != null) {
+                for( i = 0; i< data.length; i++){
+                    var html1 = $($("#studentTag").find(".tab-inner")[0]).clone();
+                    html1.find(".load-questions").remove();
+//                    html.find(".about-author").attr("id", "student"+data[i].studentId);
+//                    html.find(".removeBtn").attr("href", "javascript:removeStudent("+data[i].studentId+")");
+//                    html.find(".author-bio").html("<h4><a href='#'>"+data[i].studentName+"</a></h4>");
+
+                    var  html ="<div class='about-author clearfix' id='student"+data[i].studentId+"'>"+
+                            "<div class='author-image'>"+
+                            "<a href='#' original-title='' class='tooltip-n'><img alt='' src='http://2code.info/demo/html/ask-me/images/demo/admin.jpeg'></a>"+
+                            "</div><a class='' href='javascript:removeStudent("+ data[i].studentId+")' style='float: right'>Remove</a><div class='author-bio' style='margin-top: 25px'>"+
+                            "<h4><a href='#'>"+data[i].studentName+"</a></h4></div></div>";
+                    if(i==0){
+                        $("#studentTag").html("");
+                    }
+                    $("#studentTag").append($(html));
+                }
+            } else if (data != null && data.status == "NG" && data.id == 0) {
+                window.location.href = "/";
+            } else if (data != null && data.status == "NG" && data.id != 0) {
+                window.location.href = "/classroom/" + data.id;
+            }
+        }
+    });
+}
 
 </script>
 </body>
