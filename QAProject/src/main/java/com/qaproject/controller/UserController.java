@@ -12,6 +12,7 @@ import com.qaproject.dto.UserWithRoleDto;
 import com.qaproject.entity.Category;
 import com.qaproject.entity.Role;
 import com.qaproject.entity.User;
+import com.qaproject.util.NewsFeedUtilities;
 import com.sun.javafx.sg.PGShape;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,8 @@ public class UserController {
     CategoryDao categoryDao;
     @Autowired
     HttpSession session;
+    @Autowired
+    NewsFeedUtilities newsFeedUtilities;
 
     @RequestMapping(value = "/editProfile",method = RequestMethod.GET)
     public String editProfile(Model model, HttpServletRequest request) {
@@ -100,7 +103,7 @@ public class UserController {
 
         userDao.persist(user);
         session.setAttribute("user", user);
-
+        newsFeedUtilities.setNewsFeedQuestionAfterRegister(user);
         return "redirect:/dashboard";
     }
     @RequestMapping(value = "/login",method = RequestMethod.POST)

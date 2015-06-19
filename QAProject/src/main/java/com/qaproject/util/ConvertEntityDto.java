@@ -30,6 +30,7 @@ public class ConvertEntityDto {
         postDto.setBody(post.getBody());
         postDto.setAcceptedAnswerId(post.getAcceptedAnswerId());
         postDto.setClassName(post.getOwnerClassId().getClassroomName());
+        postDto.setOwnerName(post.getOwnerUserId().getDisplayName());
         return postDto;
     }
     public static String ConvertDateTime(Date date) {

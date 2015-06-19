@@ -2,14 +2,17 @@ package com.qaproject.dao.impl;
 
 import com.qaproject.dao.BaseDao;
 import com.qaproject.dao.PostDao;
+import com.qaproject.dto.PostDto;
 import com.qaproject.entity.Classroom;
 import com.qaproject.entity.Post;
 import com.qaproject.entity.User;
 import com.qaproject.util.Constant;
+import com.qaproject.util.ConvertEntityDto;
 import org.springframework.stereotype.Repository;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -89,4 +92,16 @@ public class PostDaoImpl extends BaseDao<Post,Integer> implements PostDao{
         }
         return questions;
     }
+
+    @Override
+    public List<PostDto> loadMoreAnswer(Integer id, Integer page) {
+        List<PostDto> postDtos = new ArrayList<PostDto>();
+        List<Post> posts = findPostChilds(id,page);
+        for (int i = 0; i < posts.size()  ; i++) {
+            PostDto postDto = ConvertEntityDto.convertPostEntityToDto(posts.get(i));
+            postDtos.add(postDto);
+        }
+        return postDtos;
+    }
+
 }
