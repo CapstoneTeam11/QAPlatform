@@ -67,6 +67,20 @@ public class PostDaoImpl extends BaseDao<Post,Integer> implements PostDao{
     }
 
     @Override
+    public List<Post> findArticlesByOwnerUser(User ownerUser) {
+        Query query = entityManager.createQuery("Select p from Post  p where p.parentId=0 and p.postType=2 " +
+                "and p.ownerUserId=:ownerUser");
+        query.setParameter("ownerUser", ownerUser);
+        List<Post> articles = null;
+        try {
+            articles = query.getResultList();
+        } catch (NoResultException e){
+
+        }
+        return articles;
+    }
+
+    @Override
     public List<Post> findRepliesByParentId(Integer parentId) {
         Query query = entityManager.createQuery("Select p from Post p where p.parentId=:parentId");
         query.setParameter("parentId",parentId);
