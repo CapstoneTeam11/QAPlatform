@@ -159,7 +159,7 @@
                             <a href="/post/view/${question.id}">${question.title}</a>
                         </h2>
                         <div class="question-author">
-                            <a href="/profile/${question.ownerUserId.id}" original-title="${question.ownerUserId.displayName}" class="question-author-img tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>
+                            <a href="/profile/view/${question.ownerUserId.id}" original-title="${question.ownerUserId.displayName}" class="question-author-img tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>
                         </div>
                         <div class="question-inner">
                             <div class="clearfix"></div>
