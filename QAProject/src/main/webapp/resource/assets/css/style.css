@@ -1654,7 +1654,6 @@ div[class*="slider_shadow"]:before, div[class^="header_shadow"] {
 	border-radius: 50%;
 }
 .commentlist li .comment-text {
-	overflow: hidden;
 	position: relative;
 }
 .comment-text .question-answered {
@@ -5162,7 +5161,21 @@ html[xmlns] .slides {
     font-size: 35px;
     color: #318e08;
 }
-
+.caretBig {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 2px;
+    vertical-align: middle;
+    border-top: 6px dashed;
+    border-right: 6px solid transparent;
+    border-left: 6px solid transparent;
+}
+.textComment {
+    text-align: justify;
+    width: 85%;
+    float: left;
+}
 #email-error, #password-error, #confirm_password-error, #professional-error {
     width: 100% !important;
     color: red !important;

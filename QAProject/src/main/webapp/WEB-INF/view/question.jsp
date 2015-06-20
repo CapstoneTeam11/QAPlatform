@@ -195,11 +195,11 @@
                         <div class="btn-group">
                             <a data-toggle="dropdown" href="" aria-expanded="false"><i class="icon-cog" style="color: black;font-weight: bold;font-size: 20px;"></i><span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu" style="left: -127px;">
-                                <li><a href="#">Action</a></li>
-                                <li><a href="#">Another action</a></li>
-                                <li><a href="#">Something else here</a></li>
+                                <li><a href="/post/update/${post.id}">Edit</a></li>
+                                <li><a href="#">Delete</a></li>
+                                <li><a href="#"></a></li>
                                 <li class="divider"></li>
-                                <li><a href="#">Separated link</a></li>
+                                <li><a href="#">Close</a></li>
                             </ul>
                         </div>
                     </span>
@@ -257,18 +257,31 @@
                                                 </c:if>
                                             </div>
                                                 <%--Add javascript to chang "<i class="icon-thumbs-up"></i>Accept" to "Unaccept"--%>
-                                            <div style="width: 75%">
+                                            <div style="width: 75%;display: flex">
                                                 <input type="hidden" name="postAnswerId" value="${postAnswer.id}">
-                                                <c:if test="${postAnswer.acceptedAnswerId !=1 && sessionScope.user.id==post.ownerUserId.id}">
-                                                    <a class="button small color acceptAnswer answerFlag" style="float: right" onclick="answerFlag(this)">Accept</a>
-                                                </c:if>
-                                                <c:if test="${postAnswer.acceptedAnswerId==1 && sessionScope.user.id==post.ownerUserId.id}">
-                                                    <a class="button small color unacceptAnswer answerFlag" style="float: right" onclick="answerFlag(this)">Unaccept</a>
-                                                </c:if>
+                                                <div style="width: 100%;float: right;">
+                                                    <c:if test="${postAnswer.acceptedAnswerId !=1 && sessionScope.user.id==post.ownerUserId.id}">
+                                                        <a class="button small color acceptAnswer answerFlag" style="float: right">Accept</a>
+                                                    </c:if>
+                                                    <c:if test="${postAnswer.acceptedAnswerId==1 && sessionScope.user.id==post.ownerUserId.id}">
+                                                        <a class="button small color unacceptAnswer answerFlag" style="float: right">Unaccept</a>
+                                                    </c:if>
+                                                </div>
+                                                <div style="float: right;margin-left: 2%;">
+                                                    <div class="btn-group">
+                                                        <a data-toggle="dropdown" href="" aria-expanded="false"><span class="caretBig"></span></a>
+                                                        <ul class="dropdown-menu" role="menu" style="left: -170px;">
+                                                            <li><a href="#">Edit</a></li>
+                                                            <li><a href="#">Delete</a></li>
+                                                            <li><a href="#"></a></li>
+                                                            <li class="divider"></li>
+                                                            <li><a href="#">Close</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="text"><p>${postAnswer.body}</p>
-                                        </div>
+                                        <div class="textComment"><p>${postAnswer.body}</p></div>
                                     </div>
                                 </div>
                             </li>
@@ -296,8 +309,9 @@
                                         </c:if>
                                         </div>
                                         <%--Add javascript to chang "<i class="icon-thumbs-up"></i>Accept" to "Unaccept"--%>
-                                        <div style="width: 75%">
+                                        <div style="width: 75%;display: flex">
                                         <input type="hidden" name="postAnswerId" value="${postAnswer.id}">
+                                        <div style="width: 100%;float: right;">
                                         <c:if test="${postAnswer.acceptedAnswerId !=1 && sessionScope.user.id==post.ownerUserId.id}">
                                         <a class="button small color acceptAnswer answerFlag" style="float: right">Accept</a>
                                         </c:if>
@@ -305,9 +319,21 @@
                                             <a class="button small color unacceptAnswer answerFlag" style="float: right">Unaccept</a>
                                         </c:if>
                                         </div>
+                                        <div style="float: right;margin-left: 2%;">
+                                            <div class="btn-group">
+                                                <a data-toggle="dropdown" href="" aria-expanded="false"><span class="caretBig"></span></a>
+                                                <ul class="dropdown-menu" role="menu" style="left: -170px;">
+                                                    <li><a href="#">Edit</a></li>
+                                                    <li><a href="#">Delete</a></li>
+                                                    <li><a href="#"></a></li>
+                                                    <li class="divider"></li>
+                                                    <li><a href="#">Close</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        </div>
                                     </div>
-                                    <div class="text"><p>${postAnswer.body}</p>
-                                    </div>
+                                    <div class="textComment"><p>${postAnswer.body}</p></div>
                                 </div>
                             </div>
                         </li>
@@ -590,12 +616,24 @@
                                         '<div class="acceptAnswerIcon" id="answerIcon' + post[i].id +'">'+
                                         '<i class="icon-ok"></i>' +
                                         '</div>' +
-                                        '<div style="width: 75%">' +
+                                        '<div style="width: 75%;display: flex">' + '<div style="width: 100%;float: right;">'+
                                         '<input type="hidden" name="postAnswerId" value="' + post[i].id +'">' +
                                         '<a class="button small color unacceptAnswer answerFlag" style="float: right" onclick="answerFlag(this)">Unaccept</a>'+
+                                        '</div>' + '</div>' +
+                                        '<div style="float: right;margin-left: 2%;">' +
+                                        '<div class="btn-group">'+
+                                        '<a data-toggle="dropdown" href="" aria-expanded="false"><span class="caretBig"></span></a>' +
+                                        '<ul class="dropdown-menu" role="menu" style="left: -170px;">' +
+                                        '<li><a href="#">Edit</a></li>' +
+                                        '<li><a href="#">Delete</a></li>' +
+                                        '<li><a href="#"></a></li>' +
+                                        '<li class="divider"></li>' +
+                                        '<li><a href="#">Close</a></li>' +
+                                        '</ul>' +
                                         '</div>' +
                                         '</div>' +
-                                        '<div class="text"><p>' + post[i].body +'</p>' +
+                                        '</div>' +
+                                        '<div class="textComment"><p>' + post[i].body +'</p>' +
                                         '</div>' +
                                         '</div>' +
                                         '</div>' +
@@ -617,12 +655,24 @@
                                         '</div>' +
                                         '<div class="acceptAnswerIcon" id="answerIcon' + post[i].id +'">'+
                                         '</div>' +
-                                        '<div style="width: 75%">' +
+                                        '<div style="width: 75%;display: flex">' + '<div style="width: 100%;float: right;">'+
                                         '<input type="hidden" name="postAnswerId" value="' + post[i].id +'">' +
                                         '<a class="button small color acceptAnswer answerFlag" style="float: right" onclick="answerFlag(this)">Accept</a>'+
+                                        '</div>' + '</div>' +
+                                        '<div style="float: right;margin-left: 2%;">' +
+                                        '<div class="btn-group">'+
+                                        '<a data-toggle="dropdown" href="" aria-expanded="false"><span class="caretBig"></span></a>' +
+                                        '<ul class="dropdown-menu" role="menu" style="left: -170px;">' +
+                                        '<li><a href="#">Edit</a></li>' +
+                                        '<li><a href="#">Delete</a></li>' +
+                                        '<li><a href="#"></a></li>' +
+                                        '<li class="divider"></li>' +
+                                        '<li><a href="#">Close</a></li>' +
+                                        '</ul>' +
                                         '</div>' +
                                         '</div>' +
-                                        '<div class="text"><p>' + post[i].body +'</p>' +
+                                        '</div>' +
+                                        '<div class="textComment"><p>' + post[i].body +'</p>' +
                                         '</div>' +
                                         '</div>' +
                                         '</div>' +
@@ -648,11 +698,23 @@
                                         '<div class="acceptAnswerIcon" id="answerIcon' + post[i].id +'">'+
                                         '<i class="icon-ok"></i>' +
                                         '</div>' +
-                                        '<div style="width: 75%">' +
+                                        '<div style="width: 75%;display: flex">' + '<div style="width: 100%;float: right;">'+
                                         '<input type="hidden" name="postAnswerId" value="' + post[i].id +'">' +
+                                        '</div>' + '</div>' +
+                                        '<div style="float: right;margin-left: 2%;">' +
+                                        '<div class="btn-group">'+
+                                        '<a data-toggle="dropdown" href="" aria-expanded="false"><span class="caretBig"></span></a>' +
+                                        '<ul class="dropdown-menu" role="menu" style="left: -170px;">' +
+                                        '<li><a href="#">Edit</a></li>' +
+                                        '<li><a href="#">Delete</a></li>' +
+                                        '<li><a href="#"></a></li>' +
+                                        '<li class="divider"></li>' +
+                                        '<li><a href="#">Close</a></li>' +
+                                        '</ul>' +
                                         '</div>' +
                                         '</div>' +
-                                        '<div class="text"><p>' + post[i].body +'</p>' +
+                                        '</div>' +
+                                        '<div class="textComment"><p>' + post[i].body +'</p>' +
                                         '</div>' +
                                         '</div>' +
                                         '</div>' +
@@ -674,11 +736,23 @@
                                         '</div>' +
                                         '<div class="acceptAnswerIcon" id="answerIcon' + post[i].id +'">'+
                                         '</div>' +
-                                        '<div style="width: 75%">' +
+                                        '<div style="width: 75%;display: flex">' + '<div style="width: 100%;float: right;">'+
                                         '<input type="hidden" name="postAnswerId" value="' + post[i].id +'">' +
+                                        '</div>' + '</div>' +
+                                        '<div style="float: right;margin-left: 2%;">' +
+                                        '<div class="btn-group">'+
+                                        '<a data-toggle="dropdown" href="" aria-expanded="false"><span class="caretBig"></span></a>' +
+                                        '<ul class="dropdown-menu" role="menu" style="left: -170px;">' +
+                                        '<li><a href="#">Edit</a></li>' +
+                                        '<li><a href="#">Delete</a></li>' +
+                                        '<li><a href="#"></a></li>' +
+                                        '<li class="divider"></li>' +
+                                        '<li><a href="#">Close</a></li>' +
+                                        '</ul>' +
                                         '</div>' +
                                         '</div>' +
-                                        '<div class="text"><p>' + post[i].body +'</p>' +
+                                        '</div>' +
+                                        '<div class="textComment"><p>' + post[i].body +'</p>' +
                                         '</div>' +
                                         '</div>' +
                                         '</div>' +
