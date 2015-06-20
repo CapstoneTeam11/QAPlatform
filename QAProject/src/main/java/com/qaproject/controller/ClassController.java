@@ -2,6 +2,7 @@ package com.qaproject.controller;
 
 import com.qaproject.dao.*;
 import com.qaproject.dto.ClassDto;
+import com.qaproject.dto.ClassUserDto;
 import com.qaproject.dto.ReturnObjectWithStatus;
 import com.qaproject.dto.StudentDto;
 import com.qaproject.entity.*;
@@ -312,6 +313,76 @@ public class ClassController {
         }
 
         return list;
+    }
+
+    /**
+     * TungTD load more student request
+     * @param model
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/classroom/loadMoreStudentRequest/{id}",method = RequestMethod.POST)
+    @ResponseBody
+    public List<ClassUserDto> loadMoreStudentRequest(ModelMap model, @PathVariable(value = "id") String id) {
+        User userSession = (User) session.getAttribute("user");
+        if(userSession==null) {
+            return null;
+        }
+        Classroom classroom = classroomDao.find(Integer.parseInt(id));
+        int idOwner = classroom.getOwnerUserId().getId();
+        User user = userDao.find(idOwner);
+
+        //get posts, materials, request to join - MinhKH
+        List<Post> posts = classroom.getPostList();
+        List<Material> materials = classroom.getMaterialList();
+        List<ClassroomUser> classroomUsers = classroomUserDao.findByClassroom(classroom);
+
+
+        //classify classroomUser - MinhKH
+        List<ClassroomUser> joinRequests = new ArrayList<ClassroomUser>();
+        List<ClassroomUser> students = new ArrayList<ClassroomUser>();
+        for (int i=0;i<classroomUsers.size();i++){
+            ClassroomUser currentClassroomUser = classroomUsers.get(i);
+            if(currentClassroomUser.getType()==1&&currentClassroomUser.getApproval()==0){
+                joinRequests.add(currentClassroomUser);
+            }
+            if (currentClassroomUser.getApproval()==1) {
+                students.add(currentClassroomUser);
+            }
+        }
+
+        //classify post - MinhKH
+        List<Post> questions = new ArrayList<Post>();
+        List<Post> articles = new ArrayList<Post>();
+        for (int i=0; i<posts.size();i++){
+            Post currentPost = posts.get(i);
+            if (currentPost.getPostType()==1){
+                questions.add(currentPost);
+            }
+            if (currentPost.getPostType()==2){
+                articles.add(currentPost);
+            }
+        }
+        // check if acceptRequest or not
+        List<ClassroomUser> checkClassroomUsers = classroomUserDao.findByUserClassroom(userSession.getId(), Integer.parseInt(id));
+        ClassroomUser checkClassroomUser = null;
+        if(checkClassroomUsers != null && checkClassroomUsers.size()>0){
+            checkClassroomUser = checkClassroomUsers.get(0);
+        }
+        List<ClassUserDto> listResquest = new ArrayList<ClassUserDto>();
+        for(int i=0; i< joinRequests.size(); i++){
+            ClassUserDto studentClassUserDto = new ClassUserDto();
+            studentClassUserDto.setClassroomId(joinRequests.get(i).getClassroomId().getId().toString());
+            studentClassUserDto.setClassroomName(joinRequests.get(i).getClassroomId().getClassroomName());
+            studentClassUserDto.setJoinRequest(joinRequests.get(i).getId().toString());
+            studentClassUserDto.setOwnerUserId(joinRequests.get(i).getClassroomId().getOwnerUserId().getId().toString());
+            studentClassUserDto.setUserDisplayName(joinRequests.get(i).getUserId().getDisplayName());
+            studentClassUserDto.setUserRoleId(userSession.getRoleId().getId());
+            studentClassUserDto.setUserId(joinRequests.get(i).getUserId().getId());
+            listResquest.add(studentClassUserDto);
+        }
+
+        return listResquest;
     }
     /**
      *

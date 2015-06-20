@@ -232,13 +232,13 @@
         </table>
     </div>
 </div>
-<div class="tab-inner-warp">
+<div class="tab-inner-warp"  id="studentRequestTag">
     <div class="tab-inner">
         <c:if test="${not empty joinRequests}">
             <c:set var="total" value="${fn:length(joinRequests)}" />
 
             <c:forEach var="joinRequest" items="${joinRequests}" varStatus="counter">
-                <c:if test="${counter.count <2}">
+                <c:if test="${counter.count <2}"> <!-- less than 15 -->
                     <form id="acceptForm${joinRequest.id}" method="post" action="/acceptRequest">
                         <input type="hidden" name="requestId" id ="requestId${joinRequest.id}"  value="${joinRequest.id}"/>
                         <input type="hidden" name="ownerClassroomId" id="ownerClassroomId${joinRequest.id}" value="${classroom.ownerUserId.id}"/>
@@ -259,8 +259,8 @@
                     </form>
                 </c:if>
             </c:forEach>
-            <c:if test="${total >15}">
-                <a href="javascript:loadMoreRequest()" class="load-questions-1"><i class="icon-refresh"></i>View more request</a>
+            <c:if test="${total >1}"> <!-- more than 15 -->
+                <a href="javascript:javascript:loadMoreStudentRequest(${classroom.id})" class="load-questions remove-1"><i class="icon-refresh"></i>View more request</a>
             </c:if>
         </c:if>
     </div>
@@ -284,7 +284,7 @@
                         </div>
                     </c:if>
                 </c:forEach>
-                <c:if test="${total >15}">
+                <c:if test="${total >1}">
                     <a href="javascript:loadMoreStudent(${classroom.id});" class="load-questions"><i class="icon-refresh"></i>View more students</a>
                 </c:if>
             </c:if>
@@ -503,7 +503,11 @@
             data: "requestId="+id+"&ownerClassroomId="+ownerClassroomId+"&currentClassroomId="+currentClassroomId,
             success: function(data){
                 if(data != null && data.status == "OK"){
-                    $("#"+el).remove();
+                    if(typeof el == 'object'){
+                        $(el).remove();
+                    }else{
+                        $("#"+el).remove();
+                    }
                     reloadStudent(studentId);
                 }else if(data != null && data.status == "NG" && data.id == 0){
                     window.location.href="/";
@@ -524,7 +528,11 @@
             data: "requestId="+id+"&ownerClassroomId="+ownerClassroomId+"&currentClassroomId="+currentClassroomId,
             success: function(data){
                 if(data != null && data.status == "OK"){
-                    $("#"+el).remove();
+                    if(typeof el == 'object'){
+                        $(el).remove();
+                    }else{
+                        $("#"+el).remove();
+                    }
 
                 }else if(data != null && data.status == "NG" && data.id == 0){
                     window.location.href="/";
@@ -623,39 +631,84 @@
             }
         });
     }
-    function loadMoreStudent(classroomId){
-    var url = "/classroom/loadMoreStudent/"+classroomId;
-    $.ajax({
-        type: "POST",
-        url: url,
+    function loadMoreStudent(classroomId) {
+        var url = "/classroom/loadMoreStudent/" + classroomId;
+        $.ajax({
+            type: "POST",
+            url: url,
 //        data: "classId=" + classId+"&type="+ type,
-        success: function (data) {
-            if (data != null) {
-                for( i = 0; i< data.length; i++){
-                    var html1 = $($("#studentTag").find(".tab-inner")[0]).clone();
-                    html1.find(".load-questions").remove();
+            success: function (data) {
+                if (data != null) {
+                    for (i = 0; i < data.length; i++) {
+                        var html1 = $($("#studentTag").find(".tab-inner")[0]).clone();
+                        html1.find(".load-questions").remove();
 //                    html.find(".about-author").attr("id", "student"+data[i].studentId);
 //                    html.find(".removeBtn").attr("href", "javascript:removeStudent("+data[i].studentId+")");
 //                    html.find(".author-bio").html("<h4><a href='#'>"+data[i].studentName+"</a></h4>");
 
-                    var  html ="<div class='about-author clearfix' id='student"+data[i].studentId+"'>"+
-                            "<div class='author-image'>"+
-                            "<a href='#' original-title='' class='tooltip-n'><img alt='' src='http://2code.info/demo/html/ask-me/images/demo/admin.jpeg'></a>"+
-                            "</div><a class='' href='javascript:removeStudent("+ data[i].studentId+")' style='float: right'>Remove</a><div class='author-bio' style='margin-top: 25px'>"+
-                            "<h4><a href='#'>"+data[i].studentName+"</a></h4></div></div>";
-                    if(i==0){
-                        $("#studentTag").html("");
+                        var html = "<div class='about-author clearfix' id='student" + data[i].studentId + "'>" +
+                                "<div class='author-image'>" +
+                                "<a href='#' original-title='' class='tooltip-n'><img alt='' src='http://2code.info/demo/html/ask-me/images/demo/admin.jpeg'></a>" +
+                                "</div><a class='' href='javascript:removeStudent(" + data[i].studentId + ")' style='float: right'>Remove</a><div class='author-bio' style='margin-top: 25px'>" +
+                                "<h4><a href='#'>" + data[i].studentName + "</a></h4></div></div>";
+                        if (i == 0) {
+                            $("#studentTag").html("");
+                        }
+                        $("#studentTag").append($(html));
                     }
-                    $("#studentTag").append($(html));
+                } else if (data != null && data.status == "NG" && data.id == 0) {
+                    window.location.href = "/";
+                } else if (data != null && data.status == "NG" && data.id != 0) {
+                    window.location.href = "/classroom/" + data.id;
                 }
-            } else if (data != null && data.status == "NG" && data.id == 0) {
-                window.location.href = "/";
-            } else if (data != null && data.status == "NG" && data.id != 0) {
-                window.location.href = "/classroom/" + data.id;
             }
-        }
-    });
-}
+        });
+    }
+    function loadMoreStudentRequest(classroomId) {
+        var url = "/classroom/loadMoreStudentRequest/" + classroomId;
+        $.ajax({
+            type: "POST",
+            url: url,
+            success: function (data) {
+                if (data != null) {
+                    for (i = 0; i < data.length; i++) {
+                        var html1 = $($("#studentRequestTag").find(".tab-inner")[0]).clone();
+                        html1.find(".remove-1").remove();
+                        var html =  "";
+                        html = html + "<form id='acceptForm"+data[i].joinRequest+"' method='post' action='/acceptRequest'>"+
+                        "<input type='hidden' name='requestId' id ='requestId"+data[i].joinRequest+"'  value='"+data[i].joinRequest+"'/>"+
+                        "<input type='hidden' name='ownerClassroomId' id='ownerClassroomId"+data[i].joinRequest+"' value='"+data[i].ownerUserId+"'/>"+
+                        "<input type='hidden' name='currentClassroomId' id='currentClassroomId"+data[i].joinRequest+"' value='"+data[i].classroomId+"'/>"+
+                        "<div class='about-author clearfix'>"+
+                        "<div class='author-image'>"+
+                        "<a href='#' original-title='"+data[i].userDisplayName+"' class='tooltip-n'><img alt='' src='http://2code.info/demo/html/ask-me/images/demo/admin.jpeg'></a>"+
+                        "</div>";
+                        if(data[i].userRoleId == 2){
+                            html = html +  "<a class='' href='#' onclick='javascript:ignoreRequest(acceptForm"+data[i].joinRequest+", "+data[i].joinRequest+");' style='float: right'>Ignore</a>"+
+                                    "<a class='' href='#' onclick='javascript:acceptRequest(acceptForm"+data[i].joinRequest+","+data[i].userId+", "+data[i].joinRequest+");' style='float: right; margin-right: 15px'>Confirm</a>";
+                        }
+
+
+                        html = html + "<div class='author-bio'>"+
+                        "<h4><a href='#'>"+data[i].userDisplayName+"</a></h4>"+
+                        "Requested to join <a href='/classroom/"+data[i].classroomId+"' style='font-size: 15px'>"+data[i].classroomName+"'</a>"+
+                        "</div>"+
+                        "</div>"+
+                        "</form>";
+
+                        if (i == 0) {
+                            $("#studentRequestTag").html("");
+                        }
+                        $("#studentRequestTag").append($(html));
+                    }
+                } else if (data != null && data.status == "NG" && data.id == 0) {
+                    window.location.href = "/";
+                } else if (data != null && data.status == "NG" && data.id != 0) {
+                    window.location.href = "/classroom/" + data.id;
+                }
+            }
+        });
+    }
 
 </script>
 </body>
