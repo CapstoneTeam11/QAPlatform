@@ -51,59 +51,6 @@
 
 <div id="wrap">
 
-<div class="panel-pop" id="signup">
-    <h2>Register Now<i class="icon-remove"></i></h2>
-    <div class="form-style form-style-3">
-        <form>
-            <div class="form-inputs clearfix">
-                <p>
-                    <label class="required">Username<span>*</span></label>
-                    <input type="text">
-                </p>
-                <p>
-                    <label class="required">E-Mail<span>*</span></label>
-                    <input type="email">
-                </p>
-                <p>
-                    <label class="required">Password<span>*</span></label>
-                    <input type="password" value="">
-                </p>
-                <p>
-                    <label class="required">Confirm Password<span>*</span></label>
-                    <input type="password" value="">
-                </p>
-            </div>
-            <p class="form-submit">
-                <input type="submit" value="Signup" class="button color small submit">
-            </p>
-        </form>
-    </div>
-</div><!-- End signup -->
-
-<div class="panel-pop" id="lost-password">
-    <h2>Lost Password<i class="icon-remove"></i></h2>
-    <div class="form-style form-style-3">
-        <p>Lost your password? Please enter your username and email address. You will receive a link to create a new password via email.</p>
-        <form>
-            <div class="form-inputs clearfix">
-                <p>
-                    <label class="required">Username<span>*</span></label>
-                    <input type="text">
-                </p>
-                <p>
-                    <label class="required">E-Mail<span>*</span></label>
-                    <input type="email">
-                </p>
-            </div>
-            <p class="form-submit">
-                <input type="submit" value="Reset" class="button color small submit">
-            </p>
-        </form>
-        <div class="clearfix"></div>
-    </div>
-</div><!-- End lost-password -->
-
-
 <%@include file="header.jsp" %>
 
 <div class="breadcrumbs">
@@ -132,10 +79,9 @@
 
     <div class="tabs-warp question-tab">
         <ul class="tabs">
-            <li class="tab"><a href="#" class="current">Joined Class</a></li>
-            <li class="tab"><a href="#">Followed Teacher</a></li>
-            <li class="tab"><a href="#">Your Material</a></li>
-            <li class="tab"><a href="#">Invitation</a></li>
+            <li class="tab"><a href="#" class="current">Joined Classrooms</a></li>
+            <li class="tab"><a href="#">Followed Teachers</a></li>
+            <li class="tab"><a href="#">Invitations</a></li>
         </ul>
         <div class="tab-inner-warp">
             <div class="tab-inner">
@@ -162,45 +108,25 @@
         </div>
         <div class="tab-inner-warp">
             <div class="tab-inner">
-                <c:if test="${not empty followers}">
-                    <c:forEach var="follower" items="${followers}">
+                <c:if test="${not empty followedTeachers}">
+                    <c:forEach var="followedTeacher" items="${followedTeachers}">
                         <div class="about-author clearfix">
                             <div class="author-image">
-                                <a href="#" original-title="admin" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
+                                <a href="/profile/view/ ${followedTeacher.teacherId.id}" original-title="admin" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
                             </div>
                             <a class="" href="#" style="float: right">Unfollow</a>
                             <div class="author-bio">
-                                <h4><a href="#">${follower.followerId.displayName}</a></h4>
-                                    ${follower.followerId.aboutMe}
+                                <h4><a href="#">${followedTeacher.teacherId.displayName}</a></h4>
+                                    ${followedTeacher.teacherId.aboutMe}
                             </div>
                         </div>
                     </c:forEach>
                 </c:if>
-                <c:if test="${empty followers}">
+                <c:if test="${empty followedTeachers}">
                     <div class="about-author clearfix">
                         No follower yet
                     </div>
                 </c:if>
-            </div>
-        </div>
-        <div class="tab-inner-warp">
-            <div class="tab-inner">
-                <table class="table table-hover">
-                    <tr>
-                        <th>No</th>
-                        <th>File name</th>
-                        <th>Uploaded Date</th>
-                        <th>File size</th>
-                        <th>Download</th>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>Introduction to AJ</td>
-                        <td>22-05-2015</td>
-                        <td>1 MB</td>
-                        <td></td>
-                    </tr>
-                </table>
             </div>
         </div>
         <div class="tab-inner-warp">

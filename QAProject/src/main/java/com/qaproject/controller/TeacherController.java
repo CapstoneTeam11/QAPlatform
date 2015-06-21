@@ -73,19 +73,19 @@ public class TeacherController {
             return "403";
         }
 
-        //get currentUser for updated classrooms, followers and invitation
+        //get currentUser for updated classrooms, followedTeachers and invitation
         User currentUser = userDao.find(user.getId());
 
         //check if teacher have any post or following others
         List<Classroom> classrooms = currentUser.getClassroomList();
-        List<Follower> followers = currentUser.getListTeacherFollow();
+        List<Follower> followedTeachers = followerDao.findByFollower(currentUser);
         List<PostInvitation> invitations = currentUser.getPostInvitationList();
-        if (classrooms.size()==0 && followers.size()==0 && invitations.size()==0) {
+        if (classrooms.size()==0 && followedTeachers.size()==0 && invitations.size()==0) {
             return "teacherdashboardWelcome";
         }
         model.addAttribute("invitations",invitations);
         model.addAttribute("classrooms",classrooms);
-        model.addAttribute("followers",followers);
+        model.addAttribute("followedTeachers",followedTeachers);
         return "teacherdashboard";
     }
 }

@@ -132,40 +132,54 @@
 
 <div class="tabs-warp question-tab">
 <ul class="tabs">
-    <li class="tab"><a href="#" class="current">Your Class</a></li>
-    <li class="tab"><a href="#">Followed Teacher</a></li>
-    <li class="tab"><a href="#">Invitation</a></li>
+    <li class="tab"><a href="#" class="current">Your Classrooms</a></li>
+    <li class="tab"><a href="#">Followed Teachers</a></li>
+    <li class="tab"><a href="#">Invitations</a></li>
 </ul>
 <div class="tab-inner-warp">
         <div class="tab-inner">
-            <c:forEach var="classroom" items="${classrooms}">
+            <c:if test="${not empty classrooms}">
+                <c:forEach var="classroom" items="${classrooms}">
+                    <div class="about-author clearfix">
+                        <div class="" style="float: left;padding-right: 20px;">
+                            <a href="#" original-title="admin" class=""><img alt="" src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>
+                        </div>
+                        <a class="" href="#" style="float: right">Close class</a>
+                        <div class="author-bio">
+                            <h4><a href="/classroom/${classroom.id}">${classroom.classroomName}</a></h4>
+                                ${classroom.classroomDescription}
+                        </div>
+                    </div>
+                </c:forEach>
+            </c:if>
+            <c:if test="${empty classrooms}">
                 <div class="about-author clearfix">
-                    <div class="" style="float: left;padding-right: 20px;">
-                        <a href="#" original-title="admin" class=""><img alt="" src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>
-                    </div>
-                    <a class="" href="#" style="float: right">Close class</a>
-                    <div class="author-bio">
-                        <h4><a href="/classroom/${classroom.id}">${classroom.classroomName}</a></h4>
-                            ${classroom.classroomDescription}
-                    </div>
+                    No classroom.
                 </div>
-            </c:forEach>
+            </c:if>
         </div>
     </div>
 <div class="tab-inner-warp">
     <div class="tab-inner">
-        <c:forEach var="follower" items="${followers}">
+        <c:if test="${not empty followedTeachers}">
+            <c:forEach var="followedTeacher" items="${followedTeachers}">
+                <div class="about-author clearfix">
+                    <div class="author-image">
+                        <a href="/profile/view/${followedTeacher.teacherId.id}" original-title="admin" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
+                    </div>
+                    <a class="" href="#" style="float: right">Unfollow</a>
+                    <div class="author-bio">
+                        <h4><a href="#">${followedTeacher.teacherId.displayName}</a></h4>
+                        ${followedTeacher.teacherId.aboutMe}
+                    </div>
+                </div>
+            </c:forEach>
+        </c:if>
+        <c:if test="${empty followedTeachers}">
             <div class="about-author clearfix">
-                <div class="author-image">
-                    <a href="#" original-title="admin" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
-                </div>
-                <a class="" href="#" style="float: right">Unfollow</a>
-                <div class="author-bio">
-                    <h4><a href="#">${follower.teacherId.displayName}</a></h4>
-                    ${follower.teacherId.aboutMe}
-                </div>
+                No followed teacher.
             </div>
-        </c:forEach>
+        </c:if>
     </div>
 </div>
 <div class="tab-inner-warp">
@@ -186,7 +200,7 @@
             </c:if>
             <c:if test="${empty invitations}">
                 <div class="about-author clearfix">
-                    No invitation yet!
+                    No invitation.
                 </div>
             </c:if>
         </div>

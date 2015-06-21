@@ -1,5 +1,6 @@
 package com.qaproject.controller;
 
+import com.qaproject.dao.FollowerDao;
 import com.qaproject.dao.UserDao;
 import com.qaproject.entity.Classroom;
 import com.qaproject.entity.ClassroomUser;
@@ -23,6 +24,8 @@ import java.util.List;
 public class StudentController {
     @Autowired
     UserDao userDao;
+    @Autowired
+    FollowerDao followerDao;
 
     @RequestMapping(value = "/studentdashboard",method = RequestMethod.GET)
     public String studentdashboard(ModelMap model, HttpServletRequest request) {
@@ -35,7 +38,7 @@ public class StudentController {
         //get currentUser for updated classrooms, followers and invitation
         User currentUser = userDao.find(user.getId());
 
-        List<Follower> followers = currentUser.getListTeacherFollow();
+        List<Follower> followedTeachers = followerDao.findByFollower(currentUser);
         List<Classroom> classrooms = new ArrayList<Classroom>();
         List<ClassroomUser> classroomUsers = currentUser.getClassroomUserList();
         List<ClassroomUser> invitations = new ArrayList<ClassroomUser>();
@@ -49,11 +52,11 @@ public class StudentController {
                 classrooms.add(currentClassroomUser.getClassroomId());
             }
         }
-        if (followers.size()==0 && classrooms.size()==0 && invitations.size()==0){
+        if (followedTeachers.size()==0 && classrooms.size()==0 && invitations.size()==0){
             return "studentdashboardWelcome";
         }
         model.addAttribute("invitations",invitations);
-        model.addAttribute("followers", followers);
+        model.addAttribute("followedTeachers", followedTeachers);
         model.addAttribute("classrooms", classrooms);
         return "studentdashboard";
     }
