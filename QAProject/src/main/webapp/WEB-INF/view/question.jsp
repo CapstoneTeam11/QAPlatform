@@ -187,13 +187,14 @@
                             class="icon-user"></i>Teacher: ${post.ownerClassId.ownerUserId.displayName}</a></span>
                     <span class="question-view"><i class="icon-eye-open"></i>${post.viewer} view(s)</span>
                     <span class="question-tags">
+                        <form action="/post/deletePost" method="post" id="deletePostForm" hidden="true"><input type="hidden" name="id" value="${post.id}"></form>
                         <c:if test="${sessionScope.user.id==post.ownerUserId.id or sessionScope.user.id==post.ownerClassId.ownerUserId.id}">
                         <div class="btn-group">
                             <a data-toggle="dropdown" href="" aria-expanded="false"><i class="icon-cog" style="color: black;font-weight: bold;font-size: 20px;"></i><span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu" style="left: -127px;">
                                 <c:if test="${sessionScope.user.id==post.ownerUserId.id}">
                                 <li><a href="/post/update/${post.id}">Edit</a></li>
-                                <li><form action="/post/deletePost" method="post"><input type="hidden" name="id" value="${post.id}"><a href="#" id="deletePost">Delete</a></form></li>
+                                <li><a href="#" id="deletePost">Delete</a></li>
                                 </c:if>
                                 <c:if test="${sessionScope.user.id==post.ownerClassId.ownerUserId.id}">
                                 <li><a href="#">Close</a></li>
@@ -272,7 +273,7 @@
                                                         <a data-toggle="dropdown" href="" aria-expanded="false"><span class="caretBig"></span></a>
                                                         <ul class="actionAnswer dropdown-menu" role="menu" >
                                                             <li><a href="#" onclick="editAnswer(this);return false;">Edit</a></li>
-                                                            <li><a onclick="deleteAnswer(this);return false;">Delete</a></li>
+                                                            <li><a href="#" onclick="deleteAnswer(this);return false;">Delete</a></li>
                                                             <li><a ></a></li>
                                                         </ul>
                                                     </div>
@@ -851,6 +852,11 @@
             var detail = CKEDITOR.instances['question-details'].getData()
             var jsonstr = JSON.stringify({ 'ownerId': '${sessionScope.user.id}', 'body': detail, 'parentId': ${post.id} });
             stompClient.send("/app/addPost", {}, jsonstr);
+            return false;
+        });
+        $('#deletePost').click(function (e) {
+            e.preventDefault();
+            var form = $('#deletePostForm').submit();
             return false;
         });
         var urlSuggest = 'http://localhost:8080/teacherInvitation/%QUERY/' +${post.id};
