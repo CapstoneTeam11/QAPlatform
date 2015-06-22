@@ -303,18 +303,6 @@
                     </ul>
                 </div>
 
-                <%--<div class="widget widget_tag_cloud">--%>
-                    <%--<h3 class="widget_title">Tags</h3>--%>
-                    <%--<a href="#">projects</a>--%>
-                    <%--<a href="#">Portfolio</a>--%>
-                    <%--<a href="#">Wordpress</a>--%>
-                    <%--<a href="#">Html</a>--%>
-                    <%--<a href="#">Css</a>--%>
-                    <%--<a href="#">jQuery</a>--%>
-                    <%--<a href="#">2code</a>--%>
-                    <%--<a href="#">vbegy</a>--%>
-                <%--</div>--%>
-
             </aside>
             <!-- End sidebar -->
         </div>
@@ -423,7 +411,16 @@
 
     });
     var createTag = function(e){
-        $('#tagsuggest').tagsinput('add', { id: Math.round((Math.random()*10000))*-1, name: $('.tt-input').val() });
+        var flag = 0;
+        for( var i = 0 ; i < elt.tagsinput('items').length ; i ++) {
+            if($('.tt-input').val()==elt.tagsinput('items')[i].name) {
+                flag = 1;
+            }
+        }
+        if(flag==0) {
+            $('#tagsuggest').tagsinput('add', { id: Math.round((Math.random()*10000))*-1, name: $('.tt-input').val() });
+            $('.tt-input').val("");
+        }
     };
 </script>
 </c:if>
