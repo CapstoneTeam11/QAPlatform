@@ -4,6 +4,7 @@ import com.qaproject.dao.BaseDao;
 import com.qaproject.dao.ClassroomDao;
 import com.qaproject.entity.Category;
 import com.qaproject.entity.Classroom;
+import com.qaproject.util.Constant;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.Query;
@@ -38,6 +39,25 @@ public class ClassroomDaoImpl extends BaseDao<Classroom,Integer> implements Clas
         List<Classroom> classrooms = null;
         Query query = entityManager.createQuery("Select c from Classroom c where c.ownerUserId.id= :ownerUserId");
         query.setParameter("ownerUserId",ownerUserId);
+        try {
+            classrooms = query.getResultList();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return classrooms;
+    }
+
+    @Override
+    public List<Classroom> findOwnedClassroomForDashboard(Integer ownerUserId, Integer page) {
+        List<Classroom> classrooms = null;
+        Query query = entityManager.createQuery("Select c from Classroom c where c.ownerUserId.id= :ownerUserId " +
+                "order by c.id desc");
+        query.setParameter("ownerUserId",ownerUserId);
+        if (page < 1) {
+            page = 1;
+        }
+        query.setFirstResult((page - 1) * Constant.NUMBER_PAGE);
+        query.setMaxResults(Constant.NUMBER_PAGE+1);
         try {
             classrooms = query.getResultList();
         } catch (Exception e){

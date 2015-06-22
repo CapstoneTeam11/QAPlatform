@@ -1,11 +1,9 @@
 package com.qaproject.controller;
 
 import com.qaproject.dao.*;
-import com.qaproject.dto.ClassDto;
-import com.qaproject.dto.ClassUserDto;
-import com.qaproject.dto.ReturnObjectWithStatus;
-import com.qaproject.dto.StudentDto;
+import com.qaproject.dto.*;
 import com.qaproject.entity.*;
+import com.qaproject.util.DashboardUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,6 +33,8 @@ public class ClassController {
     ClassroomUserDao classroomUserDao;
     @Autowired
     UserDao userDao;
+    @Autowired
+    DashboardUtilities dashboardUtilities;
     @Autowired
     HttpSession session;
 
@@ -413,6 +413,46 @@ public class ClassController {
             classroomDao.merge(classroom);
         }
         return new ReturnObjectWithStatus("OK", classroom.getId());
+    }
+
+    @RequestMapping(value = "dashboard/joinedClassroom/{page}",produces = "application/json",method = RequestMethod.GET)
+    public @ResponseBody
+    List<ClassroomDto> loadJoinedClassroom(@PathVariable Integer page) {
+        User user = (User) session.getAttribute("user");
+        List<ClassroomDto> classroomDtos = null;
+        try {
+            classroomDtos = dashboardUtilities.loadJoinedClassrooms(user.getId(), page);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return classroomDtos;
+    }
+
+    @RequestMapping(value = "dashboard/ownedClassroom/{page}",produces = "application/json",method = RequestMethod.GET)
+    public @ResponseBody
+    List<ClassroomDto> loadOwnedClassroom(@PathVariable Integer page) {
+        User user = (User) session.getAttribute("user");
+        List<ClassroomDto> classroomDtos = null;
+        try {
+            classroomDtos = dashboardUtilities.loadOwnedClassrooms(user.getId(), page);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return classroomDtos;
+    }
+
+    @RequestMapping(value = "dashboard/classroomInvitation/{page}",produces = "application/json",
+            method = RequestMethod.GET)
+    public @ResponseBody
+    List<ClassroomInvitationDto> loadClassroomInvitation(@PathVariable Integer page) {
+        User user = (User) session.getAttribute("user");
+        List<ClassroomInvitationDto> classroomInvitationDtos = null;
+        try {
+            classroomInvitationDtos = dashboardUtilities.loadClassroomInvitations(user.getId(), page);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return classroomInvitationDtos;
     }
 }
 

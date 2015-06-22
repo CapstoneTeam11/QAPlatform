@@ -87,7 +87,7 @@
             <form action="/login" method="post" id="loginForm">
                 <div class="row">
                     <div class="col-md-3">
-                        <div class="logo"><a href="/"><img alt="" src="/resource/assets/images/logo.png"></a></div>
+                        <div class="logo"><a href="/"><img alt="" src="/resource/assets/images/logoL.png"></a></div>
                     </div>
                     <div class="col-md-4"></div>
                     <div class="col-md-2">

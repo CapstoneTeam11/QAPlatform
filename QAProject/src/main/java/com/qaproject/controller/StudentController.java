@@ -1,10 +1,14 @@
 package com.qaproject.controller;
 
+import com.qaproject.dao.FollowerDao;
 import com.qaproject.dao.UserDao;
+import com.qaproject.dto.ClassroomDto;
+import com.qaproject.dto.ClassroomInvitationDto;
+import com.qaproject.dto.FollowerDto;
 import com.qaproject.entity.Classroom;
 import com.qaproject.entity.ClassroomUser;
-import com.qaproject.entity.Follower;
 import com.qaproject.entity.User;
+import com.qaproject.util.DashboardUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -23,6 +27,10 @@ import java.util.List;
 public class StudentController {
     @Autowired
     UserDao userDao;
+    @Autowired
+    FollowerDao followerDao;
+    @Autowired
+    DashboardUtilities dashboardUtilities;
 
     @RequestMapping(value = "/studentdashboard",method = RequestMethod.GET)
     public String studentdashboard(ModelMap model, HttpServletRequest request) {
@@ -32,29 +40,16 @@ public class StudentController {
             return "403";
         }
 
-        //get currentUser for updated classrooms, followers and invitation
-        User currentUser = userDao.find(user.getId());
+        List<FollowerDto> followedTeachers = dashboardUtilities.loadFollowedTeachers(user.getId(), 1);
+        List<ClassroomDto> joinedClassrooms = dashboardUtilities.loadJoinedClassrooms(user.getId(), 1);
+        List<ClassroomInvitationDto> invitations = dashboardUtilities.loadClassroomInvitations(user.getId(),1);
 
-        List<Follower> followers = currentUser.getListTeacherFollow();
-        List<Classroom> classrooms = new ArrayList<Classroom>();
-        List<ClassroomUser> classroomUsers = currentUser.getClassroomUserList();
-        List<ClassroomUser> invitations = new ArrayList<ClassroomUser>();
-
-        for (int i=0; i<classroomUsers.size();i++){
-            ClassroomUser currentClassroomUser = classroomUsers.get(i);
-            if (currentClassroomUser.getApproval()==0 && currentClassroomUser.getType()==2) {
-                invitations.add(currentClassroomUser);
-            }
-            if (currentClassroomUser.getApproval()==1){
-                classrooms.add(currentClassroomUser.getClassroomId());
-            }
-        }
-        if (followers.size()==0 && classrooms.size()==0 && invitations.size()==0){
+        if (followedTeachers.size()==0 && joinedClassrooms.size()==0 && invitations.size()==0){
             return "studentdashboardWelcome";
         }
         model.addAttribute("invitations",invitations);
-        model.addAttribute("followers", followers);
-        model.addAttribute("classrooms", classrooms);
+        model.addAttribute("followedTeachers", followedTeachers);
+        model.addAttribute("joinedClassrooms", joinedClassrooms);
         return "studentdashboard";
     }
 

@@ -1,13 +1,11 @@
 package com.qaproject.controller;
 
 import com.qaproject.dao.*;
-import com.qaproject.dto.AcceptAnswerDto;
-import com.qaproject.dto.AnswerDto;
-import com.qaproject.dto.PostDto;
-import com.qaproject.dto.WantAnswerDto;
+import com.qaproject.dto.*;
 import com.qaproject.entity.*;
 import com.qaproject.util.Constant;
 import com.qaproject.util.ConvertEntityDto;
+import com.qaproject.util.DashboardUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -40,6 +38,8 @@ public class PostController {
     UserDao userDao;
     @Autowired
     WantAnswerDao wantAnswerDao;
+    @Autowired
+    DashboardUtilities dashboardUtilities;
     @Autowired
     SimpMessagingTemplate template;
 
@@ -322,6 +322,20 @@ public class PostController {
         }
         //Send notification
         return "OK";
+    }
+
+    @RequestMapping(value = "dashboard/postInvitation/{page}",produces = "application/json",
+            method = RequestMethod.GET)
+    public @ResponseBody
+    List<PostInvitationDto> loadPostInvitation(@PathVariable Integer page) {
+        User user = (User) session.getAttribute("user");
+        List<PostInvitationDto> postInvitationDtos = null;
+        try {
+            postInvitationDtos = dashboardUtilities.loadPostInvitations(user.getId(), page);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return postInvitationDtos;
     }
     @RequestMapping(value = "/post/updateAnswer", method = RequestMethod.POST, produces = "application/json")
     public

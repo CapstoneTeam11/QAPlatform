@@ -1,5 +1,6 @@
 package com.qaproject.dao;
 
+import com.qaproject.dto.FollowerDto;
 import com.qaproject.entity.Follower;
 import com.qaproject.entity.User;
 import org.springframework.stereotype.Repository;
@@ -17,6 +18,7 @@ public interface FollowerDao {
     public Follower findByTeacherId(Integer teacherId, User StudentId);
     List<Follower> findAll();
     List<Follower> findByFollower(User user);
+    List<Follower> findFollowedTeacherForDashboard(Integer followerId, Integer page);
     @Transactional(propagation = Propagation.REQUIRED)
     public void persist(Follower entity);
     @Transactional(propagation = Propagation.REQUIRED)
