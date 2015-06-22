@@ -2,14 +2,18 @@ package com.qaproject.dao.impl;
 
 import com.qaproject.dao.BaseDao;
 import com.qaproject.dao.FollowerDao;
+import com.qaproject.dto.FollowerDto;
 import com.qaproject.entity.Follower;
 import com.qaproject.entity.User;
+import com.qaproject.util.Constant;
+import com.qaproject.util.ConvertEntityDto;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,6 +48,25 @@ public class FollowerImpl extends BaseDao<Follower,Integer> implements FollowerD
         }
         return followers;
     }
+
+    @Override
+    public List<Follower> findFollowedTeacherForDashboard(Integer followerId, Integer page) {
+        Query query = entityManager.createQuery("Select f from Follower f where f.followerId.id=:followerId order by f.id desc");
+        query.setParameter("followerId",followerId);
+        if (page < 1) {
+            page = 1;
+        }
+        query.setFirstResult((page - 1) * Constant.NUMBER_PAGE);
+        query.setMaxResults(Constant.NUMBER_PAGE+1);
+        List<Follower> followers = null;
+        try{
+            followers = query.getResultList();
+        } catch (NoResultException e){
+            e.printStackTrace();
+        }
+        return followers;
+    }
+
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)

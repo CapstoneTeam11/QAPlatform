@@ -4,7 +4,11 @@ import com.qaproject.dao.ClassroomUserDao;
 import com.qaproject.dao.FollowerDao;
 import com.qaproject.dao.UserDao;
 import com.qaproject.dao.impl.FollowerImpl;
+import com.qaproject.dto.ClassroomDto;
+import com.qaproject.dto.FollowerDto;
+import com.qaproject.dto.PostInvitationDto;
 import com.qaproject.entity.*;
+import com.qaproject.util.DashboardUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,6 +33,9 @@ public class TeacherController {
     UserDao userDao;
     @Autowired
     ClassroomUserDao classroomUserDao;
+    @Autowired
+    DashboardUtilities dashboardUtilities;
+
     @RequestMapping(value = "/followTeacher/",method = RequestMethod.GET)
     @ResponseBody
     public String followTeacher(Model model, @RequestParam(value = "teacherId")String teacherId,
@@ -72,19 +79,15 @@ public class TeacherController {
         if(user.getRoleId().getId()==1){
             return "403";
         }
-
-        //get currentUser for updated classrooms, followedTeachers and invitation
-        User currentUser = userDao.find(user.getId());
-
         //check if teacher have any post or following others
-        List<Classroom> classrooms = currentUser.getClassroomList();
-        List<Follower> followedTeachers = followerDao.findByFollower(currentUser);
-        List<PostInvitation> invitations = currentUser.getPostInvitationList();
-        if (classrooms.size()==0 && followedTeachers.size()==0 && invitations.size()==0) {
+        List<ClassroomDto> ownedClassrooms = dashboardUtilities.loadOwnedClassrooms(user.getId(), 1);
+        List<FollowerDto> followedTeachers = dashboardUtilities.loadFollowedTeachers(user.getId(), 1);
+        List<PostInvitationDto> invitations = dashboardUtilities.loadPostInvitations(user.getId(), 1);
+        if (ownedClassrooms.size()==0 && followedTeachers.size()==0 && invitations.size()==0) {
             return "teacherdashboardWelcome";
         }
         model.addAttribute("invitations",invitations);
-        model.addAttribute("classrooms",classrooms);
+        model.addAttribute("ownedClassrooms",ownedClassrooms);
         model.addAttribute("followedTeachers",followedTeachers);
         return "teacherdashboard";
     }

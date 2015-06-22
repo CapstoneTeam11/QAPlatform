@@ -1,5 +1,6 @@
 package com.qaproject.dao;
 
+import com.qaproject.dto.ClassroomDto;
 import com.qaproject.entity.Classroom;
 import com.qaproject.entity.ClassroomUser;
 import com.qaproject.entity.User;
@@ -19,6 +20,8 @@ public interface ClassroomUserDao {
     List<ClassroomUser> findByClassroom(Classroom classroom);
     List<ClassroomUser> findByUser(User user);
     List<ClassroomUser> findByUserWithApproved (User user);
+    List<ClassroomUser> findJoinedClassroomUserForDashboard (Integer studentId, Integer page);
+    List<ClassroomUser> findInvitationClassroomUserForDashboard (Integer studentId, Integer page);
     List<ClassroomUser> findByUserClassroomWithApprove(int userId, int classId);
     public List<ClassroomUser> findByUserClassroom(int userId, int classId);
     @Transactional(propagation = Propagation.REQUIRED)
