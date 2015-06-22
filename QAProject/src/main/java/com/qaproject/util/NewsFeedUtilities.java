@@ -1,6 +1,7 @@
 package com.qaproject.util;
 
 import com.qaproject.dao.*;
+import com.qaproject.dto.PostDto;
 import com.qaproject.entity.*;
 import org.joda.time.DateTime;
 import org.joda.time.Hours;
@@ -36,6 +37,85 @@ public class NewsFeedUtilities {
     private final Integer STUDENT = 1;
     private final Integer TEACHER = 2;
     private final Integer ACCEPTED = 1;
+
+    public void setNewsFeedQuestion() {
+        List<User> users = userDao.findAll();
+        if (users == null) {
+            return;
+        }
+        Jedis jedis = new Jedis("localhost");
+        for (User user : users) {
+            setQuestionsInClass(user, jedis);
+            setQuestionsInFollower(user, jedis);
+            setQuestionsInKnow(user, jedis);
+        }
+    }
+
+    public void setNewsFeedQuestionAfterRegister(User user) {
+        Jedis jedis = new Jedis("localhost");
+        setQuestionsInKnow(user,jedis);
+    }
+
+    public void setNewsFeedQuestionAfterCreatePost(Post question){
+        List<User> users = userDao.findAll();
+        if (users==null) {
+            return;
+        }
+        Jedis jedis = new Jedis("localhost");
+        for (User user: users){
+            setQuestionInClass(user,jedis,question);
+            setQuestionsInFollower(user,jedis,question);
+            setQuestionsInKnow(user,jedis,question);
+        }
+    }
+
+    public List<PostDto> loadNewsFeedQuestions(Integer userId, Integer page){
+        if (page<1){
+            page = 1;
+        }
+        Integer start = Constant.NUMBER_PAGE*(page -1);
+        Integer stop = Constant.NUMBER_PAGE*page;
+        List<Post> questions = getNewsFeedQuestions(userId,start,stop);
+        List<PostDto> questionDtos = new ArrayList<PostDto>();
+        if (questions != null) {
+            for(Post question: questions) {
+                Integer answerCount = 0;
+                if (question!=null) {
+                    List<Post> answers = postDao.findRepliesByParentId(question.getId());
+                    if (answers!=null) {
+                        answerCount = answers.size();
+                    }
+                }
+                PostDto questionDto = ConvertEntityDto.convertPostEntityToDto(question,answerCount);
+                questionDtos.add(questionDto);
+            }
+        }
+        return questionDtos;
+    }
+
+    public List<Post> getNewsFeedQuestions(Integer userId, Integer start, Integer stop) {
+        List<Post> inClass = getQuestionsByPrefixKey(QUESTION_IN_CLASS, userId, start, stop);
+        List<Post> inFollower = getQuestionsByPrefixKey(QUESTION_IN_FOLLOWER, userId, start, stop);
+        List<Post> inKnow = getQuestionsByPrefixKey(QUESTION_IN_KNOW, userId, start, stop);
+
+        List<Post> newsFeedQuestions = new ArrayList<Post>();
+        if (inClass.size()>0) {
+            for(Post question : inClass){
+                addToQuestionList(newsFeedQuestions,question);
+            }
+        }
+        if (inFollower.size()>0) {
+            for(Post question : inFollower){
+                addToQuestionList(newsFeedQuestions,question);
+            }
+        }
+        if (inKnow.size()>0) {
+            for(Post question : inKnow){
+                addToQuestionList(newsFeedQuestions,question);
+            }
+        }
+        return newsFeedQuestions;
+    }
 
     /*set user news feed question in their class for all question*/
     private void setQuestionsInClass(User user, Jedis jedis) {
@@ -249,61 +329,6 @@ public class NewsFeedUtilities {
         } else {
             list.add(question);
         }
-    }
-
-    public void setNewsFeedQuestion() {
-        List<User> users = userDao.findAll();
-        if (users == null) {
-            return;
-        }
-        Jedis jedis = new Jedis("localhost");
-        for (User user : users) {
-            setQuestionsInClass(user, jedis);
-            setQuestionsInFollower(user, jedis);
-            setQuestionsInKnow(user, jedis);
-        }
-    }
-
-    public void setNewsFeedQuestionAfterRegister(User user) {
-        Jedis jedis = new Jedis("localhost");
-        setQuestionsInKnow(user,jedis);
-    }
-
-    public void setNewsFeedQuestionAfterCreatePost(Post question){
-        List<User> users = userDao.findAll();
-        if (users==null) {
-            return;
-        }
-        Jedis jedis = new Jedis("localhost");
-        for (User user: users){
-            setQuestionInClass(user,jedis,question);
-            setQuestionsInFollower(user,jedis,question);
-            setQuestionsInKnow(user,jedis,question);
-        }
-    }
-
-    public List<Post> getNewsFeedQuestions(Integer userId, Integer start, Integer stop) {
-        List<Post> inClass = getQuestionsByPrefixKey(QUESTION_IN_CLASS, userId, start, stop);
-        List<Post> inFollower = getQuestionsByPrefixKey(QUESTION_IN_FOLLOWER, userId, start, stop);
-        List<Post> inKnow = getQuestionsByPrefixKey(QUESTION_IN_KNOW, userId, start, stop);
-
-        List<Post> newsFeedQuestions = new ArrayList<Post>();
-        if (inClass.size()>0) {
-            for(Post question : inClass){
-                addToQuestionList(newsFeedQuestions,question);
-            }
-        }
-        if (inFollower.size()>0) {
-            for(Post question : inFollower){
-                addToQuestionList(newsFeedQuestions,question);
-            }
-        }
-        if (inKnow.size()>0) {
-            for(Post question : inKnow){
-                addToQuestionList(newsFeedQuestions,question);
-            }
-        }
-        return newsFeedQuestions;
     }
 
     private List<Post> getQuestionsByPrefixKey(String prefixKey, Integer userId, Integer start, Integer stop) {

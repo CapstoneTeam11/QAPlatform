@@ -1,17 +1,23 @@
 package com.qaproject.util;
 
 import com.qaproject.dao.FollowerDao;
+import com.qaproject.dao.PostDao;
+import com.qaproject.dao.impl.PostDaoImpl;
 import com.qaproject.dto.*;
 import com.qaproject.entity.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by khangtnse60992 on 6/5/2015.
  */
 public class ConvertEntityDto {
+
     public static TagDto convertTagEntityToDto(Tag tag) {
         TagDto tagDto = new TagDto();
         tagDto.setId(tag.getId());
@@ -30,6 +36,26 @@ public class ConvertEntityDto {
         postDto.setAcceptedAnswerId(post.getAcceptedAnswerId());
         postDto.setClassName(post.getOwnerClassId().getClassroomName());
         postDto.setOwnerName(post.getOwnerUserId().getDisplayName());
+
+        return postDto;
+    }
+
+    public static PostDto convertPostEntityToDto(Post post, Integer answerCount) {
+        PostDto postDto = new PostDto();
+        if (post!=null) {
+            postDto.setId(post.getId());
+            postDto.setTitle(post.getTitle());
+            postDto.setOwnerId(post.getOwnerUserId().getId());
+            postDto.setParentId(post.getParentId());
+            postDto.setPostType(post.getPostType());
+            postDto.setLastEditedDate(ConvertDateTime(post.getLastEditedDate()));
+            postDto.setBody(post.getBody());
+            postDto.setAcceptedAnswerId(post.getAcceptedAnswerId());
+            postDto.setClassName(post.getOwnerClassId().getClassroomName());
+            postDto.setOwnerName(post.getOwnerUserId().getDisplayName());
+            postDto.setClassId(post.getOwnerClassId().getId());
+            postDto.setAnswerCount(answerCount);
+        }
         return postDto;
     }
 

@@ -18,6 +18,10 @@ public class PostDto {
     private String className;
     private String ownerName;
 
+    //MinhKH
+    private Integer classId;
+    private Integer answerCount;
+
     public String getClassName() {
         return className;
     }
@@ -96,5 +100,21 @@ public class PostDto {
 
     public void setOwnerName(String ownerName) {
         this.ownerName = ownerName;
+    }
+
+    public Integer getClassId() {
+        return classId;
+    }
+
+    public void setClassId(Integer classId) {
+        this.classId = classId;
+    }
+
+    public Integer getAnswerCount() {
+        return answerCount;
+    }
+
+    public void setAnswerCount(Integer answerCount) {
+        this.answerCount = answerCount;
     }
 }
