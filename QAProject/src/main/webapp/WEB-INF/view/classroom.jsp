@@ -146,7 +146,9 @@
     <li class="tab"><a href="#" class="current">Question</a></li>
     <li class="tab"><a href="#">Article</a></li>
     <li class="tab"><a href="#">Material</a></li>
-    <li class="tab"><a href="#">Join Request</a></li>
+    <c:if test="${user.roleId.id==2}">
+        <li class="tab"><a href="#">Join Request</a></li>
+    </c:if>
     <li class="tab"><a href="#">Student</a></li>
 </ul>
 
@@ -251,39 +253,41 @@
         </c:if>
     </div>
 </div>
-<div class="tab-inner-warp"  id="studentRequestTag">
-    <div class="tab-inner">
-        <c:if test="${not empty joinRequests}">
-            <c:set var="total" value="${fn:length(joinRequests)}" />
+<c:if test="${user.roleId.id==2}">
+    <div class="tab-inner-warp"  id="studentRequestTag">
+        <div class="tab-inner">
+            <c:if test="${not empty joinRequests}">
+                <c:set var="total" value="${fn:length(joinRequests)}" />
 
-            <c:forEach var="joinRequest" items="${joinRequests}" varStatus="counter">
-                <c:if test="${counter.count <11}"> <!-- less than 15 -->
-                    <form id="acceptForm${joinRequest.id}" method="post" action="/acceptRequest">
-                        <input type="hidden" name="requestId" id ="requestId${joinRequest.id}"  value="${joinRequest.id}"/>
-                        <input type="hidden" name="ownerClassroomId" id="ownerClassroomId${joinRequest.id}" value="${classroom.ownerUserId.id}"/>
-                        <input type="hidden" name="currentClassroomId" id="currentClassroomId${joinRequest.id}" value="${classroom.id}"/>
-                        <div class="about-author clearfix">
-                            <div class="author-image">
-                                <a href="#" original-title="${joinRequest.userId.displayName}" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
+                <c:forEach var="joinRequest" items="${joinRequests}" varStatus="counter">
+                    <c:if test="${counter.count <11}"> <!-- less than 15 -->
+                        <form id="acceptForm${joinRequest.id}" method="post" action="/acceptRequest">
+                            <input type="hidden" name="requestId" id ="requestId${joinRequest.id}"  value="${joinRequest.id}"/>
+                            <input type="hidden" name="ownerClassroomId" id="ownerClassroomId${joinRequest.id}" value="${classroom.ownerUserId.id}"/>
+                            <input type="hidden" name="currentClassroomId" id="currentClassroomId${joinRequest.id}" value="${classroom.id}"/>
+                            <div class="about-author clearfix">
+                                <div class="author-image">
+                                    <a href="#" original-title="${joinRequest.userId.displayName}" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
+                                </div>
+                                <c:if test="${user.roleId.id==2}">
+                                    <a class="" href="#" onclick="javascript:ignoreRequest('acceptForm${joinRequest.id}', ${joinRequest.id});" style="float: right">Ignore</a>
+                                    <a class="" href="#" onclick="javascript:acceptRequest('acceptForm${joinRequest.id}', ${joinRequest.userId.id}, ${joinRequest.id});" style="float: right; margin-right: 15px">Confirm</a>
+                                </c:if>
+                                <div class="author-bio">
+                                <h4><a href="#">${joinRequest.userId.displayName}</a></h4>
+                                Requested to join <a href="/classroom/${classroom.id}" style="font-size: 15px">${classroom.classroomName}</a>
+                                </div>
                             </div>
-                            <c:if test="${user.roleId.id==2}">
-                                <a class="" href="#" onclick="javascript:ignoreRequest('acceptForm${joinRequest.id}', ${joinRequest.id});" style="float: right">Ignore</a>
-                                <a class="" href="#" onclick="javascript:acceptRequest('acceptForm${joinRequest.id}', ${joinRequest.userId.id}, ${joinRequest.id});" style="float: right; margin-right: 15px">Confirm</a>
-                            </c:if>
-                            <div class="author-bio">
-                            <h4><a href="#">${joinRequest.userId.displayName}</a></h4>
-                            Requested to join <a href="/classroom/${classroom.id}" style="font-size: 15px">${classroom.classroomName}</a>
-                            </div>
-                        </div>
-                    </form>
+                        </form>
+                    </c:if>
+                </c:forEach>
+                <c:if test="${total >10}"> <!-- more than 15 -->
+                    <a href="javascript:javascript:loadMoreStudentRequest(${classroom.id})" class="post-read-more button color small">Load more...</a>
                 </c:if>
-            </c:forEach>
-            <c:if test="${total >10}"> <!-- more than 15 -->
-                <a href="javascript:javascript:loadMoreStudentRequest(${classroom.id})" class="post-read-more button color small">Load more...</a>
             </c:if>
-        </c:if>
+        </div>
     </div>
-</div>
+</c:if>
     <div class="tab-inner-warp" id="studentTag">
         <div class="tab-inner">
             <c:if test="${not empty students}">
@@ -295,7 +299,9 @@
                                 <a href="#" original-title="" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
                             </div>
                             <c:if test="${classroom.status == 1}">
-                                <a class="removeBtn" href="javascript:removeStudent(${student.userId.id});" style="float: right">Remove</a>
+                                <c:if test="${user.roleId.id==2}">
+                                    <a class="removeBtn" href="javascript:removeStudent(${student.userId.id});" style="float: right">Remove</a>
+                                </c:if>
                             </c:if>
                             <div class="author-bio" style="margin-top: 25px">
                                 <h4><a href="#">${student.userId.displayName}</a></h4>
