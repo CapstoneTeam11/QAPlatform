@@ -93,7 +93,6 @@ public class PostController {
         model.addAttribute("relatedPosts", relatedPosts);
         model.addAttribute("postAnswers", postAnswers);
         if (user != null) {
-
             WantAnswerPost wantAnswerPost = post.checkWantToAnswer(user.getId());
             if (wantAnswerPost != null) {
                 model.addAttribute("wantAnswer", wantAnswerPost);
