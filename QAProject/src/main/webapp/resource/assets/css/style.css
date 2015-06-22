@@ -5177,8 +5177,33 @@ html[xmlns] .slides {
     width: 85%;
     float: left;
 }
+.actionAnswer {
+    left: -96px;
+    min-width: 103px;
+}
+.dropdown-menu>li>a:hover, .dropdown-menu>li>form>a:hover, .dropdown-menu>li>a:focus, .dropdown-submenu:hover>a, .dropdown-submenu:focus>a {
+    text-decoration: none;
+    color: #ffffff;
+    background-color: #0081c2;
+    background-image: -moz-linear-gradient(top, #0088cc, #0077b3);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0077b3));
+    background-image: -webkit-linear-gradient(top, #0088cc, #0077b3);
+    background-image: -o-linear-gradient(top, #0088cc, #0077b3);
+    background-image: linear-gradient(to bottom, #0088cc, #0077b3);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0077b3', GradientType=0);
+}
 #email-error, #password-error, #confirm_password-error, #professional-error {
     width: 100% !important;
     color: red !important;
     font-size: 12px !important;
+}
+.dropdown-menu>li>form {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: 400;
+    line-height: 1.42857143;
+    color: #333;
+    white-space: nowrap;
 }

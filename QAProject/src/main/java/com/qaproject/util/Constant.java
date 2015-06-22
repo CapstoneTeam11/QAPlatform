@@ -5,4 +5,6 @@ package com.qaproject.util;
  */
 public class Constant {
     public static final int NUMBER_PAGE = 10;
+    public static final int ACCEPT_ANSWER = 1;
+    public static final int UNACCEPT_ANSWER = 0;
 }

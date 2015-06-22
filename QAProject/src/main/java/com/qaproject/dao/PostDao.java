@@ -21,6 +21,7 @@ public interface PostDao {
     public List<Post> findQuestionsByOwnerUser(User ownerUser);
     public List<Post> findArticlesByOwnerUser(User ownerUser);
     public List<Post> findRepliesByParentId(Integer parentId);
+    public List<Post> findRepliesWasAcceptedByParentId(Integer parentId);
     public List<Post> findQuestionByOwnerClassroom(Classroom ownerClassroom);
     public List<PostDto> loadMoreAnswer(Integer id,Integer page);
     @Transactional(propagation = Propagation.REQUIRED)
