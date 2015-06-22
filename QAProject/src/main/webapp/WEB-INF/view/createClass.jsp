@@ -257,10 +257,23 @@
 <script src="/resource/assets/js/bootstrap-tagsinput.min.js"></script>
 <script src="/resource/assets/js/bootstrapValidator.js"></script>
 <script src="/resource/assets/js/validator.js"></script>
+<script src="/resource/assets/js/handlebars-v3.0.3.js"></script>
 <!-- End js -->
 //Create Class
 
 <script>
+    var createTag = function(e){
+        var flag = 0;
+        for( var i = 0 ; i < elt.tagsinput('items').length ; i ++) {
+            if($('.tt-input').val()==elt.tagsinput('items')[i].name) {
+                flag = 1;
+            }
+        }
+        if(flag==0) {
+            $('#tagsuggest').tagsinput('add', { id: Math.round((Math.random()*10000))*-1, name: $('.tt-input').val() });
+            $('.tt-input').val("");
+        }
+    };
     $(document).ready(function () {
         var tag = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
@@ -271,24 +284,47 @@
         });
         tag.initialize();
         elt = $('#tagsuggest');
-        var hiddenTag = $('#hiddenTag');
+        var hiddenTag123 = $('#hiddenTag');
         elt.tagsinput({
             itemValue: 'id',
             itemText: 'name',
             typeaheadjs: {
                 name: 'tag',
                 displayKey: 'name',
-                source: tag.ttAdapter()
+                source: tag.ttAdapter(),
+                templates: {
+                    empty: [
+                        '<div style="display: flex"><span class="unableFind"> unable to find tag</span> <span><a class="button color small" id="createTag" onclick="createTag()" style="margin-left: 5px">Create Now</a></span></div>'
+                    ].join('\n'),
+                    suggestion: Handlebars.compile('<div><span style="white-space: nowrap">{{name}}</span></div>')
+                }
             }
         });
         elt.on('itemAdded', function (event) {
             var idTag = event.item.id;
-            hiddenTag.append("<input type='hidden' name='tagId' value=" + idTag + " id=tag" + idTag + ">");
+            if(idTag < 0) {
+                var name = event.item.name;
+                hiddenTag123.append("<input type='hidden' name='newTag' value=" + name + " id=tag" + idTag + ">");
+            } else {
+                hiddenTag123.append("<input type='hidden' name='tagId' value=" + idTag + " id=tag" + idTag + ">");
+            }
         });
         elt.on('itemRemoved', function (event) {
             var tagId = "#tag" + event.item.id;
             $(tagId).remove();
         });
+//        var tagIdUpdate = new Array();
+//        $("input[name=tagUpdateId]").each(function() {
+//            tagIdUpdate.push($(this).val());
+//        });
+//        var tagNameUpdate = new Array();
+//        $("input[name=tagUpdateName]").each(function() {
+//            tagNameUpdate.push($(this).val());
+//        });
+//        for(var i = 0 ; i < tagIdUpdate.length ; i++) {
+//            elt.tagsinput('add', { id: tagIdUpdate[i], name: tagNameUpdate[i] });
+//        }
+
         ///////////////////////////////////////////////
         var student = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),

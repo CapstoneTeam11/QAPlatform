@@ -54,11 +54,11 @@ public class ClassController {
     }
     @RequestMapping(value= "/createClass1",method= RequestMethod.POST)
 //    @ResponseBody
-    public String register(
-                           @RequestParam("classroomName") String classroomName,
+    public String createClass(@RequestParam("classroomName") String classroomName,
                            @RequestParam("classroomDescription") String classroomDescription,
                            @RequestParam("categoryId") String categoryId,
                            @RequestParam("tag") String tag,
+                           @RequestParam(value = "newTag", required = false)  List<String> newTag,
                            @RequestParam("studentList") String studentList, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         User user = (User)session.getAttribute("user");
@@ -81,21 +81,30 @@ public class ClassController {
         classroomDao.persist(room);
         String[] tagList = tag.split(",");
         for (int i = 0; i<= tagList.length-1; i++){
-            TagClassroom tagClassroom = new TagClassroom();
-            tagClassroom.setClassroomId(room);
-            String tagId = tagList[i].trim();
-            Tag tagFind = tagDao.find(Integer.parseInt(tagId));
-//            if(tagFind == null){
-//                Tag tagNew = new Tag();
-//                tagNew.setTagName(tagName);
-//                tagNew.setTagCount(0);
-//                tagDao.persist(tagNew);
-//                tagFind = tagNew;
-//            }
-            tagClassroom.setTagId(tagFind);
-            tagClassroomDao.persist(tagClassroom);
-            tagFind.setTagCount(tagFind.getTagCount()+1);
-            tagDao.merge(tagFind);
+            if(Integer.parseInt(tagList[i].trim())>0){
+                TagClassroom tagClassroom = new TagClassroom();
+                tagClassroom.setClassroomId(room);
+                String tagId = tagList[i].trim();
+                Tag tagFind = tagDao.find(Integer.parseInt(tagId));
+                tagClassroom.setTagId(tagFind);
+                tagClassroomDao.persist(tagClassroom);
+                tagFind.setTagCount(tagFind.getTagCount()+1);
+                tagDao.merge(tagFind);
+            }
+        }
+        if (newTag != null) {
+            for (int i = 0; i < newTag.size(); i++) {
+                Tag tagNew = new Tag();
+                tagNew.setTagName(newTag.get(i));
+                tagNew.setTagCount(0);
+                tagDao.persist(tagNew);
+                TagClassroom tagClassroom = new TagClassroom();
+                tagClassroom.setClassroomId(room);
+                tagClassroom.setTagId(tagNew);
+                tagClassroomDao.persist(tagClassroom);
+                tagNew.setTagCount(tagNew.getTagCount()+1);
+                tagDao.merge(tagNew);
+            }
         }
         String[] listStudentId = studentList.split(",");
         boolean flag = false;
@@ -383,6 +392,156 @@ public class ClassController {
         }
 
         return listResquest;
+    }
+    /**
+     * TungTD loadMoreActicle
+     * @param model
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/classroom/loadMoreActicle/{id}",method = RequestMethod.POST)
+    @ResponseBody
+    public List<ArticleDto> loadMoreActicle(ModelMap model, @PathVariable(value = "id") String id) {
+        User userSession = (User) session.getAttribute("user");
+        if(userSession==null) {
+            return null;
+        }
+        Classroom classroom = classroomDao.find(Integer.parseInt(id));
+        int idOwner = classroom.getOwnerUserId().getId();
+        User user = userDao.find(idOwner);
+
+        //get posts, materials, request to join - MinhKH
+        List<Post> posts = classroom.getPostList();
+        List<Material> materials = classroom.getMaterialList();
+
+
+        //classify post - MinhKH
+        List<Post> questions = new ArrayList<Post>();
+        List<Post> articles = new ArrayList<Post>();
+        for (int i=0; i<posts.size();i++){
+            Post currentPost = posts.get(i);
+            if (currentPost.getPostType()==1){
+                questions.add(currentPost);
+            }
+            if (currentPost.getPostType()==2){
+                articles.add(currentPost);
+            }
+        }
+        // check if acceptRequest or not
+        List<ClassroomUser> checkClassroomUsers = classroomUserDao.findByUserClassroom(userSession.getId(), Integer.parseInt(id));
+        ClassroomUser checkClassroomUser = null;
+        if(checkClassroomUsers != null && checkClassroomUsers.size()>0){
+            checkClassroomUser = checkClassroomUsers.get(0);
+        }
+        List<ArticleDto> articleDtos = new ArrayList<ArticleDto>();
+        for(int i=0; i< articles.size(); i++){
+            Post article = articles.get(i);
+            ArticleDto articleDto = new ArticleDto();
+            articleDto.setQuestionId(article.getId().toString());
+            articleDto.setClassroomName(article.getOwnerClassId().getClassroomName());
+            articleDto.setQuestionAcceptedAnswerId(article.getAcceptedAnswerId().toString());
+            articleDto.setQuestionBody(article.getBody());
+            articleDto.setQuestionLastEditedDate(article.getLastEditedDate().toString());
+            articleDto.setQuestionOwnerUserId(article.getOwnerUserId().getId().toString());
+            articleDto.setQuestionTitle(article.getTitle());
+            articleDto.setReplyCount(article.getReplyCount() == null ? "0" : article.getReplyCount().toString());
+            articleDto.setQuestionOwnerUserName(article.getOwnerUserId().getDisplayName());
+            articleDtos.add(articleDto);
+        }
+
+        return articleDtos;
+    }
+
+    /**
+     * TungTD loadMoreActicle
+     * @param model
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/classroom/loadMoreQuestion/{id}",method = RequestMethod.POST)
+    @ResponseBody
+    public List<ArticleDto> loadMoreQuestion(ModelMap model, @PathVariable(value = "id") String id) {
+        User userSession = (User) session.getAttribute("user");
+        if(userSession==null) {
+            return null;
+        }
+        Classroom classroom = classroomDao.find(Integer.parseInt(id));
+        int idOwner = classroom.getOwnerUserId().getId();
+        User user = userDao.find(idOwner);
+
+        //get posts, materials, request to join - MinhKH
+        List<Post> posts = classroom.getPostList();
+        List<Material> materials = classroom.getMaterialList();
+
+
+        //classify post - MinhKH
+        List<Post> questions = new ArrayList<Post>();
+        List<Post> articles = new ArrayList<Post>();
+        for (int i=0; i<posts.size();i++){
+            Post currentPost = posts.get(i);
+            if (currentPost.getPostType()==1){
+                questions.add(currentPost);
+            }
+            if (currentPost.getPostType()==2){
+                articles.add(currentPost);
+            }
+        }
+        // check if acceptRequest or not
+        List<ClassroomUser> checkClassroomUsers = classroomUserDao.findByUserClassroom(userSession.getId(), Integer.parseInt(id));
+        ClassroomUser checkClassroomUser = null;
+        if(checkClassroomUsers != null && checkClassroomUsers.size()>0){
+            checkClassroomUser = checkClassroomUsers.get(0);
+        }
+        List<ArticleDto> articleDtos = new ArrayList<ArticleDto>();
+        for(int i=0; i< questions.size(); i++){
+            Post article = questions.get(i);
+            ArticleDto articleDto = new ArticleDto();
+            articleDto.setQuestionId(article.getId().toString());
+            articleDto.setClassroomName(article.getOwnerClassId().getClassroomName());
+            articleDto.setQuestionAcceptedAnswerId(article.getAcceptedAnswerId().toString());
+            articleDto.setQuestionBody(article.getBody());
+            articleDto.setQuestionLastEditedDate(article.getLastEditedDate().toString());
+            articleDto.setQuestionOwnerUserId(article.getOwnerUserId().getId().toString());
+            articleDto.setQuestionTitle(article.getTitle());
+            articleDto.setReplyCount(article.getReplyCount()==null?"0":article.getReplyCount().toString());
+            articleDto.setQuestionOwnerUserName(article.getOwnerUserId().getDisplayName());
+            articleDtos.add(articleDto);
+        }
+
+        return articleDtos;
+    }
+    /**
+     * TungTD loadMoreActicle
+     * @param model
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/classroom/loadMoreMaterial/{id}",method = RequestMethod.POST)
+    @ResponseBody
+    public List<MaterialDto> loadMoreMaterial(ModelMap model, @PathVariable(value = "id") String id) {
+        User userSession = (User) session.getAttribute("user");
+        if(userSession==null) {
+            return null;
+        }
+        Classroom classroom = classroomDao.find(Integer.parseInt(id));
+        int idOwner = classroom.getOwnerUserId().getId();
+        User user = userDao.find(idOwner);
+
+        //get posts, materials, request to join - MinhKH
+        List<Post> posts = classroom.getPostList();
+        List<Material> materials = classroom.getMaterialList();
+        List<MaterialDto> materialDtos = new ArrayList<MaterialDto>();
+        for(int i=0; i< materials.size(); i++){
+            Material material = materials.get(i);
+            MaterialDto materialDto = new MaterialDto();
+            materialDto.setCreationDate(material.getCreationDate().toString());
+            materialDto.setId(material.getId().toString());
+            materialDto.setName(material.getName());
+            materialDto.setSize(material.getSize().toString());
+            materialDtos.add(materialDto);
+        }
+
+        return materialDtos;
     }
     /**
      *
