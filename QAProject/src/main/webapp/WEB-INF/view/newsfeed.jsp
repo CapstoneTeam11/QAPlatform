@@ -8,6 +8,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -103,41 +104,85 @@
                 <div class="col-md-12">
                     <div class="boxedtitle page-title"><h2>Question</h2></div>
                     <div style="display: block;">
-                        <div class="tab-inner">
+                        <div class="tab-inner" id="questions">
                             <c:if test="${not empty questions}">
-                                <c:forEach var="question" items="${questions}">
-                                    <article class="question question-type-normal">
-                                        <h2>
-                                            <a href="/post/view/${question.id}">${question.title}</a>
-                                        </h2>
-                                        <div class="question-author">
-                                            <a href="/profile/view/${question.ownerUserId.id}" original-title="${question.ownerUserId.displayName}" class="question-author-img tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>
-                                        </div>
-                                        <div class="question-inner">
-                                            <div class="clearfix"></div>
-                                            <div class="question-desc short-text">${question.body}</div>
-                                            <div class="question-details">
-                                                <span class="question-answered question-answered-done">
-                                                    <c:if test="${question.acceptedAnswerId} != null">
-                                                        <i class="icon-ok"></i>Resolved
-                                                    </c:if>
-                                                </span>
+                                <c:if test="${fn:length(questions)>10}">
+                                    <c:forEach var="question" items="${questions}" end="9">
+                                        <article class="question question-type-normal">
+                                            <h2>
+                                                <a href="/post/view/${question.id}">${question.title}</a>
+                                            </h2>
+                                            <div class="question-author">
+                                                <a href="/profile/view/${question.ownerId}"
+                                                   original-title="${question.ownerName}"
+                                                   class="question-author-img tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>
                                             </div>
-                                            <span class="question-date"><i class="icon-time"></i>${question.lastEditedDate}</span>
-                                            <span class="question-category"><a href="/classroom/${question.ownerClassId.id}"><i class="icon-group"></i>Class: ${question.ownerClassId.classroomName}</a></span>
-                                            <span class="question-comment"><a href="#"><i class="icon-comment"></i>0 Answer(s)</a></span>
-                                            <div class="clearfix"></div>
-                                        </div>
-                                    </article>
-                                </c:forEach>
-                                <a href="#" class="post-read-more button color small" style="margin-bottom: 5px;">Continue reading</a>
+                                            <div class="question-inner">
+                                                <div class="clearfix"></div>
+                                                <div class="question-desc short-text">${question.body}</div>
+                                                <div class="question-details">
+                                                    <span class="question-answered question-answered-done">
+                                                        <c:if test="${question.acceptedAnswerId} != null">
+                                                            <i class="icon-ok"></i>Resolved
+                                                        </c:if>
+                                                    </span>
+                                                </div>
+                                                <span class="question-date"><i
+                                                        class="icon-time"></i>${question.lastEditedDate}</span>
+                                                <span class="question-category"><a
+                                                        href="/classroom/${question.classId}"><i
+                                                        class="icon-group"></i>Class: ${question.className}</a></span>
+                                                <span class="question-comment"><a href="#"><i
+                                                        class="icon-comment"></i>${question.answerCount} Answer(s)</a></span>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                        </article>
+                                    </c:forEach>
+                                </c:if>
+                                <c:if test="${fn:length(questions)<=10}">
+                                    <c:forEach var="question" items="${questions}">
+                                        <article class="question question-type-normal">
+                                            <h2>
+                                                <a href="/post/view/${question.id}">${question.title}</a>
+                                            </h2>
+                                            <div class="question-author">
+                                                <a href="/profile/view/${question.ownerId}"
+                                                   original-title="${question.ownerName}"
+                                                   class="question-author-img tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>
+                                            </div>
+                                            <div class="question-inner">
+                                                <div class="clearfix"></div>
+                                                <div class="question-desc short-text">${question.body}</div>
+                                                <div class="question-details">
+                                                    <span class="question-answered question-answered-done">
+                                                        <c:if test="${question.acceptedAnswerId} != null">
+                                                            <i class="icon-ok"></i>Resolved
+                                                        </c:if>
+                                                    </span>
+                                                </div>
+                                                <span class="question-date"><i
+                                                        class="icon-time"></i>${question.lastEditedDate}</span>
+                                                <span class="question-category"><a
+                                                        href="/classroom/${question.classId}"><i
+                                                        class="icon-group"></i>Class: ${question.className}</a></span>
+                                                <span class="question-comment"><a href="#"><i
+                                                        class="icon-comment"></i>${question.answerCount} Answer(s)</a></span>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                        </article>
+                                    </c:forEach>
+                                </c:if>
+                            </c:if>
+                            <c:if test="${fn:length(questions)>10}">
+                                <a class="post-read-more button color small"
+                                   style="margin-bottom: 5px;" id="loadMoreQuestion">Load more</a>
                             </c:if>
                         </div>
                     </div>
                 </div>
 
 
-            </div><!-- End #question -->
+            </div><!-- End question -->
 
             <div class="divider"><span></span></div>
 
@@ -241,20 +286,12 @@
 <c:if test="${not empty suggestedClassrooms}">
     <script>
         $(document).ready(function(){
-                    jQuery(".panel-pop").animate({"top":"-100%"},10).hide();
-                    jQuery("#suggested-classrooms").show().animate({"top":"50%"},500);
-                    jQuery("body").prepend("<div class='wrap-pop'></div>");
-                    wrap_pop();
-
-                    /*short test for list of posts - MinhKH*/
-                    $(".short-text").each(function () {
-                        text = $(this).text();
-                        if (text.length > 400) {
-                            $(this).html(text.substr(0, 400) + '.......');
-                        }
-                    });
-
+            jQuery(".panel-pop").animate({"top":"-100%"},10).hide();
+            jQuery("#suggested-classrooms").show().animate({"top":"50%"},500);
+            jQuery("body").prepend("<div class='wrap-pop'></div>");
+            wrap_pop();
         });
+
         function wrap_pop() {
             jQuery(".wrap-pop").click(function () {
                 jQuery(".panel-pop").animate({"top":"-100%"},500).hide(function () {
@@ -265,6 +302,74 @@
         }
     </script>
 </c:if>
+<script>
+    $(document).ready(function(){
+        /*short test for list of posts - MinhKH*/
+        $(".short-text").each(function () {
+            text = $(this).text();
+            if (text.length > 400) {
+                $(this).html(text.substr(0, 400) + '.......');
+            }
+        });
+
+        //Load more
+        var questionPage = 2;
+        $('#loadMoreQuestion').click(function (e) {
+            var url = "newsFeed/question/" + questionPage;
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function (data) {
+                    var newsFeedQuestion = new Array();
+                    newsFeedQuestion = data;
+                    var length = newsFeedQuestion.length;
+                    if (length > 10) {
+                        length = newsFeedQuestion.length - 1;
+                    } else {
+                        $('#loadMoreQuestion').hide();
+                    }
+                    for (var i = 0; i < length; i++) {
+                        var component = '<article class="question question-type-normal">' +
+                                '<h2>' +
+                                '<a href="/post/view/'+ newsFeedQuestion[i].id + '">'+ newsFeedQuestion[i].title
+                                +'</a>' +
+                                '</h2>' +
+                                '<div class="question-author">' +
+                                '<a href="/profile/view/'+ newsFeedQuestion[i].ownerId + '"' +
+                                'original-title="'+ newsFeedQuestion[i].ownerName + '" class="question-author' +
+                                '-img' +
+                                ' tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>' +
+                                '</div>' +
+                                '<div class="question-inner">' +
+                                '<div class="clearfix"></div>' +
+                                '<div class="question-desc short-text">'+ newsFeedQuestion[i].body + '</div>' +
+                                '<div class="question-details">' +
+                                '<span class="question-answered question-answered-done">';
+                        if (newsFeedQuestion[i].acceptedAnswerId===undefined) {
+                            component = component + '<i class="icon-ok"></i>Resolved';
+                        }
+                        component = component + '</span>' +
+                                '</div>' +
+                                '<span class="question-date"><i ' +
+                                'class="icon-time"></i>' + newsFeedQuestion[i].lastEditedDate + '</span>' +
+                                '<span class="question-category"><a ' +
+                                'href="/classroom/' + newsFeedQuestion[i].classId + '"><i ' +
+                                'class="icon-group"></i>Class: ' + newsFeedQuestion[i].className + '</a></span>' +
+                                '<span class="question-comment"><a href="#"><i ' +
+                                'class="icon-comment"></i>' + newsFeedQuestion[i].answerCount +
+                                ' Answer(s)</a></span>' +
+                                '<div class="clearfix"></div>' +
+                                '</div>' +
+                                '</article>';
+                        $('#questions').append(component);
+                    }
+                    questionPage++;
+                }
+            })
+        });
+
+    });
+</script>
 
 </body>
 </html>

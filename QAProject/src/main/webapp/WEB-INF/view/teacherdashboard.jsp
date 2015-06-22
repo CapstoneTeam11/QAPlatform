@@ -176,7 +176,7 @@
             </c:if>
             <c:if test="${fn:length(ownedClassrooms) > 10}">
                 <div><a class="post-read-more button color small" style="margin-bottom: 20px;"
-                        id="loadMoreClassroom">Continue reading</a></div>
+                        id="loadMoreClassroom">Load more</a></div>
             </c:if>
         </div>
     </div>
@@ -225,7 +225,7 @@
             </c:if>
             <c:if test="${fn:length(followedTeachers) > 10}">
                 <div><a class="post-read-more button color small" style="margin-bottom: 20px;"
-                        id="loadMoreTeacher">Continue reading</a></div>
+                        id="loadMoreTeacher">Load more</a></div>
             </c:if>
         </div>
     </div>
@@ -272,7 +272,7 @@
             </c:if>
             <c:if test="${fn:length(invitations) > 10}">
                 <div><a class="post-read-more button color small" style="margin-bottom: 20px;"
-                        id="loadMoreInvitation">Continue reading</a></div>
+                        id="loadMoreInvitation">Load more</a></div>
             </c:if>
         </div>
     </div>

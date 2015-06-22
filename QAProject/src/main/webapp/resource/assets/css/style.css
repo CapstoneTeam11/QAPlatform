@@ -5154,6 +5154,8 @@ html[xmlns] .slides {
     right: 20px;
     height: 23px;
     line-height: 15px;
+    font-weight: bold;
+    color: rgb(51, 122, 183);
 }
 .acceptAnswerIcon {
     margin-left: 15px;
@@ -5181,7 +5183,7 @@ html[xmlns] .slides {
     left: -96px;
     min-width: 103px;
 }
-.dropdown-menu>li>a:hover, .dropdown-menu>li>form>a:hover, .dropdown-menu>li>a:focus, .dropdown-submenu:hover>a, .dropdown-submenu:focus>a {
+.dropdown-menu>li>a:hover, .dropdown-menu>li>form:hover, .dropdown-menu>li>a:focus, .dropdown-submenu:hover>a, .dropdown-submenu:focus>a {
     text-decoration: none;
     color: #ffffff;
     background-color: #0081c2;

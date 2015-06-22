@@ -4,14 +4,17 @@ import com.qaproject.dao.ClassroomDao;
 import com.qaproject.dao.ClassroomUserDao;
 import com.qaproject.dao.PostDao;
 import com.qaproject.dao.UserDao;
+import com.qaproject.dto.PostDto;
 import com.qaproject.entity.*;
 import com.qaproject.util.NewsFeedUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
@@ -42,7 +45,7 @@ public class NewsFeedController {
      * @return String
      */
     @RequestMapping(value= "/newsfeed", method= RequestMethod.GET)
-    public String suggestClass(ModelMap model){
+    public String newsFeedLoad(ModelMap model){
         //Check is User
         User user = (User) session.getAttribute("user");
         if(user==null) {
@@ -63,13 +66,13 @@ public class NewsFeedController {
         List<Classroom> suggestedClassrooms = classroomDao.findByCategory(category);
 
         //get suggested posts - materials
-        List<Post> suggestedQuestions = newsFeedUtilities.getNewsFeedQuestions(user.getId(),0,10);
+        List<PostDto> suggestedQuestions = newsFeedUtilities.loadNewsFeedQuestions(user.getId(), 1);
         List<Post> suggestedArticles = new ArrayList<Post>();
         List<Material> suggestedMaterials = new ArrayList<Material>();
 
         //Check if User is teacher
-        if (user.getRoleId().getId()==2){
-        }
+        //if (user.getRoleId().getId()==2){
+        //}
 
         //Check if User is student
         if (user.getRoleId().getId()==1){
@@ -100,5 +103,18 @@ public class NewsFeedController {
         model.addAttribute("questions",suggestedQuestions);
         model.addAttribute("articles",suggestedArticles);
         return "newsfeed";
+    }
+
+    @RequestMapping(value = "newsFeed/question/{page}",produces = "application/json",method = RequestMethod.GET)
+    public @ResponseBody
+    List<PostDto> loadNewsFeedQuestion(@PathVariable Integer page) {
+        User user = (User) session.getAttribute("user");
+        List<PostDto> questionDtos = null;
+        try {
+            questionDtos = newsFeedUtilities.loadNewsFeedQuestions(user.getId(),page);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return questionDtos;
     }
 }
