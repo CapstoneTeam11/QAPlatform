@@ -23,7 +23,7 @@ public class ConvertEntityDto {
     public static PostDto convertPostEntityToDto(Post post) {
         PostDto postDto = new PostDto();
         postDto.setId(post.getId());
-        postDto.setOwnerId(post.getOwnerUserId().getDisplayName());
+        postDto.setOwnerId(post.getOwnerUserId().getId());
         postDto.setParentId(post.getParentId());
         postDto.setPostType(post.getPostType());
         postDto.setLastEditedDate(ConvertDateTime(post.getLastEditedDate()));

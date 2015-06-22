@@ -117,5 +117,17 @@ public class PostDaoImpl extends BaseDao<Post,Integer> implements PostDao{
         }
         return postDtos;
     }
-
+    @Override
+    public List<Post> findRepliesWasAcceptedByParentId(Integer parentId) {
+        List<Post> posts = null;
+        Query query = entityManager.createQuery("Select p from Post p where p.parentId=:parentId and p.acceptedAnswerId=:accept");
+        query.setParameter("accept",Constant.ACCEPT_ANSWER);
+        query.setParameter("parentId",parentId);
+        try {
+            posts = query.getResultList();
+        } catch (NoResultException e){
+            System.out.println("No post was accepted");
+        }
+        return posts;
+    }
 }

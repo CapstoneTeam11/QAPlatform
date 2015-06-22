@@ -6,6 +6,7 @@ import com.qaproject.dto.AnswerDto;
 import com.qaproject.dto.PostDto;
 import com.qaproject.dto.WantAnswerDto;
 import com.qaproject.entity.*;
+import com.qaproject.util.Constant;
 import com.qaproject.util.ConvertEntityDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -61,11 +62,11 @@ public class PostController {
     }
 
     @RequestMapping(value = "/post/view/{id}", method = RequestMethod.GET)
-     public String view(@PathVariable Integer id, ModelMap model) {
+    public String view(@PathVariable Integer id, ModelMap model) {
         //check if not parent Post return 404.
         Post post = postDao.find(id);
 
-        if (post==null || post.getParentId()!=0) {
+        if (post == null || post.getParentId() != 0) {
             return "404";
         }
 
@@ -101,11 +102,14 @@ public class PostController {
         }
         return "article";
     }
-    @RequestMapping(value = "post/view/{id}/{page}",produces = "application/json",method = RequestMethod.GET)
-    public @ResponseBody List<PostDto> loadMoreAnswer(@PathVariable Integer id,@PathVariable Integer page) {
+
+    @RequestMapping(value = "post/view/{id}/{page}", produces = "application/json", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    List<PostDto> loadMoreAnswer(@PathVariable Integer id, @PathVariable Integer page) {
         List<PostDto> postDtos = null;
         try {
-            postDtos = postDao.loadMoreAnswer(id,page);
+            postDtos = postDao.loadMoreAnswer(id, page);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -117,21 +121,22 @@ public class PostController {
         model.addAttribute("classId", id);
         return "createPost";
     }
+
     @RequestMapping(value = "/post/update/{id}", method = RequestMethod.GET)
     public String updateDispath(@PathVariable Integer id, ModelMap model) {
         Post post = postDao.find(id);
         User user = (User) session.getAttribute("user");
         //validate authorize
-        if(post==null) {
+        if (post == null) {
             return "error";
         }
-        if(user==null) {
+        if (user == null) {
             return "/";
         }
-        if(post.getOwnerUserId().getId()!=user.getId()) {
+        if (post.getOwnerUserId().getId() != user.getId()) {
             return "403";
         }
-        model.addAttribute("post",post);
+        model.addAttribute("post", post);
         return "createPost";
     }
 
@@ -199,11 +204,11 @@ public class PostController {
                          ModelMap model) {
         //Check is User
         User user = (User) session.getAttribute("user");
-        Post post  = postDao.find(id);
+        Post post = postDao.find(id);
         if (user == null) {
             return "redirect:/";
         }
-        if(post==null) {
+        if (post == null) {
             return "404";
         }
         post.setTitle(postName);
@@ -282,13 +287,17 @@ public class PostController {
             Post post;
             Integer idUnaccept = acceptAnswerDto.getIdUnaccept();
             Integer id = acceptAnswerDto.getId();
-            if (idUnaccept != 0) {
-                post = postDao.find(idUnaccept);
-                post.setAcceptedAnswerId(0);
-                postDao.merge(post);
-            }
             post = postDao.find(id);
-            post.setAcceptedAnswerId(1);
+            //remove post was accepted before .
+            List<Post> posts = postDao.findRepliesWasAcceptedByParentId(post.getParentId());
+            if (posts != null) {
+                for (int i = 0; i < posts.size(); i++) {
+                        Post postUn = posts.get(i);
+                        postUn.setAcceptedAnswerId(Constant.UNACCEPT_ANSWER);
+                        postDao.merge(postUn);
+                }
+            }
+            post.setAcceptedAnswerId(Constant.ACCEPT_ANSWER);
             postDao.merge(post);
         } catch (Exception e) {
             e.printStackTrace();
@@ -313,5 +322,67 @@ public class PostController {
         }
         //Send notification
         return "OK";
+    }
+    @RequestMapping(value = "/post/updateAnswer", method = RequestMethod.POST, produces = "application/json")
+    public
+    @ResponseBody
+    String updateAnswer(@ModelAttribute(value = "postDto") PostDto postDto) {
+        try {
+            Post post = postDao.find(postDto.getId());
+            post.setBody(postDto.getBody());
+            post.setLastEditedDate(new Date());
+            postDao.merge(post);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "NG";
+        }
+        return "OK";
+    }
+    @RequestMapping(value = "/post/updateAnswer/{id}", method = RequestMethod.GET, produces = "application/json")
+    public
+    @ResponseBody
+    String updateAnswer(@PathVariable Integer id) {
+        Post post ;
+        String body ="";
+        try {
+             post = postDao.find(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+        if(post!=null) {
+            body = post.getBody();
+        }
+        return body;
+    }
+
+    @RequestMapping(value = "/post/deleteAnswer", method = RequestMethod.POST, produces = "application/json")
+    public
+    @ResponseBody
+    String deleteAnswer(@ModelAttribute(value = "postDto") PostDto postDto) {
+        //authorize
+        Post post ;
+        try {
+            post = postDao.find(postDto.getId());
+            postDao.remove(post);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "NG";
+        }
+        return "OK";
+    }
+    @RequestMapping(value = "/post/deletePost", method = RequestMethod.POST)
+    public String deletePost(@RequestParam Integer id) {
+        Post post ;
+        Integer classId;
+        try {
+            post = postDao.find(id);
+            classId = post.getOwnerClassId().getId();
+            postDao.remove(post);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "NG";
+        }
+        return "redirect:/classroom/"+classId;
     }
 }
