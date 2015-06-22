@@ -78,11 +78,13 @@ public class PostController {
         }
         List<Integer> relatedPostIds = tagPostDao.findRelatedPostIds(tagIds);
         List<Post> relatedPosts = new ArrayList<Post>();
-        for (int i = 0; i < relatedPostIds.size(); i++) {
-            int currentRelatedPostId = relatedPostIds.get(i);
-            if (currentRelatedPostId != post.getId()) {
-                Post relatedPost = postDao.find(currentRelatedPostId);
-                relatedPosts.add(relatedPost);
+        if (relatedPostIds!=null) {
+            for (int i = 0; i < relatedPostIds.size(); i++) {
+                int currentRelatedPostId = relatedPostIds.get(i);
+                if (currentRelatedPostId != post.getId()) {
+                    Post relatedPost = postDao.find(currentRelatedPostId);
+                    relatedPosts.add(relatedPost);
+                }
             }
         }
         //get List Post answer
