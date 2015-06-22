@@ -6,9 +6,10 @@
   To change this template use File | Settings | File Templates.
 --%>
 <div class="navbar navbar-fixed-top">
-    <header id="header">
+    <header id="header" style="height: 50px">
         <section class="container clearfix">
-            <div class="logo"><a href="/newsfeed"><img alt="" src="/resource/assets/images/logo.png"></a></div>
+            <div class="logo"
+                 style="line-height: 50px"><a href="/newsfeed"><img alt="" src="/resource/assets/images/logo.png"></a></div>
             <nav class="">
                 <ul class="nav nav-pills notification" >
                     <li class="dropdown pull-right">
@@ -31,7 +32,7 @@
                     </li>
                 </ul>
             </nav>
-            <nav class="navigation">
+            <nav class="navigation" style="margin-top: -18px">
                 <ul>
                     <li><a href="/newsfeed">News feed</a></li>
                     <li class="parent-list" style="margin-right: 5px"><a>Hi, ${sessionScope.user.displayName} <span class="menu-nav-arrow"></span></a>
