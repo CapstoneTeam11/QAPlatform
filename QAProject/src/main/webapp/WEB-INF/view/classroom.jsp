@@ -279,7 +279,7 @@
                 </c:if>
             </c:forEach>
             <c:if test="${total >10}"> <!-- more than 15 -->
-                <a href="javascript:javascript:loadMoreStudentRequest(${classroom.id})" class="load-questions remove-1"><i class="icon-refresh"></i>Load more...</a>
+                <a href="javascript:javascript:loadMoreStudentRequest(${classroom.id})" class="post-read-more button color small">Load more...</a>
             </c:if>
         </c:if>
     </div>
@@ -289,7 +289,7 @@
             <c:if test="${not empty students}">
                 <c:set var="total" value="${fn:length(students)}" />
                 <c:forEach var="student" items="${students}" varStatus="counter">
-                    <c:if test="${counter.count <2}">
+                    <c:if test="${counter.count <11}">
                         <div class="about-author clearfix" id="student${student.userId.id}">
                             <div class="author-image">
                                 <a href="#" original-title="" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
@@ -303,8 +303,8 @@
                         </div>
                     </c:if>
                 </c:forEach>
-                <c:if test="${total >1}">
-                    <a href="javascript:loadMoreStudent(${classroom.id});" class="load-questions"><i class="icon-refresh"></i>View more students</a>
+                <c:if test="${total >10}">
+                    <a href="javascript:loadMoreStudent(${classroom.id});" class="post-read-more button color small">Load more...</a>
                 </c:if>
             </c:if>
 
