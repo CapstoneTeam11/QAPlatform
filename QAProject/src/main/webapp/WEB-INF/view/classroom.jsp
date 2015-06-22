@@ -150,10 +150,12 @@
     <li class="tab"><a href="#">Student</a></li>
 </ul>
 
-<div class="tab-inner-warp">
+<div class="tab-inner-warp" id="questionTag">
     <div class="tab-inner">
         <c:if test="${not empty questions}">
-            <c:forEach var="question" items="${questions}">
+            <c:set var="total" value="${fn:length(questions)}" />
+            <c:forEach var="question" items="${questions}" varStatus="counter">
+                <c:if test="${counter.count <11}">
                     <article class="question question-type-normal">
                         <h2>
                             <a href="/post/view/${question.id}">${question.title}</a>
@@ -177,31 +179,39 @@
                             <div class="clearfix"></div>
                         </div>
                     </article>
+                </c:if>
             </c:forEach>
-            <a href="#" class="post-read-more button color small" style="margin-bottom: 20px;">Continue reading</a>
+            <c:if test="${total >10}">
+                <a href="javascript:loadMoreQuestion(${classroom.id});" class="post-read-more button color small" style="margin-bottom: 5px;" id="loadMoreQuestion">Load more...</a>
+            </c:if>
         </c:if>
     </div>
 </div>
-<div class="tab-inner-warp">
+<div class="tab-inner-warp" id="articleTag">
     <div class="tab-inner">
         <c:if test="${not empty articles}">
-            <c:forEach var="article" items="${articles}">
-                <article class="post clearfix">
-                    <div class="post-inner">
-                        <h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a href="/post/view/${article.id}">${article.title}</a></h2>
-                        <div class="post-meta">
-                            <span class="meta-author"><i class="icon-user"></i><a href="#">Author: ${article.ownerUserId.displayName}</a></span>
-                            <span class="meta-date"><i class="icon-time"></i>${article.lastEditedDate}</span>
-                            <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">${article.replyCount} comment(s)</a></span>
-                            <span class="question-category"><a href="/classroom/${article.ownerClassId.id}"><i class="icon-group"></i>Class: ${article.ownerClassId.classroomName}</a></span>
-                        </div>
-                        <div class="post-content short-text">
-                            <p>${article.body}</p>
-                        </div><!-- End post-content -->
-                    </div><!-- End post-inner -->
-                </article>
+            <c:set var="total" value="${fn:length(articles)}" />
+            <c:forEach var="article" items="${articles}" varStatus="counter">
+                <c:if test="${counter.count <11}">
+                    <article class="post clearfix">
+                        <div class="post-inner">
+                            <h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a href="/post/view/${article.id}">${article.title}</a></h2>
+                            <div class="post-meta">
+                                <span class="meta-author"><i class="icon-user"></i><a href="#">Author: ${article.ownerUserId.displayName}</a></span>
+                                <span class="meta-date"><i class="icon-time"></i>${article.lastEditedDate}</span>
+                                <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">${article.replyCount} comment(s)</a></span>
+                                <span class="question-category"><a href="/classroom/${article.ownerClassId.id}"><i class="icon-group"></i>Class: ${article.ownerClassId.classroomName}</a></span>
+                            </div>
+                            <div class="post-content short-text">
+                                <p>${article.body}</p>
+                            </div><!-- End post-content -->
+                        </div><!-- End post-inner -->
+                    </article>
+                </c:if>
             </c:forEach>
-            <a href="#" class="post-read-more button color small" style="margin-bottom: 5px;">Continue reading</a>
+        </c:if>
+        <c:if test="${total >10}">
+            <a href="javascript:loadMoreArticle(${classroom.id});" class="post-read-more button color small" style="margin-bottom: 5px;" id="loadMoreActicle">Load more...</a>
         </c:if>
     </div>
 </div>
@@ -212,7 +222,7 @@
                 <a href="#" class="button medium green-button" style="float: right;margin-top: -25px;margin-right: -10px;" id="addMaterial-click"><i class="icon-upload"></i> Upload</a>
             </c:if>
         </div>
-        <table class="table table-hover">
+        <table class="table table-hover" id="materialTag">
             <tr>
                 <th>No</th>
                 <th>File name</th>
@@ -220,16 +230,25 @@
                 <th>File size</th>
                 <th>Save to</th>
             </tr>
-            <c:forEach var="material" items="${materials}" varStatus="counter">
-                <tr>
-                    <td>${counter.count}</td>
-                    <td>${material.name}</td>
-                    <td>${material.creationDate}</td>
-                    <td>${material.size}</td>
-                    <td><a id="add-to-folder-click" href="#">Folder</a> / <a href="/download/${material.id}"> Computer</a></td>
-                </tr>
-            </c:forEach>
+            <c:set var="total" value="${fn:length(materials)}" />
+
+                <c:forEach var="material" items="${materials}" varStatus="counter">
+
+                    <c:if test="${counter.count <11}">
+                        <tr>
+                            <td>${counter.count}</td>
+                            <td>${material.name}</td>
+                            <td>${material.creationDate}</td>
+                            <td>${material.size}</td>
+                            <td><a id="add-to-folder-click" href="#">Folder</a> / <a href="/download/${material.id}"> Computer</a></td>
+                        </tr>
+                    </c:if>
+                </c:forEach>
+
         </table>
+        <c:if test="${total >0}">
+            <a href="javascript:loadMoreMaterial(${classroom.id});" class="post-read-more button color small" style="margin-bottom: 5px;" id="loadMoreMaterial">Load more...</a>
+        </c:if>
     </div>
 </div>
 <div class="tab-inner-warp"  id="studentRequestTag">
@@ -238,7 +257,7 @@
             <c:set var="total" value="${fn:length(joinRequests)}" />
 
             <c:forEach var="joinRequest" items="${joinRequests}" varStatus="counter">
-                <c:if test="${counter.count <2}"> <!-- less than 15 -->
+                <c:if test="${counter.count <11}"> <!-- less than 15 -->
                     <form id="acceptForm${joinRequest.id}" method="post" action="/acceptRequest">
                         <input type="hidden" name="requestId" id ="requestId${joinRequest.id}"  value="${joinRequest.id}"/>
                         <input type="hidden" name="ownerClassroomId" id="ownerClassroomId${joinRequest.id}" value="${classroom.ownerUserId.id}"/>
@@ -259,8 +278,8 @@
                     </form>
                 </c:if>
             </c:forEach>
-            <c:if test="${total >1}"> <!-- more than 15 -->
-                <a href="javascript:javascript:loadMoreStudentRequest(${classroom.id})" class="load-questions remove-1"><i class="icon-refresh"></i>View more request</a>
+            <c:if test="${total >10}"> <!-- more than 15 -->
+                <a href="javascript:javascript:loadMoreStudentRequest(${classroom.id})" class="load-questions remove-1"><i class="icon-refresh"></i>Load more...</a>
             </c:if>
         </c:if>
     </div>
@@ -425,6 +444,7 @@
                 name: 'student',
                 displayKey: 'studentName',
                 source: student.ttAdapter()
+
             }
         });
         elt1.on('itemAdded', function (event) {
@@ -701,15 +721,109 @@
                         }
                         $("#studentRequestTag").append($(html));
                     }
-                } else if (data != null && data.status == "NG" && data.id == 0) {
-                    window.location.href = "/";
-                } else if (data != null && data.status == "NG" && data.id != 0) {
-                    window.location.href = "/classroom/" + data.id;
                 }
             }
         });
     }
 
+    function loadMoreArticle(classroomId) {
+        var url = "/classroom/loadMoreActicle/" + classroomId;
+        $.ajax({
+            type: "POST",
+            url: url,
+            success: function (data) {
+                if (data != null) {
+                    for (i = 0; i < data.length; i++) {
+                        var article = data[i];
+                        $("#loadMoreActicle").remove();
+                        var html =  "";
+                        html = html + "<article class='question question-type-normal'><h2>"+
+                                "<a href='/post/view/"+article.questionId+"'>"+article.questionTitle+"</a></h2>"+
+                                "<div class='question-author'>"+
+                                "<a href='/profile/view/"+article.questionOwnerUserId+"' original-title='"+article.questionOwnerUserName+"' " +
+                                "class='question-author-img tooltip-n'><span></span><img alt='' src='http://2code.info/demo/html/ask-me/images/demo/avatar.png'></a>"+
+                                "</div>"+
+                                "<div class='question-inner'><div class='clearfix'></div><div class='question-desc short-text'>"+article.questionBody+"</div>"+
+                                "<div class='question-details'><span class='question-answered question-answered-done'>"
+                        if(article.questionAcceptedAnswerId != null){
+                            html = html + "<i class='icon-ok'></i>Resolved</span>";
+                        }
+                        html = html + "</div>"+
+                                "<span class='question-date'><i class='icon-time'></i>"+article.questionLastEditedDate+"</span>"+
+                                "<span class='question-category'><a href='#'><i class='icon-group'></i>Class: "+article.classroomName+"</a></span>"+
+                                "<span class='question-comment'><a href='#'><i class='icon-comment'></i>"+article.replyCount+" Answer(s)</a></span>"+
+                                "<div class='clearfix'></div></div></article>";
+                        if (i == 0) {
+                            $("#articleTag").html("");
+                        }
+                        $("#articleTag").append($(html));
+                    }
+                }
+            }
+        });
+    }
+    function loadMoreQuestion(classroomId) {
+        var url = "/classroom/loadMoreQuestion/" + classroomId;
+        $.ajax({
+            type: "POST",
+            url: url,
+            success: function (data) {
+                if (data != null) {
+                    for (i = 0; i < data.length; i++) {
+                        var article = data[i];
+                        $("#loadMoreQuestion").remove();
+                        var html =  "";
+                        html = html + "<article class='question question-type-normal'><h2>"+
+                                "<a href='/post/view/"+article.questionId+"'>"+article.questionTitle+"</a></h2>"+
+                                "<div class='question-author'>"+
+                                "<a href='/profile/view/"+article.questionOwnerUserId+"' original-title='"+article.questionOwnerUserName+"' " +
+                                "class='question-author-img tooltip-n'><span></span><img alt='' src='http://2code.info/demo/html/ask-me/images/demo/avatar.png'></a>"+
+                                "</div>"+
+                                "<div class='question-inner'><div class='clearfix'></div><div class='question-desc short-text'>"+article.questionBody+"</div>"+
+                                "<div class='question-details'><span class='question-answered question-answered-done'>"
+                        if(article.questionAcceptedAnswerId != null){
+                            html = html + "<i class='icon-ok'></i>Resolved</span>";
+                        }
+                        html = html + "</div>"+
+                                "<span class='question-date'><i class='icon-time'></i>"+article.questionLastEditedDate+"</span>"+
+                                "<span class='question-category'><a href='#'><i class='icon-group'></i>Class: "+article.classroomName+"</a></span>"+
+                                "<span class='question-comment'><a href='#'><i class='icon-comment'></i>"+article.replyCount+" Answer(s)</a></span>"+
+                                "<div class='clearfix'></div></div></article>";
+                        if (i == 0) {
+                            $("#questionTag").html("");
+                        }
+                        $("#questionTag").append($(html));
+                    }
+                }
+            }
+        });
+    }
+    function loadMoreMaterial(classroomId) {
+        var url = "/classroom/loadMoreMaterial/" + classroomId;
+        $.ajax({
+            type: "POST",
+            url: url,
+            success: function (data) {
+                if (data != null) {
+                    for (i = 0; i < data.length; i++) {
+                        var material = data[i];
+                        $("#loadMoreMaterial").remove();
+                        var row =  "";
+                        row = row + "<tr><td>"+(i+1)+"</td>"+
+                        "<td>"+material.name+"</td>"+
+                        "<td>"+material.creationDate+"</td>"+
+                        "<td>"+material.size+"</td>"+
+                        "<td><a id='add-to-folder-click' href='#'>Folder</a> / <a href='/download/"+material.id+"'> Computer</a></td>"+
+                        "</tr>";
+                        if (i == 0) {
+                            $("#materialTag tbody tr").remove();
+                        }
+                        $("#materialTag tbody").append(row);
+                    }
+                }
+            }
+        });
+    }
 </script>
 </body>
 </html>
