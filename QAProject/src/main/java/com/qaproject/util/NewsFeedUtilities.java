@@ -73,12 +73,16 @@ public class NewsFeedUtilities {
         if (page<1){
             page = 1;
         }
-        Integer start = Constant.NUMBER_PAGE*(page -1);
-        Integer stop = Constant.NUMBER_PAGE*page;
-        List<Post> questions = getNewsFeedQuestions(userId,start,stop);
+        Integer from = Constant.NUMBER_PAGE*(page -1);
+        Integer to = Constant.NUMBER_PAGE*page +1 ;
+        List<Post> questions = getNewsFeedQuestions(userId);
+        if (to>questions.size()) {
+            to = questions.size();
+        }
         List<PostDto> questionDtos = new ArrayList<PostDto>();
         if (questions != null) {
-            for(Post question: questions) {
+            List<Post> subQuestion = questions.subList(from,to);
+            for(Post question: subQuestion) {
                 Integer answerCount = 0;
                 if (question!=null) {
                     List<Post> answers = postDao.findRepliesByParentId(question.getId());
@@ -93,7 +97,9 @@ public class NewsFeedUtilities {
         return questionDtos;
     }
 
-    public List<Post> getNewsFeedQuestions(Integer userId, Integer start, Integer stop) {
+    public List<Post> getNewsFeedQuestions(Integer userId) {
+        Integer start = 0;
+        Integer stop = 100;
         List<Post> inClass = getQuestionsByPrefixKey(QUESTION_IN_CLASS, userId, start, stop);
         List<Post> inFollower = getQuestionsByPrefixKey(QUESTION_IN_FOLLOWER, userId, start, stop);
         List<Post> inKnow = getQuestionsByPrefixKey(QUESTION_IN_KNOW, userId, start, stop);

@@ -174,11 +174,11 @@
                     No classroom.
                 </div>
             </c:if>
-            <c:if test="${fn:length(ownedClassrooms) > 10}">
-                <div><a class="post-read-more button color small" style="margin-bottom: 20px;"
-                        id="loadMoreClassroom">Load more</a></div>
-            </c:if>
         </div>
+        <c:if test="${fn:length(ownedClassrooms) > 10}">
+            <div><a class="post-read-more button color small" style="margin-bottom: 20px;"
+                    id="loadMoreClassroom">Load more</a></div>
+        </c:if>
     </div>
     <div class="tab-inner-warp">
         <div class="tab-inner" id="followedTeachers">
@@ -223,11 +223,11 @@
                     No followed teacher.
                 </div>
             </c:if>
-            <c:if test="${fn:length(followedTeachers) > 10}">
-                <div><a class="post-read-more button color small" style="margin-bottom: 20px;"
-                        id="loadMoreTeacher">Load more</a></div>
-            </c:if>
         </div>
+        <c:if test="${fn:length(followedTeachers) > 10}">
+            <div><a class="post-read-more button color small" style="margin-bottom: 20px;"
+                    id="loadMoreTeacher">Load more</a></div>
+        </c:if>
     </div>
 <div class="tab-inner-warp">
         <div class="tab-inner" id="invitations">
@@ -270,11 +270,11 @@
                     No invitation.
                 </div>
             </c:if>
-            <c:if test="${fn:length(invitations) > 10}">
-                <div><a class="post-read-more button color small" style="margin-bottom: 20px;"
-                        id="loadMoreInvitation">Load more</a></div>
-            </c:if>
         </div>
+        <c:if test="${fn:length(invitations) > 10}">
+            <div><a class="post-read-more button color small" style="margin-bottom: 20px;"
+                    id="loadMoreInvitation">Load more</a></div>
+        </c:if>
     </div>
 </div><!-- End page-content -->
 </div><!-- End main -->

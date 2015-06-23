@@ -173,11 +173,11 @@
                                     </c:forEach>
                                 </c:if>
                             </c:if>
-                            <c:if test="${fn:length(questions)>10}">
-                                <a class="post-read-more button color small"
-                                   style="margin-bottom: 5px;" id="loadMoreQuestion">Load more</a>
-                            </c:if>
                         </div>
+                        <c:if test="${fn:length(questions)>10}">
+                            <a class="post-read-more button color small"
+                               style="margin-bottom: 5px;" id="loadMoreQuestion">Load more</a>
+                        </c:if>
                     </div>
                 </div>
 
@@ -336,9 +336,9 @@
                                 '</h2>' +
                                 '<div class="question-author">' +
                                 '<a href="/profile/view/'+ newsFeedQuestion[i].ownerId + '"' +
-                                'original-title="'+ newsFeedQuestion[i].ownerName + '" class="question-author' +
-                                '-img' +
-                                ' tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>' +
+                                'original-title="'+ newsFeedQuestion[i].ownerName +
+                                '" class="question-author-img tooltip-n">' +
+                                '<span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>' +
                                 '</div>' +
                                 '<div class="question-inner">' +
                                 '<div class="clearfix"></div>' +
@@ -366,6 +366,7 @@
                     questionPage++;
                 }
             })
+            jQuery(".tooltip-n").tipsy({fade:true,gravity:"s"});
         });
 
     });
