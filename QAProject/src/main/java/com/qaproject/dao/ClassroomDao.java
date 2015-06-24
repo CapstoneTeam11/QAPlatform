@@ -2,6 +2,7 @@ package com.qaproject.dao;
 
 import com.qaproject.entity.Category;
 import com.qaproject.entity.Classroom;
+import com.qaproject.entity.User;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ public interface ClassroomDao {
     List<Classroom> findByCategory(Category category);
     List<Classroom> findByOwnerUser(Integer ownerUserId);
     List<Classroom> findOwnedClassroomForDashboard (Integer ownerUserId, Integer page);
+    Classroom findLastCreatedClassroomByOwner (User owner);
     @Transactional(propagation = Propagation.REQUIRED)
     public void persist(Classroom entity);
     @Transactional(propagation = Propagation.REQUIRED)

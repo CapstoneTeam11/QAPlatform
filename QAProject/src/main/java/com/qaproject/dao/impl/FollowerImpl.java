@@ -40,6 +40,19 @@ public class FollowerImpl extends BaseDao<Follower,Integer> implements FollowerD
     public List<Follower> findByFollower(User user) {
         Query query = entityManager.createQuery("Select f from Follower f where f.followerId=:user");
         query.setParameter("user",user);
+        List<Follower> followedTeachers = null;
+        try{
+            followedTeachers = query.getResultList();
+        } catch (NoResultException e){
+            e.printStackTrace();
+        }
+        return followedTeachers;
+    }
+
+    @Override
+    public List<Follower> findByTeacher(Integer teacherId) {
+        Query query = entityManager.createQuery("Select f from Follower f where f.teacherId.id=:teacherId");
+        query.setParameter("teacherId",teacherId);
         List<Follower> followers = null;
         try{
             followers = query.getResultList();

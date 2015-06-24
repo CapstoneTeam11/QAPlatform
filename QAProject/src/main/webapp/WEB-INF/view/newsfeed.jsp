@@ -366,7 +366,6 @@
                     questionPage++;
                 }
             })
-            jQuery(".tooltip-n").tipsy({fade:true,gravity:"s"});
         });
 
     });

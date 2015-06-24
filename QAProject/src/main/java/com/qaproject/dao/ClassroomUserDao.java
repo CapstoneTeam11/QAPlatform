@@ -24,6 +24,8 @@ public interface ClassroomUserDao {
     List<ClassroomUser> findInvitationClassroomUserForDashboard (Integer studentId, Integer page);
     List<ClassroomUser> findByUserClassroomWithApprove(int userId, int classId);
     public List<ClassroomUser> findByUserClassroom(int userId, int classId);
+    public ClassroomUser findLastRequestByStudent (User student);
+    public List<ClassroomUser> findLastInvitationsByStudents (List<Integer> studentIds);
     @Transactional(propagation = Propagation.REQUIRED)
     public void persist(ClassroomUser entity);
     @Transactional(propagation = Propagation.REQUIRED)

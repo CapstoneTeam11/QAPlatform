@@ -3,7 +3,9 @@ package com.qaproject.controller;
 import com.qaproject.dao.*;
 import com.qaproject.dto.*;
 import com.qaproject.entity.*;
+import com.qaproject.util.Constant;
 import com.qaproject.util.DashboardUtilities;
+import com.qaproject.util.NotificationUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,6 +35,10 @@ public class ClassController {
     ClassroomUserDao classroomUserDao;
     @Autowired
     UserDao userDao;
+    @Autowired
+    FollowerDao followerDao;
+    @Autowired
+    NotificationUtilities notificationUtilities;
     @Autowired
     DashboardUtilities dashboardUtilities;
     @Autowired
@@ -128,6 +134,25 @@ public class ClassController {
                 }
         }
 
+        //Notification - MinhKH
+        List<Follower> followers = followerDao.findByTeacher(user.getId());
+        List<User> receivers = new ArrayList<User>();
+        User sender = userDao.find(user.getId());
+        Classroom object = classroomDao.findLastCreatedClassroomByOwner(sender);
+
+        if (followers!=null) {
+            for (Follower follower:followers){
+                receivers.add(follower.getFollowerId());
+            }
+        }
+        if(object!=null) {
+            Integer objectId = object.getId();
+            notificationUtilities.insertNotification(receivers,sender,objectId, Constant.NT_TEACHER_CREATE_CLASS,
+                    Constant.IV_FALSE);
+        }
+
+
+
 //        objectWithStatus.setId(room.getId());
 //        objectWithStatus.setStatus("OK");
         return "redirect:/classroom/"+room.getId();
@@ -160,6 +185,15 @@ public class ClassController {
             classroomUser.setType(1);
             classroomUser.setApproval(0);
             classroomUserDao.merge(classroomUser);
+        }
+
+        //Notification - MinhKH
+        User sender = userDao.find(user.getId());
+        ClassroomUser object = classroomUserDao.findLastRequestByStudent(sender);
+        if (object!=null) {
+            User receiver = object.getClassroomId().getOwnerUserId();
+            notificationUtilities.insertNotification(receiver,sender,object.getId(),
+                    Constant.NT_REQUEST_TO_JOIN_CLASS,Constant.IV_FALSE);
         }
 
         return "OK";
@@ -195,6 +229,36 @@ public class ClassController {
                 flag = true;
             }
         }
+
+        User user = (User) session.getAttribute("user");
+        if (user==null) {
+            return "NG";
+        }
+        //Notification - MinhKH
+        User sender = userDao.find(user.getId());
+        Classroom object = classroomDao.find(Integer.parseInt(classroomId));
+        List<User> receivers = new ArrayList<User>();
+        if (object!=null && listStudentId!=null) {
+            List<Integer> iStudentIds = new ArrayList<Integer>();
+            for (int i =0 ; i<listStudentId.length; i++){
+                Integer iStudentId = null;
+                try {
+                    iStudentId = Integer.parseInt(listStudentId[i]);
+                } catch (NumberFormatException e){
+                    e.printStackTrace();
+                }
+                iStudentIds.add(iStudentId);
+            }
+            List<ClassroomUser> classroomUsers = classroomUserDao.findLastInvitationsByStudents(iStudentIds);
+            if (classroomUsers!=null){
+                for(ClassroomUser classroomUser : classroomUsers) {
+                    receivers.add(classroomUser.getUserId());
+                }
+            }
+            notificationUtilities.insertNotification(receivers,sender,object.getId(),
+                    Constant.NT_INVITE_TO_JOIN_CLASS,Constant.IV_FALSE);
+        }
+
         if (flag){
             return "NG";
         }

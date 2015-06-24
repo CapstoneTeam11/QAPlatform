@@ -122,6 +122,40 @@ public class ConvertEntityDto {
         return postInvitationDto;
     }
 
+    public static NotificationDto convertNotificationEntityToDto(Notification notification, Integer notificationType,Object object) {
+        NotificationDto notificationDto = new NotificationDto();
+        if (notification!=null && notificationType > 0 && notificationType <= 7 ) {
+            if (notificationType == Constant.NT_TEACHER_CREATE_CLASS ||
+                    notificationType == Constant.NT_INVITE_TO_JOIN_CLASS ||
+                    notificationType == Constant.NT_REQUEST_TO_JOIN_CLASS) {
+                if (!(object instanceof Classroom)) {
+                    return  notificationDto;
+                }
+                Classroom classroom = (Classroom) object;
+                notificationDto.setObjectName(classroom.getClassroomName());
+                notificationDto.setHref("/classroom/"+String.valueOf(notification.getObjectId()));
+            }
+            if (notificationType == Constant.NT_TEACHER_CREATE_POST ||
+                    notificationType == Constant.NT_STUDENT_CREATE_POST ||
+                    notificationType == Constant.NT_INVITE_TO_ANSWER_POST) {
+                if (!(object instanceof Post)) {
+                    return notificationDto;
+                }
+                Post post = (Post) object;
+                notificationDto.setObjectName(post.getTitle());
+                notificationDto.setHref("/post/view/"+String.valueOf(notification.getObjectId()));
+            }
+
+            notificationDto.setId(notification.getId());
+            notificationDto.setReceiverId(notification.getReceiverId().getId());
+            notificationDto.setSenderId(notification.getSenderId().getId());
+            notificationDto.setSenderDisplayName(notification.getSenderId().getDisplayName());
+            notificationDto.setNotificationType(notificationType);
+            notificationDto.setObjectId(notification.getObjectId());
+        }
+        return notificationDto;
+    }
+
     public static String ConvertDateTime(Date date) {
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
         return df.format(date);
