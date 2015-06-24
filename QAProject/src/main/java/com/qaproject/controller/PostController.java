@@ -65,12 +65,47 @@ public class PostController {
     public String view(@PathVariable Integer id, ModelMap model) {
         //check if not parent Post return 404.
         Post post = postDao.find(id);
-
-        if (post == null || post.getParentId() != 0) {
+        if (post == null || 0 != post.getParentId()) {
             return "404";
         }
 
         User user = (User) session.getAttribute("user");
+        if (user != null) {
+            if (0 != post.getStatus()) {
+                //check user can comment or not .
+                if (user.getId() == post.getOwnerUserId().getId()) {
+                    //check user is post owner
+                    post.setIsComment(1);
+                }
+                if (0 == post.getIsComment()) {
+                    // check user is class's teacher
+                    if (user.getId() == post.getOwnerClassId().getOwnerUserId().getId()) {
+                        post.setIsComment(1);
+                    }
+                }
+                if (0 == post.getIsComment() && user.getRoleId().getId() == Constant.TEACHER) {
+                    // check user was invitated
+                    List<PostInvitation> postInvitations = post.getPostInvitationList();
+                    for (int i = 0; i < postInvitations.size(); i++) {
+                        if (user.getId() == postInvitations.get(i).getTeacherId().getId()) {
+                            post.setIsComment(1);
+                            break;
+                        }
+                    }
+
+                }
+                if (0 == post.getIsComment()) {
+                    //check List User in Classrom
+                    List<ClassroomUser> classroomUsers = post.getOwnerClassId().getClassroomUserList();
+                    for (int i = 0; i < classroomUsers.size(); i++) {
+                        if (user.getId() == classroomUsers.get(i).getUserId().getId()) {
+                            post.setIsComment(1);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
         //get related postId - MinhKH
         List<Integer> tagIds = new ArrayList<Integer>();
         for (int i = 0; i < post.getTagPostList().size(); i++) {
@@ -78,7 +113,7 @@ public class PostController {
         }
         List<Integer> relatedPostIds = tagPostDao.findRelatedPostIds(tagIds);
         List<Post> relatedPosts = new ArrayList<Post>();
-        if (relatedPostIds!=null) {
+        if (relatedPostIds != null) {
             for (int i = 0; i < relatedPostIds.size(); i++) {
                 int currentRelatedPostId = relatedPostIds.get(i);
                 if (currentRelatedPostId != post.getId()) {
@@ -168,6 +203,7 @@ public class PostController {
         post.setViewer(0);
         post.setAcceptedAnswerId(0);
         post.setParentId(0);
+        post.setStatus(1);
         post.setCreationDate(new Date());
         post.setLastEditedDate(new Date());
         //Create List TagPost
@@ -293,9 +329,9 @@ public class PostController {
             List<Post> posts = postDao.findRepliesWasAcceptedByParentId(post.getParentId());
             if (posts != null) {
                 for (int i = 0; i < posts.size(); i++) {
-                        Post postUn = posts.get(i);
-                        postUn.setAcceptedAnswerId(Constant.UNACCEPT_ANSWER);
-                        postDao.merge(postUn);
+                    Post postUn = posts.get(i);
+                    postUn.setAcceptedAnswerId(Constant.UNACCEPT_ANSWER);
+                    postDao.merge(postUn);
                 }
             }
             post.setAcceptedAnswerId(Constant.ACCEPT_ANSWER);
@@ -325,9 +361,10 @@ public class PostController {
         return "OK";
     }
 
-    @RequestMapping(value = "dashboard/postInvitation/{page}",produces = "application/json",
+    @RequestMapping(value = "dashboard/postInvitation/{page}", produces = "application/json",
             method = RequestMethod.GET)
-    public @ResponseBody
+    public
+    @ResponseBody
     List<PostInvitationDto> loadPostInvitation(@PathVariable Integer page) {
         User user = (User) session.getAttribute("user");
         List<PostInvitationDto> postInvitationDtos = null;
@@ -338,6 +375,7 @@ public class PostController {
         }
         return postInvitationDtos;
     }
+
     @RequestMapping(value = "/post/updateAnswer", method = RequestMethod.POST, produces = "application/json")
     public
     @ResponseBody
@@ -353,19 +391,20 @@ public class PostController {
         }
         return "OK";
     }
+
     @RequestMapping(value = "/post/updateAnswer/{id}", method = RequestMethod.GET, produces = "application/json")
     public
     @ResponseBody
     String updateAnswer(@PathVariable Integer id) {
-        Post post ;
-        String body ="";
+        Post post;
+        String body = "";
         try {
-             post = postDao.find(id);
+            post = postDao.find(id);
         } catch (Exception e) {
             e.printStackTrace();
             return "";
         }
-        if(post!=null) {
+        if (post != null) {
             body = post.getBody();
         }
         return body;
@@ -376,7 +415,7 @@ public class PostController {
     @ResponseBody
     String deleteAnswer(@ModelAttribute(value = "postDto") PostDto postDto) {
         //authorize
-        Post post ;
+        Post post;
         try {
             post = postDao.find(postDto.getId());
             postDao.remove(post);
@@ -386,9 +425,11 @@ public class PostController {
         }
         return "OK";
     }
+
     @RequestMapping(value = "/post/deletePost", method = RequestMethod.POST)
     public String deletePost(@RequestParam Integer id) {
-        Post post ;
+        //authorize
+        Post post;
         Integer classId;
         try {
             post = postDao.find(id);
@@ -398,7 +439,35 @@ public class PostController {
             e.printStackTrace();
             return "NG";
         }
-        return "redirect:/classroom/"+classId;
+        return "redirect:/classroom/" + classId;
     }
-    
+
+    @RequestMapping(value = "/post/closePost", method = RequestMethod.POST)
+    public String closePost(@RequestParam Integer id) {
+        //authorize
+        Post post = null;
+        try {
+            post = postDao.find(id);
+            post.setStatus(Constant.CLOSE_POST);
+            postDao.merge(post);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "redirect:/post/view/" + post.getId();
+    }
+
+    @RequestMapping(value = "/post/openPost", method = RequestMethod.POST)
+    public String openPost(@RequestParam Integer id) {
+        //authorize
+        Post post = null;
+        try {
+            post = postDao.find(id);
+            post.setStatus(Constant.OPEN_POST);
+            postDao.merge(post);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "redirect:/post/view/" + post.getId();
+    }
+
 }

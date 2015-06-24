@@ -51,6 +51,8 @@ public class Post {
     private Integer status;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "postId")
     private List<WantAnswerPost> wantAnswerPosts;
+    @Transient
+    private Integer isComment = 0;
     public Post() {
     }
 
@@ -174,6 +176,14 @@ public class Post {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Integer getIsComment() {
+        return isComment;
+    }
+
+    public void setIsComment(Integer isComment) {
+        this.isComment = isComment;
     }
 
     @Override

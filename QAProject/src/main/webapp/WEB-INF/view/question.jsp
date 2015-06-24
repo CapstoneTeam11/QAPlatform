@@ -94,13 +94,12 @@
 </div>
 <div class="panel-pop" id="invite-teacher">
     <h2>Invite Teacher<i class="icon-remove"></i></h2>
-
     <div class="form-style form-style-3">
         <form method="post" action="/teacherInvitation">
             <div id="hiddenTeacher"></div>
             <input type="hidden" name="postId" value="${post.id}">
             <div style="display: flex;">
-                <p style="width: 18% !important;">
+                <p style="width: 18% !important;margin-top: 3%">
                     <label class="required">Teacher<span>*</span></label>
                 </p>
                 <div style="width: 82%">
@@ -111,6 +110,28 @@
                 <input type="submit" value="Invite" id="inviteTeacher-click" class="button color small submit">
             </p>
         </form>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<div class="panel-Confirm" id="delete-post">
+        <h2>Delete Post</h2>
+        <div>
+            <p class="panelMessage">Do you want delete this post ?</p>
+            <p>
+                <input type="submit" value="Cancel"  class="button color small cancel panelButton" >
+                <input type="submit" value="OK"  class="button color small OK panelButton" style="margin-left: 3%;">
+            </p>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<div class="panel-Confirm" id="delete-comment">
+    <h2>Delete Comment</h2>
+    <div>
+        <p class="panelMessage">Do you want delete this Comment ?</p>
+        <p>
+            <input type="submit" value="Cancel"  class="button color small cancel panelButton" >
+            <input type="submit" value="OK"  class="button color small OK panelButton" style="margin-left: 3%;">
+        </p>
         <div class="clearfix"></div>
     </div>
 </div>
@@ -181,7 +202,7 @@
                         <p>${post.body}</p>
                     </div>
                     <span class="question-date"><i class="icon-time"></i>${post.lastEditedDate}</span>
-                    <span class="question-category"><a href="/classroom/${post.ownerClassId.id}}"><i
+                    <span class="question-category"><a href="/classroom/${post.ownerClassId.id}"><i
                             class="icon-group"></i>Class: ${post.ownerClassId.classroomName}</a></span>
                     <span class="question-category"><a href="#"><i
                             class="icon-user"></i>Teacher: ${post.ownerClassId.ownerUserId.displayName}</a></span>
@@ -193,11 +214,18 @@
                             <a data-toggle="dropdown" href="" aria-expanded="false"><i class="icon-cog" style="color: black;font-weight: bold;font-size: 20px;"></i><span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu" style="left: -127px;">
                                 <c:if test="${sessionScope.user.id==post.ownerUserId.id}">
-                                <li><a href="/post/update/${post.id}">Edit</a></li>
-                                <li><a href="#" id="deletePost">Delete</a></li>
+                                    <li><a href="/post/update/${post.id}">Edit</a></li>
+                                    <li><a href="#" id="deletePost">Delete</a></li>
                                 </c:if>
                                 <c:if test="${sessionScope.user.id==post.ownerClassId.ownerUserId.id}">
-                                <li><a href="#">Close</a></li>
+                                    <c:if test="${post.status!=0}">
+                                        <form action="/post/closePost" method="post" id="closeOpenPostForm" hidden="true"><input type="hidden" name="id" value="${post.id}"></form>
+                                        <li><a href="#" id="closeOpenPost">Close</a></li>
+                                    </c:if>
+                                    <c:if test="${post.status==0}">
+                                        <form action="/post/openPost" method="post" id="closeOpenPostForm" hidden="true"><input type="hidden" name="id" value="${post.id}"></form>
+                                        <li><a href="#" id="closeOpenPost">Open</a></li>
+                                    </c:if>
                                 </c:if>
                             </ul>
                         </div>
@@ -216,7 +244,7 @@
                 <%--<div class="clearfix"></div>--%>
             <%--</div>--%>
             <!-- End share-tags -->
-            <c:if test="${sessionScope.user!=null}">
+            <c:if test="${post.isComment==1}">
             <div id="respond" class="comment-respond page-content clearfix">
                 <div class="boxedtitle page-title"><h2>Leave a reply</h2></div>
                 <form action="#" id="commentform" class="comment-form">
@@ -475,6 +503,14 @@
     }
     // Connect to server via websocket
     stompClient.connect("guest", "guest", connectCallback, errorCallback);
+    function wrap_pop() {
+        $(".wrap-pop").click(function () {
+            $(".panel-Confirm").animate({"top":"-100%"},500).hide(function () {
+                $(this).animate({"top":"-100%"},500);
+            });
+            $(this).remove();
+        });
+    }
     var answerFlag = function(e){
         if($(e).hasClass('acceptAnswer')) {
             var acceptAnswer = $(e);
@@ -614,18 +650,32 @@
         var deleteDiv = $(e).parents('.comment')
         var postDto = {'id' : deleteId };
         var url = '/post/deleteAnswer';
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: postDto,
-            success: function (data) {
-                if(data != "NG" ){
-                    deleteDiv.remove();
-                } else {
-                    console.log("Error");
-                }
+        $(".panel-Confirm").animate({"top":"-100%"},10).hide();
+        $("#delete-comment").show().animate({"top":"34%"},500);
+        $("body").prepend("<div class='wrap-pop'></div>");
+        wrap_pop()
+        var flagPanel =  $('.panelButton').click(function(e) {
+            if ($(e.currentTarget).hasClass('OK')) {
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: postDto,
+                    success: function (data) {
+                        if(data != "NG" ){
+                            deleteDiv.remove();
+                        } else {
+                            console.log("Error");
+                        }
+                    }
+                });
+                $(".panel-Confirm").animate({"top":"-100%"},500);
+                $(".wrap-pop").remove();
+            } else {
+                $(".panel-Confirm").animate({"top":"-100%"},500);
+                $(".wrap-pop").remove();
             }
-        });
+        })
+
     }
     $(document).ready(function () {
 
@@ -741,7 +791,6 @@
                                  '<ul class="actionAnswer dropdown-menu" role="menu">' +
                                  '<li><a onclick="editAnswer(this);return false">Edit</a></li>' +
                                  '<li><a onclick="deleteAnswer(this);return false;">Delete</a></li>' +
-                                 '<li><a ></a></li>' +
                                  '</ul>' +
                                  '</div>' ;
                 return actionPost;
@@ -854,9 +903,26 @@
             stompClient.send("/app/addPost", {}, jsonstr);
             return false;
         });
+
+
         $('#deletePost').click(function (e) {
             e.preventDefault();
-            var form = $('#deletePostForm').submit();
+            $(".panel-Confirm").animate({"top":"-100%"},10).hide();
+            $("#delete-post").show().animate({"top":"34%"},500);
+            $("body").prepend("<div class='wrap-pop'></div>");
+            wrap_pop()
+            var flagPanel =  $('.panelButton').click(function(e) {
+                if ($(e.currentTarget).hasClass('OK')) {
+                    var form = $('#deletePostForm').submit();
+                } else {
+                    $(".panel-Confirm").animate({"top":"-100%"},500);
+                    $(".wrap-pop").remove();
+                }
+            })
+        });
+        $('#closeOpenPost').click(function (e) {
+            e.preventDefault();
+            var form = $('#closeOpenPostForm').submit();
             return false;
         });
         var urlSuggest = 'http://localhost:8080/teacherInvitation/%QUERY/' +${post.id};

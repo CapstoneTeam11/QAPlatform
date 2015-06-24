@@ -5209,3 +5209,37 @@ html[xmlns] .slides {
     color: #333;
     white-space: nowrap;
 }
+.panel-Confirm {
+    background-color: #FFF;
+    border: 1px solid #e5e5e5;
+    -webkit-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
+    width: 295px;
+    position: fixed;
+    padding: 20px;
+    top: -100%;
+    left: 50%;
+    margin-left: -131px;
+    z-index: 998;
+    color: #2f3239;
+    display: none;
+}
+.panelMessage {
+    color: rgb(89, 89, 89);
+    margin-left: 3px;
+    font-weight: bold;
+    font-size: 14px;
+}
+.panelButton {
+    float: left;
+    width: 44%;
+}
+.panel-Confirm h2 {
+    border-bottom: 2px solid #B5B5B5;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: rgb(226, 84, 84);
+}
