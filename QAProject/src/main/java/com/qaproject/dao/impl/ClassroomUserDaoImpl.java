@@ -10,6 +10,7 @@ import com.qaproject.util.Constant;
 import com.qaproject.util.ConvertEntityDto;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
@@ -118,9 +119,37 @@ public class ClassroomUserDaoImpl extends BaseDao<ClassroomUser,Integer> impleme
         query.setParameter("classId",classId);
         try {
             classroomUsers = query.getResultList();
-        } catch (Exception e){
+        } catch (NoResultException e){
             e.printStackTrace();
         }
         return classroomUsers;
+    }
+
+    @Override
+    public ClassroomUser findLastRequestByStudent(User student) {
+        Query query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.userId=:student and cu.type=1 " +
+                "order by cu.id desc");
+        query.setParameter("student",student);
+        query.setMaxResults(1);
+        ClassroomUser classroomUser = null;
+        try {
+             classroomUser =(ClassroomUser) query.getResultList().get(0);
+        } catch (NoResultException e){
+
+        }
+        return  classroomUser;
+    }
+
+    @Override
+    public List<ClassroomUser> findLastInvitationsByStudents(List<Integer> studentIds) {
+        Query query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.userId.id in :studentIds");
+        query.setParameter("studentIds",studentIds);
+        List<ClassroomUser> classroomUsers = null;
+        try {
+            classroomUsers = query.getResultList();
+        } catch (NoResultException e){
+
+        }
+        return  classroomUsers;
     }
 }

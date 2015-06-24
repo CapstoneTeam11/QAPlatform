@@ -6,6 +6,7 @@ import com.qaproject.entity.*;
 import com.qaproject.util.Constant;
 import com.qaproject.util.ConvertEntityDto;
 import com.qaproject.util.DashboardUtilities;
+import com.qaproject.util.NotificationUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -39,7 +40,13 @@ public class PostController {
     @Autowired
     WantAnswerDao wantAnswerDao;
     @Autowired
+    FollowerDao followerDao;
+    @Autowired
+    ClassroomUserDao classroomUserDao;
+    @Autowired
     DashboardUtilities dashboardUtilities;
+    @Autowired
+    NotificationUtilities notificationUtilities;
     @Autowired
     SimpMessagingTemplate template;
 
@@ -57,6 +64,28 @@ public class PostController {
         post.setOwnerClassId(parentId.getOwnerClassId());
         post.setOwnerUserId(userDao.find(answerDto.getOwnerId()));
         postDao.persist(post);
+
+        User user = (User) session.getAttribute("user");
+        if (user==null) {
+            return;
+        }
+        //Notification - MinhKH
+        User sender = userDao.find(user.getId());
+        Post object = postDao.findLastCreatedReplyByOwner(sender);
+        Post parent = postDao.find(post.getParentId());
+        List<User> receivers = new ArrayList<User>();
+        if (object!=null) {
+            receivers.add(parent.getOwnerUserId());
+            List<Post> children = postDao.findRepliesByParentId(parent.getId());
+            for (Post child : children){
+                if (!child.equals(object)){ // if child is not user's reply
+                    receivers.add(child.getOwnerUserId());
+                }
+            }
+            notificationUtilities.insertNotification(receivers,sender,object.getId(),Constant.NT_USER_REPLY,
+                    Constant.IV_FALSE);
+        }
+
         PostDto postDto = ConvertEntityDto.convertPostEntityToDto(post);
         template.convertAndSend("/topic/addPost/" + answerDto.getParentId(), postDto);
     }
@@ -227,6 +256,38 @@ public class PostController {
         }
         post.getTagPostList().addAll(tagPosts);
         postDao.persist(post);
+
+        //Notification - MinhKH
+        User sender = userDao.find(user.getId());
+        List<User> receivers = new ArrayList<User>();
+        List<ClassroomUser> inClassStudents = classroomUserDao.findByClassroom(classroom);
+        if (inClassStudents!=null){
+            for (ClassroomUser classroomUser : inClassStudents){
+                receivers.add(classroomUser.getUserId());
+            }
+        }
+        Post object = postDao.findLastCreatedPostByOwner(sender);
+        if (object!=null) { // if Post is inserted successfully in DB
+            if (sender.getRoleId().getId()==Constant.UR_STUDENT_ROLE){ // if student: receivers contain classroom owner
+                receivers.add(post.getOwnerClassId().getOwnerUserId());
+                notificationUtilities.insertNotification(receivers,sender,object.getId(),
+                        Constant.NT_STUDENT_CREATE_POST, Constant.IV_FALSE);
+            }
+            if (sender.getRoleId().getId()==Constant.UR_TEACHER_ROLE) { //if teacher: receivers contain followers
+                List<Follower> followers = followerDao.findByTeacher(sender.getId());
+                if (followers!=null) {
+                    for(Follower follower:followers){
+                        User currentFollower = follower.getFollowerId();
+                        if (!receivers.contains(currentFollower)){ // if follower is not inClassroom student
+                            receivers.add(follower.getFollowerId());
+                        }
+                    }
+                }
+                notificationUtilities.insertNotification(receivers,sender,object.getId(),
+                        Constant.NT_TEACHER_CREATE_POST, Constant.IV_FALSE);
+            }
+        }
+
         return "redirect:/post/view/" + post.getId();
     }
 

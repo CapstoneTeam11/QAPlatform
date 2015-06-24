@@ -127,14 +127,14 @@
                         </c:if>
                         <c:if test="${empty joinedClassrooms}">
                             <div class="about-author clearfix">
-                                No classrooms joined yet
+                                No joined classroom
                             </div>
                         </c:if>
-                        <c:if test="${fn:length(joinedClassrooms) > 10}">
-                            <div><a class="post-read-more button color small" style="margin-bottom: 20px;"
-                                    id="loadMoreClassroom">Load more</a></div>
-                        </c:if>
                     </div>
+                    <c:if test="${fn:length(joinedClassrooms) > 10}">
+                        <div><a class="post-read-more button color small" style="margin-bottom: 20px;"
+                                id="loadMoreClassroom">Load more</a></div>
+                    </c:if>
                 </div>
                 <div class="tab-inner-warp">
                     <div class="tab-inner" id="followedTeachers">
@@ -179,11 +179,11 @@
                                 No followed teacher.
                             </div>
                         </c:if>
-                        <c:if test="${fn:length(followedTeachers) > 10}">
-                            <div><a class="post-read-more button color small" style="margin-bottom: 20px;"
-                                    id="loadMoreTeacher">Load more</a></div>
-                        </c:if>
                     </div>
+                    <c:if test="${fn:length(followedTeachers) > 10}">
+                        <div><a class="post-read-more button color small" style="margin-bottom: 20px;"
+                                id="loadMoreTeacher">Load more</a></div>
+                    </c:if>
                 </div>
                 <div class="tab-inner-warp">
                     <div class="tab-inner" id="invitations">
@@ -236,11 +236,11 @@
                                 No invitation
                             </div>
                         </c:if>
-                        <c:if test="${fn:length(invitations) > 10}">
-                            <div><a class="post-read-more button color small" style="margin-bottom: 20px;"
-                                    id="loadMoreInvitation">Load more</a></div>
-                        </c:if>
                     </div>
+                    <c:if test="${fn:length(invitations) > 10}">
+                        <div><a class="post-read-more button color small" style="margin-bottom: 20px;"
+                                id="loadMoreInvitation">Load more</a></div>
+                    </c:if>
                 </div>
             </div>
             <!-- End page-content -->
@@ -248,29 +248,16 @@
         <!-- End main -->
         <aside class="col-md-3 sidebar">
             <div class="widget widget_highest_points">
-                <h3 class="widget_title">Hi, Student</h3>
+                <h3 class="widget_title">Hi, ${sessionScope.user.displayName}</h3>
                 <ul>
                     <li>
                         <div class="author-img">
-                            <a href="#"><img width="60" height="60"
+                            <a href="/profile/view/${sessionScope.user.id}"><img width="60" height="60"
                                              src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" alt=""></a>
                         </div>
                         <h6><a href="#">Edit profile</a></h6>
                     </li>
                 </ul>
-            </div>
-
-
-            <div class="widget widget_tag_cloud">
-                <h3 class="widget_title">Tags</h3>
-                <a href="#">projects</a>
-                <a href="#">Portfolio</a>
-                <a href="#">Wordpress</a>
-                <a href="#">Html</a>
-                <a href="#">Css</a>
-                <a href="#">jQuery</a>
-                <a href="#">2code</a>
-                <a href="#">vbegy</a>
             </div>
 
         </aside>

@@ -117,6 +117,37 @@ public class PostDaoImpl extends BaseDao<Post,Integer> implements PostDao{
         }
         return postDtos;
     }
+
+    @Override
+    public Post findLastCreatedPostByOwner(User ownerUser) {
+        Query query = entityManager.createQuery("Select p from Post  p where p.parentId=0 " +
+                "and p.ownerUserId=:ownerUser order by p.id desc");
+        query.setParameter("ownerUser", ownerUser);
+        query.setMaxResults(1);
+        Post post = null;
+        try {
+            post = (Post) query.getResultList().get(0);
+        } catch (NoResultException e){
+
+        }
+        return post;
+    }
+
+    @Override
+    public Post findLastCreatedReplyByOwner(User ownerUser) {
+        Query query = entityManager.createQuery("Select p from Post  p where p.parentId>0 " +
+                "and p.ownerUserId=:ownerUser order by p.id desc");
+        query.setParameter("ownerUser", ownerUser);
+        query.setMaxResults(1);
+        Post reply = null;
+        try {
+            reply = (Post) query.getResultList().get(0);
+        } catch (NoResultException e){
+
+        }
+        return reply;
+    }
+
     @Override
     public List<Post> findRepliesWasAcceptedByParentId(Integer parentId) {
         List<Post> posts = null;

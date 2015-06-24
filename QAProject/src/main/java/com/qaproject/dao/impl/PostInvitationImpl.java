@@ -16,6 +16,19 @@ import java.util.List;
 public class PostInvitationImpl extends BaseDao<PostInvitation,Integer> implements PostInvitationDao {
 
     @Override
+    public List<PostInvitation> findLastInvitationsByTeachers(List<Integer> teacherIds) {
+        List<PostInvitation> postInvitations = null;
+        Query query = entityManager.createQuery("Select pi from PostInvitation pi where pi.teacherId.id in :teacherIds");
+        query.setParameter("teacherIds",teacherIds);
+        try {
+            postInvitations = query.getResultList();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return postInvitations;
+    }
+
+    @Override
     public List<PostInvitation> findPostInvitationForDashboard(Integer teacherId, Integer page) {
         List<PostInvitation> postInvitations = null;
         Query query = entityManager.createQuery("Select pi from PostInvitation pi where pi.teacherId.id=:teacherId " +
