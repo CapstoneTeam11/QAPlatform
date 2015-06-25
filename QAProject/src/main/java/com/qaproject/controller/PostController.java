@@ -255,8 +255,10 @@ public class PostController {
             }
         }
         post.getTagPostList().addAll(tagPosts);
+        classroom.setActiveTime(new Date());
         postDao.persist(post);
-
+        classroomDao.merge(classroom);
+        
         //Notification - MinhKH
         User sender = userDao.find(user.getId());
         List<User> receivers = new ArrayList<User>();

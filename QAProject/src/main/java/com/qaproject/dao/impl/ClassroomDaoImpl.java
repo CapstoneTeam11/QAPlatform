@@ -53,7 +53,7 @@ public class ClassroomDaoImpl extends BaseDao<Classroom,Integer> implements Clas
     public List<Classroom> findOwnedClassroomForDashboard(Integer ownerUserId, Integer page) {
         List<Classroom> classrooms = null;
         Query query = entityManager.createQuery("Select c from Classroom c where c.ownerUserId.id= :ownerUserId " +
-                "order by c.id desc");
+                "order by c.activeTime desc");
         query.setParameter("ownerUserId",ownerUserId);
         if (page < 1) {
             page = 1;

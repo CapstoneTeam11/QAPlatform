@@ -62,7 +62,7 @@ public class ClassroomUserDaoImpl extends BaseDao<ClassroomUser,Integer> impleme
     @Override
     public List<ClassroomUser> findJoinedClassroomUserForDashboard (Integer studentId, Integer page){
         Query query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.userId.id=:studentId and "+
-                "cu.approval=1 order by cu.id desc");
+                "cu.approval=1 order by cu.classroomId.activeTime desc");
         query.setParameter("studentId",studentId);
         if (page < 1) {
             page = 1;
