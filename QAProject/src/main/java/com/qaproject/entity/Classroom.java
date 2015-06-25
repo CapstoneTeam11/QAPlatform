@@ -3,6 +3,7 @@ package com.qaproject.entity;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,6 +27,8 @@ public class Classroom {
     private Category categoryId;
     @Column(name = "Status")
     private Integer status;
+    @Column(name = "ActiveTime")
+    private Date activeTime;
     @OneToMany(mappedBy = "ownerClassId",fetch = FetchType.LAZY)
     private List<Post> postList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "classroomId")
@@ -126,6 +129,14 @@ public class Classroom {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Date getActiveTime() {
+        return activeTime;
+    }
+
+    public void setActiveTime(Date activeTime) {
+        this.activeTime = activeTime;
     }
 
     @Override

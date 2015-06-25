@@ -17,8 +17,6 @@ public class Notification {
     private Integer notificationType;
     @Column(name = "IsViewed")
     private Integer isViewed;
-    @Column(name = "Status")
-    private Integer status;
     @JoinColumn(name = "SenderId", referencedColumnName = "Id")
     @ManyToOne
     private User senderId;
@@ -63,14 +61,6 @@ public class Notification {
 
     public void setIsViewed(Integer isViewed) {
         this.isViewed = isViewed;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
     }
 
     public User getSenderId() {
