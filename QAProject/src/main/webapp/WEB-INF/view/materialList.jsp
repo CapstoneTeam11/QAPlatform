@@ -139,7 +139,7 @@
                                     <tr>
                                         <td><a href="/download/${material.id}"><i class="icon-download"></i> ${material.name}</a></td>
                                         <td>${material.size}</td>
-                                        <td><a href="" class="button small red-button"><i class="icon-remove"></i> Delete</a></td>
+                                        <td><form action="/material/delete" method="post" style="display: none"><input type="hidden" name="materialId" value="${material.id}"></form><a href="#" onclick="removeMaterial(this)"><i class="icon-remove"></i> Delete</a></td>
                                     </tr>
                                     </c:forEach>
                                 </table>
@@ -207,6 +207,12 @@
 <script src="/resource/assets/js/custom.js"></script>
 
 <!-- End js -->
-
+<script>
+    var removeMaterial = function(e) {
+       var formDelete = $(e).parents('td').find('form');
+       $(formDelete).submit();
+        return false;
+    }
+</script>
 </body>
 </html>

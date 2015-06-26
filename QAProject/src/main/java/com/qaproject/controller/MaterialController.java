@@ -43,7 +43,7 @@ public class MaterialController {
     HttpSession session;
 
 
-    @RequestMapping(value = "/library", method = RequestMethod.GET)
+    @RequestMapping(value = "/material", method = RequestMethod.GET)
     public String material(ModelMap model) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
@@ -53,6 +53,50 @@ public class MaterialController {
         model.addAttribute("folders", folders);
         return "material";
     }
+    @RequestMapping(value = "/material/delete", method = RequestMethod.POST)
+    public String deleteMaterial(ModelMap model,@RequestParam Integer materialId) {
+        User user = (User) session.getAttribute("user");
+        int flag = 0;
+        int classId = 0;
+        if (user == null) {
+            return "redirect:/";
+        }
+        Material material = materialDao.find(materialId);
+        if(material==null) {
+            return "404";
+        }
+        //if material is class's material
+        if(material.getOwnerClassId()!=null) {
+            classId = material.getOwnerClassId().getId();
+            //authorize user is classroom's teacher
+            if(user.getId()!=material.getOwnerClassId().getOwnerUserId().getId()) {
+                return "403";
+            }
+        }
+        //if material is user's material
+        if(material.getFolderId()!=null) {
+            flag =1;
+            if(material.getFolderId().checkUser(user)==false) {
+                return "403";
+            }
+        }
+        try{
+            File file = new File(material.getFileURL());
+            if(file.delete()){
+                System.out.println(file.getName() + " is deleted!");
+            }else{
+                System.out.println("Delete operation is failed.");
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        materialDao.remove(material);
+        if(flag==1) {
+            return "redirect:/material";
+        }
+        return "redirect:/classroom/"+classId;
+    }
+
 
     @RequestMapping(value = "/folder/{id}", method = RequestMethod.GET)
     public String material(@PathVariable Integer id,
@@ -85,7 +129,7 @@ public class MaterialController {
         folder.setManagerId(user);
         folder.setName(name);
         folderDao.persist(folder);
-        return "redirect:/library";
+        return "redirect:/material";
     }
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
@@ -132,7 +176,7 @@ public class MaterialController {
 
             }
         }
-        return "redirect:/library";
+        return "redirect:/classroom/"+classId;
     }
 
     @RequestMapping(value = "/download/{materialId}", method = RequestMethod.GET)
@@ -209,6 +253,6 @@ public class MaterialController {
         materialCopy.setFileURL(dest);
         materialCopy.setSize(material.getSize());
         materialDao.persist(materialCopy);
-        return "classroom";
+        return "redirect:/classroom/"+material.getOwnerClassId().getId();
     }
 }

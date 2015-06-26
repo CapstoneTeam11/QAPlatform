@@ -18,10 +18,10 @@ public class Material {
     @Column(name = "Name")
     private String name;
     @JoinColumn(name = "FolderId", referencedColumnName = "Id")
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.MERGE)
     private Folder folderId;
     @JoinColumn(name = "OwnerClassId", referencedColumnName = "Id")
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.MERGE)
     private Classroom ownerClassId;
     @Column(name = "CreationDate")
     @Temporal(TemporalType.TIMESTAMP)

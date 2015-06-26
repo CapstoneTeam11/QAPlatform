@@ -809,13 +809,13 @@ jQuery(document).ready(function($) {
     });
     /* Add to folder */
 
-    jQuery("#add-to-folder-click").click(function () {
-        jQuery(".panel-pop").animate({"top":"-100%"},10).hide();
-        jQuery("#add-to-folder").show().animate({"top":"50%"},500);
-        jQuery("body").prepend("<div class='wrap-pop'></div>");
-        wrap_pop();
-        return false;
-    });
+//    jQuery("#add-to-folder-click").click(function () {
+//        jQuery(".panel-pop").animate({"top":"-100%"},10).hide();
+//        jQuery("#add-to-folder").show().animate({"top":"50%"},500);
+//        jQuery("body").prepend("<div class='wrap-pop'></div>");
+//        wrap_pop();
+//        return false;
+//    });
 	
 	/* Panel pop */
 	

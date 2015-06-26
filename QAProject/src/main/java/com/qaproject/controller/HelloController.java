@@ -72,10 +72,10 @@ public class HelloController {
     public String profile(ModelMap model) {
         return "profile";
     }
-    @RequestMapping(value = "/material",method = RequestMethod.GET)
-    public String material(ModelMap model) {
-        return "material";
-    }
+//    @RequestMapping(value = "/material",method = RequestMethod.GET)
+//    public String material(ModelMap model) {
+//        return "material";
+//    }
     @RequestMapping(value = "/classroomWelcome",method = RequestMethod.GET)
     public String classroomWelcome(ModelMap model, HttpServletRequest request) {
         HttpSession session = request.getSession();// Phan quyen user
