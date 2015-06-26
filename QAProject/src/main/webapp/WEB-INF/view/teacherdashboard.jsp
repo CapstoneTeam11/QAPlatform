@@ -185,13 +185,14 @@
             <c:if test="${not empty followedTeachers}">
                 <c:if test="${fn:length(followedTeachers)>10}">
                     <c:forEach var="followedTeacher" items="${followedTeachers}" end="9">
-                        <div class="about-author clearfix">
+                        <div class="about-author clearfix" id="teacher${followedTeacher.teacherId}">
                             <div class="author-image">
                                 <a href="/profile/view/${followedTeacher.teacherId}"
                                    original-title="admin" class="tooltip-n"><img alt=""
                                                                                  src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
                             </div>
-                            <a class="" href="#" style="float: right">Unfollow</a>
+                            <a id="${followedTeacher.teacherId}" class="unFollow"
+                               style="float: right; cursor: pointer">Unfollow</a>
 
                             <div class="author-bio">
                                 <h4><a href="#">${followedTeacher.teacherName}</a></h4>
@@ -202,13 +203,14 @@
                 </c:if>
                 <c:if test="${fn:length(followedTeachers) <= 10}">
                     <c:forEach var="followedTeacher" items="${followedTeachers}">
-                        <div class="about-author clearfix">
+                        <div class="about-author clearfix" id="teacher${followedTeacher.teacherId}">
                             <div class="author-image">
                                 <a href="/profile/view/${followedTeacher.teacherId}"
                                    original-title="admin" class="tooltip-n"><img alt=""
                                                                                  src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
                             </div>
-                            <a class="" href="#" style="float: right">Unfollow</a>
+                            <a id="${followedTeacher.teacherId}" class="unFollow"
+                               style="float: right; cursor: pointer">Unfollow</a>
 
                             <div class="author-bio">
                                 <h4><a href="#">${followedTeacher.teacherName}</a></h4>
@@ -353,7 +355,18 @@
                         $('#loadMoreTeacher').hide();
                     }
                     for (var i = 0; i < length; i++) {
-                        $('#followedTeachers').append('<div class="about-author clearfix"> <div class="author-image"> <a href="/profile/view/' + followedTeachers[i].teacherId + '" original-title="admin" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a> </div> <a class="" href="#" style="float: right">Unfollow</a> <div class="author-bio"> <h4><a href="#">' + followedTeachers[i].teacherName + '</a></h4> ' + followedTeachers[i].aboutTeacher + ' </div> </div>');
+                        $('#followedTeachers').append('<div class="about-author clearfix" id="teacher'+
+                                followedTeachers[i].teacherId +
+                                '"> <div class="author-image"> <a href="/profile/view/' +
+                                '' + followedTeachers[i].teacherId +
+                                '" original-title="admin" class="tooltip-n"><img alt="" ' +
+                                'src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a> </div>' +
+                                ' <a id="'+
+                                followedTeachers[i].teacherId +
+                                '" class="unFollow" style="float: right; cursor: pointer">Unfollow</a>' +
+                                ' <div class="author-bio"> <h4><a href="#">' +
+                                followedTeachers[i].teacherName +
+                                '</a></h4> ' + followedTeachers[i].aboutTeacher + ' </div> </div>');
                     }
                     followedTeacherPage++;
                 }
@@ -426,6 +439,23 @@
                     invitationPage++;
                 }
             })
+        });
+
+    });
+    $('.unFollow').click(function (e) {
+        var teacherId = $(this).attr('id');
+        $.ajax({
+            type: "GET",
+            url: "/unfollowTeacher/",
+            data: "teacherId="+ teacherId,
+            success: function (data){
+                if(data === "OK"){
+                    var followedTeacher = $('#teacher'+teacherId);
+                    var teacherName = followedTeacher.find("h4").find("a").text();
+                    followedTeacher.html('You have unfollowed <a href="/profile/view/'+ teacherId +'">'+ teacherName+'</a>');
+                    followedTeacher.attr("style","background-color: #FFFFEA")
+                }
+            }
         });
     });
 </script>
