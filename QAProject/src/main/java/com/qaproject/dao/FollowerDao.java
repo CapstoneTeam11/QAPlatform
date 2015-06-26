@@ -19,7 +19,7 @@ public interface FollowerDao {
     List<Follower> findAll();
     List<Follower> findByFollower(User user);
     List<Follower> findByTeacher(Integer teacherId);
-    List<Follower> findFollowedTeacherForDashboard(Integer followerId, Integer page);
+    List<Follower> findFollowedTeacherForDashboard(Integer followerId, Integer nextFrom);
     @Transactional(propagation = Propagation.REQUIRED)
     public void persist(Follower entity);
     @Transactional(propagation = Propagation.REQUIRED)

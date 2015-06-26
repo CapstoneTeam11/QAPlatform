@@ -192,7 +192,7 @@
                                                                                  src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
                             </div>
                             <a id="${followedTeacher.teacherId}" class="unFollow"
-                               style="float: right; cursor: pointer">Unfollow</a>
+                               style="float: right; cursor: pointer" onclick="unFollow(this);return false;">Unfollow</a>
 
                             <div class="author-bio">
                                 <h4><a href="#">${followedTeacher.teacherName}</a></h4>
@@ -210,7 +210,7 @@
                                                                                  src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
                             </div>
                             <a id="${followedTeacher.teacherId}" class="unFollow"
-                               style="float: right; cursor: pointer">Unfollow</a>
+                               style="float: right; cursor: pointer" onclick="unFollow(this);return false;">Unfollow</a>
 
                             <div class="author-bio">
                                 <h4><a href="#">${followedTeacher.teacherName}</a></h4>
@@ -288,7 +288,7 @@
                 <div class="author-img">
                     <a href="#"><img width="60" height="60" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" alt=""></a>
                 </div>
-                <h6><a href="#">Edit profile</a></h6>
+                <h6><a href="/profile/update">Edit profile</a></h6>
             </li>
         </ul>
     </div>
@@ -336,12 +336,12 @@
 <script src="/resource/assets/js/jquery.bxslider.min.js"></script>
 <script src="/resource/assets/js/custom.js"></script>
 <script>
-    $(document).ready(function () {
-        var followedTeacherPage = 2;
+    /*$(document).ready(function () {*/
+        var nextFromFollowedTeacher = 10;
         var ownedClassroomPage = 2;
         var invitationPage = 2;
         $('#loadMoreTeacher').click(function (e) {
-            var url = "dashboard/followedTeacher/" + followedTeacherPage;
+            var url = "dashboard/followedTeacher/" + nextFromFollowedTeacher;
             $.ajax({
                 type: "GET",
                 url: url,
@@ -363,12 +363,13 @@
                                 'src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a> </div>' +
                                 ' <a id="'+
                                 followedTeachers[i].teacherId +
-                                '" class="unFollow" style="float: right; cursor: pointer">Unfollow</a>' +
+                                '" class="unFollow" style="float: right; cursor: pointer" ' +
+                                'onclick="unFollow(this);return false;">Unfollow</a>' +
                                 ' <div class="author-bio"> <h4><a href="#">' +
                                 followedTeachers[i].teacherName +
                                 '</a></h4> ' + followedTeachers[i].aboutTeacher + ' </div> </div>');
                     }
-                    followedTeacherPage++;
+                    nextFromFollowedTeacher=nextFromFollowedTeacher+10;
                 }
             })
         });
@@ -440,24 +441,25 @@
                 }
             })
         });
-
-    });
-    $('.unFollow').click(function (e) {
-        var teacherId = $(this).attr('id');
-        $.ajax({
-            type: "GET",
-            url: "/unfollowTeacher/",
-            data: "teacherId="+ teacherId,
-            success: function (data){
-                if(data === "OK"){
-                    var followedTeacher = $('#teacher'+teacherId);
-                    var teacherName = followedTeacher.find("h4").find("a").text();
-                    followedTeacher.html('You have unfollowed <a href="/profile/view/'+ teacherId +'">'+ teacherName+'</a>');
-                    followedTeacher.attr("style","background-color: #FFFFEA")
+        var unFollow = function (e) {
+            var teacherId = $(e).attr('id');
+            $.ajax({
+                type: "GET",
+                url: "/unfollowTeacher/",
+                data: "teacherId="+ teacherId,
+                success: function (data){
+                    if(data === "OK"){
+                        nextFromFollowedTeacher--;
+                        var followedTeacher = $('#teacher'+teacherId);
+                        var teacherName = followedTeacher.find("h4").find("a").text();
+                        followedTeacher.html('You have unfollowed <a href="/profile/view/'+ teacherId +'">'+ teacherName+'</a>');
+                        followedTeacher.attr("style","background-color: #FFFFEA")
+                    }
                 }
-            }
-        });
-    });
+            });
+        };
+   /* })*/
+
 </script>
 <!-- End js -->
 

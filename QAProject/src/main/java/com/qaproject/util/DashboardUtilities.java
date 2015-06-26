@@ -32,9 +32,9 @@ public class DashboardUtilities {
     @Autowired
     PostInvitationDao postInvitationDao;
 
-    public List<FollowerDto> loadFollowedTeachers(Integer followerId, Integer page) {
+    public List<FollowerDto> loadFollowedTeachers(Integer followerId, Integer nextFrom) {
         List<FollowerDto> followerDtos = new ArrayList<FollowerDto>();
-        List<Follower> followers = followerDao.findFollowedTeacherForDashboard(followerId, page);
+        List<Follower> followers = followerDao.findFollowedTeacherForDashboard(followerId, nextFrom);
         if (followers!=null){
             for(Follower follower : followers) {
                 FollowerDto followerDto = ConvertEntityDto.convertFollowerEntityToDto(follower);
