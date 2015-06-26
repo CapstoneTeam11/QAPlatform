@@ -2,6 +2,7 @@ package com.qaproject.controller;
 
 import com.qaproject.dao.CategoryDao;
 import com.qaproject.dao.RoleDao;
+import com.qaproject.dao.TagDao;
 import com.qaproject.dao.UserDao;
 import com.qaproject.dao.impl.CategoryDaoImpl;
 import com.qaproject.dao.impl.UserDaoImpl;
@@ -9,9 +10,7 @@ import com.qaproject.dto.ReturnObjectWithStatus;
 import com.qaproject.dto.StudentDto;
 import com.qaproject.dto.TeacherDto;
 import com.qaproject.dto.UserWithRoleDto;
-import com.qaproject.entity.Category;
-import com.qaproject.entity.Role;
-import com.qaproject.entity.User;
+import com.qaproject.entity.*;
 import com.qaproject.util.NewsFeedUtilities;
 import com.sun.javafx.sg.PGShape;
 import org.hibernate.Session;
@@ -37,6 +36,8 @@ public class UserController {
     @Autowired
     UserDao userDao;
     @Autowired
+    TagDao tagDao;
+    @Autowired
     RoleDao roleDao;
     @Autowired
     CategoryDao categoryDao;
@@ -55,6 +56,50 @@ public class UserController {
         model.addAttribute("categories",categoryList);
         model.addAttribute("user", user);
         return "editProfile";
+    }
+    @RequestMapping(value = "/editProfile",method = RequestMethod.POST)
+    public String updateProfile(@RequestParam("displayName") String displayName,
+                                @RequestParam("cate") Integer cate,
+                                @RequestParam("aboutMe") String aboutMe,
+                                @RequestParam String profileUrl,
+                                @RequestParam List<Integer> tagId,
+                                @RequestParam String email,
+                                @RequestParam String password,
+                                @RequestParam(required = false) List<String> newTag,
+                                HttpServletRequest request) {
+        User user = (User) session.getAttribute("user");
+        if(user == null){
+            return "welcome";
+        }
+        user.setDisplayName(displayName);
+        user.setCategoryId(categoryDao.find(cate));
+        user.setAboutMe(aboutMe);
+        user.setProfileImageURL(profileUrl);
+        user.setEmail(email);
+        user.setPassword(password);
+        List<TagUser> tagUsers = new ArrayList<TagUser>();
+        for (int i = 0; i < tagId.size(); i++) {
+            TagUser tagUser = new TagUser();
+            tagUser.setUserId(user);
+            tagUser.setTagId(tagDao.find(tagId.get(i)));
+            tagUsers.add(tagUser);
+        }
+        if (newTag != null) {
+            for (int i = 0; i < newTag.size(); i++) {
+                TagUser tagUser = new TagUser();
+                tagUser.setUserId(user);
+                Tag tag = new Tag();
+                tag.setTagName(newTag.get(i));
+                tagDao.persist(tag);
+                tagUser.setTagId(tag);
+                tagUsers.add(tagUser);
+            }
+        }
+        user.getTagUserList().clear();
+        user.getTagUserList().addAll(tagUsers);
+        userDao.merge(user);
+        session.setAttribute("user",userDao.find(user.getId()));
+        return "redirect:/editProfile";
     }
     @RequestMapping(value = "/editProfileData",method = RequestMethod.POST)
     @ResponseBody
