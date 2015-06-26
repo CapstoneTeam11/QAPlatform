@@ -196,7 +196,7 @@ public class PostController {
             return "error";
         }
         if (user == null) {
-            return "/";
+            return "redirect:/";
         }
         if (post.getOwnerUserId().getId() != user.getId()) {
             return "403";

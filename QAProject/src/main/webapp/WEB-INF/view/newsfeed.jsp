@@ -115,7 +115,8 @@
                                             <div class="question-author">
                                                 <a href="/profile/view/${question.ownerId}"
                                                    original-title="${question.ownerName}"
-                                                   class="question-author-img tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>
+                                                   class="question-author-img tooltip-n"><span></span><img alt=""
+                                                   src="${question.ownerProfileImageURL}"></a>
                                             </div>
                                             <div class="question-inner">
                                                 <div class="clearfix"></div>
@@ -338,7 +339,7 @@
                                 '<a href="/profile/view/'+ newsFeedQuestion[i].ownerId + '"' +
                                 'original-title="'+ newsFeedQuestion[i].ownerName +
                                 '" class="question-author-img tooltip-n">' +
-                                '<span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>' +
+                                '<span></span><img alt="" src="' + newsFeedQuestion[i].ownerProfileImageURL + '"></a>' +
                                 '</div>' +
                                 '<div class="question-inner">' +
                                 '<div class="clearfix"></div>' +

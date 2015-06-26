@@ -36,7 +36,7 @@ public class ConvertEntityDto {
         postDto.setAcceptedAnswerId(post.getAcceptedAnswerId());
         postDto.setClassName(post.getOwnerClassId().getClassroomName());
         postDto.setOwnerName(post.getOwnerUserId().getDisplayName());
-
+        postDto.setOwnerProfileImageURL(post.getOwnerUserId().getProfileImageURL());
         return postDto;
     }
 
@@ -53,6 +53,7 @@ public class ConvertEntityDto {
             postDto.setAcceptedAnswerId(post.getAcceptedAnswerId());
             postDto.setClassName(post.getOwnerClassId().getClassroomName());
             postDto.setOwnerName(post.getOwnerUserId().getDisplayName());
+            postDto.setOwnerProfileImageURL(post.getOwnerUserId().getProfileImageURL());
             postDto.setClassId(post.getOwnerClassId().getId());
             postDto.setAnswerCount(answerCount);
         }

@@ -46,7 +46,7 @@ public class UserController {
     @Autowired
     NewsFeedUtilities newsFeedUtilities;
 
-    @RequestMapping(value = "/editProfile",method = RequestMethod.GET)
+    @RequestMapping(value = "/profile/update",method = RequestMethod.GET)
     public String editProfile(Model model, HttpServletRequest request) {
         User user = (User) session.getAttribute("user");
         if(user == null){
@@ -57,13 +57,12 @@ public class UserController {
         model.addAttribute("user", user);
         return "editProfile";
     }
-    @RequestMapping(value = "/editProfile",method = RequestMethod.POST)
+    @RequestMapping(value = "/profile/update",method = RequestMethod.POST)
     public String updateProfile(@RequestParam("displayName") String displayName,
                                 @RequestParam("cate") Integer cate,
                                 @RequestParam("aboutMe") String aboutMe,
                                 @RequestParam String profileUrl,
                                 @RequestParam List<Integer> tagId,
-                                @RequestParam String email,
                                 @RequestParam String password,
                                 @RequestParam(required = false) List<String> newTag,
                                 HttpServletRequest request) {
@@ -75,7 +74,6 @@ public class UserController {
         user.setCategoryId(categoryDao.find(cate));
         user.setAboutMe(aboutMe);
         user.setProfileImageURL(profileUrl);
-        user.setEmail(email);
         user.setPassword(password);
         List<TagUser> tagUsers = new ArrayList<TagUser>();
         for (int i = 0; i < tagId.size(); i++) {
@@ -99,7 +97,7 @@ public class UserController {
         user.getTagUserList().addAll(tagUsers);
         userDao.merge(user);
         session.setAttribute("user",userDao.find(user.getId()));
-        return "redirect:/editProfile";
+        return "redirect:/profile/update";
     }
     @RequestMapping(value = "/editProfileData",method = RequestMethod.POST)
     @ResponseBody
@@ -137,6 +135,7 @@ public class UserController {
         user.setDisplayName(email.split("@")[0]);
         user.setEmail(email);
         user.setPassword(password);
+        user.setProfileImageURL("http://hefty-stone.ospry.io/1tugwxucoaf/avatar.png");
         Category category = new Category();
         category.setId(Integer.parseInt(cate));
         user.setCategoryId(category);

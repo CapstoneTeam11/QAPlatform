@@ -77,7 +77,7 @@
                 <div class="page-content">
                     <h2>About ${userProfile.displayName}</h2>
                     <c:if test="${sessionScope.user.id==userProfile.id}">
-                        <a class="comment-reply" href="#" style="margin-right: 10px;">
+                        <a class="comment-reply" href="/profile/update" style="margin-right: 10px;">
                             <i class="icon-pencil"></i>Edit profile
                         </a>
                     </c:if>
@@ -87,7 +87,8 @@
                     <c:if test="${isFollow}">
                         <div id="follow"><a class="question-report" href="javascript:unfollowTeacher(${userProfile.id});" style="margin-right: 20px;">Unfollow</a></div>
                     </c:if>
-                    <div class="user-profile-img"><img width="60" height="60" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" alt="admin"></div>
+                    <div class="user-profile-img"><img src="${userProfile.profileImageURL}"
+                                                       style="width: 80px;height: 80px"alt="admin"></div>
                     <div class="ul_list ul_list-icon-ok about-user">
                         <ul>
                             <li><i class="icon-user"></i>Type : ${userProfile.roleId.roleName}</li>
@@ -130,7 +131,10 @@
                                 <a href="/post/view/${question.id}">${question.title}</a>
                             </h2>
                             <div class="question-author">
-                                <a href="/profile/view/${question.ownerUserId.id}" original-title="${question.ownerUserId.displayName}" class="question-author-img tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>
+                                <a href="/profile/view/${question.ownerUserId.id}"
+                                   original-title="${question.ownerUserId.displayName}"
+                                   class="question-author-img tooltip-n"><span></span><img alt=""
+                                   src="${question.ownerUserId.profileImageURL}"></a>
                             </div>
                             <div class="question-inner">
                                 <div class="clearfix"></div>

@@ -17,6 +17,7 @@ public class PostDto {
     private Integer ownerId;
     private String className;
     private String ownerName;
+    private String ownerProfileImageURL;
 
     //MinhKH
     private Integer classId;
@@ -116,5 +117,14 @@ public class PostDto {
 
     public void setAnswerCount(Integer answerCount) {
         this.answerCount = answerCount;
+    }
+
+
+    public String getOwnerProfileImageURL() {
+        return ownerProfileImageURL;
+    }
+
+    public void setOwnerProfileImageURL(String ownerProfileImageURL) {
+        this.ownerProfileImageURL = ownerProfileImageURL;
     }
 }

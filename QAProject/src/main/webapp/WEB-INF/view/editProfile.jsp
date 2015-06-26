@@ -119,16 +119,15 @@
                             </div>
                         </div>
                         <div class="clearfix"></div>
-                        <form action="/editProfile" method="post" id="updateForm">
+                        <form action="/profile/update" method="post" id="updateForm">
                             <input type="hidden" name="profileUrl" id="profileUrl" value="${user.profileImageURL}">
                             <div class="form-inputs clearfix">
                                 <p>
-                                    <label>Display Name<span>*</span></label>
+                                    <label class="required">Display Name<span>*</span></label>
                                     <input type="text" name="displayName" value="${user.displayName}">
                                 </p>
                                 <p>
-                                    <label class="required">E-Mail<span>*</span></label>
-                                    <input type="email" name="email" name="email" value="${user.email}">
+                                    <%--Blank space--%>
                                 </p>
                                 <p>
                                     <label class="required">Password<span>*</span></label>
@@ -139,7 +138,7 @@
                                     <input type="password" id="confirmPassword" value="${user.password}">
                                 </p>
                                 <p>
-                                    <label>Your area</label>
+                                    <label class="required">Your area<span>*</span></label>
                                     <span class="styled-select" style="width: 100%;">
                                     <select id="professional" name="cate" title="Please choose your knowledge" required>
                                         <option value="">Select a type</option>
@@ -162,7 +161,7 @@
                             <div class="form-style form-style-2">
 
                                 <p>
-                                    <label>Know about</label>
+                                    <label class="required">Know about<span>*</span></label>
                                     <c:forEach var="tag" items="${user.tagUserList}">
                                     <input type="hidden" name="tagUpdateId" value="${tag.tagId.id}">
                                     <input type="hidden" name="tagUpdateName" value="${tag.tagId.tagName}">
