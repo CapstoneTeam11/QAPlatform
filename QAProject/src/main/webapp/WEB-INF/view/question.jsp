@@ -464,7 +464,9 @@
     CKEDITOR.replace('question-details');
 </script>
 <script>
-    var page = 2;
+    var listAnswer = new Array()
+    listAnswer = $( "input[name='postAnswerId']" )
+    var lastestId = listAnswer.last().val();
     //Create stomp client over sockJS protocol
     var socket = new SockJS("/ws");
     var stompClient = Stomp.over(socket);
@@ -664,9 +666,6 @@
                     success: function (data) {
                         if(data != "NG" ){
                             deleteDiv.remove();
-                            $('#commentListDetail').empty();
-                            page = 1;
-                            $('#loadMore').click();
                         } else {
                             console.log("Error");
                         }
@@ -737,7 +736,7 @@
             }
         });
         $('#loadMore').click(function (e) {
-            var url = "/post/view/${post.id}/"+page;
+            var url = "/post/view/${post.id}/"+lastestId;
             //comply sequence of function div
             //1(required)
             function getCommentDiv(ownerName,lastEditDate) {
@@ -826,6 +825,7 @@
                     }
                     for(var i = 0 ; i < length ; i++ ) {
                         //if user is Question owner .
+                        lastestId = post[i].id;
                         if(postOwnerId==userId) {
                             // if answer was accepted
                             if(post[i].acceptedAnswerId==1) {
@@ -895,7 +895,6 @@
                         }
 
                     }
-                    page++;
                 }
             });
         });
@@ -905,9 +904,6 @@
             var detail = CKEDITOR.instances['question-details'].getData()
             var jsonstr = JSON.stringify({ 'ownerId': '${sessionScope.user.id}', 'body': detail, 'parentId': ${post.id} });
             stompClient.send("/app/addPost", {}, jsonstr);
-            $('#commentListDetail').empty();
-            page = 1;
-            $('#loadMore').click();
             return false;
         });
 

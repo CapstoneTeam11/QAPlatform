@@ -152,7 +152,7 @@ public class PostController {
             }
         }
         //get List Post answer
-        List<Post> postAnswers = postDao.findPostChilds(id, 1);
+        List<Post> postAnswers = postDao.findPostChilds(id, 0);
         model.addAttribute("post", post);
         model.addAttribute("relatedPosts", relatedPosts);
         model.addAttribute("postAnswers", postAnswers);
@@ -168,13 +168,13 @@ public class PostController {
         return "article";
     }
 
-    @RequestMapping(value = "post/view/{id}/{page}", produces = "application/json", method = RequestMethod.GET)
+    @RequestMapping(value = "post/view/{id}/{lastestId}", produces = "application/json", method = RequestMethod.GET)
     public
     @ResponseBody
-    List<PostDto> loadMoreAnswer(@PathVariable Integer id, @PathVariable Integer page) {
+    List<PostDto> loadMoreAnswer(@PathVariable Integer id, @PathVariable Integer lastestId) {
         List<PostDto> postDtos = null;
         try {
-            postDtos = postDao.loadMoreAnswer(id, page);
+            postDtos = postDao.loadMoreAnswer(id, lastestId);
         } catch (Exception e) {
             e.printStackTrace();
         }

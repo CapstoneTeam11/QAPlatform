@@ -34,14 +34,16 @@ public class PostDaoImpl extends BaseDao<Post,Integer> implements PostDao{
     }
 
     @Override
-    public List<Post> findPostChilds(Integer id,Integer page) {
+    public List<Post> findPostChilds(Integer id,Integer lastestId) {
         Query query = null;
-        query = entityManager.createQuery("select u from Post u where u.parentId =:id order by u.id desc ", Post.class);
-        query.setParameter("id", id);
-        if (page < 1) {
-            page = 1;
+        if(lastestId==0) {
+            query = entityManager.createQuery("select u from Post u where u.parentId =:id order by u.id desc", Post.class);
+            query.setParameter("id", id);
+        } else {
+            query = entityManager.createQuery("select u from Post u where u.parentId =:id and u.id < :lastestId order by u.id desc", Post.class);
+            query.setParameter("id", id);
+            query.setParameter("lastestId",lastestId);
         }
-        query.setFirstResult((page - 1) * Constant.NUMBER_PAGE);
         query.setMaxResults(Constant.NUMBER_PAGE+1);
         List<Post> posts = null;
         try {
