@@ -664,18 +664,48 @@ public class ClassController {
         return classroomDtos;
     }
 
-    @RequestMapping(value = "dashboard/classroomInvitation/{page}",produces = "application/json",
+    @RequestMapping(value = "dashboard/classroomInvitation/{nextFrom}",produces = "application/json",
             method = RequestMethod.GET)
     public @ResponseBody
-    List<ClassroomInvitationDto> loadClassroomInvitation(@PathVariable Integer page) {
+    List<ClassroomInvitationDto> loadClassroomInvitation(@PathVariable Integer nextFrom) {
         User user = (User) session.getAttribute("user");
         List<ClassroomInvitationDto> classroomInvitationDtos = null;
         try {
-            classroomInvitationDtos = dashboardUtilities.loadClassroomInvitations(user.getId(), page);
+            classroomInvitationDtos = dashboardUtilities.loadClassroomInvitations(user.getId(), nextFrom);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return classroomInvitationDtos;
+    }
+
+    @RequestMapping(value = "/ignoreInvitation",method = RequestMethod.POST)
+    @ResponseBody
+    public String ignoreInvitation(@RequestParam Integer invitationId) {
+        //authorize
+        ClassroomUser classroomUser = classroomUserDao.find(invitationId);
+        try {
+            classroomUser.setApproval(2); // 2 = ignore
+            classroomUserDao.merge(classroomUser);
+        } catch (Exception e){
+            return "NG";
+        }
+        return "OK";
+    }
+
+    @RequestMapping(value = "/confirmInvitation",method = RequestMethod.POST)
+    @ResponseBody
+    public String confirmInvitation(@RequestParam Integer invitationId) {
+        //authorize
+        ClassroomUser classroomUser = classroomUserDao.find(invitationId);
+        String classroomDescription = "";
+        try {
+            classroomUser.setApproval(1); // 1 = confirm
+            classroomUserDao.merge(classroomUser);
+            classroomDescription = classroomUser.getClassroomId().getClassroomDescription();
+        } catch (Exception e){
+            return "";
+        }
+        return classroomDescription;
     }
 }
 

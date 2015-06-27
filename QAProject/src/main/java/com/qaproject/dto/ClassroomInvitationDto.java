@@ -4,6 +4,7 @@ package com.qaproject.dto;
  * Created by Minh on 6/22/2015.
  */
 public class ClassroomInvitationDto {
+    private Integer id;
     private Integer classroomId;
     private String classroomName;
     private Integer teacherId;
@@ -39,5 +40,13 @@ public class ClassroomInvitationDto {
 
     public void setTeacherName(String teacherName) {
         this.teacherName = teacherName;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

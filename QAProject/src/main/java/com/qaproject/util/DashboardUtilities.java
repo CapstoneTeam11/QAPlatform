@@ -68,9 +68,9 @@ public class DashboardUtilities {
         return classroomDtos;
     }
 
-    public List<ClassroomInvitationDto> loadClassroomInvitations(Integer studentId, Integer page){
+    public List<ClassroomInvitationDto> loadClassroomInvitations(Integer studentId, Integer nextFrom){
         List<ClassroomInvitationDto> classroomInvitationDtos = new ArrayList<ClassroomInvitationDto>();
-        List<ClassroomUser> classroomUsers = classroomUserDao.findInvitationClassroomUserForDashboard(studentId, page);
+        List<ClassroomUser> classroomUsers = classroomUserDao.findInvitationClassroomUserForDashboard(studentId, nextFrom);
         if (classroomUsers!=null) {
             for (ClassroomUser classroomUser : classroomUsers) {
                 ClassroomInvitationDto classroomInvitationDto =

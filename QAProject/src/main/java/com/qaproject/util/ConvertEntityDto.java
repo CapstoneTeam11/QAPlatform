@@ -90,6 +90,7 @@ public class ConvertEntityDto {
         ClassroomInvitationDto classroomInvitationDto = new ClassroomInvitationDto();
         if (classroomUser!=null) {
             Classroom classroom = classroomUser.getClassroomId();
+            classroomInvitationDto.setId(classroomUser.getId());
             classroomInvitationDto.setClassroomId(classroom.getId());
             classroomInvitationDto.setClassroomName(classroom.getClassroomName());
             classroomInvitationDto.setTeacherId(classroom.getOwnerUserId().getId());

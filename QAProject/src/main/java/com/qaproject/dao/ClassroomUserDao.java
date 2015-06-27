@@ -21,7 +21,7 @@ public interface ClassroomUserDao {
     List<ClassroomUser> findByUser(User user);
     List<ClassroomUser> findByUserWithApproved (User user);
     List<ClassroomUser> findJoinedClassroomUserForDashboard (Integer studentId, Integer page);
-    List<ClassroomUser> findInvitationClassroomUserForDashboard (Integer studentId, Integer page);
+    List<ClassroomUser> findInvitationClassroomUserForDashboard (Integer studentId, Integer nextFrom);
     List<ClassroomUser> findByUserClassroomWithApprove(int userId, int classId);
     public List<ClassroomUser> findByUserClassroom(int userId, int classId);
     public ClassroomUser findLastRequestByStudent (User student);
