@@ -473,7 +473,7 @@
 
     // Callback function to be called when stomp client is connected to server
     var connectCallback = function () {
-        stompClient.subscribe('/topic/addPost/${post.id}', post);
+        stompClient.subscribe('/topic/user/${sessionScope.user.id}', post);
     };
 
     // Callback function to be called when stomp client could not connect to server
@@ -901,8 +901,19 @@
         MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         $('#submit').click(function (e) {
             e.preventDefault();
+            var url = "/post/add"
             var detail = CKEDITOR.instances['question-details'].getData()
-            var jsonstr = JSON.stringify({ 'ownerId': '${sessionScope.user.id}', 'body': detail, 'parentId': ${post.id} });
+            var postDto  = {'ownerId': '${sessionScope.user.id}', 'body': detail, 'parentId': ${post.id}};
+            $.ajax({
+                type : "POST",
+                url : url,
+                data : postDto,
+                success: function (data) {
+                    if(data != "OK" ){
+                        console.log("Error");
+                    }
+                }
+            })
             stompClient.send("/app/addPost", {}, jsonstr);
             return false;
         });

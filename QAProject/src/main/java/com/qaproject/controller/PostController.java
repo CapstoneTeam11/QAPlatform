@@ -50,24 +50,24 @@ public class PostController {
     @Autowired
     SimpMessagingTemplate template;
 
-    @MessageMapping("/addPost")
-    public void addStock(AnswerDto answerDto) throws Exception {
+    @RequestMapping(value = "/post/add", method = RequestMethod.POST,produces = "application/json")
+    public String addStock(@ModelAttribute PostDto postDto) throws Exception {
         //Need to edit subcrible
-        Post parentId = postDao.find(answerDto.getParentId());
+        Post parentId = postDao.find(postDto.getParentId());
         Post post = new Post();
-        post.setBody(answerDto.getBody());
+        post.setBody(postDto.getBody());
         post.setLastEditedDate(new Date());
         post.setCreationDate(new Date());
         post.setPostType(3);
         post.setAcceptedAnswerId(0);
-        post.setParentId(answerDto.getParentId());
+        post.setParentId(postDto.getParentId());
         post.setOwnerClassId(parentId.getOwnerClassId());
-        post.setOwnerUserId(userDao.find(answerDto.getOwnerId()));
+        post.setOwnerUserId(userDao.find(postDto.getOwnerId()));
         postDao.persist(post);
 
         User user = (User) session.getAttribute("user");
         if (user==null) {
-            return;
+            return "NG";
         }
         //Notification - MinhKH
         User sender = userDao.find(user.getId());
@@ -86,8 +86,9 @@ public class PostController {
                     Constant.IV_FALSE);
         }
 
-        PostDto postDto = ConvertEntityDto.convertPostEntityToDto(post);
-        template.convertAndSend("/topic/addPost/" + answerDto.getParentId(), postDto);
+        postDto = ConvertEntityDto.convertPostEntityToDto(post);
+        template.convertAndSend("/topic/addPost/" + postDto.getParentId(), postDto);
+        return "OK";
     }
 
     @RequestMapping(value = "/post/view/{id}", method = RequestMethod.GET)
