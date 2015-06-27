@@ -1484,8 +1484,8 @@ div[class*="slider_shadow"]:before, div[class^="header_shadow"] {
 	border-radius: 50%;
 }
 .about-author .author-image a:hover:before {
-	content: "\f0fe";
-	opacity: 0.9;
+	/*content: "\f0fe";
+	opacity: 0.9;*/
 	filter: alpha(opacity=90);
 }
 .about-author .author-bio {
@@ -2055,8 +2055,8 @@ div[class*="slider_shadow"]:before, div[class^="header_shadow"] {
 	border-radius: 50%;
 }
 .widget_highest_points .author-img a:hover:before {
-	content: "\f0fe";
-	opacity: 0.9;
+	/*content: "\f0fe";
+	opacity: 0.9;*/
 	filter: alpha(opacity=90);
 }
 /* Search Widget */
@@ -5242,4 +5242,8 @@ html[xmlns] .slides {
     font-size: 20px;
     font-weight: bold;
     color: rgb(226, 84, 84);
+}
+
+.closedStatus {
+    color: #ff7f7f;
 }

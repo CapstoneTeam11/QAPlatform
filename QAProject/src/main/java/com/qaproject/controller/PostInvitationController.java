@@ -10,8 +10,10 @@ import com.qaproject.util.Constant;
 import com.qaproject.util.NotificationUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
@@ -72,5 +74,18 @@ public class PostInvitationController {
         }
 
         return "redirect:/post/view/"+postId;
+    }
+
+    @RequestMapping(value = "/removeInvitation",method = RequestMethod.POST)
+    @ResponseBody
+    public String removeInvitation(@RequestParam Integer invitationId) {
+        //authorize
+        PostInvitation postInvitation = postInvitationDao.find(invitationId);
+        try {
+            postInvitationDao.delete(postInvitation);
+        } catch (Exception e){
+            return "NG";
+        }
+        return "OK";
     }
 }

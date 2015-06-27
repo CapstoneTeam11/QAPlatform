@@ -22,4 +22,6 @@ public interface PostInvitationDao {
     public void merge(PostInvitation entity);
     @Transactional(propagation = Propagation.REQUIRED)
     public void remove(PostInvitation entity);
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void delete(PostInvitation entity);
 }

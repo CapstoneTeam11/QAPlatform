@@ -142,29 +142,63 @@
             <c:if test="${not empty ownedClassrooms}">
                 <c:if test="${fn:length(ownedClassrooms)>10}">
                     <c:forEach var="ownedClassroom" items="${ownedClassrooms}" end="9">
-                        <div class="about-author clearfix">
+                        <div class="about-author clearfix" id="classroom${ownedClassroom.id}">
                             <div class="" style="float: left;padding-right: 20px;">
                                 <a href="#" original-title="admin" class=""><img alt="" src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>
                             </div>
-                            <a class="" href="#" style="float: right">Close class</a>
+                            <c:if test="${ownedClassroom.status == 1}">
+                            <a id="${ownedClassroom.id}" class="closeClass" style="float: right; cursor: pointer"
+                               onclick="closeClass(this); return false;">
+                                Close class</a>
                             <div class="author-bio">
                                 <h4><a href="/classroom/${ownedClassroom.id}">${ownedClassroom.classroomName}</a></h4>
-                                    ${ownedClassroom.classroomDescription}
+                                <div class="closedStatus" style="display: none">This classroom is closed.</div>
+                                <div class="classroomDescription">${ownedClassroom.classroomDescription}</div>
                             </div>
+                            </c:if>
+                            <c:if test="${ownedClassroom.status == 0}">
+                                <a id="${ownedClassroom.id}" class="openClass" style="float: right; cursor: pointer"
+                                   onclick="openClass(this); return false;">
+                                    Open class</a>
+                                <div class="author-bio">
+                                    <h4><a href="/classroom/${ownedClassroom.id}">${ownedClassroom.classroomName}</a></h4>
+                                    <div class="closedStatus">This classroom is closed.</div>
+                                    <div class="classroomDescription"style="display:none">
+                                        ${ownedClassroom.classroomDescription}
+                                    </div>
+                                </div>
+                            </c:if>
                         </div>
                     </c:forEach>
                 </c:if>
                 <c:if test="${fn:length(ownedClassrooms)<=10}">
                     <c:forEach var="ownedClassroom" items="${ownedClassrooms}">
-                        <div class="about-author clearfix">
+                        <div class="about-author clearfix" id="classroom${ownedClassroom.id}">
                             <div class="" style="float: left;padding-right: 20px;">
                                 <a href="#" original-title="admin" class=""><img alt="" src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>
                             </div>
-                            <a class="" href="#" style="float: right">Close class</a>
-                            <div class="author-bio">
-                                <h4><a href="/classroom/${ownedClassroom.id}">${ownedClassroom.classroomName}</a></h4>
-                                    ${ownedClassroom.classroomDescription}
-                            </div>
+                            <c:if test="${ownedClassroom.status == 1}">
+                                <a id="${ownedClassroom.id}" class="closeClass" style="float: right; cursor: pointer"
+                                   onclick="closeClass(this); return false;">
+                                    Close class</a>
+                                <div class="author-bio">
+                                    <h4><a href="/classroom/${ownedClassroom.id}">${ownedClassroom.classroomName}</a></h4>
+                                    <div class="closedStatus" style="display: none">This classroom is closed.</div>
+                                    <div class="classroomDescription">${ownedClassroom.classroomDescription}</div>
+                                </div>
+                            </c:if>
+                            <c:if test="${ownedClassroom.status == 0}">
+                                <a id="${ownedClassroom.id}" class="openClass" style="float: right; cursor: pointer"
+                                   onclick="openClass(this); return false;">
+                                    Open class</a>
+                                <div class="author-bio">
+                                    <h4><a href="/classroom/${ownedClassroom.id}">${ownedClassroom.classroomName}</a></h4>
+                                    <div class="closedStatus">This classroom is closed.</div>
+                                    <div class="classroomDescription"style="display:none">
+                                            ${ownedClassroom.classroomDescription}
+                                    </div>
+                                </div>
+                            </c:if>
                         </div>
                     </c:forEach>
                 </c:if>
@@ -188,15 +222,18 @@
                         <div class="about-author clearfix" id="teacher${followedTeacher.teacherId}">
                             <div class="author-image">
                                 <a href="/profile/view/${followedTeacher.teacherId}"
-                                   original-title="admin" class="tooltip-n"><img alt=""
-                                                                                 src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
+                                   original-title="${followedTeacher.teacherName}" class="tooltip-n"><img alt=""
+                                   src="${followedTeacher.profileImageURL}"></a>
                             </div>
                             <a id="${followedTeacher.teacherId}" class="unFollow"
                                style="float: right; cursor: pointer" onclick="unFollow(this);return false;">Unfollow</a>
 
                             <div class="author-bio">
-                                <h4><a href="#">${followedTeacher.teacherName}</a></h4>
-                                    ${followedTeacher.aboutTeacher}
+                                <h4><a href="/profile/view/${followedTeacher.teacherId}">${followedTeacher.teacherName}</a></h4>
+                                <c:if test="${empty followedTeacher.aboutTeacher}">
+                                    ${followedTeacher.teacherName} has not introduced about himself or herself yet.
+                                </c:if>
+                                ${followedTeacher.aboutTeacher}
                             </div>
                         </div>
                     </c:forEach>
@@ -206,15 +243,18 @@
                         <div class="about-author clearfix" id="teacher${followedTeacher.teacherId}">
                             <div class="author-image">
                                 <a href="/profile/view/${followedTeacher.teacherId}"
-                                   original-title="admin" class="tooltip-n"><img alt=""
-                                                                                 src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
+                                   original-title="${followedTeacher.teacherName}" class="tooltip-n"><img alt=""
+                                  src="${followedTeacher.profileImageURL}"></a>
                             </div>
                             <a id="${followedTeacher.teacherId}" class="unFollow"
                                style="float: right; cursor: pointer" onclick="unFollow(this);return false;">Unfollow</a>
 
                             <div class="author-bio">
-                                <h4><a href="#">${followedTeacher.teacherName}</a></h4>
-                                    ${followedTeacher.aboutTeacher}
+                                <h4><a href="/profile/view/${followedTeacher.teacherId}">${followedTeacher.teacherName}</a></h4>
+                                <c:if test="${empty followedTeacher.aboutTeacher}">
+                                    ${followedTeacher.teacherName} has not introduced about himself or herself yet.
+                                </c:if>
+                                ${followedTeacher.aboutTeacher}
                             </div>
                         </div>
                     </c:forEach>
@@ -236,11 +276,12 @@
             <c:if test="${not empty invitations}">
                 <c:if test="${fn:length(invitations)>10}">
                     <c:forEach var="invitation" items="${invitations}" end="9">
-                        <div class="about-author clearfix">
+                        <div class="about-author clearfix" id="invitation${invitation.id}">
                             <div class="" style="float: left;padding-right: 20px;">
                                 <a href="#" original-title="admin" class=""><img alt="" src="https://askwarks.files.wordpress.com/2012/06/icon-conversation.png"></a>
                             </div>
-                            <a class="" href="#" style="float: right">Remove</a>
+                            <a id="${invitation.id}" class="removeInvitation" style="float: right; cursor:pointer"
+                                   onclick="removeInvitation(this);return false" >Remove</a>
                             <div class="author-bio">
                                 <h4><a href="/post/view/${invitation.postId}">${invitation.postTitle}</a></h4>
                                 You are invited to answer this question in <a
@@ -252,11 +293,12 @@
                 </c:if>
                 <c:if test="${fn:length(invitations)<=10}">
                     <c:forEach var="invitation" items="${invitations}">
-                        <div class="about-author clearfix">
+                        <div class="about-author clearfix" id="invitation${invitation.id}">
                             <div class="" style="float: left;padding-right: 20px;">
                                 <a href="#" original-title="admin" class=""><img alt="" src="https://askwarks.files.wordpress.com/2012/06/icon-conversation.png"></a>
                             </div>
-                            <a class="" href="#" style="float: right">Remove</a>
+                            <a id="${invitation.id}" class="removeInvitation" style="float: right; cursor:pointer"
+                               onclick="removeInvitation(this);return false" >Remove</a>
                             <div class="author-bio">
                                 <h4><a href="/post/view/${invitation.postId}">${invitation.postTitle}</a></h4>
                                 You are invited to answer this question in <a
@@ -286,7 +328,8 @@
         <ul>
             <li>
                 <div class="author-img">
-                    <a href="#"><img width="60" height="60" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" alt=""></a>
+                    <a href="/profile/view/${sessionScope.user.id}"><img width="60" height="60"
+                                     src="${sessionScope.user.profileImageURL}" alt=""></a>
                 </div>
                 <h6><a href="/profile/update">Edit profile</a></h6>
             </li>
@@ -339,7 +382,7 @@
     /*$(document).ready(function () {*/
         var nextFromFollowedTeacher = 10;
         var ownedClassroomPage = 2;
-        var invitationPage = 2;
+        var nextFromInvitation = 10;
         $('#loadMoreTeacher').click(function (e) {
             var url = "dashboard/followedTeacher/" + nextFromFollowedTeacher;
             $.ajax({
@@ -355,19 +398,28 @@
                         $('#loadMoreTeacher').hide();
                     }
                     for (var i = 0; i < length; i++) {
-                        $('#followedTeachers').append('<div class="about-author clearfix" id="teacher'+
+                        var component = '<div class="about-author clearfix" id="teacher'+
                                 followedTeachers[i].teacherId +
                                 '"> <div class="author-image"> <a href="/profile/view/' +
                                 '' + followedTeachers[i].teacherId +
-                                '" original-title="admin" class="tooltip-n"><img alt="" ' +
-                                'src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a> </div>' +
+                                '" original-title="' + followedTeachers[i].teacherName +
+                                '" class="tooltip-n"><img alt="" ' +
+                                'src="'+  followedTeachers[i].profileImageURL +'"></a> </div>' +
                                 ' <a id="'+
                                 followedTeachers[i].teacherId +
                                 '" class="unFollow" style="float: right; cursor: pointer" ' +
                                 'onclick="unFollow(this);return false;">Unfollow</a>' +
-                                ' <div class="author-bio"> <h4><a href="#">' +
+                                ' <div class="author-bio"> <h4><a href="/profile/view/' +
+                                + followedTeachers[i].teacherId + '">' +
                                 followedTeachers[i].teacherName +
-                                '</a></h4> ' + followedTeachers[i].aboutTeacher + ' </div> </div>');
+                                '</a></h4> ' + followedTeachers[i].aboutTeacher
+                        if (followedTeachers[i].aboutTeacher===undefined || followedTeachers[i].aboutTeacher===""){
+                            component = component + followedTeachers[i].teacherName
+                                    + ' has not introduced about himself or herself yet.'
+                        }
+                        component = component + ' </div> </div>';
+                        $('#followedTeachers').append(component);
+                        $(".tooltip-n").tipsy({fade:true,gravity:"s"});
                     }
                     nextFromFollowedTeacher=nextFromFollowedTeacher+10;
                 }
@@ -388,25 +440,51 @@
                         $('#loadMoreClassroom').hide();
                     }
                     for (var i = 0; i < length; i++) {
-                        $('#ownedClassrooms').append('<div class="about-author clearfix">'+
+                        var component = '<div class="about-author clearfix" id="classroom'+ ownedClassrooms[i].id +'">'+
                                 '<div class="" style="float: left;padding-right: 20px;">'+
                                 '<a href="#" original-title="admin" class=""><img alt=""' +
                                 ' src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>'+
-                                '</div>'+
-                                '<a class="" href="#" style="float: right">Close class</a>'+
-                                '<div class="author-bio">'+
-                                '<h4><a href="/classroom/'+
-                                ownedClassrooms[i].id +'">'+ ownedClassrooms[i].classroomName +'</a></h4>'+
-                                ownedClassrooms[i].classroomDescription +
-                                '</div>'+
-                                '</div>');
+                                '</div>';
+                        if (ownedClassrooms[i].status === 1) {
+                            component = component +
+                                    '<a id="' + ownedClassrooms[i].id +
+                                    '" class="closeClass" style="float: right; cursor:pointer" onclick="closeClass(this); return false;">Close class</a>'+
+                                    '<div class="author-bio">'+
+                                    '<h4><a href="/classroom/'+
+                                    ownedClassrooms[i].id +'">'+ ownedClassrooms[i].classroomName
+                                    +'</a></h4><div class="closedStatus" style="display: none">'+
+                                    'This classroom is closed.' +
+                                    '</div>'+
+                                    '<div class="classroomDescription">'+
+                                    ownedClassrooms[i].classroomDescription +
+                                    '</div>'+
+                                    '</div>'+
+                                    '</div>';
+                        } else {
+                            component = component +
+                                    '<a id="' + ownedClassrooms[i].id +
+                                    '" class="openClass" style="float: right; cursor:pointer" onclick="openClass(this); return false;">Open class</a>'+
+                                    '<div class="author-bio">'+
+                                    '<h4><a href="/classroom/'+
+                                    ownedClassrooms[i].id +'">'+ ownedClassrooms[i].classroomName
+                                    +'</a></h4><div class="closedStatus">'+
+                                    'This classroom is closed.' +
+                                    '</div>'+
+                                    '<div class="classroomDescription" style="display: none">'+
+                                    ownedClassrooms[i].classroomDescription +
+                                    '</div>'+
+                                    '</div>'+
+                                    '</div>';
+                        }
+
+                        $('#ownedClassrooms').append(component);
                     }
                     ownedClassroomPage++;
                 }
             })
         });
         $('#loadMoreInvitation').click(function (e) {
-            var url = "dashboard/postInvitation/" + invitationPage;
+            var url = "dashboard/postInvitation/" + nextFromInvitation;
             $.ajax({
                 type: "GET",
                 url: url,
@@ -437,7 +515,7 @@
                                 '</div>' +
                                 '</div>');
                     }
-                    invitationPage++;
+                    invitationPage = nextFromInvitation + 10;
                 }
             })
         });
@@ -452,12 +530,72 @@
                         nextFromFollowedTeacher--;
                         var followedTeacher = $('#teacher'+teacherId);
                         var teacherName = followedTeacher.find("h4").find("a").text();
-                        followedTeacher.html('You have unfollowed <a href="/profile/view/'+ teacherId +'">'+ teacherName+'</a>');
+                        followedTeacher.html('You have unfollowed <a href="/profile/view/'+ teacherId +'">'+
+                                teacherName+'</a>.');
                         followedTeacher.attr("style","background-color: #FFFFEA")
                     }
                 }
             });
         };
+        var removeInvitation = function (e) {
+            var invitationId = $(e).attr('id');
+            $.ajax({
+                type: "POST",
+                url: "/removeInvitation",
+                data: 'invitationId=' + invitationId,
+                success: function (data){
+                    if(data === "OK"){
+                        nextFromInvitation--;
+                        var invitation = $('#invitation'+invitationId);
+                        var questionHref = invitation.find("h4").find("a").attr("href");
+                        var questionTitle = invitation.find("h4").find("a").text();
+                        invitation.html('You have denied answering <a href="'+ questionHref +'">'+
+                                questionTitle+'</a>.');
+                        invitation.attr("style","background-color: #FFFFEA")
+                    }
+                }
+            });
+        };
+        var openClass = function (e){
+            var classroomId = $(e).attr('id');
+            $.ajax({
+                type: "POST",
+                url: "/openCloseClass",
+                data: "classId="+classroomId +"&type=1",
+                success: function (data){
+                    if(data.status === "OK"){
+                        var classroom = $('#classroom'+classroomId);
+                        var classroomDescription = classroom.find("div.classroomDescription");
+                        classroomDescription.removeAttr("style");
+                        var closedStatus = classroom.find("div.closedStatus");
+                        closedStatus.attr("style", "display:none");
+                        $(e).attr("class","closeClass");
+                        $(e).attr("onclick","closeClass(this); return false;");
+                        $(e).html("Close class");
+                    }
+                }
+            });
+        };
+    var closeClass = function (e){
+        var classroomId = $(e).attr('id');
+        $.ajax({
+            type: "POST",
+            url: "/openCloseClass",
+            data: "classId="+classroomId +"&type=0",
+            success: function (data){
+                if(data.status === "OK"){
+                    var classroom = $('#classroom'+classroomId);
+                    var classroomDescription = classroom.find("div.classroomDescription");
+                    classroomDescription.attr("style", "display:none");
+                    var closedStatus = classroom.find("div.closedStatus");
+                    closedStatus.removeAttr("style");
+                    $(e).attr("class","openClass");
+                    $(e).attr("onclick","openClass(this); return false;");
+                    $(e).html("Open class");
+                }
+            }
+        });
+    }
    /* })*/
 
 </script>

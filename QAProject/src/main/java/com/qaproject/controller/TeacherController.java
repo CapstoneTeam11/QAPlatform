@@ -82,7 +82,7 @@ public class TeacherController {
         //check if teacher have any post or following others
         List<ClassroomDto> ownedClassrooms = dashboardUtilities.loadOwnedClassrooms(user.getId(), 1);
         List<FollowerDto> followedTeachers = dashboardUtilities.loadFollowedTeachers(user.getId(), 0);
-        List<PostInvitationDto> invitations = dashboardUtilities.loadPostInvitations(user.getId(), 1);
+        List<PostInvitationDto> invitations = dashboardUtilities.loadPostInvitations(user.getId(), 0);
         if (ownedClassrooms.size()==0 && followedTeachers.size()==0 && invitations.size()==0) {
             return "teacherdashboardWelcome";
         }

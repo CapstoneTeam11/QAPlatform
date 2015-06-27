@@ -424,15 +424,15 @@ public class PostController {
         return "OK";
     }
 
-    @RequestMapping(value = "dashboard/postInvitation/{page}", produces = "application/json",
+    @RequestMapping(value = "dashboard/postInvitation/{nextFrom}", produces = "application/json",
             method = RequestMethod.GET)
     public
     @ResponseBody
-    List<PostInvitationDto> loadPostInvitation(@PathVariable Integer page) {
+    List<PostInvitationDto> loadPostInvitation(@PathVariable Integer nextFrom) {
         User user = (User) session.getAttribute("user");
         List<PostInvitationDto> postInvitationDtos = null;
         try {
-            postInvitationDtos = dashboardUtilities.loadPostInvitations(user.getId(), page);
+            postInvitationDtos = dashboardUtilities.loadPostInvitations(user.getId(), nextFrom);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -81,9 +81,9 @@ public class DashboardUtilities {
         return classroomInvitationDtos;
     }
 
-    public List<PostInvitationDto> loadPostInvitations(Integer teacherId, Integer page){
+    public List<PostInvitationDto> loadPostInvitations(Integer teacherId, Integer nextFrom){
         List<PostInvitationDto> postInvitationDtos = new ArrayList<PostInvitationDto>();
-        List<PostInvitation> postInvitations = postInvitationDao.findPostInvitationForDashboard(teacherId,page);
+        List<PostInvitation> postInvitations = postInvitationDao.findPostInvitationForDashboard(teacherId,nextFrom);
         if (postInvitations!=null) {
             for (PostInvitation postInvitation : postInvitations) {
                 PostInvitationDto postInvitationDto = ConvertEntityDto.convertPostInvitationEntityToDto(postInvitation);

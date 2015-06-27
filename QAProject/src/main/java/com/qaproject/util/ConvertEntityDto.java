@@ -81,6 +81,7 @@ public class ConvertEntityDto {
             classroomDto.setTeacherId(classroom.getOwnerUserId().getId());
             classroomDto.setClassroomName(classroom.getClassroomName());
             classroomDto.setClassroomDescription(classroom.getClassroomDescription());
+            classroomDto.setStatus(classroom.getStatus());
         }
         return classroomDto;
     }
@@ -104,6 +105,7 @@ public class ConvertEntityDto {
             classroomDto.setTeacherId(classroom.getOwnerUserId().getId());
             classroomDto.setClassroomName(classroom.getClassroomName());
             classroomDto.setClassroomDescription(classroom.getClassroomDescription());
+            classroomDto.setStatus(classroom.getStatus());
         }
         return classroomDto;
     }
