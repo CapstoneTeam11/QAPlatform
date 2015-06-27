@@ -8,6 +8,7 @@ public class ClassroomDto {
     private Integer teacherId;
     private String classroomName;
     private String classroomDescription;
+    private Integer status;
 
     public Integer getId() {
         return id;
@@ -39,5 +40,13 @@ public class ClassroomDto {
 
     public void setClassroomDescription(String classroomDescription) {
         this.classroomDescription = classroomDescription;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

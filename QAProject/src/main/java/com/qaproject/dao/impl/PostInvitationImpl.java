@@ -5,6 +5,8 @@ import com.qaproject.dao.PostInvitationDao;
 import com.qaproject.entity.PostInvitation;
 import com.qaproject.util.Constant;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
 import java.util.List;
@@ -29,21 +31,28 @@ public class PostInvitationImpl extends BaseDao<PostInvitation,Integer> implemen
     }
 
     @Override
-    public List<PostInvitation> findPostInvitationForDashboard(Integer teacherId, Integer page) {
+    public List<PostInvitation> findPostInvitationForDashboard(Integer teacherId, Integer nextFrom) {
         List<PostInvitation> postInvitations = null;
         Query query = entityManager.createQuery("Select pi from PostInvitation pi where pi.teacherId.id=:teacherId " +
                 "order by pi.id desc");
         query.setParameter("teacherId",teacherId);
-        if (page < 1) {
-            page = 1;
+        if (nextFrom < 0) {
+            nextFrom = 0;
         }
-        query.setFirstResult((page - 1) * Constant.NUMBER_PAGE);
-        query.setMaxResults(Constant.NUMBER_PAGE+1);
+        query.setFirstResult(nextFrom);
+        query.setMaxResults(11);
         try {
             postInvitations = query.getResultList();
         } catch (Exception e){
             e.printStackTrace();
         }
         return postInvitations;
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void delete(PostInvitation entity) {
+        PostInvitation postInvitation = entityManager.getReference(PostInvitation.class, entity.getId());
+        entityManager.remove(postInvitation);
     }
 }
