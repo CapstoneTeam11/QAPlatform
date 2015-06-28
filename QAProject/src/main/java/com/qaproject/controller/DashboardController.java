@@ -1,5 +1,6 @@
 package com.qaproject.controller;
 
+import com.qaproject.dao.UserDao;
 import com.qaproject.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

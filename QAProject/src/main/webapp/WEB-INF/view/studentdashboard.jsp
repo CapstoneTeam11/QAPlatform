@@ -53,6 +53,18 @@
 
 <div id="wrap">
 
+<div class="panel-Confirm" id="leave-classroom">
+    <h2>Leave classroom</h2>
+    <div>
+        <p class="panelMessage">Do you want to leave this classroom?</p>
+        <p>
+            <input type="submit" value="Cancel"  class="button color small cancel panelButton" >
+            <input type="submit" value="OK"  class="button color small OK panelButton" style="margin-left: 3%;">
+        </p>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
 <%@include file="header.jsp" %>
 
 <div class="breadcrumbs">
@@ -94,31 +106,39 @@
                         <c:if test="${not empty joinedClassrooms}">
                             <c:if test="${fn:length(joinedClassrooms)>10}">
                                 <c:forEach var="joinedClassroom" items="${joinedClassrooms}" end="9">
-                                    <div class="about-author clearfix">
+                                    <div class="about-author clearfix" id="classroom${joinedClassroom.id}">
                                         <div class="" style="float: left;padding-right: 20px;">
                                             <a href="#" original-title="admin" class=""><img alt=""
                                                                                              src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>
                                         </div>
-                                        <a class="" href="#" style="float: right">Leave</a>
+                                        <a class="leaveClassroom" onclick="leaveClassroom(this); return false;"
+                                           style="float: right; cursor:pointer" id="${joinedClassroom.id}">Leave</a>
 
                                         <div class="author-bio">
-                                            <h4><a href="#">${joinedClassroom.classroomName}</a></h4>
-                                                ${joinedClassroom.classroomDescription}
+                                            <h4><a href="/classroom/${joinedClassroom.id}">
+                                                    ${joinedClassroom.classroomName}
+                                            </a>
+                                            </h4>
+                                            ${joinedClassroom.classroomDescription}
                                         </div>
                                     </div>
                                 </c:forEach>
                             </c:if>
                             <c:if test="${fn:length(joinedClassrooms)<=10}">
                                 <c:forEach var="joinedClassroom" items="${joinedClassrooms}">
-                                    <div class="about-author clearfix">
+                                    <div class="about-author clearfix" id="classroom${joinedClassroom.id}">
                                         <div class="" style="float: left;padding-right: 20px;">
                                             <a href="#" original-title="admin" class=""><img alt=""
                                                                                              src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>
                                         </div>
-                                        <a class="" href="#" style="float: right">Leave</a>
+                                        <a class="leaveClassroom" onclick="leaveClassroom(this); return false;"
+                                           style="float: right; cursor:pointer" id="${joinedClassroom.id}">Leave</a>
 
                                         <div class="author-bio">
-                                            <h4><a href="#">${joinedClassroom.classroomName}</a></h4>
+                                            <h4><a href="/classroom/${joinedClassroom.id}">
+                                                    ${joinedClassroom.classroomName}
+                                                </a>
+                                            </h4>
                                                 ${joinedClassroom.classroomDescription}
                                         </div>
                                     </div>
@@ -267,9 +287,9 @@
                     <li>
                         <div class="author-img">
                             <a href="/profile/view/${sessionScope.user.id}"><img width="60" height="60"
-                                             src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" alt=""></a>
+                                             src="${sessionScope.user.profileImageURL}" alt=""></a>
                         </div>
-                        <h6><a href="#">Edit profile</a></h6>
+                        <h6><a href="/profile/update">Edit profile</a></h6>
                     </li>
                 </ul>
             </div>
@@ -310,8 +330,8 @@
 <script>
     /*$(document).ready(function () {*/
         var nextFromFollowedTeacher = 10;
-        var joinedClassroomPage = 2;
-        var nextFromInvivation = 10;
+        var nextFromJoinedClassroom = 10;
+        var nextFromInvitation = 10;
         $('#loadMoreTeacher').click(function (e) {
             var url = "dashboard/followedTeacher/" + nextFromFollowedTeacher;
             $.ajax({
@@ -355,7 +375,7 @@
             })
         });
         $('#loadMoreClassroom').click(function (e) {
-            var url = "dashboard/joinedClassroom/" + joinedClassroomPage;
+            var url = "dashboard/joinedClassroom/" + nextFromJoinedClassroom;
             $.ajax({
                 type: "GET",
                 url: url,
@@ -369,24 +389,29 @@
                         $('#loadMoreClassroom').hide();
                     }
                     for (var i = 0; i < length; i++) {
-                        $('#joinedClassrooms').append('<div class="about-author clearfix"> ' +
+                        $('#joinedClassrooms').append('<div class="about-author clearfix" id="classroom'+
+                                joinedClassrooms[i].id +'">' +
                                 '<div class="" style="float: left;padding-right: 20px;">' +
                                 '<a href="#" original-title="admin" class=""><img alt="" ' +
-                                'src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a> ' +
-                                '</div> ' +
-                                '<a class="" href="#" style="float: right">Leave</a>' +
-                                '<div class="author-bio"> ' +
-                                '<h4><a href="#">' + joinedClassrooms[i].classroomName + '</a></h4>' +
+                                'src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>' +
+                                '</div>' +
+                                '<a class="leaveClassroom" onclick="leaveClassroom(this); return false;" ' +
+                                'style="float: right; cursor:pointer" id="'+ joinedClassrooms[i].id +'">Leave</a>' +
+                                '<div class="author-bio">' +
+                                '<h4><a href="/classroom/'+ joinedClassrooms[i].id +'">' +
+                                joinedClassrooms[i].classroomName +
+                                '</a>' +
+                                '</h4>' +
                                 joinedClassrooms[i].classroomDescription +
                                 '</div>' +
-                                '</div> ');
+                                '</div>');
                     }
-                    joinedClassroomPage++;
+                    nextFromJoinedClassroom= nextFromJoinedClassroom +10;
                 }
             })
         });
         $('#loadMoreInvitation').click(function (e) {
-            var url = "dashboard/classroomInvitation/" + nextFromInvivation;
+            var url = "dashboard/classroomInvitation/" + nextFromInvitation;
             $.ajax({
                 type: "GET",
                 url: url,
@@ -400,17 +425,18 @@
                         $('#loadMoreInvitation').hide();
                     }
                     for (var i = 0; i < length; i++) {
-                        $('#invitations').append('<div class="about-author clearfix" id=invitation"' +
-                                invitations[i].id + '">' +
+                        $('#invitations').append('<div class="about-author clearfix" id=invitation' +
+                                invitations[i].id + '>' +
                                 '<div class="" style="float: left;padding-right: 20px;">' +
                                 '<a href="#" original-title="admin" class=""><img alt="" ' +
                                 'src="http://consultoriaparacolegios.com/wp-content/uploads/2014/08/Classroom-Learning-Icon-150x150-e1427087330238.png"></a>' +
                                 '</div>' +
                                 '<a class="ignoreInvitation" style="float: right; cursor:pointer" '+
-                                'onclick="ignoreInvitation(this); return false;"'+ invitations[i].id +'>Ignore</a>'+
+                                'onclick="ignoreInvitation(this); return false;" id="'+ invitations[i].id +'">Ignore</a>'+
                                 '<a class="confirmInvitation" '+
                                 'style="float: right; margin-right: 15px; cursor: pointer" '+
-                                'onclick="confirmInvitation(this); return false;"'+ invitations[i].id +'>Confirm</a>'+
+                                'onclick="confirmInvitation(this); return false;" id="'+ invitations[i].id
+                                +'">Confirm</a>'+
                                 '<div class="author-bio">' +
                                 '<h4>' +
                                 '<a href="/classroom/'+ invitations[i].classroomId +
@@ -422,7 +448,7 @@
                                 '</div>' +
                                 '</div>');
                     }
-                    nextFromInvivation= nextFromInvivation + 10;
+                    nextFromInvitation= nextFromInvitation + 10;
                 }
             })
         });
@@ -452,7 +478,7 @@
                 data: "invitationId="+ invitationId,
                 success: function (data){
                     if(data === "OK"){
-                        nextFromInvivation--;
+                        nextFromInvitation--;
                         var invitation = $('#invitation'+invitationId);
                         var classroomName = invitation.find("h4").find("a").text();
                         var classroomHref = invitation.find("h4").find("a").attr("href");
@@ -472,29 +498,78 @@
                 data: "invitationId="+ invitationId,
                 success: function (data){
                     if(data !== ""){
-                        nextFromInvivation--;
+                        nextFromInvitation--;
                         var invitation = $('#invitation'+invitationId);
                         var classroomName = invitation.find("h4").find("a").text();
                         var classroomHref = invitation.find("h4").find("a").attr("href");
+                        var classroomId = classroomHref.split("/")[2];
                         var classroomDescription = data;
                         invitation.html('You have joined <a href="/classroom/'+
                                 classroomHref +'">'+
                                 classroomName+'</a>.');
                         invitation.attr("style","background-color: #e5ffe5")
-                        var newJoinedClassroom = '<div class="about-author clearfix"> ' +
+                        var newJoinedClassroom = '<div class="about-author clearfix" id="classroom'+
+                                classroomId +'">' +
                                 '<div class="" style="float: left;padding-right: 20px;">' +
                                 '<a href="#" original-title="admin" class=""><img alt="" ' +
-                                'src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a> ' +
-                                '</div> ' +
-                                '<a class="" href="#" style="float: right">Leave</a>' +
-                                '<div class="author-bio"> ' +
-                                '<h4><a href="' + classroomHref +'">' + classroomName + '</a></h4>' +
+                                'src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>' +
+                                '</div>' +
+                                '<a class="leaveClassroom" onclick="leaveClassroom(this); return false;" ' +
+                                'style="float: right; cursor:pointer" id="'+ classroomId +'">Leave</a>' +
+                                '<div class="author-bio">' +
+                                '<h4><a href="/classroom/'+ classroomId +'">' +
+                                classroomName +
+                                '</a>' +
+                                '</h4>' +
                                 classroomDescription +
                                 '</div>' +
-                                '</div> '
+                                '</div>'
                         $('#joinedClassrooms').prepend(newJoinedClassroom);
                     }
                 }
+            });
+        };
+        var leaveClassroom = function(e) {
+            var classroomId = $(e).attr('id');
+            $(".panel-Confirm").animate({"top":"-100%"},10).hide();
+            $("#leave-classroom").show().animate({"top":"34%"},500);
+            $("body").prepend("<div class='wrap-pop'></div>");
+            wrap_pop();
+            var flagPanel =  $('.panelButton').click(function(e) {
+                if ($(e.currentTarget).hasClass('OK')) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/leaveClassroom",
+                        data: 'classroomId=' + classroomId,
+                        success: function (data) {
+                            if(data != "NG" ){
+                                nextFromJoinedClassroom--;
+                                var classroom = $('#classroom'+classroomId);
+                                var classroomName = classroom.find("h4").find("a").text();
+                                var classroomHref = classroom.find("h4").find("a").attr("href");
+                                classroom.html('You have left classroom <a href="/classroom/'+
+                                        classroomHref +'">'+
+                                        classroomName+'</a>.');
+                                classroom.attr("style","background-color: #FFFFEA")
+                            } else {
+                                console.log("Error");
+                            }
+                        }
+                    });
+                    $(".panel-Confirm").animate({"top":"-100%"},500);
+                    $(".wrap-pop").remove();
+                } else {
+                    $(".panel-Confirm").animate({"top":"-100%"},500);
+                    $(".wrap-pop").remove();
+                }
+            })
+        };
+        function wrap_pop() {
+            $(".wrap-pop").click(function () {
+                $(".panel-Confirm").animate({"top":"-100%"},500).hide(function () {
+                    $(this).animate({"top":"-100%"},500);
+                });
+                $(this).remove();
             });
         }
     /*});*/

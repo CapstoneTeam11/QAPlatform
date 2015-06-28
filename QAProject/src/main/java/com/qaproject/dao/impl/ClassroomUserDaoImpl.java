@@ -9,6 +9,8 @@ import com.qaproject.entity.User;
 import com.qaproject.util.Constant;
 import com.qaproject.util.ConvertEntityDto;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
@@ -60,15 +62,15 @@ public class ClassroomUserDaoImpl extends BaseDao<ClassroomUser,Integer> impleme
     }
 
     @Override
-    public List<ClassroomUser> findJoinedClassroomUserForDashboard (Integer studentId, Integer page){
+    public List<ClassroomUser> findJoinedClassroomUserForDashboard (Integer studentId, Integer nextFrom){
         Query query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.userId.id=:studentId and "+
                 "cu.approval=1 order by cu.classroomId.activeTime desc");
         query.setParameter("studentId",studentId);
-        if (page < 1) {
-            page = 1;
+        if (nextFrom < 0) {
+            nextFrom = 0;
         }
-        query.setFirstResult((page - 1) * Constant.NUMBER_PAGE);
-        query.setMaxResults(Constant.NUMBER_PAGE+1);
+        query.setFirstResult(nextFrom);
+        query.setMaxResults(11);
         List<ClassroomUser> classroomUsers = null;
         try {
             classroomUsers = query.getResultList();
@@ -141,6 +143,22 @@ public class ClassroomUserDaoImpl extends BaseDao<ClassroomUser,Integer> impleme
     }
 
     @Override
+    public ClassroomUser findJoinedClassroomByClassroomAndUser(Integer studentId, Integer classroomId) {
+        Query query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.userId.id=:studentId and " +
+                "cu.classroomId.id=:classroomId");
+        query.setParameter("studentId",studentId);
+        query.setParameter("classroomId",classroomId);
+        query.setMaxResults(1);
+        ClassroomUser classroomUser = null;
+        try {
+            classroomUser =(ClassroomUser) query.getResultList().get(0);
+        } catch (NoResultException e){
+
+        }
+        return  classroomUser;
+    }
+
+    @Override
     public List<ClassroomUser> findLastInvitationsByStudents(List<Integer> studentIds) {
         Query query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.userId.id in :studentIds");
         query.setParameter("studentIds",studentIds);
@@ -151,5 +169,12 @@ public class ClassroomUserDaoImpl extends BaseDao<ClassroomUser,Integer> impleme
 
         }
         return  classroomUsers;
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void delete(ClassroomUser entity) {
+        ClassroomUser classroomUser = entityManager.getReference(ClassroomUser.class,entity.getId());
+        entityManager.remove(classroomUser);
     }
 }

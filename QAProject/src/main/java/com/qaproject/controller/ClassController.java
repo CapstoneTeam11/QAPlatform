@@ -638,13 +638,14 @@ public class ClassController {
         return new ReturnObjectWithStatus("OK", classroom.getId());
     }
 
-    @RequestMapping(value = "dashboard/joinedClassroom/{page}",produces = "application/json",method = RequestMethod.GET)
+    @RequestMapping(value = "dashboard/joinedClassroom/{nextFrom}",produces = "application/json",
+            method = RequestMethod.GET)
     public @ResponseBody
-    List<ClassroomDto> loadJoinedClassroom(@PathVariable Integer page) {
+    List<ClassroomDto> loadJoinedClassroom(@PathVariable Integer nextFrom) {
         User user = (User) session.getAttribute("user");
         List<ClassroomDto> classroomDtos = null;
         try {
-            classroomDtos = dashboardUtilities.loadJoinedClassrooms(user.getId(), page);
+            classroomDtos = dashboardUtilities.loadJoinedClassrooms(user.getId(), nextFrom);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -706,6 +707,20 @@ public class ClassController {
             return "";
         }
         return classroomDescription;
+    }
+
+    @RequestMapping(value = "/leaveClassroom",method = RequestMethod.POST)
+    @ResponseBody
+    public String leaveClassroom(@RequestParam Integer classroomId) {
+        //authorize
+        User user = (User) session.getAttribute("user");
+        ClassroomUser classroomUser = classroomUserDao.findJoinedClassroomByClassroomAndUser(user.getId(),classroomId);
+        try {
+            classroomUserDao.delete(classroomUser);
+        } catch (Exception e){
+            return "NG";
+        }
+        return "OK";
     }
 }
 
