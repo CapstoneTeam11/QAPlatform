@@ -499,6 +499,7 @@
                 success: function (data){
                     if(data !== ""){
                         nextFromInvitation--;
+                        nextFromJoinedClassroom++;
                         var invitation = $('#invitation'+invitationId);
                         var classroomName = invitation.find("h4").find("a").text();
                         var classroomHref = invitation.find("h4").find("a").attr("href");
