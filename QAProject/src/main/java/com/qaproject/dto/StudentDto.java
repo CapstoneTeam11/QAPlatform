@@ -4,15 +4,24 @@ package com.qaproject.dto;
  * Created by TADUCTUNG on 08-Jun-15.
  */
 public class StudentDto {
+    private Integer Id;
+    private Integer studentId;
     private String studentName;
-    private int studentId;
-    private String imageStudent;
+    private String studentProfileImageURL;
 
-    public StudentDto() {
+    public Integer getId() {
+        return Id;
     }
 
-    public StudentDto(String studentName, int studentId) {
-        this.studentName = studentName;
+    public void setId(Integer id) {
+        Id = id;
+    }
+
+    public Integer getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(Integer studentId) {
         this.studentId = studentId;
     }
 
@@ -24,19 +33,12 @@ public class StudentDto {
         this.studentName = studentName;
     }
 
-    public int getStudentId() {
-        return studentId;
+    public String getStudentProfileImageURL() {
+        return studentProfileImageURL;
     }
 
-    public void setStudentId(int studentId) {
-        this.studentId = studentId;
-    }
-
-    public String getImageStudent() {
-        return imageStudent;
-    }
-
-    public void setImageStudent(String imageStudent) {
-        this.imageStudent = imageStudent;
+    public void setStudentProfileImageURL(String studentProfileImageURL) {
+        this.studentProfileImageURL = studentProfileImageURL;
     }
 }
+

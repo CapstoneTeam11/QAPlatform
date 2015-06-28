@@ -100,6 +100,44 @@ public class ClassroomUserDaoImpl extends BaseDao<ClassroomUser,Integer> impleme
     }
 
     @Override
+    public List<ClassroomUser> findRequestsByClassroom(Integer classroomId, Integer nextFrom) {
+        Query query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.classroomId.id=:classroomId and "+
+                "cu.approval=0 order by cu.id desc");
+        query.setParameter("classroomId",classroomId);
+        if (nextFrom < 0) {
+            nextFrom = 0;
+        }
+        query.setFirstResult(nextFrom);
+        query.setMaxResults(11);
+        List<ClassroomUser> requests = null;
+        try {
+            requests = query.getResultList();
+        } catch (NoResultException e){
+            e.printStackTrace();
+        }
+        return requests;
+    }
+
+    @Override
+    public List<ClassroomUser> findStudentsByClassroom(Integer classroomId, Integer nextFrom) {
+        Query query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.classroomId.id=:classroomId and "+
+                "cu.approval=1 order by cu.id desc");
+        query.setParameter("classroomId",classroomId);
+        if (nextFrom < 0) {
+            nextFrom = 0;
+        }
+        query.setFirstResult(nextFrom);
+        query.setMaxResults(11);
+        List<ClassroomUser> students = null;
+        try {
+            students = query.getResultList();
+        } catch (NoResultException e){
+            e.printStackTrace();
+        }
+        return students;
+    }
+
+    @Override
     public List<ClassroomUser> findByUserClassroomWithApprove(int userId, int classId) {
         List<ClassroomUser> classroomUsers = null;
         Query query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.userId.id=:userId and cu.classroomId.id = :classId and cu.approval = 1");
@@ -174,7 +212,7 @@ public class ClassroomUserDaoImpl extends BaseDao<ClassroomUser,Integer> impleme
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public void delete(ClassroomUser entity) {
-        ClassroomUser classroomUser = entityManager.getReference(ClassroomUser.class,entity.getId());
+        ClassroomUser classroomUser = entityManager.getReference(ClassroomUser.class, entity.getId());
         entityManager.remove(classroomUser);
     }
 }

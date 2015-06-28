@@ -3,6 +3,7 @@ package com.qaproject.controller;
 import com.qaproject.dao.*;
 import com.qaproject.dto.*;
 import com.qaproject.entity.*;
+import com.qaproject.util.ClassroomUtilities;
 import com.qaproject.util.Constant;
 import com.qaproject.util.DashboardUtilities;
 import com.qaproject.util.NotificationUtilities;
@@ -41,6 +42,8 @@ public class ClassController {
     NotificationUtilities notificationUtilities;
     @Autowired
     DashboardUtilities dashboardUtilities;
+    @Autowired
+    ClassroomUtilities classroomUtilities;
     @Autowired
     HttpSession session;
 
@@ -267,55 +270,35 @@ public class ClassController {
 
 
     @RequestMapping(value = "/classroom/{id}",method = RequestMethod.GET)
-    public String classroom(ModelMap model, @PathVariable(value = "id") String id) {
-        User userSession = (User) session.getAttribute("user");
-        if(userSession==null) {
+    public String classroom(ModelMap model, @PathVariable(value = "id")Integer id) {
+        User user = (User) session.getAttribute("user");
+        if(user==null) {
             return "redirect:403";
         }
-        Classroom classroom = classroomDao.find(Integer.parseInt(id));
+        Classroom classroom = classroomDao.find(id);
         int idOwner = classroom.getOwnerUserId().getId();
-        User user = userDao.find(idOwner);
+        User ownerClassroom = userDao.find(idOwner);
 
-        //get posts, materials, request to join - MinhKH
-        List<Post> posts = classroom.getPostList();
-        List<Material> materials = classroom.getMaterialList();
-        List<ClassroomUser> classroomUsers = classroomUserDao.findByClassroom(classroom);
+        //get questions, articles, materials, request to join - MinhKH
+        List<PostDto> questions = classroomUtilities.loadQuestions(id, 0);
+        List<PostDto> articles = classroomUtilities.loadArticles(id,0);
+        List<MaterialDto> materials = classroomUtilities.loadMaterials(id,0);
+        List<RequestDto> requests = classroomUtilities.loadRequests(id,0);
+        List<StudentDto> students = classroomUtilities.loadStudents(id,0);
 
 
-        //classify classroomUser - MinhKH
-        List<ClassroomUser> joinRequests = new ArrayList<ClassroomUser>();
-        List<ClassroomUser> students = new ArrayList<ClassroomUser>();
-        for (int i=0;i<classroomUsers.size();i++){
-            ClassroomUser currentClassroomUser = classroomUsers.get(i);
-            if(currentClassroomUser.getType()==1&&currentClassroomUser.getApproval()==0){
-                joinRequests.add(currentClassroomUser);
-            }
-            if (currentClassroomUser.getApproval()==1) {
-                students.add(currentClassroomUser);
-            }
-        }
 
-        if (posts.size()==0 && materials.size()==0 && joinRequests.size()==0 && students.size()==0) {
+        if (questions.size()==0 && articles.size()==0 && materials.size()==0 && requests.size()==0
+                && students.size() ==0) {
             model.addAttribute("classroom", classroom);
-            model.addAttribute("userOwner", user);
-            model.addAttribute("user", userSession);
+            model.addAttribute("userOwner", ownerClassroom);
+            model.addAttribute("user", user);
             return "classroomWelcome";
         }
 
-        //classify post - MinhKH
-        List<Post> questions = new ArrayList<Post>();
-        List<Post> articles = new ArrayList<Post>();
-        for (int i=0; i<posts.size();i++){
-            Post currentPost = posts.get(i);
-            if (currentPost.getPostType()==1){
-                questions.add(currentPost);
-            }
-            if (currentPost.getPostType()==2){
-                articles.add(currentPost);
-            }
-        }
+
         // check if acceptRequest or not
-        List<ClassroomUser> checkClassroomUsers = classroomUserDao.findByUserClassroom(userSession.getId(), Integer.parseInt(id));
+        List<ClassroomUser> checkClassroomUsers = classroomUserDao.findByUserClassroom(user.getId(), id);
         ClassroomUser checkClassroomUser = null;
         if(checkClassroomUsers != null && checkClassroomUsers.size()>0){
             checkClassroomUser = checkClassroomUsers.get(0);
@@ -323,11 +306,11 @@ public class ClassController {
         model.addAttribute("questions",questions);
         model.addAttribute("articles",articles);
         model.addAttribute("materials",materials);
-        model.addAttribute("joinRequests",joinRequests);
+        model.addAttribute("requests",requests);
         model.addAttribute("students",students);
         model.addAttribute("classroom", classroom);
-        model.addAttribute("userOwner", user);
-        model.addAttribute("user", userSession);
+        model.addAttribute("userOwner", ownerClassroom);
+        model.addAttribute("user", user);
         model.addAttribute("checkClassroomUser", checkClassroomUser);
         return "classroom";
     }
@@ -338,54 +321,9 @@ public class ClassController {
         if(userSession==null) {
             return null;
         }
-        Classroom classroom = classroomDao.find(Integer.parseInt(id));
-        int idOwner = classroom.getOwnerUserId().getId();
-        User user = userDao.find(idOwner);
-
-        //get posts, materials, request to join - MinhKH
-        List<Post> posts = classroom.getPostList();
-        List<Material> materials = classroom.getMaterialList();
-        List<ClassroomUser> classroomUsers = classroomUserDao.findByClassroom(classroom);
 
 
-        //classify classroomUser - MinhKH
-        List<ClassroomUser> joinRequests = new ArrayList<ClassroomUser>();
-        List<ClassroomUser> students = new ArrayList<ClassroomUser>();
-        for (int i=0;i<classroomUsers.size();i++){
-            ClassroomUser currentClassroomUser = classroomUsers.get(i);
-            if(currentClassroomUser.getType()==1&&currentClassroomUser.getApproval()==0){
-                joinRequests.add(currentClassroomUser);
-            }
-            if (currentClassroomUser.getApproval()==1) {
-                students.add(currentClassroomUser);
-            }
-        }
-
-        //classify post - MinhKH
-        List<Post> questions = new ArrayList<Post>();
-        List<Post> articles = new ArrayList<Post>();
-        for (int i=0; i<posts.size();i++){
-            Post currentPost = posts.get(i);
-            if (currentPost.getPostType()==1){
-                questions.add(currentPost);
-            }
-            if (currentPost.getPostType()==2){
-                articles.add(currentPost);
-            }
-        }
-        // check if acceptRequest or not
-        List<ClassroomUser> checkClassroomUsers = classroomUserDao.findByUserClassroom(userSession.getId(), Integer.parseInt(id));
-        ClassroomUser checkClassroomUser = null;
-        if(checkClassroomUsers != null && checkClassroomUsers.size()>0){
-            checkClassroomUser = checkClassroomUsers.get(0);
-        }
-        List<StudentDto> list = new ArrayList<StudentDto>();
-        for(int i=0; i< students.size(); i++){
-            StudentDto studentDto = new StudentDto(students.get(i).getUserId().getDisplayName(), students.get(i).getUserId().getId());
-            list.add(studentDto);
-        }
-
-        return list;
+        return null;
     }
 
     /**
@@ -401,61 +339,9 @@ public class ClassController {
         if(userSession==null) {
             return null;
         }
-        Classroom classroom = classroomDao.find(Integer.parseInt(id));
-        int idOwner = classroom.getOwnerUserId().getId();
-        User user = userDao.find(idOwner);
-
-        //get posts, materials, request to join - MinhKH
-        List<Post> posts = classroom.getPostList();
-        List<Material> materials = classroom.getMaterialList();
-        List<ClassroomUser> classroomUsers = classroomUserDao.findByClassroom(classroom);
 
 
-        //classify classroomUser - MinhKH
-        List<ClassroomUser> joinRequests = new ArrayList<ClassroomUser>();
-        List<ClassroomUser> students = new ArrayList<ClassroomUser>();
-        for (int i=0;i<classroomUsers.size();i++){
-            ClassroomUser currentClassroomUser = classroomUsers.get(i);
-            if(currentClassroomUser.getType()==1&&currentClassroomUser.getApproval()==0){
-                joinRequests.add(currentClassroomUser);
-            }
-            if (currentClassroomUser.getApproval()==1) {
-                students.add(currentClassroomUser);
-            }
-        }
-
-        //classify post - MinhKH
-        List<Post> questions = new ArrayList<Post>();
-        List<Post> articles = new ArrayList<Post>();
-        for (int i=0; i<posts.size();i++){
-            Post currentPost = posts.get(i);
-            if (currentPost.getPostType()==1){
-                questions.add(currentPost);
-            }
-            if (currentPost.getPostType()==2){
-                articles.add(currentPost);
-            }
-        }
-        // check if acceptRequest or not
-        List<ClassroomUser> checkClassroomUsers = classroomUserDao.findByUserClassroom(userSession.getId(), Integer.parseInt(id));
-        ClassroomUser checkClassroomUser = null;
-        if(checkClassroomUsers != null && checkClassroomUsers.size()>0){
-            checkClassroomUser = checkClassroomUsers.get(0);
-        }
-        List<ClassUserDto> listResquest = new ArrayList<ClassUserDto>();
-        for(int i=0; i< joinRequests.size(); i++){
-            ClassUserDto studentClassUserDto = new ClassUserDto();
-            studentClassUserDto.setClassroomId(joinRequests.get(i).getClassroomId().getId().toString());
-            studentClassUserDto.setClassroomName(joinRequests.get(i).getClassroomId().getClassroomName());
-            studentClassUserDto.setJoinRequest(joinRequests.get(i).getId().toString());
-            studentClassUserDto.setOwnerUserId(joinRequests.get(i).getClassroomId().getOwnerUserId().getId().toString());
-            studentClassUserDto.setUserDisplayName(joinRequests.get(i).getUserId().getDisplayName());
-            studentClassUserDto.setUserRoleId(userSession.getRoleId().getId());
-            studentClassUserDto.setUserId(joinRequests.get(i).getUserId().getId());
-            listResquest.add(studentClassUserDto);
-        }
-
-        return listResquest;
+        return null;
     }
     /**
      * TungTD loadMoreActicle
@@ -470,142 +356,34 @@ public class ClassController {
         if(userSession==null) {
             return null;
         }
-        Classroom classroom = classroomDao.find(Integer.parseInt(id));
-        int idOwner = classroom.getOwnerUserId().getId();
-        User user = userDao.find(idOwner);
-
-        //get posts, materials, request to join - MinhKH
-        List<Post> posts = classroom.getPostList();
-        List<Material> materials = classroom.getMaterialList();
 
 
-        //classify post - MinhKH
-        List<Post> questions = new ArrayList<Post>();
-        List<Post> articles = new ArrayList<Post>();
-        for (int i=0; i<posts.size();i++){
-            Post currentPost = posts.get(i);
-            if (currentPost.getPostType()==1){
-                questions.add(currentPost);
-            }
-            if (currentPost.getPostType()==2){
-                articles.add(currentPost);
-            }
-        }
-        // check if acceptRequest or not
-        List<ClassroomUser> checkClassroomUsers = classroomUserDao.findByUserClassroom(userSession.getId(), Integer.parseInt(id));
-        ClassroomUser checkClassroomUser = null;
-        if(checkClassroomUsers != null && checkClassroomUsers.size()>0){
-            checkClassroomUser = checkClassroomUsers.get(0);
-        }
-        List<ArticleDto> articleDtos = new ArrayList<ArticleDto>();
-        for(int i=0; i< articles.size(); i++){
-            Post article = articles.get(i);
-            ArticleDto articleDto = new ArticleDto();
-            articleDto.setQuestionId(article.getId().toString());
-            articleDto.setClassroomName(article.getOwnerClassId().getClassroomName());
-            articleDto.setQuestionAcceptedAnswerId(article.getAcceptedAnswerId().toString());
-            articleDto.setQuestionBody(article.getBody());
-            articleDto.setQuestionLastEditedDate(article.getLastEditedDate().toString());
-            articleDto.setQuestionOwnerUserId(article.getOwnerUserId().getId().toString());
-            articleDto.setQuestionTitle(article.getTitle());
-            articleDto.setReplyCount(article.getReplyCount() == null ? "0" : article.getReplyCount().toString());
-            articleDto.setQuestionOwnerUserName(article.getOwnerUserId().getDisplayName());
-            articleDtos.add(articleDto);
-        }
-
-        return articleDtos;
+        return null;
     }
 
-    /**
-     * TungTD loadMoreActicle
-     * @param model
-     * @param id
-     * @return
-     */
-    @RequestMapping(value = "/classroom/loadMoreQuestion/{id}",method = RequestMethod.POST)
+
+    @RequestMapping(value = "/classroom/question",method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public List<ArticleDto> loadMoreQuestion(ModelMap model, @PathVariable(value = "id") String id) {
-        User userSession = (User) session.getAttribute("user");
-        if(userSession==null) {
-            return null;
-        }
-        Classroom classroom = classroomDao.find(Integer.parseInt(id));
-        int idOwner = classroom.getOwnerUserId().getId();
-        User user = userDao.find(idOwner);
+    public List<PostDto> loadMoreQuestion(@RequestParam Integer classroomId, @RequestParam Integer nextFrom) {
+        List<PostDto> questions = new ArrayList<PostDto>();
+        try {
+            questions = classroomUtilities.loadQuestions(classroomId,nextFrom);
+        } catch (Exception e){
 
-        //get posts, materials, request to join - MinhKH
-        List<Post> posts = classroom.getPostList();
-        List<Material> materials = classroom.getMaterialList();
-
-
-        //classify post - MinhKH
-        List<Post> questions = new ArrayList<Post>();
-        List<Post> articles = new ArrayList<Post>();
-        for (int i=0; i<posts.size();i++){
-            Post currentPost = posts.get(i);
-            if (currentPost.getPostType()==1){
-                questions.add(currentPost);
-            }
-            if (currentPost.getPostType()==2){
-                articles.add(currentPost);
-            }
         }
-        // check if acceptRequest or not
-        List<ClassroomUser> checkClassroomUsers = classroomUserDao.findByUserClassroom(userSession.getId(), Integer.parseInt(id));
-        ClassroomUser checkClassroomUser = null;
-        if(checkClassroomUsers != null && checkClassroomUsers.size()>0){
-            checkClassroomUser = checkClassroomUsers.get(0);
-        }
-        List<ArticleDto> articleDtos = new ArrayList<ArticleDto>();
-        for(int i=0; i< questions.size(); i++){
-            Post article = questions.get(i);
-            ArticleDto articleDto = new ArticleDto();
-            articleDto.setQuestionId(article.getId().toString());
-            articleDto.setClassroomName(article.getOwnerClassId().getClassroomName());
-            articleDto.setQuestionAcceptedAnswerId(article.getAcceptedAnswerId().toString());
-            articleDto.setQuestionBody(article.getBody());
-            articleDto.setQuestionLastEditedDate(article.getLastEditedDate().toString());
-            articleDto.setQuestionOwnerUserId(article.getOwnerUserId().getId().toString());
-            articleDto.setQuestionTitle(article.getTitle());
-            articleDto.setReplyCount(article.getReplyCount()==null?"0":article.getReplyCount().toString());
-            articleDto.setQuestionOwnerUserName(article.getOwnerUserId().getDisplayName());
-            articleDtos.add(articleDto);
-        }
-
-        return articleDtos;
+        return questions;
     }
-    /**
-     * TungTD loadMoreActicle
-     * @param model
-     * @param id
-     * @return
-     */
-    @RequestMapping(value = "/classroom/loadMoreMaterial/{id}",method = RequestMethod.POST)
+
+    @RequestMapping(value = "/classroom/article",method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public List<MaterialDto> loadMoreMaterial(ModelMap model, @PathVariable(value = "id") String id) {
-        User userSession = (User) session.getAttribute("user");
-        if(userSession==null) {
-            return null;
-        }
-        Classroom classroom = classroomDao.find(Integer.parseInt(id));
-        int idOwner = classroom.getOwnerUserId().getId();
-        User user = userDao.find(idOwner);
+    public List<PostDto> loadMoreArticle(@RequestParam Integer classroomId, @RequestParam Integer nextFrom) {
+        List<PostDto> articles = new ArrayList<PostDto>();
+        try {
+            articles = classroomUtilities.loadArticles(classroomId, nextFrom);
+        } catch (Exception e){
 
-        //get posts, materials, request to join - MinhKH
-        List<Post> posts = classroom.getPostList();
-        List<Material> materials = classroom.getMaterialList();
-        List<MaterialDto> materialDtos = new ArrayList<MaterialDto>();
-        for(int i=0; i< materials.size(); i++){
-            Material material = materials.get(i);
-            MaterialDto materialDto = new MaterialDto();
-            materialDto.setCreationDate(material.getCreationDate().toString());
-            materialDto.setId(material.getId().toString());
-            materialDto.setName(material.getName());
-            materialDto.setSize(material.getSize().toString());
-            materialDtos.add(materialDto);
         }
-
-        return materialDtos;
+        return articles;
     }
     /**
      *
