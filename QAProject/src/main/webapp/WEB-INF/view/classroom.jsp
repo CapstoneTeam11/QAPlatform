@@ -50,7 +50,17 @@
 <div class="loader"><div class="loader_html"></div></div>
 
 <div id="wrap">
-
+<div class="panel-Confirm" id="remove-student">
+    <h2>Leave classroom</h2>
+    <div>
+        <p class="panelMessage">Do you want to remove this student?</p>
+        <p>
+            <input type="submit" value="Cancel"  class="button color small cancel panelButton" >
+            <input type="submit" value="OK"  class="button color small OK panelButton" style="margin-left: 3%;">
+        </p>
+        <div class="clearfix"></div>
+    </div>
+</div>
 <div class="panel-pop" id="addMaterial">
     <h2>Upload Material<i class="icon-remove"></i></h2>
     <div class="form-style form-style-3">
@@ -367,7 +377,7 @@
                 </c:if>
                 <c:if test="${fn:length(requests)<=10}">
                     <c:forEach var="request" items="${requests}">
-                        <div class="about-author clearfix">
+                        <div class="about-author clearfix" id="request${request.id}">
                             <div class="author-image">
                                 <a href="/profile/view/${request.studentId}" original-title="${request.studentName}"
                                    class="tooltip-n"><img alt="" src="${request.studentProfileImageURL}"></a>
@@ -434,34 +444,10 @@
                 </c:if>
             </c:if>
             <c:if test="${empty students}">
-                <div class="about-author clearfix">
+                <div class="about-author clearfix" id="noStudent">
                     No student.
                 </div>
             </c:if>
-            <%--<c:if test="${not empty students}">
-                <c:set var="total" value="${fn:length(students)}" />
-                <c:forEach var="student" items="${students}" varStatus="counter">
-                    <c:if test="${counter.count <11}">
-                        <div class="about-author clearfix" id="student${student.userId.id}">
-                            <div class="author-image">
-                                <a href="#" original-title="" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
-                            </div>
-                            <c:if test="${classroom.status == 1}">
-                                <c:if test="${user.roleId.id==2}">
-                                    <a class="removeBtn" href="javascript:removeStudent(${student.userId.id});" style="float: right">Remove</a>
-                                </c:if>
-                            </c:if>
-                            <div class="author-bio" style="margin-top: 25px">
-                                <h4><a href="#">${student.userId.displayName}</a></h4>
-                            </div>
-                        </div>
-                    </c:if>
-                </c:forEach>
-                <c:if test="${total >10}">
-                    <a href="javascript:loadMoreStudent(${classroom.id});" class="post-read-more button color small">Load more...</a>
-                </c:if>
-            </c:if>--%>
-
         </div>
         <c:if test="${fn:length(students)>10}">
             <a class="post-read-more button color small"
@@ -1020,6 +1006,105 @@
         })
     });
 
+    var ignoreRequest = function (e){
+        var requestId = $(e).attr('id');
+        $.ajax({
+            type: "POST",
+            url: "/ignoreRequests",
+            data: "requestId="+ requestId,
+            success: function (data){
+                if(data === "OK"){
+                    nextFromRequest--;
+                    var request = $('#request'+requestId);
+                    var studentName = request.find("h4").find("a").text();
+                    var studentHref = request.find("h4").find("a").attr("href");
+                    request.html('You have ignored the request of <a href="'+
+                            studentHref +'">'+
+                            studentName+'</a>.');
+                    request.attr("style","background-color: #FFFFEA")
+                }
+            }
+        });
+    };
+    var confirmRequest = function (e){
+        var requestId = $(e).attr('id');
+        $.ajax({
+            type: "POST",
+            url: "/confirmRequest",
+            data: "requestId="+ requestId,
+            success: function (data){
+                if(data !== undefined){
+                    nextFromRequest--;
+                    nextFromStudent++;
+                    var student = data;
+                    var request = $('#request'+requestId);
+                    var studentName = request.find("h4").find("a").text();
+                    var studentHref = request.find("h4").find("a").attr("href");
+                    request.html('You have confirmed the request of <a href="'+
+                            studentHref +'">'+
+                            studentName+'</a>.');
+                    request.attr("style","background-color: #e5ffe5")
+                    var newStudent = '<div class="about-author clearfix" id="student'+ student.id+'">' +
+                            '<div class="author-image">' +
+                            '<a href="/profile/view/'+ student.studentId+'" original-title="" class="tooltip-n">' +
+                            '<img alt="" src="'+student.studentProfileImageURL+'"></a>' +
+                            '</div>' +
+                            '<a class="removeStudent" id="'+ student.id+'" ' +
+                            'onclick="removeStudent(this); return false;" ' +
+                            'style="float: right; cursor:pointer">Remove</a>' +
+                            '<div class="author-bio" style="margin-top: 25px">' +
+                            '<h4><a href="/profile/view/'+ student.studentId+'">'+ student.studentName+'</a></h4>' +
+                            '</div>' +
+                            '</div>';
+                    $('#noStudent').remove();
+                    $('#students').prepend(newStudent);
+                }
+            }
+        });
+    };
+    var removeStudent = function(e) {
+        var removeId = $(e).attr('id');
+        $(".panel-Confirm").animate({"top":"-100%"},10).hide();
+        $("#remove-student").show().animate({"top":"34%"},500);
+        $("body").prepend("<div class='wrap-pop'></div>");
+        wrap_pop();
+        var flagPanel =  $('.panelButton').click(function(e) {
+            if ($(e.currentTarget).hasClass('OK')) {
+                $.ajax({
+                    type: "POST",
+                    url: "/removeStudentFromClassroom",
+                    data: 'removeId=' + removeId,
+                    success: function (data) {
+                        if(data != "NG" ){
+                            nextFromStudent--;
+                            var removeElement = $('#student'+removeId);
+                            var studentName = removeElement.find("h4").find("a").text();
+                            var studentHref = removeElement.find("h4").find("a").attr("href");
+                            removeElement.html('You have removed <a href="'+
+                                    studentHref +'">'+
+                                    studentName+'</a> from classroom.');
+                            removeElement.attr("style","background-color: #FFFFEA")
+                        } else {
+                            console.log("Error");
+                        }
+                    }
+                });
+                $(".panel-Confirm").animate({"top":"-100%"},500);
+                $(".wrap-pop").remove();
+            } else {
+                $(".panel-Confirm").animate({"top":"-100%"},500);
+                $(".wrap-pop").remove();
+            }
+        })
+    };
+    function wrap_pop() {
+        $(".wrap-pop").click(function () {
+            $(".panel-Confirm").animate({"top":"-100%"},500).hide(function () {
+                $(this).animate({"top":"-100%"},500);
+            });
+            $(this).remove();
+        });
+    }
 </script>
 </body>
 </html>

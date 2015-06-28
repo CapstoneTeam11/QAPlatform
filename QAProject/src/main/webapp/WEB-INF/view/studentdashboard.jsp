@@ -482,7 +482,7 @@
                         var invitation = $('#invitation'+invitationId);
                         var classroomName = invitation.find("h4").find("a").text();
                         var classroomHref = invitation.find("h4").find("a").attr("href");
-                        invitation.html('You have ignored the invitation to join <a href="/classroom/'+
+                        invitation.html('You have ignored the invitation to join <a href="'+
                                 classroomHref +'">'+
                                 classroomName+'</a>.');
                         invitation.attr("style","background-color: #FFFFEA")
@@ -505,7 +505,7 @@
                         var classroomHref = invitation.find("h4").find("a").attr("href");
                         var classroomId = classroomHref.split("/")[2];
                         var classroomDescription = data;
-                        invitation.html('You have joined <a href="/classroom/'+
+                        invitation.html('You have joined <a href="'+
                                 classroomHref +'">'+
                                 classroomName+'</a>.');
                         invitation.attr("style","background-color: #e5ffe5")
@@ -548,7 +548,7 @@
                                 var classroom = $('#classroom'+classroomId);
                                 var classroomName = classroom.find("h4").find("a").text();
                                 var classroomHref = classroom.find("h4").find("a").attr("href");
-                                classroom.html('You have left classroom <a href="/classroom/'+
+                                classroom.html('You have left classroom <a href="'+
                                         classroomHref +'">'+
                                         classroomName+'</a>.');
                                 classroom.attr("style","background-color: #FFFFEA")
