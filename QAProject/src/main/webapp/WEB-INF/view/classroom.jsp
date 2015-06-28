@@ -389,35 +389,6 @@
                     No request.
                 </div>
             </c:if>
-            <%--<c:if test="${not empty joinRequests}">
-                <c:set var="total" value="${fn:length(joinRequests)}" />
-
-                <c:forEach var="joinRequest" items="${joinRequests}" varStatus="counter">
-                    <c:if test="${counter.count <11}"> <!-- less than 15 -->
-                        <form id="acceptForm${joinRequest.id}" method="post" action="/acceptRequest">
-                            <input type="hidden" name="requestId" id ="requestId${joinRequest.id}"  value="${joinRequest.id}"/>
-                            <input type="hidden" name="ownerClassroomId" id="ownerClassroomId${joinRequest.id}" value="${classroom.ownerUserId.id}"/>
-                            <input type="hidden" name="currentClassroomId" id="currentClassroomId${joinRequest.id}" value="${classroom.id}"/>
-                            <div class="about-author clearfix">
-                                <div class="author-image">
-                                    <a href="#" original-title="${joinRequest.userId.displayName}" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
-                                </div>
-                                <c:if test="${user.roleId.id==2}">
-                                    <a class="" href="#" onclick="javascript:ignoreRequest('acceptForm${joinRequest.id}', ${joinRequest.id});" style="float: right">Ignore</a>
-                                    <a class="" href="#" onclick="javascript:acceptRequest('acceptForm${joinRequest.id}', ${joinRequest.userId.id}, ${joinRequest.id});" style="float: right; margin-right: 15px">Confirm</a>
-                                </c:if>
-                                <div class="author-bio">
-                                <h4><a href="#">${joinRequest.userId.displayName}</a></h4>
-                                Requested to join <a href="/classroom/${classroom.id}" style="font-size: 15px">${classroom.classroomName}</a>
-                                </div>
-                            </div>
-                        </form>
-                    </c:if>
-                </c:forEach>
-                <c:if test="${total >10}"> <!-- more than 15 -->
-                    <a href="javascript:javascript:loadMoreStudentRequest(${classroom.id})" class="post-read-more button color small">Load more...</a>
-                </c:if>
-            </c:if>--%>
         </div>
         <c:if test="${fn:length(requests)>10}">
             <a class="post-read-more button color small"
@@ -426,8 +397,47 @@
     </div>
 
 </c:if>
-    <div class="tab-inner-warp" id="studentTag">
-        <div class="tab-inner">
+    <div class="tab-inner-warp">
+        <div class="tab-inner" id="students">
+            <c:if test="${not empty students}">
+                <c:if test="${fn:length(students)>10}">
+                    <c:forEach var="student" items="${students}" end="9">
+                        <div class="about-author clearfix" id="student${student.id}">
+                            <div class="author-image">
+                                <a href="/profile/view/${student.studentId}" original-title="" class="tooltip-n">
+                                    <img alt="" src="${student.studentProfileImageURL}"></a>
+                            </div>
+                                <a class="removeStudent" id="${student.id}"
+                                   onclick="removeStudent(this); return false;"
+                                   style="float: right; cursor:pointer">Remove</a>
+                            <div class="author-bio" style="margin-top: 25px">
+                                <h4><a href="/profile/view/${student.studentId}">${student.studentName}</a></h4>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </c:if>
+                <c:if test="${fn:length(students)<=10}">
+                    <c:forEach var="student" items="${students}">
+                        <div class="about-author clearfix" id="student${student.id}">
+                            <div class="author-image">
+                                <a href="/profile/view/${student.studentId}" original-title="" class="tooltip-n">
+                                    <img alt="" src="${student.studentProfileImageURL}"></a>
+                            </div>
+                            <a class="removeStudent" id="${student.id}"
+                               onclick="removeStudent(this); return false;"
+                               style="float: right; cursor:pointer">Remove</a>
+                            <div class="author-bio" style="margin-top: 25px">
+                                <h4><a href="/profile/view/${student.studentId}">${student.studentName}</a></h4>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </c:if>
+            </c:if>
+            <c:if test="${empty students}">
+                <div class="about-author clearfix">
+                    No student.
+                </div>
+            </c:if>
             <%--<c:if test="${not empty students}">
                 <c:set var="total" value="${fn:length(students)}" />
                 <c:forEach var="student" items="${students}" varStatus="counter">
@@ -453,7 +463,10 @@
             </c:if>--%>
 
         </div>
-
+        <c:if test="${fn:length(students)>10}">
+            <a class="post-read-more button color small"
+               style="margin-bottom: 5px;" id="loadMoreStudent">Load more</a>
+        </c:if>
     </div>
 </div><!-- End page-content -->
 </div><!-- End main -->
@@ -795,6 +808,7 @@
     var nextFromArticle = 10;
     var nextFromMaterial = 10;
     var nextFromRequest = 10;
+    var nextFromStudent = 10;
     $('#loadMoreQuestion').click(function (e) {
         var url = "/classroom/question";
         var classroomId = ${classroom.id};
@@ -966,6 +980,42 @@
                     $(".tooltip-n").tipsy({fade:true,gravity:"s"});
                 }
                 nextFromRequest = nextFromRequest + 10;
+            }
+        })
+    });
+    $('#loadMoreStudent').click(function (e) {
+        var url = "/classroom/student";
+        var classroomId = ${classroom.id};
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {classroomId: classroomId, nextFrom: nextFromStudent},
+            success: function (data) {
+                var students = new Array();
+                students = data;
+                var length = students.length;
+                if (length > 10) {
+                    length = students.length - 1;
+                } else {
+                    $('#loadMoreStudent').hide();
+                }
+                for (var i = 0; i < length; i++) {
+                    var component = '<div class="about-author clearfix" id="student'+ students[i].id+'">' +
+                            '<div class="author-image">' +
+                            '<a href="/profile/view/'+ students[i].studentId+'" original-title="" class="tooltip-n">' +
+                            '<img alt="" src="'+students[i].studentProfileImageURL+'"></a>' +
+                            '</div>' +
+                            '<a class="removeStudent" id="'+ students[i].id+'" ' +
+                            'onclick="removeStudent(this); return false;" ' +
+                            'style="float: right; cursor:pointer">Remove</a>' +
+                            '<div class="author-bio" style="margin-top: 25px">' +
+                            '<h4><a href="/profile/view/'+ students[i].studentId+'">'+ students[i].studentName+'</a></h4>' +
+                            '</div>' +
+                            '</div>';
+                    $('#students').append(component);
+                    $(".tooltip-n").tipsy({fade:true,gravity:"s"});
+                }
+                nextFromStudent = nextFromStudent + 10;
             }
         })
     });

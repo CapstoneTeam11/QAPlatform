@@ -362,6 +362,19 @@ public class ClassController {
         }
         return requestDtos;
     }
+
+    @RequestMapping(value = "/classroom/student",method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public List<StudentDto> loadMoreStudent(@RequestParam Integer classroomId, @RequestParam Integer nextFrom) {
+        List<StudentDto> studentDtos = new ArrayList<StudentDto>();
+        try {
+            studentDtos = classroomUtilities.loadStudents(classroomId, nextFrom);
+        } catch (Exception e){
+
+        }
+        return studentDtos;
+    }
+
     /**
      *
      * @param model
