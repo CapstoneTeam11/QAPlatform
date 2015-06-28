@@ -286,30 +286,6 @@
                 No article.
             </div>
         </c:if>
-        <%--<c:if test="${not empty articles}">
-            <c:set var="total" value="${fn:length(articles)}" />
-            <c:forEach var="article" items="${articles}" varStatus="counter">
-                <c:if test="${counter.count <11}">
-                    <article class="post clearfix">
-                        <div class="post-inner">
-                            <h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a href="/post/view/${article.id}">${article.title}</a></h2>
-                            <div class="post-meta">
-                                <span class="meta-author"><i class="icon-user"></i><a href="#">Author: ${article.ownerUserId.displayName}</a></span>
-                                <span class="meta-date"><i class="icon-time"></i>${article.lastEditedDate}</span>
-                                <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">${article.replyCount} comment(s)</a></span>
-                                <span class="question-category"><a href="/classroom/${article.ownerClassId.id}"><i class="icon-group"></i>Class: ${article.ownerClassId.classroomName}</a></span>
-                            </div>
-                            <div class="post-content short-text">
-                                <p>${article.body}</p>
-                            </div><!-- End post-content -->
-                        </div><!-- End post-inner -->
-                    </article>
-                </c:if>
-            </c:forEach>
-        </c:if>
-        <c:if test="${total >10}">
-            <a href="javascript:loadMoreArticle(${classroom.id});" class="post-read-more button color small" style="margin-bottom: 5px;" id="loadMoreActicle">Load more...</a>
-        </c:if>--%>
     </div>
     <c:if test="${fn:length(articles)>10}">
         <a class="post-read-more button color small"
@@ -318,24 +294,22 @@
 </div>
 <div class="tab-inner-warp">
     <div class="tab-inner">
-        <%--<div class="col-md-3 col-sm-6" style="float: right">
+        <div class="col-md-3 col-sm-6" style="float: right">
             <c:if test="${classroom.status == 1}">
                 <a href="#" class="button medium green-button" style="float: right;margin-top: -25px;margin-right: -10px;" id="addMaterial-click"><i class="icon-upload"></i> Upload</a>
             </c:if>
         </div>
-        <table class="table table-hover" id="materialTag">
-            <tr>
-                <th>No</th>
-                <th>File name</th>
-                <th>Uploaded Date</th>
-                <th>File size</th>
-                <th>Save to</th>
-            </tr>
-            <c:set var="total" value="${fn:length(materials)}" />
-
-                <c:forEach var="material" items="${materials}" varStatus="counter">
-
-                    <c:if test="${counter.count <11}">
+        <c:if test="${not empty materials}">
+            <table class="table table-hover" id="materials">
+                <tr>
+                    <th>No</th>
+                    <th>File name</th>
+                    <th>Uploaded Date</th>
+                    <th>File size</th>
+                    <th>Save to</th>
+                </tr>
+                <c:if test="${fn:length(materials)>10}">
+                    <c:forEach var="material" items="${materials}" end="9" varStatus="counter">
                         <tr>
                             <td>${counter.count}</td>
                             <td>${material.name}</td>
@@ -343,13 +317,30 @@
                             <td>${material.size}</td>
                             <td><a id="add-to-folder-click" href="#">Folder</a> / <a href="/download/${material.id}"> Computer</a></td>
                         </tr>
-                    </c:if>
-                </c:forEach>
-
-        </table>
-        <c:if test="${total >0}">
-            <a href="javascript:loadMoreMaterial(${classroom.id});" class="post-read-more button color small" style="margin-bottom: 5px;" id="loadMoreMaterial">Load more...</a>
-        </c:if>--%>
+                    </c:forEach>
+                </c:if>
+                <c:if test="${fn:length(materials)<=10}">
+                    <c:forEach var="material" items="${materials}" varStatus="counter">
+                        <tr>
+                            <td>${counter.count}</td>
+                            <td>${material.name}</td>
+                            <td>${material.creationDate}</td>
+                            <td>${material.size}</td>
+                            <td><a id="add-to-folder-click" href="#">Folder</a> / <a href="/download/${material.id}"> Computer</a></td>
+                        </tr>
+                    </c:forEach>
+                </c:if>
+            </table>
+        </c:if>
+        <c:if test="${empty materials}">
+            <div class="about-author clearfix">
+                No material.
+            </div>
+        </c:if>
+        <c:if test="${fn:length(materials)>10}">
+            <a class="post-read-more button color small"
+               style="margin-bottom: 5px;" id="loadMoreMaterial">Load more</a>
+        </c:if>
     </div>
 </div>
 <c:if test="${user.roleId.id==2}">
@@ -754,6 +745,7 @@
     //Load more - MinhKH
     var nextFromQuestion = 10;
     var nextFromArticle = 10;
+    var nextFromMaterial = 10;
     $('#loadMoreQuestion').click(function (e) {
         var url = "/classroom/question";
         var classroomId = ${classroom.id};
@@ -850,6 +842,39 @@
                     $(".tooltip-n").tipsy({fade:true,gravity:"s"});
                 }
                 nextFromArticle = nextFromArticle + 10;
+            }
+        })
+    });
+    $('#loadMoreMaterial').click(function (e) {
+        var url = "/classroom/material";
+        var classroomId = ${classroom.id};
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {classroomId: classroomId, nextFrom: nextFromMaterial},
+            success: function (data) {
+                var materials = new Array();
+                materials = data;
+                var length = materials.length;
+                if (length > 10) {
+                    length = materials.length - 1;
+                } else {
+                    $('#loadMoreMaterial').hide();
+                }
+                var counter = nextFromMaterial + 1;
+                for (var i = 0; i < length; i++) {
+                    var component = '<tr>' +
+                            '<td>'+ counter + '</td>' +
+                    '<td>'+ materials[i].name + '</td>' +
+                    '<td>'+ materials[i].creationDate + '</td>' +
+                    '<td>' + materials[i].size + '</td>' +
+                    '<td><a id="add-to-folder-click" href="#">Folder</a> / <a href="/download/'+ materials[i].id +
+                    '">Computer</a></td>' +
+                    '</tr>';
+                    $('#materials').append(component);
+                    counter++;
+                }
+                nextFromMaterial = nextFromMaterial + 10;
             }
         })
     });

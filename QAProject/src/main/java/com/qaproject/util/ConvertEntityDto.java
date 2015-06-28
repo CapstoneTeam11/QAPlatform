@@ -165,8 +165,6 @@ public class ConvertEntityDto {
         if (material!=null) {
             materialDto.setId(material.getId());
             materialDto.setName(material.getName());
-            materialDto.setFolderId(material.getFolderId().getId());
-            materialDto.setFolderName(material.getFolderId().getName());
             materialDto.setOwnerClassroomId(material.getOwnerClassId().getId());
             materialDto.setOwnerClassroomName(material.getOwnerClassId().getClassroomName());
             materialDto.setCreationDate(ConvertDateTime(material.getCreationDate()));

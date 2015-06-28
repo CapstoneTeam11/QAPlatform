@@ -343,48 +343,45 @@ public class ClassController {
 
         return null;
     }
-    /**
-     * TungTD loadMoreActicle
-     * @param model
-     * @param id
-     * @return
-     */
-    @RequestMapping(value = "/classroom/loadMoreActicle/{id}",method = RequestMethod.POST)
-    @ResponseBody
-    public List<ArticleDto> loadMoreActicle(ModelMap model, @PathVariable(value = "id") String id) {
-        User userSession = (User) session.getAttribute("user");
-        if(userSession==null) {
-            return null;
-        }
 
-
-        return null;
-    }
 
 
     @RequestMapping(value = "/classroom/question",method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public List<PostDto> loadMoreQuestion(@RequestParam Integer classroomId, @RequestParam Integer nextFrom) {
-        List<PostDto> questions = new ArrayList<PostDto>();
+        List<PostDto> questionDtos = new ArrayList<PostDto>();
         try {
-            questions = classroomUtilities.loadQuestions(classroomId,nextFrom);
+            questionDtos = classroomUtilities.loadQuestions(classroomId,nextFrom);
         } catch (Exception e){
 
         }
-        return questions;
+        return questionDtos;
     }
 
     @RequestMapping(value = "/classroom/article",method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public List<PostDto> loadMoreArticle(@RequestParam Integer classroomId, @RequestParam Integer nextFrom) {
-        List<PostDto> articles = new ArrayList<PostDto>();
+        List<PostDto> articleDtos = new ArrayList<PostDto>();
         try {
-            articles = classroomUtilities.loadArticles(classroomId, nextFrom);
+            articleDtos = classroomUtilities.loadArticles(classroomId, nextFrom);
         } catch (Exception e){
 
         }
-        return articles;
+        return articleDtos;
     }
+
+    @RequestMapping(value = "/classroom/material",method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public List<MaterialDto> loadMoreMaterial(@RequestParam Integer classroomId, @RequestParam Integer nextFrom) {
+        List<MaterialDto> materialDtos = new ArrayList<MaterialDto>();
+        try {
+            materialDtos = classroomUtilities.loadMaterials(classroomId, nextFrom);
+        } catch (Exception e){
+
+        }
+        return materialDtos;
+    }
+
     /**
      *
      * @param model
