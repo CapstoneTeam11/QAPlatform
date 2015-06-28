@@ -40,4 +40,6 @@ public class RequestDto {
     public void setStudentProfileImageURL(String studentProfileImageURL) {
         this.studentProfileImageURL = studentProfileImageURL;
     }
+
+
 }

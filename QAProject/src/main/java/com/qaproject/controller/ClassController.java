@@ -314,37 +314,6 @@ public class ClassController {
         model.addAttribute("checkClassroomUser", checkClassroomUser);
         return "classroom";
     }
-    @RequestMapping(value = "/classroom/loadMoreStudent/{id}",method = RequestMethod.POST)
-    @ResponseBody
-    public List<StudentDto> loadMoreStudent(ModelMap model, @PathVariable(value = "id") String id) {
-        User userSession = (User) session.getAttribute("user");
-        if(userSession==null) {
-            return null;
-        }
-
-
-        return null;
-    }
-
-    /**
-     * TungTD load more student request
-     * @param model
-     * @param id
-     * @return
-     */
-    @RequestMapping(value = "/classroom/loadMoreStudentRequest/{id}",method = RequestMethod.POST)
-    @ResponseBody
-    public List<ClassUserDto> loadMoreStudentRequest(ModelMap model, @PathVariable(value = "id") String id) {
-        User userSession = (User) session.getAttribute("user");
-        if(userSession==null) {
-            return null;
-        }
-
-
-        return null;
-    }
-
-
 
     @RequestMapping(value = "/classroom/question",method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
@@ -382,6 +351,17 @@ public class ClassController {
         return materialDtos;
     }
 
+    @RequestMapping(value = "/classroom/request",method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public List<RequestDto> loadMoreRequest(@RequestParam Integer classroomId, @RequestParam Integer nextFrom) {
+        List<RequestDto> requestDtos = new ArrayList<RequestDto>();
+        try {
+            requestDtos = classroomUtilities.loadRequests(classroomId, nextFrom);
+        } catch (Exception e){
+
+        }
+        return requestDtos;
+    }
     /**
      *
      * @param model

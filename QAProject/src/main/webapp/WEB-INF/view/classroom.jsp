@@ -344,8 +344,51 @@
     </div>
 </div>
 <c:if test="${user.roleId.id==2}">
-    <div class="tab-inner-warp"  id="studentRequestTag">
-        <div class="tab-inner">
+    <div class="tab-inner-warp">
+        <div class="tab-inner" id="requests">
+            <c:if test="${not empty requests}">
+                <c:if test="${fn:length(requests)>10}">
+                    <c:forEach var="request" items="${requests}" end="9">
+                        <div class="about-author clearfix" id="request${request.id}">
+                            <div class="author-image">
+                                <a href="/profile/view/${request.studentId}" original-title="${request.studentName}"
+                                   class="tooltip-n"><img alt="" src="${request.studentProfileImageURL}"></a>
+                            </div>
+                            <a class="ignoreRequest" onclick="ignoreRequest(this); return false;"
+                               style="float: right; cursor: pointer" id="${request.id}">Ignore</a>
+                            <a class="confirmRequest" onclick="confirmRequest(this); return false;"
+                               style="float: right; margin-right: 15px; cursor: pointer" id="${request.id}">Confirm</a>
+                            <div class="author-bio">
+                                <h4><a href="/profile/view/${request.studentId}">${request.studentName}</a></h4>
+                                Requested to join <a href="/classroom/${classroom.id}" style="font-size: 15px">${classroom.classroomName}</a>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </c:if>
+                <c:if test="${fn:length(requests)<=10}">
+                    <c:forEach var="request" items="${requests}">
+                        <div class="about-author clearfix">
+                            <div class="author-image">
+                                <a href="/profile/view/${request.studentId}" original-title="${request.studentName}"
+                                   class="tooltip-n"><img alt="" src="${request.studentProfileImageURL}"></a>
+                            </div>
+                            <a class="ignoreRequest" onclick="ignoreRequest(this); return false;"
+                               style="float: right; cursor: pointer" id="${request.id}">Ignore</a>
+                            <a class="confirmRequest" onclick="confirmRequest(this); return false;"
+                               style="float: right; margin-right: 15px; cursor: pointer" id="${request.id}">Confirm</a>
+                            <div class="author-bio">
+                                <h4><a href="/profile/view/${request.studentId}">${request.studentName}</a></h4>
+                                Requested to join <a href="/classroom/${classroom.id}" style="font-size: 15px">${classroom.classroomName}</a>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </c:if>
+            </c:if>
+            <c:if test="${empty requests}">
+                <div class="about-author clearfix">
+                    No request.
+                </div>
+            </c:if>
             <%--<c:if test="${not empty joinRequests}">
                 <c:set var="total" value="${fn:length(joinRequests)}" />
 
@@ -376,7 +419,12 @@
                 </c:if>
             </c:if>--%>
         </div>
+        <c:if test="${fn:length(requests)>10}">
+            <a class="post-read-more button color small"
+               style="margin-bottom: 5px;" id="loadMoreRequest">Load more</a>
+        </c:if>
     </div>
+
 </c:if>
     <div class="tab-inner-warp" id="studentTag">
         <div class="tab-inner">
@@ -627,7 +675,7 @@
             }
         });
     }
-    function ignoreRequest(el, requestId){
+    /*function ignoreRequest(el, requestId){
         var url = "/ignoreRequest";
         var id = $("#requestId"+requestId).val();
         var ownerClassroomId = $("#ownerClassroomId"+requestId).val();
@@ -651,7 +699,7 @@
                 }
             }
         });
-    }
+    }*/
     function reloadStudent(studentId, requestId){
         var url = "/getUserById";
         $.ajax({
@@ -746,6 +794,7 @@
     var nextFromQuestion = 10;
     var nextFromArticle = 10;
     var nextFromMaterial = 10;
+    var nextFromRequest = 10;
     $('#loadMoreQuestion').click(function (e) {
         var url = "/classroom/question";
         var classroomId = ${classroom.id};
@@ -875,6 +924,48 @@
                     counter++;
                 }
                 nextFromMaterial = nextFromMaterial + 10;
+            }
+        })
+    });
+    $('#loadMoreRequest').click(function (e) {
+        var url = "/classroom/request";
+        var classroomId = ${classroom.id};
+        var classroomName = "${classroom.classroomName}";
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {classroomId: classroomId, nextFrom: nextFromRequest},
+            success: function (data) {
+                var requests = new Array();
+                requests = data;
+                var length = requests.length;
+                if (length > 10) {
+                    length = requests.length - 1;
+                } else {
+                    $('#loadMoreRequest').hide();
+                }
+                for (var i = 0; i < length; i++) {
+                    var component = '<div class="about-author clearfix">' +
+                            '<div class="author-image">' +
+                            '<a href="/profile/view/'+ requests[i].studentId +'" original-title="'
+                            + requests[i].studentName +'" ' +
+                            'class="tooltip-n"><img alt="" src="'+ requests[i].studentProfileImageURL +'"></a>' +
+                            '</div>' +
+                            '<a class="ignoreRequest" onclick="ignoreRequest(this); return false;" ' +
+                            'style="float: right; cursor: pointer" id="'+ requests[i].id +'">Ignore</a>' +
+                            '<a class="confirmRequest" onclick="confirmRequest(this); return false;" ' +
+                            'style="float: right; margin-right: 15px; cursor: pointer" id="'+ requests[i].id+
+                            '">Confirm</a>' +
+                            '<div class="author-bio">' +
+                            '<h4><a href="/profile/view/'+ requests[i].studentId +'">'+ requests[i].studentName+'</a></h4>' +
+                            'Requested to join <a href="/classroom/'+classroomId+'" style="font-size:' +
+                            ' 15px">'+ classroomName+ '</a>' +
+                            '</div>' +
+                            '</div>';
+                    $('#requests').append(component);
+                    $(".tooltip-n").tipsy({fade:true,gravity:"s"});
+                }
+                nextFromRequest = nextFromRequest + 10;
             }
         })
     });
