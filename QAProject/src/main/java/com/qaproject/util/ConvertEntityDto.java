@@ -188,7 +188,7 @@ public class ConvertEntityDto {
     public static StudentDto convertClassroomUserEntityToStudentDto(ClassroomUser classroomUser){
         StudentDto studentDto = new StudentDto();
         if (classroomUser!=null){
-            studentDto.setId(classroomUser.getId());
+            studentDto.setClassroomUserId(classroomUser.getId());
             studentDto.setStudentId(classroomUser.getUserId().getId());
             studentDto.setStudentName(classroomUser.getUserId().getDisplayName());
             studentDto.setStudentProfileImageURL(classroomUser.getUserId().getProfileImageURL());

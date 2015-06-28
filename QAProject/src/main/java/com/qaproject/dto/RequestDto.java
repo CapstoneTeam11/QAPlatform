@@ -4,7 +4,7 @@ package com.qaproject.dto;
  * Created by Minh on 6/28/2015.
  */
 public class RequestDto {
-    private Integer id;
+    private Integer id; //this id is used for ClassroomUser
     private Integer studentId;
     private String studentName;
     private String studentProfileImageURL;

@@ -412,12 +412,12 @@
             <c:if test="${not empty students}">
                 <c:if test="${fn:length(students)>10}">
                     <c:forEach var="student" items="${students}" end="9">
-                        <div class="about-author clearfix" id="student${student.id}">
+                        <div class="about-author clearfix" id="student${student.classroomUserId}">
                             <div class="author-image">
                                 <a href="/profile/view/${student.studentId}" original-title="" class="tooltip-n">
                                     <img alt="" src="${student.studentProfileImageURL}"></a>
                             </div>
-                                <a class="removeStudent" id="${student.id}"
+                                <a class="removeStudent" id="${student.classroomUserId}"
                                    onclick="removeStudent(this); return false;"
                                    style="float: right; cursor:pointer">Remove</a>
                             <div class="author-bio" style="margin-top: 25px">
@@ -428,12 +428,12 @@
                 </c:if>
                 <c:if test="${fn:length(students)<=10}">
                     <c:forEach var="student" items="${students}">
-                        <div class="about-author clearfix" id="student${student.id}">
+                        <div class="about-author clearfix" id="student${student.classroomUserId}">
                             <div class="author-image">
                                 <a href="/profile/view/${student.studentId}" original-title="" class="tooltip-n">
                                     <img alt="" src="${student.studentProfileImageURL}"></a>
                             </div>
-                            <a class="removeStudent" id="${student.id}"
+                            <a class="removeStudent" id="${student.classroomUserId}"
                                onclick="removeStudent(this); return false;"
                                style="float: right; cursor:pointer">Remove</a>
                             <div class="author-bio" style="margin-top: 25px">
@@ -986,12 +986,12 @@
                     $('#loadMoreStudent').hide();
                 }
                 for (var i = 0; i < length; i++) {
-                    var component = '<div class="about-author clearfix" id="student'+ students[i].id+'">' +
+                    var component = '<div class="about-author clearfix" id="student'+ students[i].classroomUserId+'">' +
                             '<div class="author-image">' +
                             '<a href="/profile/view/'+ students[i].studentId+'" original-title="" class="tooltip-n">' +
                             '<img alt="" src="'+students[i].studentProfileImageURL+'"></a>' +
                             '</div>' +
-                            '<a class="removeStudent" id="'+ students[i].id+'" ' +
+                            '<a class="removeStudent" id="'+ students[i].classroomUserId+'" ' +
                             'onclick="removeStudent(this); return false;" ' +
                             'style="float: right; cursor:pointer">Remove</a>' +
                             '<div class="author-bio" style="margin-top: 25px">' +
@@ -1044,12 +1044,12 @@
                             studentHref +'">'+
                             studentName+'</a>.');
                     request.attr("style","background-color: #e5ffe5")
-                    var newStudent = '<div class="about-author clearfix" id="student'+ student.id+'">' +
+                    var newStudent = '<div class="about-author clearfix" id="student'+ student.classroomUserId+'">' +
                             '<div class="author-image">' +
                             '<a href="/profile/view/'+ student.studentId+'" original-title="" class="tooltip-n">' +
                             '<img alt="" src="'+student.studentProfileImageURL+'"></a>' +
                             '</div>' +
-                            '<a class="removeStudent" id="'+ student.id+'" ' +
+                            '<a class="removeStudent" id="'+ student.classroomUserId+'" ' +
                             'onclick="removeStudent(this); return false;" ' +
                             'style="float: right; cursor:pointer">Remove</a>' +
                             '<div class="author-bio" style="margin-top: 25px">' +

@@ -4,18 +4,12 @@ package com.qaproject.dto;
  * Created by TADUCTUNG on 08-Jun-15.
  */
 public class StudentDto {
-    private Integer Id;
+    private Integer classroomUserId; //this id is used for ClassroomUser, -> classroom dashboard page
     private Integer studentId;
     private String studentName;
     private String studentProfileImageURL;
 
-    public Integer getId() {
-        return Id;
-    }
 
-    public void setId(Integer id) {
-        Id = id;
-    }
 
     public Integer getStudentId() {
         return studentId;
@@ -39,6 +33,14 @@ public class StudentDto {
 
     public void setStudentProfileImageURL(String studentProfileImageURL) {
         this.studentProfileImageURL = studentProfileImageURL;
+    }
+
+    public Integer getClassroomUserId() {
+        return classroomUserId;
+    }
+
+    public void setClassroomUserId(Integer classroomUserId) {
+        this.classroomUserId = classroomUserId;
     }
 }
 
