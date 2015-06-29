@@ -26,6 +26,8 @@ public interface PostDao {
     public List<Post> findQuestionByOwnerClassroom(Integer classroomId, Integer nextFrom);
     public List<Post> findArticleByOwnerClassroom(Integer classroomId, Integer nextFrom);
     public List<Post> findArticleByCategory(Integer categoryId, Integer nextFrom);
+    public List<Post> findQuestionsByOwnerUser(Integer ownerUserId, Integer nextFrom);
+    public List<Post> findArticlesByOwnerUser(Integer ownerUserId, Integer nextFrom);
     public List<PostDto> loadMoreAnswer(Integer id,Integer page);
     public Post findLastCreatedPostByOwner(User ownerUser);
     public Post findLastCreatedReplyByOwner(User ownerUser);
