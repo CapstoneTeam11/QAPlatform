@@ -1,6 +1,7 @@
 package com.qaproject.util;
 
 import com.qaproject.dao.*;
+import com.qaproject.dto.MaterialDto;
 import com.qaproject.dto.PostDto;
 import com.qaproject.entity.*;
 import org.joda.time.DateTime;
@@ -30,6 +31,8 @@ public class NewsFeedUtilities {
     FollowerDao followerDao;
     @Autowired
     ClassroomUserDao classroomUserDao;
+    @Autowired
+    MaterialDao materialDao;
 
     private final String QUESTION_IN_KNOW = "QIK_";
     private final String QUESTION_IN_CLASS = "QIC_";
@@ -95,6 +98,38 @@ public class NewsFeedUtilities {
             }
         }
         return questionDtos;
+    }
+
+    public List<PostDto> loadNewsFeedArticles (Integer categoryId, Integer nextFrom){
+        List<Post> articles = postDao.findArticleByCategory(categoryId, nextFrom);
+        List<PostDto> articleDtos = new ArrayList<PostDto>();
+        if (articles!=null) {
+            for(Post article: articles){
+                if (article !=null) {
+                    List<Post> answers = postDao.findRepliesByParentId(article.getId());
+                    if (answers!=null) {
+                        Integer answerCount = answers.size();
+                        PostDto articleDto = ConvertEntityDto.convertPostEntityToDto(article,answerCount);
+                        articleDtos.add(articleDto);
+                    }
+
+                }
+
+            }
+        }
+        return articleDtos;
+    }
+
+    public List<MaterialDto> loadNewsFeedMaterials(Integer categoryId, Integer nextFrom) {
+        List<MaterialDto> materialDtos = new ArrayList<MaterialDto>();
+        List<Material> materials = materialDao.findMaterialByCategory(categoryId,nextFrom);
+        if (materials!=null) {
+            for (Material material:materials){
+                MaterialDto materialDto = ConvertEntityDto.convertMaterialEntityToDto(material);
+                materialDtos.add(materialDto);
+            }
+        }
+        return materialDtos;
     }
 
     public List<Post> getNewsFeedQuestions(Integer userId) {

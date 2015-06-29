@@ -148,6 +148,25 @@ public class PostDaoImpl extends BaseDao<Post,Integer> implements PostDao{
     }
 
     @Override
+    public List<Post> findArticleByCategory(Integer categoryId, Integer nextFrom) {
+        Query query = entityManager.createQuery("Select p from Post p where p.postType=2 and" +
+                " p.ownerClassId.categoryId.id=:categoryId order by p.id desc");
+        query.setParameter("categoryId",categoryId);
+        List<Post> articles = null;
+        if (nextFrom < 0) {
+            nextFrom = 0;
+        }
+        query.setFirstResult(nextFrom);
+        query.setMaxResults(11);
+        try {
+            articles = query.getResultList();
+        } catch (NoResultException e){
+
+        }
+        return articles;
+    }
+
+    @Override
     public List<PostDto> loadMoreAnswer(Integer id, Integer page) {
         List<PostDto> postDtos = new ArrayList<PostDto>();
         List<Post> posts = findPostChilds(id,page);

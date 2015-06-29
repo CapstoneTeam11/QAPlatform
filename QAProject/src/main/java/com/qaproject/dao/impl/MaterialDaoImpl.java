@@ -32,4 +32,23 @@ public class MaterialDaoImpl extends BaseDao<Material,Integer> implements Materi
         }
         return materials;
     }
+
+    @Override
+    public List<Material> findMaterialByCategory(Integer categoryId, Integer nextFrom) {
+        Query query = entityManager.createQuery("Select m from Material m where m.ownerClassId.categoryId.id=:categoryId " +
+                "order by m.id desc ");
+        query.setParameter("categoryId",categoryId);
+        if (nextFrom < 0) {
+            nextFrom = 0;
+        }
+        query.setFirstResult(nextFrom);
+        query.setMaxResults(11);
+        List<Material> materials = null;
+        try{
+            materials = query.getResultList();
+        } catch (NoResultException e){
+            e.printStackTrace();
+        }
+        return materials;
+    }
 }
