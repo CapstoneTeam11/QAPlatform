@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%--
   Created by IntelliJ IDEA.
   User: Minh
@@ -123,96 +124,199 @@
 
         </ul>
         <div class="tab-inner-warp">
-            <div class="tab-inner">
+            <div class="tab-inner" id="questions">
                 <c:if test="${not empty questions}">
-                    <c:forEach var="question" items="${questions}">
-                        <article class="question question-type-normal">
-                            <h2>
-                                <a href="/post/view/${question.id}">${question.title}</a>
-                            </h2>
-                            <div class="question-author">
-                                <a href="/profile/view/${question.ownerUserId.id}"
-                                   original-title="${question.ownerUserId.displayName}"
-                                   class="question-author-img tooltip-n"><span></span><img alt=""
-                                   src="${question.ownerUserId.profileImageURL}"></a>
-                            </div>
-                            <div class="question-inner">
-                                <div class="clearfix"></div>
-                                <div class="question-desc short-text">${question.body}</div>
-                                <div class="question-details">
-                                                <span class="question-answered question-answered-done">
-                                                    <c:if test="${question.acceptedAnswerId} != null">
-                                                        <i class="icon-ok"></i>Resolved
-                                                    </c:if>
-                                                </span>
+                    <c:if test="${fn:length(questions)>10}">
+                        <c:forEach var="question" items="${questions}" end="9">
+                            <article class="question question-type-normal">
+                                <h2>
+                                    <a href="/post/view/${question.id}">${question.title}</a>
+                                </h2>
+                                <div class="question-author">
+                                    <a href="/profile/view/${question.ownerId}"
+                                       original-title="${question.ownerName}"
+                                       class="tooltip-n"><span></span><img alt=""
+                                                                           src="${question.ownerProfileImageURL}"></a>
                                 </div>
-                                <span class="question-date"><i class="icon-time"></i>${question.lastEditedDate}</span>
-                                <span class="question-category"><a href="/classroom/${question.ownerClassId.id}"><i class="icon-group"></i>Class: ${question.ownerClassId.classroomName}</a></span>
-                                <span class="question-comment"><a href="#"><i class="icon-comment"></i>0 Answer(s)</a></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </article>
-                    </c:forEach>
-                    <a href="#" class="post-read-more button color small" style="margin-bottom: 5px;">Continue reading</a>
+                                <div class="question-inner">
+                                    <div class="clearfix"></div>
+                                    <div class="question-desc short-text">${question.body}</div>
+                                    <div class="question-details">
+                                                    <span class="question-answered question-answered-done">
+                                                        <c:if test="${question.acceptedAnswerId} != null">
+                                                            <i class="icon-ok"></i>Resolved
+                                                        </c:if>
+                                                    </span>
+                                    </div>
+                                                <span class="question-date"><i
+                                                        class="icon-time"></i>${question.lastEditedDate}</span>
+                                                <span class="question-category"><a
+                                                        href="/classroom/${question.classId}"><i
+                                                        class="icon-group"></i>Class: ${question.className}</a></span>
+                                                <span class="question-comment"><a href="#"><i
+                                                        class="icon-comment"></i>${question.answerCount} Answer(s)</a></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </article>
+                        </c:forEach>
+                    </c:if>
+                    <c:if test="${fn:length(questions)<=10}">
+                        <c:forEach var="question" items="${questions}">
+                            <article class="question question-type-normal">
+                                <h2>
+                                    <a href="/post/view/${question.id}">${question.title}</a>
+                                </h2>
+                                <div class="question-author">
+                                    <a href="/profile/view/${question.ownerId}"
+                                       original-title="${question.ownerName}"
+                                       class="tooltip-n"><span></span><img alt=""
+                                                                           src="${question.ownerProfileImageURL}"></a>
+                                </div>
+                                <div class="question-inner">
+                                    <div class="clearfix"></div>
+                                    <div class="question-desc short-text">${question.body}</div>
+                                    <div class="question-details">
+                                                    <span class="question-answered question-answered-done">
+                                                        <c:if test="${question.acceptedAnswerId} != null">
+                                                            <i class="icon-ok"></i>Resolved
+                                                        </c:if>
+                                                    </span>
+                                    </div>
+                                                <span class="question-date"><i
+                                                        class="icon-time"></i>${question.lastEditedDate}</span>
+                                                <span class="question-category"><a
+                                                        href="/classroom/${question.classId}"><i
+                                                        class="icon-group"></i>Class: ${question.className}</a></span>
+                                                <span class="question-comment"><a href="#"><i
+                                                        class="icon-comment"></i>${question.answerCount} Answer(s)</a></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </article>
+                        </c:forEach>
+                    </c:if>
                 </c:if>
                 <c:if test="${empty questions}">
-                    <div class="about-author clearfix" id="no-question">
+                    <div class="about-author clearfix">
                         No question.
                     </div>
                 </c:if>
             </div>
+            <c:if test="${fn:length(questions)>10}">
+                <a class="post-read-more button color small"
+                   style="margin-bottom: 5px;" id="loadMoreQuestion">Load more</a>
+            </c:if>
         </div>
         <div class="tab-inner-warp">
-            <div class="tab-inner">
+            <div class="tab-inner" id="articles">
                 <c:if test="${not empty articles}">
-                    <c:forEach var="article" items="${articles}">
-                        <article class="post clearfix">
-                            <div class="post-inner">
-                                <h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a href="/post/view/${article.id}">${article.title}</a></h2>
-                                <div class="post-meta">
-                                    <span class="meta-author"><i class="icon-user"></i><a href="/profile/view/${article.ownerUserId.id}">Author: ${article.ownerUserId.displayName}</a></span>
-                                    <span class="meta-date"><i class="icon-time"></i>${article.lastEditedDate}</span>
-                                    <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">${article.replyCount} comment(s)</a></span>
-                                    <span class="question-category"><a href="/classroom/${article.ownerClassId.id}"><i class="icon-group"></i>Class: ${article.ownerClassId.classroomName}</a></span>
-                                </div>
-                                <div class="post-content short-text">
-                                    <p>${article.body}</p>
-                                </div><!-- End post-content -->
-                            </div><!-- End post-inner -->
-                        </article>
-                    </c:forEach>
-                    <a href="#" class="post-read-more button color small" style="margin-bottom: 5px;">Continue reading</a>
+                    <c:if test="${fn:length(articles)>10}">
+                        <c:forEach var="article" items="${articles}" end="9">
+                            <article class="post clearfix">
+                                <div class="post-inner">
+                                    <h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a
+                                            href="/post/view/${article.id}">${article.title}</a></h2>
+                                    <div class="post-meta">
+                                        <span class="meta-author"><i class="icon-user"></i><a href="#">Author: ${article.ownerName}</a></span>
+                                        <span class="meta-date"><i class="icon-time"></i>${article.lastEditedDate}</span>
+                                <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">${article.answerCount}
+                                    comment(s)</a></span>
+                                <span class="question-category"><a href="/classroom/${article.classId}"><i
+                                        class="icon-group"></i>Class: ${article.className}</a></span>
+                                    </div>
+                                    <div class="post-content short-text">
+                                        <p>${article.body}</p>
+                                    </div><!-- End post-content -->
+                                </div><!-- End post-inner -->
+                            </article>
+                        </c:forEach>
+                    </c:if>
+                    <c:if test="${fn:length(articles)<=10}">
+                        <c:forEach var="article" items="${articles}">
+                            <article class="post clearfix">
+                                <div class="post-inner">
+                                    <h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a
+                                            href="/post/view/${article.id}">${article.title}</a></h2>
+                                    <div class="post-meta">
+                                        <span class="meta-author"><i class="icon-user"></i><a href="#">Author: ${article.ownerName}</a></span>
+                                        <span class="meta-date"><i class="icon-time"></i>${article.lastEditedDate}</span>
+                                <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">${article.answerCount}
+                                    comment(s)</a></span>
+                                <span class="question-category"><a href="/classroom/${article.classId}"><i
+                                        class="icon-group"></i>Class: ${article.className}</a></span>
+                                    </div>
+                                    <div class="post-content short-text">
+                                        <p>${article.body}</p>
+                                    </div><!-- End post-content -->
+                                </div><!-- End post-inner -->
+                            </article>
+                        </c:forEach>
+                    </c:if>
                 </c:if>
                 <c:if test="${empty articles}">
-                    <div class="about-author clearfix" id="no-article">
+                    <div class="about-author clearfix">
                         No article.
                     </div>
                 </c:if>
             </div>
+            <c:if test="${fn:length(articles)>10}">
+                <a class="post-read-more button color small"
+                   style="margin-bottom: 5px;" id="loadMoreArticle">Load more</a>
+            </c:if>
         </div>
         <div class="tab-inner-warp">
-            <div class="tab-inner">
+            <div class="tab-inner" id="classrooms">
                 <c:if test="${not empty classrooms}">
-                    <c:forEach var="classroom" items="${classrooms}">
-                        <div class="about-author clearfix">
-                            <div class="" style="float: left;padding-right: 20px;">
-                                <a href="#" original-title="admin" class=""><img alt="" src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>
+                    <c:if test="${fn:length(classrooms)>10}">
+                        <c:forEach var="classroom" items="${classrooms}" end="9">
+                            <div class="about-author clearfix" id="classroom${classroom.id}">
+                                <div class="" style="float: left;padding-right: 20px;">
+                                    <a href="#" original-title="admin" class=""><img alt=""
+                                                                                     src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>
+                                </div>
+                                <div class="author-bio">
+                                    <h4><a href="/classroom/${classroom.id}">
+                                            ${classroom.classroomName}
+                                    </a>
+                                    </h4>
+                                        ${classroom.classroomDescription}
+                                </div>
                             </div>
-                            <a class="" href="#" style="float: right">Close class</a>
-                            <div class="author-bio">
-                                <h4><a href="/classroom/${classroom.id}">${classroom.classroomName}</a></h4>
-                                    ${classroom.classroomDescription}
+                        </c:forEach>
+                    </c:if>
+                    <c:if test="${fn:length(classrooms)<=10}">
+                        <c:forEach var="classroom" items="${classrooms}">
+                            <div class="about-author clearfix" id="classroom${classroom.id}">
+                                <div class="" style="float: left;padding-right: 20px;">
+                                    <a href="#" original-title="admin" class=""><img alt=""
+                                                                                     src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>
+                                </div>
+                                <div class="author-bio">
+                                    <h4><a href="/classroom/${classroom.id}">
+                                            ${classroom.classroomName}
+                                    </a>
+                                    </h4>
+                                        ${classroom.classroomDescription}
+                                </div>
                             </div>
-                        </div>
-                    </c:forEach>
-                    <a href="#" class="post-read-more button color small" style="margin-bottom: 5px;">Continue reading</a>
+                        </c:forEach>
+                    </c:if>
                 </c:if>
                 <c:if test="${empty classrooms}">
-                    <div class="about-author clearfix" id="no-classroom">
-                        No classroom.
+                    <div class="about-author clearfix">
+                        No classroom
                     </div>
                 </c:if>
             </div>
+            <c:if test="${fn:length(classrooms) > 10}">
+                <c:if test="${userProfile.roleId.id==1}">
+                <div><a class="post-read-more button color small" style="margin-bottom: 20px;"
+                        id="loadMoreJoinedClassroom">Load more</a></div>
+                </c:if>
+                <c:if test="${userProfile.roleId.id==2}">
+                    <div><a class="post-read-more button color small" style="margin-bottom: 20px;"
+                            id="loadMoreOwnedClassroom">Load more</a></div>
+                </c:if>
+            </c:if>
         </div>
     </div><!-- End page-content -->
 </div><!-- End main -->
@@ -304,6 +408,202 @@
             }
         });
     }
+
+    //Load more - MinhKH
+    var nextFromQuestion = 10;
+    var nextFromArticle = 10;
+    var nextFromJoinedClassroom = 10;
+    var ownedClassroomPage = 2;
+    $('#loadMoreQuestion').click(function (e) {
+        var url = "/profile/question";
+        var userProfileId = ${userProfile.id};
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {userProfileId: userProfileId, nextFrom: nextFromQuestion},
+            success: function (data) {
+                var questions = new Array();
+                questions = data;
+                var length = questions.length;
+                if (length > 10) {
+                    length = questions.length - 1;
+                } else {
+                    $('#loadMoreQuestion').hide();
+                }
+                for (var i = 0; i < length; i++) {
+                    var component = '<article class="question question-type-normal">' +
+                            '<h2>' +
+                            '<a href="/post/view/'+ questions[i].id + '">'+ questions[i].title
+                            +'</a>' +
+                            '</h2>' +
+                            '<div class="question-author">' +
+                            '<a href="/profile/view/'+ questions[i].ownerId + '"' +
+                            'original-title="'+ questions[i].ownerName +
+                            '" class="tooltip-n">' +
+                            '<span></span><img alt="" src="' + questions[i].ownerProfileImageURL + '"></a>' +
+                            '</div>' +
+                            '<div class="question-inner">' +
+                            '<div class="clearfix"></div>' +
+                            '<div class="question-desc short-text">'+ questions[i].body + '</div>' +
+                            '<div class="question-details">' +
+                            '<span class="question-answered question-answered-done">';
+                    if (questions[i].acceptedAnswerId===undefined) {
+                        component = component + '<i class="icon-ok"></i>Resolved';
+                    }
+                    component = component + '</span>' +
+                            '</div>' +
+                            '<span class="question-date"><i ' +
+                            'class="icon-time"></i>' + questions[i].lastEditedDate + '</span>' +
+                            '<span class="question-category"><a ' +
+                            'href="/classroom/' + questions[i].classId + '"><i ' +
+                            'class="icon-group"></i>Class: ' + questions[i].className + '</a></span>' +
+                            '<span class="question-comment"><a href="#"><i ' +
+                            'class="icon-comment"></i>' + questions[i].answerCount +
+                            ' Answer(s)</a></span>' +
+                            '<div class="clearfix"></div>' +
+                            '</div>' +
+                            '</article>';
+                    $('#questions').append(component);
+                    $(".tooltip-n").tipsy({fade:true,gravity:"s"});
+                }
+                nextFromQuestion = nextFromQuestion + 10;
+            }
+        })
+    });
+    $('#loadMoreArticle').click(function (e) {
+        var url = "/profile/article";
+        var userProfileId = ${userProfile.id};
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {userProfileId: userProfileId, nextFrom: nextFromArticle},
+            success: function (data) {
+                var articles = new Array();
+                articles = data;
+                var length = articles.length;
+                if (length > 10) {
+                    length = articles.length - 1;
+                } else {
+                    $('#loadMoreArticle').hide();
+                }
+                for (var i = 0; i < length; i++) {
+                    var component = '<article class="post clearfix">'+
+                            '<div class="post-inner">'+
+                            '<h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a '+
+                            'href="/post/view/'+ articles[i].id +'">'+ articles[i].title +'</a></h2>'+
+                            '<div class="post-meta">'+
+                            '<span class="meta-author"><i class="icon-user"></i><a href="#">Author: ' +
+                            articles[i].ownerName + '</a></span>'+
+                            '<span class="meta-date"><i class="icon-time"></i>'+ articles[i].lastEditedDate +'</span>'+
+                            '<span class="meta-comment"><i class="icon-comments-alt"></i><a' +
+                            ' href="#">' + articles[i].answerCount +
+                            ' comment(s)</a></span>'+
+                            '<span class="question-category"><a href="/classroom/' + articles[i].classId + '"><i '+
+                            'class="icon-group"></i>Class: '+ articles[i].className +'</a></span>'+
+                            '</div>'+
+                            '<div class="post-content short-text">'+
+                            '<p>'+ articles[i].body +'</p>'+
+                            '</div>'+
+                            '</div>'+
+                            '</article>';
+                    $('#articles').append(component);
+                }
+                nextFromArticle = nextFromArticle + 10;
+            }
+        })
+    });
+    $('#loadMoreOwnedClassroom').click(function (e) {
+        var url = "/profile/ownedClassroom";
+        var userProfileId = ${userProfile.id};
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {userProfileId: userProfileId, page: ownedClassroomPage},
+            success: function (data) {
+                var ownedClassrooms = new Array();
+                ownedClassrooms = data;
+                var length = ownedClassrooms.length;
+                if (length > 10) {
+                    length = ownedClassrooms.length - 1;
+                } else {
+                    $('#loadMoreOwnedClassroom').hide();
+                }
+                for (var i = 0; i < length; i++) {
+                    var component = '<div class="about-author clearfix" id="classroom'+ ownedClassrooms[i].id +'">'+
+                            '<div class="" style="float: left;padding-right: 20px;">'+
+                            '<a href="#" original-title="admin" class=""><img alt=""' +
+                            ' src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>'+
+                            '</div>';
+                    if (ownedClassrooms[i].status === 1) {
+                        component = component +
+                                '<div class="author-bio">'+
+                                '<h4><a href="/classroom/'+
+                                ownedClassrooms[i].id +'">'+ ownedClassrooms[i].classroomName
+                                +'</a></h4><div class="closedStatus" style="display: none">'+
+                                'This classroom is closed.' +
+                                '</div>'+
+                                '<div class="classroomDescription">'+
+                                ownedClassrooms[i].classroomDescription +
+                                '</div>'+
+                                '</div>'+
+                                '</div>';
+                    } else {
+                        component = component +
+                                '<div class="author-bio">'+
+                                '<h4><a href="/classroom/'+
+                                ownedClassrooms[i].id +'">'+ ownedClassrooms[i].classroomName
+                                +'</a></h4><div class="closedStatus">'+
+                                'This classroom is closed.' +
+                                '</div>'+
+                                '<div class="classroomDescription" style="display: none">'+
+                                ownedClassrooms[i].classroomDescription +
+                                '</div>'+
+                                '</div>'+
+                                '</div>';
+                    }
+
+                    $('#classrooms').append(component);
+                }
+                ownedClassroomPage++;
+            }
+        })
+    });
+    $('#loadMoreJoinedClassroom').click(function (e) {
+        var url = "/profile/joinedClassroom";
+        var userProfileId = ${userProfile.id};
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {userProfileId: userProfileId, nextFrom: nextFromJoinedClassroom},
+            success: function (data) {
+                var joinedClassrooms = new Array();
+                joinedClassrooms = data;
+                var length = joinedClassrooms.length;
+                if (length > 10) {
+                    length = joinedClassrooms.length - 1;
+                } else {
+                    $('#loadMoreJoinedClassroom').hide();
+                }
+                for (var i = 0; i < length; i++) {
+                    $('#classrooms').append('<div class="about-author clearfix" id="classroom'+
+                            joinedClassrooms[i].id +'">' +
+                            '<div class="" style="float: left;padding-right: 20px;">' +
+                            '<a href="#" original-title="admin" class=""><img alt="" ' +
+                            'src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>' +
+                            '</div>' +
+                            '<div class="author-bio">' +
+                            '<h4><a href="/classroom/'+ joinedClassrooms[i].id +'">' +
+                            joinedClassrooms[i].classroomName +
+                            '</a>' +
+                            '</h4>' +
+                            joinedClassrooms[i].classroomDescription +
+                            '</div>' +
+                            '</div>');
+                }
+                nextFromJoinedClassroom= nextFromJoinedClassroom +10;
+            }
+        })
+    });
 </script>
 
 </body>

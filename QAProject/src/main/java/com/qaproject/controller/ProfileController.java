@@ -1,13 +1,14 @@
 package com.qaproject.controller;
 
 import com.qaproject.dao.*;
+import com.qaproject.dto.ClassroomDto;
+import com.qaproject.dto.PostDto;
 import com.qaproject.entity.*;
+import com.qaproject.util.ProfileUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
@@ -30,6 +31,8 @@ public class ProfileController {
     ClassroomUserDao classroomUserDao;
     @Autowired
     HttpSession session;
+    @Autowired
+    ProfileUtilities profileUtilities;
 
 
     @RequestMapping(value = "/profile/view/{id}", method = RequestMethod.GET)
@@ -52,21 +55,16 @@ public class ProfileController {
                 }
             }
         }
-
-        List<Post> questions = postDao.findQuestionsByOwnerUser(userProfile);
-        List<Post> articles = postDao.findArticlesByOwnerUser(userProfile);
-        List<Classroom> classrooms = new ArrayList<Classroom>();
+        Integer userProfileId = userProfile.getId();
+        List<PostDto> questions = profileUtilities.loadProfileQuestions(userProfileId,0);
+        List<PostDto> articles = profileUtilities.loadProfileArticles(userProfileId, 0);
+        List<ClassroomDto> classrooms = new ArrayList<ClassroomDto>();
 
         if (userProfile.getRoleId().getId()==1){ // if user is student, find joined classrooms
-            List<ClassroomUser> classroomUsers = classroomUserDao.findByUserWithApproved(userProfile);
-            if (classroomUsers!=null) {
-                for (ClassroomUser classroomUser : classroomUsers){
-                    classrooms.add(classroomUser.getClassroomId());
-                }
-            }
+            classrooms = profileUtilities.loadJoinedClassrooms(userProfileId,0);
         }
         if (userProfile.getRoleId().getId()==2){ // if user is teacher, find owner classrooms
-            classrooms = classroomDao.findByOwnerUser(user.getId());
+            classrooms = profileUtilities.loadOwnedClassrooms(userProfileId,1); //load by page
         }
 
 
@@ -80,5 +78,54 @@ public class ProfileController {
         model.addAttribute("userProfile", userProfile);
 
         return "profile";
+    }
+
+    @RequestMapping(value = "/profile/question",method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public List<PostDto> loadMoreQuestion(@RequestParam Integer userProfileId, @RequestParam Integer nextFrom) {
+        List<PostDto> questionDtos = new ArrayList<PostDto>();
+        try {
+            questionDtos = profileUtilities.loadProfileQuestions(userProfileId,nextFrom);
+        } catch (Exception e){
+
+        }
+        return questionDtos;
+    }
+
+    @RequestMapping(value = "/profile/article",method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public List<PostDto> loadMoreArticle(@RequestParam Integer userProfileId, @RequestParam Integer nextFrom) {
+        List<PostDto> articleDtos = new ArrayList<PostDto>();
+        try {
+            articleDtos = profileUtilities.loadProfileArticles(userProfileId, nextFrom);
+        } catch (Exception e){
+
+        }
+        return articleDtos;
+    }
+
+    @RequestMapping(value = "/profile/joinedClassroom",method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public List<ClassroomDto> loadMoreJoinedClassroom(@RequestParam Integer userProfileId, @RequestParam Integer nextFrom) {
+        List<ClassroomDto> classroomDtos = new ArrayList<ClassroomDto>();
+        try {
+            classroomDtos = profileUtilities.loadJoinedClassrooms(userProfileId, nextFrom);
+        } catch (Exception e){
+
+        }
+        return classroomDtos;
+    }
+
+    @RequestMapping(value = "/profile/ownedClassroom",method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public List<ClassroomDto> loadMoreOwnedClassroom(@RequestParam Integer userProfileId,
+                                                   @RequestParam Integer page) {
+        List<ClassroomDto> classroomDtos = new ArrayList<ClassroomDto>();
+        try {
+            classroomDtos = profileUtilities.loadOwnedClassrooms(userProfileId, page);
+        } catch (Exception e){
+
+        }
+        return classroomDtos;
     }
 }
