@@ -102,7 +102,7 @@ public class ClassroomUserDaoImpl extends BaseDao<ClassroomUser,Integer> impleme
     @Override
     public List<ClassroomUser> findRequestsByClassroom(Integer classroomId, Integer nextFrom) {
         Query query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.classroomId.id=:classroomId and "+
-                "cu.approval=0 order by cu.id desc");
+                "cu.approval=0 and cu.type=1 order by cu.id desc");
         query.setParameter("classroomId",classroomId);
         if (nextFrom < 0) {
             nextFrom = 0;

@@ -414,7 +414,8 @@
                     <c:forEach var="student" items="${students}" end="9">
                         <div class="about-author clearfix" id="student${student.classroomUserId}">
                             <div class="author-image">
-                                <a href="/profile/view/${student.studentId}" original-title="" class="tooltip-n">
+                                <a href="/profile/view/${student.studentId}" original-title="${student.studentName}"
+                                   class="tooltip-n">
                                     <img alt="" src="${student.studentProfileImageURL}"></a>
                             </div>
                                 <a class="removeStudent" id="${student.classroomUserId}"
@@ -430,7 +431,8 @@
                     <c:forEach var="student" items="${students}">
                         <div class="about-author clearfix" id="student${student.classroomUserId}">
                             <div class="author-image">
-                                <a href="/profile/view/${student.studentId}" original-title="" class="tooltip-n">
+                                <a href="/profile/view/${student.studentId}" original-title="${student.studentName}"
+                                   class="tooltip-n">
                                     <img alt="" src="${student.studentProfileImageURL}"></a>
                             </div>
                             <a class="removeStudent" id="${student.classroomUserId}"
@@ -471,7 +473,7 @@
                     <p id="link-btn"></p><a href="javascript:joinClass(${classroom.id})" class="button small color" id="join">Join</a></p>
                 </c:if>
                 <c:if test="${checkClassroomUser.approval == 0 && checkClassroomUser.type == 1}">
-                    <a href="#" class="button small color" id="join">Request Send</a>
+                    <a href="#" class="button small color" id="join">Request Sent</a>
                     <%--<a href="javascript:handleClass('${classroom.id}', 1)" class="button small color" id="join">Cancel Request</a>--%>
                 </c:if>
                 <c:if test="${checkClassroomUser.approval == 0 && checkClassroomUser.type == 2}">
@@ -494,13 +496,13 @@
         </c:if>
     </c:if>
     <div class="widget widget_highest_points">
-        <h3 class="widget_title">Class Owner</h3>
+        <h3 class="widget_title">Classroom Owner</h3>
         <ul>
             <li>
                 <div class="author-img">
-                    <a href="#"><img width="60" height="60" src="${userOwner.profileImageURL}" alt=""></a>
+                    <a href="/profile/view${userOwner.id}"><img width="60" height="60" src="${userOwner.profileImageURL}" alt=""></a>
                 </div>
-                <h6><a href="#">${userOwner.displayName}</a></h6>
+                <h6><a href="/profile/view${userOwner.id}">${userOwner.displayName}</a></h6>
                 <span class="comment">${userOwner.aboutMe}</span>
             </li>
         </ul>
@@ -609,7 +611,7 @@
 //            data: "username="+username+"&password="+password,
             success: function(data){
                 if(data == "OK"){
-                    $("#join").text("Request sent!").attr("href", "#");
+                    $("#join").text("Request Sent").attr("href", "#");
 //                    $().toastmessage('showSuccessToast', 'Join class request sent!');
                 }else{
                     $().toastmessage('showErrorToast', "Join class request fail! Please try again late!");
@@ -649,7 +651,7 @@
             }
         });
     }
-    function acceptRequest(el, studentId, requestId){
+    /*function acceptRequest(el, studentId, requestId){
         var url = "/acceptRequest";
         var id = $("#requestId"+requestId).val();
         var ownerClassroomId = $("#ownerClassroomId"+requestId).val();
@@ -673,7 +675,7 @@
                 }
             }
         });
-    }
+    }*/
     /*function ignoreRequest(el, requestId){
         var url = "/ignoreRequest";
         var id = $("#requestId"+requestId).val();
@@ -699,7 +701,7 @@
             }
         });
     }*/
-    function reloadStudent(studentId, requestId){
+    /*function reloadStudent(studentId, requestId){
         var url = "/getUserById";
         $.ajax({
             type: "POST",
@@ -723,8 +725,8 @@
                 }
             }
         });
-    }
-    function removeStudent(studentId){
+    }*/
+    /*function removeStudent(studentId){
         var url = "/removeStudent";
         var classId = ${classroom.id};
         var ownerId = ${classroom.ownerUserId.id}
@@ -743,7 +745,7 @@
                 }
             }
         });
-    }
+    }*/
     function handleClass(id, type){
         var url = "/handleClass";
         $.ajax({
@@ -988,7 +990,9 @@
                 for (var i = 0; i < length; i++) {
                     var component = '<div class="about-author clearfix" id="student'+ students[i].classroomUserId+'">' +
                             '<div class="author-image">' +
-                            '<a href="/profile/view/'+ students[i].studentId+'" original-title="" class="tooltip-n">' +
+                            '<a href="/profile/view/'+ students[i].studentId+'" original-title="'+
+                            students[i].studentName +
+                            '" class="tooltip-n">' +
                             '<img alt="" src="'+students[i].studentProfileImageURL+'"></a>' +
                             '</div>' +
                             '<a class="removeStudent" id="'+ students[i].classroomUserId+'" ' +
@@ -1010,7 +1014,7 @@
         var requestId = $(e).attr('id');
         $.ajax({
             type: "POST",
-            url: "/ignoreRequests",
+            url: "/ignoreRequest",
             data: "requestId="+ requestId,
             success: function (data){
                 if(data === "OK"){
@@ -1046,7 +1050,9 @@
                     request.attr("style","background-color: #e5ffe5")
                     var newStudent = '<div class="about-author clearfix" id="student'+ student.classroomUserId+'">' +
                             '<div class="author-image">' +
-                            '<a href="/profile/view/'+ student.studentId+'" original-title="" class="tooltip-n">' +
+                            '<a href="/profile/view/'+ student.studentId+'" original-title="'+
+                            student.studentName +
+                            '" class="tooltip-n">' +
                             '<img alt="" src="'+student.studentProfileImageURL+'"></a>' +
                             '</div>' +
                             '<a class="removeStudent" id="'+ student.classroomUserId+'" ' +
@@ -1072,7 +1078,7 @@
             if ($(e.currentTarget).hasClass('OK')) {
                 $.ajax({
                     type: "POST",
-                    url: "/removeStudentFromClassroom",
+                    url: "/removeStudent",
                     data: 'removeId=' + removeId,
                     success: function (data) {
                         if(data != "NG" ){

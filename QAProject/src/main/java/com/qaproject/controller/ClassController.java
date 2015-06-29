@@ -372,48 +372,7 @@ public class ClassController {
         return studentDtos;
     }
 
-    @RequestMapping(value = "/ignoreRequests",method = RequestMethod.POST)
-    @ResponseBody
-    public String ignoreRequest(@RequestParam Integer requestId) {
-        //authorize
-        ClassroomUser classroomUser = classroomUserDao.find(requestId);
-        try {
-            classroomUser.setApproval(2); // 2 = ignore
-            classroomUserDao.merge(classroomUser);
-        } catch (Exception e){
-            return "NG";
-        }
-        return "OK";
-    }
 
-    @RequestMapping(value = "/confirmRequest",method = RequestMethod.POST, produces = "application/json")
-    @ResponseBody
-    public StudentDto confirmRequest(@RequestParam Integer requestId) {
-        //authorize
-        ClassroomUser classroomUser = classroomUserDao.find(requestId);
-        StudentDto studentDto = new StudentDto();
-        try {
-            classroomUser.setApproval(1); // 1 = confirm
-            classroomUserDao.merge(classroomUser);
-            studentDto = ConvertEntityDto.convertClassroomUserEntityToStudentDto(classroomUser);
-        } catch (Exception e){
-
-        }
-        return studentDto;
-    }
-
-    @RequestMapping(value = "/removeStudentFromClassroom",method = RequestMethod.POST)
-    @ResponseBody
-    public String removeStudent(@RequestParam Integer removeId) {
-        //authorize
-        ClassroomUser classroomUser = classroomUserDao.find(removeId);
-        try {
-            classroomUserDao.delete(classroomUser);
-        } catch (Exception e){
-            return "NG";
-        }
-        return "OK";
-    }
 
     /**
      *
