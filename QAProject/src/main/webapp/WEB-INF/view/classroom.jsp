@@ -74,7 +74,7 @@
                 <c:if test="${classroom.status == 1}">
                     <input type="submit" value="Upload" class="button color small submit">
                 </c:if>
-                <input type="hidden" name="classId" value="1">
+                <input type="hidden" name="classId" value="${classroom.id}">
             </p>
         </form>
         <div class="clearfix"></div>
@@ -83,23 +83,14 @@
 
 <div class="panel-pop" id="add-to-folder">
     <h2>Add to folder<i class="icon-remove"></i></h2>
-    <div style="height: auto; max-height: 300px; overflow-x: hidden;">
-
-            <a href="/library/add/1/4" class="list-group-item">
-                <h4 class="list-group-item-heading">Java </h4>
+    <div style="height: auto; max-height: 300px; overflow-x: hidden;" id="folderList">
+        <c:forEach var="folder" items="${sessionScope.user.folderList}">
+            <a href="/library/add/${folder.id}/" class="list-group-item">
+                <h4 class="list-group-item-heading">${folder.name} </h4>
             </a>
-            <a href="#" class="list-group-item">
-                <h4 class="list-group-item-heading">C# </h4>
-            </a>
-            <a href="#" class="list-group-item">
-                <h4 class="list-group-item-heading">Document 4</h4>
-            </a>
-            <a href="#" class="list-group-item">
-                <h4 class="list-group-item-heading">Piture 5</h4>
-            </a>
-
-        </div>
-    </div><!-- End add to folder -->
+        </c:forEach>
+    </div>
+</div><!-- End add to folder -->
 
 
 
@@ -317,6 +308,7 @@
                     <th>Uploaded Date</th>
                     <th>File size</th>
                     <th>Save to</th>
+                    <th></th>
                 </tr>
                 <c:if test="${fn:length(materials)>10}">
                     <c:forEach var="material" items="${materials}" end="9" varStatus="counter">
@@ -325,8 +317,8 @@
                             <td>${material.name}</td>
                             <td>${material.creationDate}</td>
                             <td>${material.size}</td>
-                            <td><a id="add-to-folder-click" href="#">Folder</a> / <a href="/download/${material.id}"> Computer</a></td>
-                        </tr>
+                            <td><input type="hidden" value="${material.id}" name="materialId"><a id="add-to-folder-click" href="#">Folder</a> / <a href="/download/${material.id}"> Computer</a></td>
+                            <td><form action="/material/delete" method="post" style="display: none"><input type="hidden" name="materialId" value="${material.id}"></form><a href="#" onclick="removeMaterial(this)"><i class="icon-remove"></i> Delete</a></td>                        </tr>
                     </c:forEach>
                 </c:if>
                 <c:if test="${fn:length(materials)<=10}">
@@ -336,7 +328,8 @@
                             <td>${material.name}</td>
                             <td>${material.creationDate}</td>
                             <td>${material.size}</td>
-                            <td><a id="add-to-folder-click" href="#">Folder</a> / <a href="/download/${material.id}"> Computer</a></td>
+                            <td><input type="hidden" value="${material.id}" name="materialId"><a id="add-to-folder-click" href="#">Folder</a> / <a href="/download/${material.id}"> Computer</a></td>
+                            <td><form action="/material/delete" method="post" style="display: none"><input type="hidden" name="materialId" value="${material.id}"></form><a href="#" onclick="removeMaterial(this)"><i class="icon-remove"></i> Delete</a></td>                        </tr>
                         </tr>
                     </c:forEach>
                 </c:if>
@@ -564,8 +557,38 @@
 
 <!-- End js -->
 <script>
+
+    var removeMaterial = function(e) {
+        var formDelete = $(e).parents('td').find('form');
+        $(formDelete).submit();
+        return false;
+    }
     var studentNameList = [];
     $(document).ready(function () {
+        function wrap_pop() {
+            $(".wrap-pop").click(function () {
+                $(".panel-pop").animate({"top":"-100%"},500).hide(function () {
+                    $(this).animate({"top":"-100%"},500);
+                });
+                $(this).remove();
+            });
+        }
+        $("#add-to-folder-click").click(function (e) {
+            $(".panel-pop").animate({"top":"-100%"},10).hide();
+            $("#add-to-folder").show().animate({"top":"50%"},500);
+            $("body").prepend("<div class='wrap-pop'></div>");
+            wrap_pop();
+            var materialId = $(e.currentTarget).parents('td').find("[name='materialId']").val();
+            var listHref = $('#folderList').children();
+            for( var i = 0 ; i < listHref.length ; i++) {
+                if(listHref[i].hasAttribute('href')) {
+                    oldHref = listHref[i].href;
+                    newHref = oldHref + materialId;
+                    listHref[i].href = newHref;
+                }
+            }
+            return false;
+        });
         var student = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
