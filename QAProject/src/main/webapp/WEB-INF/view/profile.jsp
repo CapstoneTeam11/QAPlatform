@@ -368,7 +368,7 @@
     function followTeacher(id){
         var url = "/followTeacher/";
         $.ajax({
-            type: "GET",
+            type: "POST",
             url: url,
             data: "teacherId="+id,
             success: function(data){
@@ -390,7 +390,7 @@
     function unfollowTeacher(id){
         var url = "/unfollowTeacher/";
         $.ajax({
-            type: "GET",
+            type: "POST",
             url: url,
             data: "teacherId="+id,
             success: function(data){
