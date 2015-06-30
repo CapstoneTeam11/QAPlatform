@@ -48,10 +48,12 @@ public class PostController {
     @Autowired
     NotificationUtilities notificationUtilities;
     @Autowired
+    NotificationDao notificationDao;
+    @Autowired
     SimpMessagingTemplate template;
 
     @RequestMapping(value = "/post/add", method = RequestMethod.POST,produces = "application/json")
-    public String addStock(@ModelAttribute PostDto postDto) throws Exception {
+    public @ResponseBody String addStock(@ModelAttribute PostDto postDto) throws Exception {
         //Need to edit subcrible
         Post parentId = postDao.find(postDto.getParentId());
         Post post = new Post();
@@ -71,23 +73,24 @@ public class PostController {
         }
         //Notification - MinhKH
         User sender = userDao.find(user.getId());
-        Post object = postDao.findLastCreatedReplyByOwner(sender);
         Post parent = postDao.find(post.getParentId());
-        List<User> receivers = new ArrayList<User>();
-        if (object!=null) {
-            receivers.add(parent.getOwnerUserId());
-            List<Post> children = postDao.findRepliesByParentId(parent.getId());
-            for (Post child : children){
-                if (!child.equals(object)){ // if child is not user's reply
-                    receivers.add(child.getOwnerUserId());
-                }
-            }
-            notificationUtilities.insertNotification(receivers,sender,object.getId(),Constant.NT_USER_REPLY,
-                    Constant.IV_FALSE);
-        }
-
+        //Edit realtime KhangTN
         postDto = ConvertEntityDto.convertPostEntityToDto(post);
-        template.convertAndSend("/topic/addPost/" + postDto.getParentId(), postDto);
+        List<User> receivers = userDao.findUserNotificationByPost(parent.getId());
+            for (User receiver : receivers){
+                if(receiver.getId()!=user.getId()) {
+                Notification notification = new Notification();
+                notification.setReceiverId(receiver);
+                notification.setSenderId(sender);
+                notification.setObjectId(parentId.getId());
+                notification.setNotificationType(Constant.NT_USER_REPLY);
+                notification.setIsViewed(Constant.IV_FALSE);
+                notificationDao.persist(notification);
+                NotificationDto notificationDto  = ConvertEntityDto.convertNotificationEntityToDto(notification,notification.getNotificationType(),parentId);
+                template.convertAndSend("/topic/notice/" + receiver.getId(), notificationDto);
+                }
+                template.convertAndSend("/topic/discussion/" + receiver.getId(), postDto);
+            }
         return "OK";
     }
 

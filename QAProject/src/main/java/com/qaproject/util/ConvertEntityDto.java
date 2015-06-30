@@ -129,7 +129,7 @@ public class ConvertEntityDto {
         NotificationDto notificationDto = new NotificationDto();
         if (notification!=null && notificationType > 0 && notificationType <= 7 ) {
             if (notificationType == Constant.NT_TEACHER_CREATE_CLASS ||
-                    notificationType == Constant.NT_INVITE_TO_JOIN_CLASS ||
+                    notificationType == Constant.NT_INVITE_TO_JOIN_CLASS || notificationType == Constant.NT_ACCEPT_TO_JOIN_CLASS ||
                     notificationType == Constant.NT_REQUEST_TO_JOIN_CLASS) {
                 if (!(object instanceof Classroom)) {
                     return  notificationDto;
@@ -139,7 +139,7 @@ public class ConvertEntityDto {
                 notificationDto.setHref("/classroom/"+String.valueOf(notification.getObjectId()));
             }
             if (notificationType == Constant.NT_TEACHER_CREATE_POST ||
-                    notificationType == Constant.NT_STUDENT_CREATE_POST ||
+                    notificationType == Constant.NT_USER_REPLY ||
                     notificationType == Constant.NT_INVITE_TO_ANSWER_POST) {
                 if (!(object instanceof Post)) {
                     return notificationDto;
@@ -148,13 +148,29 @@ public class ConvertEntityDto {
                 notificationDto.setObjectName(post.getTitle());
                 notificationDto.setHref("/post/view/"+String.valueOf(notification.getObjectId()));
             }
-
             notificationDto.setId(notification.getId());
-            notificationDto.setReceiverId(notification.getReceiverId().getId());
             notificationDto.setSenderId(notification.getSenderId().getId());
             notificationDto.setSenderDisplayName(notification.getSenderId().getDisplayName());
+            notificationDto.setSenderAvatar(notification.getSenderId().getProfileImageURL());
             notificationDto.setNotificationType(notificationType);
             notificationDto.setObjectId(notification.getObjectId());
+            if(notificationType==Constant.NT_TEACHER_CREATE_CLASS) {
+                notificationDto.setContent(" created new classroom");
+            } else if (notificationType==Constant.NT_INVITE_TO_JOIN_CLASS) {
+                notificationDto.setContent(" invited you to join "+notificationDto.getObjectName());
+            } else if (notificationType==Constant.NT_REQUEST_TO_JOIN_CLASS) {
+                notificationDto.setContent(" requested to join "+notificationDto.getObjectName());
+            } else if (notificationType==Constant.NT_TEACHER_CREATE_POST) {
+                notificationDto.setContent(" created new question / article");
+            } else if (notificationType==Constant.NT_STUDENT_CREATE_POST) {
+                notificationDto.setContent(" created new question / article");
+            } else if (notificationType==Constant.NT_USER_REPLY) {
+                notificationDto.setContent(" answered question "+notificationDto.getObjectName());
+            } else if (notificationType==Constant.NT_INVITE_TO_ANSWER_POST) {
+                notificationDto.setContent(" invited you to answer "+notificationDto.getObjectName());
+            } else {
+                notificationDto.setContent(" accept your request");
+            }
         }
         return notificationDto;
     }

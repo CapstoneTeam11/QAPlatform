@@ -20,7 +20,6 @@ public class UserDaoImpl extends BaseDao<User,Integer> implements UserDao {
     public List<User> login(String username, String password) {
         Query query = null;
         query = entityManager.createQuery("select u from User u where u.email = :username and u.password = :password", User.class);
-
         List<User> users = null;
         try {
             query.setParameter("username", username);
@@ -102,6 +101,19 @@ public class UserDaoImpl extends BaseDao<User,Integer> implements UserDao {
         List<User> users = null;
         try {
             query.setParameter("username", "%" + username + "%");
+            query.setParameter("postId",postId);
+            users =  query.getResultList();
+        } catch (NoResultException e) {
+            System.out.println("User null");
+        }
+        return users;
+    }
+    @Override
+    public List<User> findUserNotificationByPost(Integer postId) {
+        Query query = null;
+        query = entityManager.createQuery("select distinct (u) from User u where u.id in (select p.ownerUserId from Post p where p.parentId=:postId) or u.id in (select w.userId from WantAnswerPost w where w.postId.id=:postId ) or u.id in (select p.ownerUserId from Post p where p.id=:postId)", User.class);
+        List<User> users = null;
+        try {
             query.setParameter("postId",postId);
             users =  query.getResultList();
         } catch (NoResultException e) {

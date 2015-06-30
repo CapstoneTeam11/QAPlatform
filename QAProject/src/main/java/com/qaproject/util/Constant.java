@@ -20,6 +20,7 @@ public class Constant {
     public static final int NT_REQUEST_TO_JOIN_CLASS = 5;
     public static final int NT_INVITE_TO_JOIN_CLASS = 6;
     public static final int NT_INVITE_TO_ANSWER_POST =7;
+    public static final int NT_ACCEPT_TO_JOIN_CLASS =8;
     // HR = Href
     public static final String HR_CLASSROOM_VIEW = "/classroom/";
     public static final String HR_POST_VIEW = "/post/view/";

@@ -37,6 +37,7 @@ design by: KhangTN
     font-size: 14px;
     color: #f68484;
     font-weight: 700;
+    margin-left:10px
 }
 .notification-action {
     color: #bfc5cf;
@@ -44,11 +45,13 @@ design by: KhangTN
     word-wrap: break-word;
     white-space: normal;
     display: initial;
+    width: 300px;
 }
 
 .notification-link {
     font-weight: 700;
     color: #71d398;
+    display : inline-block;
 
 }
 .notification .open>a, .notification .open>a:focus, .notification .open>a:hover {

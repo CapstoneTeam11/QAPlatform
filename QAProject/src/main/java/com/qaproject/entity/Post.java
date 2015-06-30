@@ -53,6 +53,8 @@ public class Post {
     private List<WantAnswerPost> wantAnswerPosts;
     @Transient
     private Integer isComment = 0;
+    @Transient
+    private List<Integer> listUserNotification ;
     public Post() {
     }
 
@@ -225,6 +227,19 @@ public class Post {
 
     public void setWantAnswerPosts(List<WantAnswerPost> wantAnswerPosts) {
         this.wantAnswerPosts = wantAnswerPosts;
+    }
+
+    public List<Integer> getListUserNotification(List<Post> answers) {
+        List<Integer> users = new ArrayList<Integer>();
+        for(int i = 0 ; i < wantAnswerPosts.size() ; i++) {
+            users.add(wantAnswerPosts.get(i).getUserId().getId());
+        }
+        for(int i = 0 ; i < answers.size();i++) {
+            if(!users.contains(answers.get(i).getOwnerUserId().getId())){
+                users.add(answers.get(i).getOwnerUserId().getId());
+            }
+        }
+        return listUserNotification;
     }
 
     public WantAnswerPost checkWantToAnswer(int userId) {

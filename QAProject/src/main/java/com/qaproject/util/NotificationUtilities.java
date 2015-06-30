@@ -49,4 +49,5 @@ public class NotificationUtilities {
         notificationDao.persist(notification);
         return true;
     }
+
 }

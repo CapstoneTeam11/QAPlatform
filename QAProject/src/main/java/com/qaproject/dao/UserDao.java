@@ -19,6 +19,7 @@ public interface UserDao {
     public List<User> findTeacherPostInvitation(String name,Integer portId);
     public List<User> findAllStudentNotInClass(int classId, String username);
     public List<User> findAllStudent(String username);
+    public List<User> findUserNotificationByPost(Integer postId);
     @Transactional(propagation = Propagation.REQUIRED)
     public void persist(User entity);
     @Transactional(propagation = Propagation.REQUIRED)

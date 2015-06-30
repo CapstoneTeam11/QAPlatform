@@ -62,7 +62,6 @@
 
 <div class="panel-pop" id="signup">
     <h2>Register Now<i class="icon-remove"></i></h2>
-    <input type="hidden" value="${sessionScope.user.id}" id="userIdFlag">
     <div class="form-style form-style-3">
         <form>
             <div class="form-inputs clearfix">
@@ -460,52 +459,14 @@
 <script src="/resource/assets/js/bootstrap-tagsinput.js"></script>
 <script src="/resource/assets/js/bootstrap-tagsinput.min.js"></script>
 <script src="/resource/assets/js/handlebars-v3.0.3.js"></script>
+<c:if test="${sessionScope.user!=null}">
+<script src="/resource/assets/js/notification.js"></script>
+</c:if>
 <script>
     CKEDITOR.replace('question-details');
 </script>
 <script>
-    var listAnswer = new Array()
-    listAnswer = $( "input[name='postAnswerId']" )
-    var lastestId = listAnswer.last().val();
-    //Create stomp client over sockJS protocol
-    var socket = new SockJS("/ws");
-    var stompClient = Stomp.over(socket);
 
-    // Callback function to be called when stomp client is connected to server
-    var connectCallback = function () {
-        stompClient.subscribe('/topic/user/${sessionScope.user.id}', post);
-    };
-
-    // Callback function to be called when stomp client could not connect to server
-    var errorCallback = function (error) {
-        alert(error.headers.message);
-    };
-
-    function post(post) {
-        var post = JSON.parse(post.body);
-        var currentCount = $('#countNotifi').html() * 1;
-        $('#countNotifi').html(currentCount + 1);
-        $('#commentListDetail').prepend('<li class="comment">' +
-                '<div class="comment-body clearfix">' +
-                '<div class="avatar"><img alt="" src="../ask-me/images/demo/avatar.png"></div>' +
-                '<div class="comment-text">' +
-                '<div class="author clearfix">' +
-                '<div class="comment-author"><a href="#">' + post.ownerId + '</a></div>' +
-                '<div class="comment-meta">' +
-                '<div class="date"><i class="icon-time"></i>' + post.lastEditedDate + '</div>' +
-                '</div>' +
-                '</div>' +
-                '<div class="text"><p>' + post.body + '</p>' +
-                '</div></div></div> </li>');
-        MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-        $.growl.notice({
-            message: '<div class="activity-item"> <i class="fa fa-heart text-danger"></i> <div class="activity">' + post.ownerId + '<a href="#">Create post</a> in <a href="#">' + post.className + '</a> <span>few seconds ago</span> </div> </div>',
-            location: "bl"
-        });
-
-    }
-    // Connect to server via websocket
-    stompClient.connect("guest", "guest", connectCallback, errorCallback);
     function wrap_pop() {
         $(".wrap-pop").click(function () {
             $(".panel-Confirm").animate({"top":"-100%"},500).hide(function () {
@@ -681,8 +642,144 @@
 
     }
     $(document).ready(function () {
+        var listAnswer = new Array()
+        listAnswer = $( "input[name='postAnswerId']" )
+        var lastestId = listAnswer.last().val();
+        function getCommentDiv(ownerName,lastEditDate) {
+            var commentDiv = '<li class="comment">'+
+                    '<div class="comment-body comment-body-answered clearfix">'+
+                    '<div class="avatar"><img alt=""'+
+                    'src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg">'+
+                    '</div>'+
+                    '<div class="comment-text">'+
+                    '<div class="author clearfix"  style="display: flex">'+
+                    '<div style="width: 30%">'+
+                    '<div class="comment-author"><a href="#">' + ownerName +'</a>'+
+                    '</div>'+
+                    '<div class="comment-meta">'+
+                    '<div class="date"><i class="icon-time"></i>' + lastEditDate +'</div>' +
+                    '</div>' +
+                    '</div>' ;
+            return commentDiv;
+        }
+        //2
+        function acceptAnswerIconDiv(id) {
+            var answerIconDiv = '<div class="acceptAnswerIcon" id="answerIcon' + id +'">'+
+                    '<i class="icon-ok"></i>' +
+                    '</div>' +
+                    '<div style="width: 75%;display: flex">' + '<div style="width: 100%;float: right;">'+
+                    '<input type="hidden" name="postAnswerId" value="' + id +'">' ;
+            return answerIconDiv;
+        }
+        //2 ( required one of acceptAnswerIconDiv or notAcceptAnswerIconDiv)
+        function notAcceptAnswerIconDiv(id) {
+            var answerIconDiv = '<div class="acceptAnswerIcon" id="answerIcon' + id +'">'+
+                    '</div>' +
+                    '<div style="width: 75%;display: flex">' + '<div style="width: 100%;float: right;">'+
+                    '<input type="hidden" name="postAnswerId" value="' + id +'">' ;
+            return answerIconDiv;
+        }
+        //3 ( optional )
+        function unacceptAnswerDiv() {
+            return '<a class="button small color unacceptAnswer answerFlag" style="float: right" onclick="answerFlag(this)">Unaccept</a>'
+        }
+        //3  ( optional )
+        function acceptAnswerDiv() {
+            return '<a class="button small color acceptAnswer answerFlag" style="float: right" onclick="answerFlag(this)">Accept</a>'
+        }
+        //Css for comment 4 (required)
+        function acceptAnswerAction() {
+            var acceptAnswerAction = '</div>' + '</div>' +
+                    '<div style="float: right;margin-left: 2%;">' ;
+            return acceptAnswerAction;
+        }
+        //5 ( optional )
+        function postActionUser() {
+            var actionPost = '<div class="btn-group">'+
+                    '<a data-toggle="dropdown" href="" aria-expanded="false"><span class="caretBig"></span></a>' +
+                    '<ul class="actionAnswer dropdown-menu" role="menu">' +
+                    '<li><a onclick="editAnswer(this);return false">Edit</a></li>' +
+                    '<li><a onclick="deleteAnswer(this);return false;">Delete</a></li>' +
+                    '</ul>' +
+                    '</div>' ;
+            return actionPost;
+        }
+        //6 (required)
+        function answerBody(body) {
+            var answerBody = '</div>' +
+                    '</div>' +
+                    '<div class="textComment"><p class="textBody">' + body +'</p>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</li>';
+            return answerBody;
+        }
+        //Create stomp client over sockJS protocol
+        var socket = new SockJS("/ws");
+        var stompClient = Stomp.over(socket);
 
+        // Callback function to be called when stomp client is connected to server
+        var connectCallback = function () {
+            stompClient.subscribe('/topic/discussion/${sessionScope.user.id}', post);
+            stompClient.subscribe('/topic/notice/${sessionScope.user.id}', notification);
+        };
 
+        // Callback function to be called when stomp client could not connect to server
+        var errorCallback = function (error) {
+            alert(error.headers.message);
+        };
+
+        function notification(notification) {
+            var notification = JSON.parse(notification.body);
+            var currentCount = $('#countNotifi').html() * 1;
+            $('#countNotifi').html(currentCount + 1);
+            $.growl.notice({
+                message: '<div class="activity-item"> <i class="fa fa-heart text-danger"></i> <div class="activity">' + notification.senderDisplayName + '' +
+                        '<a href="'+ notification.href +'">' + notification.content  + '</a> <span> few seconds ago</span> </div> </div>',
+                location: "bl"
+            });
+        }
+
+        function post(post) {
+            var postOwnerId = ${post.ownerUserId.id}
+            var userId =$('#userIdFlag').val()
+            var post = JSON.parse(post.body);
+            if(postOwnerId==userId) {
+                    //user is post Owner
+                    if(userId==post.ownerId) {
+                        var divAppend = getCommentDiv(post.ownerName, post.lastEditedDate) +
+                                notAcceptAnswerIconDiv(post.id) + acceptAnswerDiv() +
+                                acceptAnswerAction() + postActionUser() + answerBody(post.body)
+                        $('#commentListDetail').prepend(divAppend);
+                    } else {
+                        var divAppend = getCommentDiv(post.ownerName,post.lastEditedDate) +
+                                notAcceptAnswerIconDiv(post.id) + acceptAnswerDiv() +
+                                acceptAnswerAction() + answerBody(post.body)
+                        $('#commentListDetail').prepend(divAppend);
+                    }
+
+            } else {
+                    //user is post Owner
+                    if(userId==post.ownerId) {
+                        var divAppend = getCommentDiv(post.ownerName, post.lastEditedDate) +
+                                notAcceptAnswerIconDiv(post.id) +
+                                acceptAnswerAction() + postActionUser() + answerBody(post.body)
+
+                        $('#commentListDetail').prepend(divAppend);
+                    } else {
+                        var divAppend = getCommentDiv(post.ownerName,post.lastEditedDate) +
+                                notAcceptAnswerIconDiv(post.id) +
+                                acceptAnswerAction() + answerBody(post.body)
+                        $('#commentListDetail').prepend(divAppend);
+                    }
+            }
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+
+        }
+
+        // Connect to server via websocket
+        stompClient.connect("guest", "guest", connectCallback, errorCallback);
 //        $('.answerFlag').delegate('click',function (e) {
 //
 //        });
@@ -739,76 +836,7 @@
             var url = "/post/view/${post.id}/"+lastestId;
             //comply sequence of function div
             //1(required)
-            function getCommentDiv(ownerName,lastEditDate) {
-                var commentDiv = '<li class="comment">'+
-                        '<div class="comment-body comment-body-answered clearfix">'+
-                        '<div class="avatar"><img alt=""'+
-                        'src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg">'+
-                        '</div>'+
-                        '<div class="comment-text">'+
-                        '<div class="author clearfix"  style="display: flex">'+
-                        '<div style="width: 30%">'+
-                        '<div class="comment-author"><a href="#">' + ownerName +'</a>'+
-                        '</div>'+
-                        '<div class="comment-meta">'+
-                        '<div class="date"><i class="icon-time"></i>' + lastEditDate +'</div>' +
-                        '</div>' +
-                        '</div>' ;
-                return commentDiv;
-            }
-            //2
-            function acceptAnswerIconDiv(id) {
-                var answerIconDiv = '<div class="acceptAnswerIcon" id="answerIcon' + id +'">'+
-                                    '<i class="icon-ok"></i>' +
-                                    '</div>' +
-                                    '<div style="width: 75%;display: flex">' + '<div style="width: 100%;float: right;">'+
-                                    '<input type="hidden" name="postAnswerId" value="' + id +'">' ;
-                return answerIconDiv;
-            }
-            //2 ( required one of acceptAnswerIconDiv or notAcceptAnswerIconDiv)
-            function notAcceptAnswerIconDiv(id) {
-                var answerIconDiv = '<div class="acceptAnswerIcon" id="answerIcon' + id +'">'+
-                        '</div>' +
-                        '<div style="width: 75%;display: flex">' + '<div style="width: 100%;float: right;">'+
-                        '<input type="hidden" name="postAnswerId" value="' + id +'">' ;
-                return answerIconDiv;
-            }
-            //3 ( optional )
-            function unacceptAnswerDiv() {
-                return '<a class="button small color unacceptAnswer answerFlag" style="float: right" onclick="answerFlag(this)">Unaccept</a>'
-            }
-            //3  ( optional )
-            function acceptAnswerDiv() {
-                return '<a class="button small color acceptAnswer answerFlag" style="float: right" onclick="answerFlag(this)">Accept</a>'
-            }
-            //Css for comment 4 (required)
-            function acceptAnswerAction() {
-                var acceptAnswerAction = '</div>' + '</div>' +
-                                         '<div style="float: right;margin-left: 2%;">' ;
-                return acceptAnswerAction;
-            }
-            //5 ( optional )
-            function postActionUser() {
-                var actionPost = '<div class="btn-group">'+
-                                 '<a data-toggle="dropdown" href="" aria-expanded="false"><span class="caretBig"></span></a>' +
-                                 '<ul class="actionAnswer dropdown-menu" role="menu">' +
-                                 '<li><a onclick="editAnswer(this);return false">Edit</a></li>' +
-                                 '<li><a onclick="deleteAnswer(this);return false;">Delete</a></li>' +
-                                 '</ul>' +
-                                 '</div>' ;
-                return actionPost;
-            }
-            //6 (required)
-            function answerBody(body) {
-                var answerBody = '</div>' +
-                                 '</div>' +
-                                 '<div class="textComment"><p class="textBody">' + body +'</p>' +
-                                 '</div>' +
-                                 '</div>' +
-                                 '</div>' +
-                                 '</li>';
-                return answerBody;
-            }
+
             $.ajax({
                 type : "GET",
                 url : url,
@@ -914,7 +942,6 @@
                     }
                 }
             })
-            stompClient.send("/app/addPost", {}, jsonstr);
             return false;
         });
 
@@ -975,9 +1002,7 @@
             var tagId = "#userId" + event.item.id;
             $(tagId).remove();
         });
-
     });
-
 </script>
 <!-- End js -->
 
