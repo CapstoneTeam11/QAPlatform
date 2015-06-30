@@ -40,9 +40,9 @@ public class StudentController {
             return "403";
         }
 
-        List<FollowerDto> followedTeachers = dashboardUtilities.loadFollowedTeachers(user.getId(), 1);
-        List<ClassroomDto> joinedClassrooms = dashboardUtilities.loadJoinedClassrooms(user.getId(), 1);
-        List<ClassroomInvitationDto> invitations = dashboardUtilities.loadClassroomInvitations(user.getId(),1);
+        List<FollowerDto> followedTeachers = dashboardUtilities.loadFollowedTeachers(user.getId(), 0);
+        List<ClassroomDto> joinedClassrooms = dashboardUtilities.loadJoinedClassrooms(user.getId(), 0);
+        List<ClassroomInvitationDto> invitations = dashboardUtilities.loadClassroomInvitations(user.getId(),0);
 
         if (followedTeachers.size()==0 && joinedClassrooms.size()==0 && invitations.size()==0){
             return "studentdashboardWelcome";

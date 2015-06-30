@@ -36,9 +36,9 @@ public class TeacherController {
     @Autowired
     DashboardUtilities dashboardUtilities;
 
-    @RequestMapping(value = "/followTeacher/",method = RequestMethod.GET)
+    @RequestMapping(value = "/followTeacher/",method = RequestMethod.POST)
     @ResponseBody
-    public String followTeacher(Model model, @RequestParam(value = "teacherId")String teacherId,
+    public String followTeacher(@RequestParam(value = "teacherId")Integer teacherId,
                                 HttpServletRequest request) {
         HttpSession session =  request.getSession();
         User user = (User) session.getAttribute("user");
@@ -47,7 +47,7 @@ public class TeacherController {
         }
         Follower follower = new Follower();
         follower.setFollowerId(user);
-        follower.setTeacherId(new User(Integer.parseInt(teacherId)));
+        follower.setTeacherId(new User(teacherId));
         try {
             followerDao.persist(follower);
         } catch (Exception e){
@@ -55,16 +55,16 @@ public class TeacherController {
         }
         return "OK";
     }
-    @RequestMapping(value = "/unfollowTeacher/",method = RequestMethod.GET)
+    @RequestMapping(value = "/unfollowTeacher/",method = RequestMethod.POST)
     @ResponseBody
-    public String unfollowTeacher(Model model, @RequestParam(value = "teacherId")String teacherId,
+    public String unfollowTeacher(Model model, @RequestParam(value = "teacherId")Integer teacherId,
                                 HttpServletRequest request) {
         HttpSession session =  request.getSession();
         User user = (User) session.getAttribute("user");
         if(user == null){
             return "NG";
         }
-        Follower follower = followerDao.findByTeacherId(Integer.parseInt(teacherId), user);
+        Follower follower = followerDao.findByTeacherId(teacherId, user);
         try {
             followerDao.delete(follower);
         } catch (Exception e){

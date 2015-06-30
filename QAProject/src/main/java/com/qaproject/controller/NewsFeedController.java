@@ -4,6 +4,7 @@ import com.qaproject.dao.ClassroomDao;
 import com.qaproject.dao.ClassroomUserDao;
 import com.qaproject.dao.PostDao;
 import com.qaproject.dao.UserDao;
+import com.qaproject.dto.MaterialDto;
 import com.qaproject.dto.PostDto;
 import com.qaproject.entity.*;
 import com.qaproject.util.NewsFeedUtilities;
@@ -66,13 +67,10 @@ public class NewsFeedController {
         List<Classroom> suggestedClassrooms = classroomDao.findByCategory(category);
 
         //get suggested posts - materials
-        List<PostDto> suggestedQuestions = newsFeedUtilities.loadNewsFeedQuestions(user.getId(), 1);
-        List<Post> suggestedArticles = new ArrayList<Post>();
-        List<Material> suggestedMaterials = new ArrayList<Material>();
-
-        //Check if User is teacher
-        //if (user.getRoleId().getId()==2){
-        //}
+        List<PostDto> suggestedQuestions = newsFeedUtilities.loadNewsFeedQuestions(user.getId(), 1); //load by page
+        List<PostDto> suggestedArticles = newsFeedUtilities.loadNewsFeedArticles(user.getCategoryId().getId(),
+                0); //load by nextFrom
+        List<MaterialDto> suggestedMaterials = newsFeedUtilities.loadNewsFeedMaterials(user.getCategoryId().getId(),0);
 
         //Check if User is student
         if (user.getRoleId().getId()==1){
@@ -80,24 +78,6 @@ public class NewsFeedController {
                 model.addAttribute("suggestedClassrooms",suggestedClassrooms);
             }
         }
-
-        for (int i =0;i<suggestedClassrooms.size(); i++){
-            Classroom currentSuggestedClassroom = suggestedClassrooms.get(i);
-            List<Post> currentSuggestedPosts = currentSuggestedClassroom.getPostList();
-            suggestedMaterials.addAll(currentSuggestedClassroom.getMaterialList());
-            //classify posts
-            for (int j=0; j<currentSuggestedPosts.size(); j++){
-                Post currentSuggestedPost = currentSuggestedPosts.get(j);
-                if (currentSuggestedPost.getPostType()==1) {
-                    //suggestedQuestions.add(currentSuggestedPost);
-                }
-                if (currentSuggestedPost.getPostType()==2) {
-                    suggestedArticles.add(currentSuggestedPost);
-                }
-            }
-        }
-
-
 
         model.addAttribute("materials", suggestedMaterials);
         model.addAttribute("questions",suggestedQuestions);
@@ -116,5 +96,31 @@ public class NewsFeedController {
             e.printStackTrace();
         }
         return questionDtos;
+    }
+
+    @RequestMapping(value = "newsFeed/article/{nextFrom}",produces = "application/json",method = RequestMethod.GET)
+    public @ResponseBody
+    List<PostDto> loadNewsFeedArticle(@PathVariable Integer nextFrom) {
+        User user = (User) session.getAttribute("user");
+        List<PostDto> articleDtos = null;
+        try {
+            articleDtos = newsFeedUtilities.loadNewsFeedArticles(user.getCategoryId().getId(), nextFrom);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return articleDtos;
+    }
+
+    @RequestMapping(value = "newsFeed/material/{nextFrom}",produces = "application/json",method = RequestMethod.GET)
+    public @ResponseBody
+    List<MaterialDto> loadNewsFeedMaterial(@PathVariable Integer nextFrom) {
+        User user = (User) session.getAttribute("user");
+        List<MaterialDto> materialDtos = null;
+        try {
+            materialDtos = newsFeedUtilities.loadNewsFeedMaterials(user.getCategoryId().getId(), nextFrom);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return materialDtos;
     }
 }

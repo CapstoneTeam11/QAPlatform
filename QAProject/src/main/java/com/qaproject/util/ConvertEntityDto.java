@@ -90,6 +90,7 @@ public class ConvertEntityDto {
         ClassroomInvitationDto classroomInvitationDto = new ClassroomInvitationDto();
         if (classroomUser!=null) {
             Classroom classroom = classroomUser.getClassroomId();
+            classroomInvitationDto.setId(classroomUser.getId());
             classroomInvitationDto.setClassroomId(classroom.getId());
             classroomInvitationDto.setClassroomName(classroom.getClassroomName());
             classroomInvitationDto.setTeacherId(classroom.getOwnerUserId().getId());
@@ -174,6 +175,44 @@ public class ConvertEntityDto {
         }
         return notificationDto;
     }
+
+    public static MaterialDto convertMaterialEntityToDto(Material material){
+        MaterialDto materialDto = new MaterialDto();
+        if (material!=null) {
+            materialDto.setId(material.getId());
+            materialDto.setName(material.getName());
+            materialDto.setOwnerClassroomId(material.getOwnerClassId().getId());
+            materialDto.setOwnerClassroomName(material.getOwnerClassId().getClassroomName());
+            materialDto.setCreationDate(ConvertDateTime(material.getCreationDate()));
+            materialDto.setSize(material.getSize());
+            materialDto.setFileURL(material.getFileURL());
+        }
+        return materialDto;
+    }
+
+    public static RequestDto convertClassroomUserEntityToRequestDto(ClassroomUser classroomUser){
+        RequestDto requestDto = new RequestDto();
+        if (classroomUser!=null){
+            requestDto.setId(classroomUser.getId());
+            requestDto.setStudentId(classroomUser.getUserId().getId());
+            requestDto.setStudentName(classroomUser.getUserId().getDisplayName());
+            requestDto.setStudentProfileImageURL(classroomUser.getUserId().getProfileImageURL());
+        }
+        return requestDto;
+    }
+
+    public static StudentDto convertClassroomUserEntityToStudentDto(ClassroomUser classroomUser){
+        StudentDto studentDto = new StudentDto();
+        if (classroomUser!=null){
+            studentDto.setClassroomUserId(classroomUser.getId());
+            studentDto.setStudentId(classroomUser.getUserId().getId());
+            studentDto.setStudentName(classroomUser.getUserId().getDisplayName());
+            studentDto.setStudentProfileImageURL(classroomUser.getUserId().getProfileImageURL());
+        }
+        return studentDto;
+    }
+
+
 
     public static String ConvertDateTime(Date date) {
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");

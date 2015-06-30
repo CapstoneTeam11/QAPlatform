@@ -50,7 +50,17 @@
 <div class="loader"><div class="loader_html"></div></div>
 
 <div id="wrap">
-
+<div class="panel-Confirm" id="remove-student">
+    <h2>Leave classroom</h2>
+    <div>
+        <p class="panelMessage">Do you want to remove this student?</p>
+        <p>
+            <input type="submit" value="Cancel"  class="button color small cancel panelButton" >
+            <input type="submit" value="OK"  class="button color small OK panelButton" style="margin-left: 3%;">
+        </p>
+        <div class="clearfix"></div>
+    </div>
+</div>
 <div class="panel-pop" id="addMaterial">
     <h2>Upload Material<i class="icon-remove"></i></h2>
     <div class="form-style form-style-3">
@@ -64,7 +74,7 @@
                 <c:if test="${classroom.status == 1}">
                     <input type="submit" value="Upload" class="button color small submit">
                 </c:if>
-                <input type="hidden" name="classId" value="${classroom.id}">
+                <input type="hidden" name="classId" value="1">
             </p>
         </form>
         <div class="clearfix"></div>
@@ -73,13 +83,22 @@
 
 <div class="panel-pop" id="add-to-folder">
     <h2>Add to folder<i class="icon-remove"></i></h2>
-    <div style="height: auto; max-height: 300px; overflow-x: hidden;" id="folderList">
-            <c:forEach var="folder" items="${sessionScope.user.folderList}">
-            <a href="/library/add/${folder.id}/" class="list-group-item">
-                <h4 class="list-group-item-heading">${folder.name} </h4>
+    <div style="height: auto; max-height: 300px; overflow-x: hidden;">
+
+            <a href="/library/add/1/4" class="list-group-item">
+                <h4 class="list-group-item-heading">Java </h4>
             </a>
-            </c:forEach>
-    </div>
+            <a href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">C# </h4>
+            </a>
+            <a href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">Document 4</h4>
+            </a>
+            <a href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">Piture 5</h4>
+            </a>
+
+        </div>
     </div><!-- End add to folder -->
 
 
@@ -143,70 +162,145 @@
     <li class="tab"><a href="#">Student</a></li>
 </ul>
 
-<div class="tab-inner-warp" id="questionTag">
-    <div class="tab-inner">
+<div class="tab-inner-warp">
+    <div class="tab-inner" id="questions">
         <c:if test="${not empty questions}">
-            <c:set var="total" value="${fn:length(questions)}" />
-            <c:forEach var="question" items="${questions}" varStatus="counter">
-                <c:if test="${counter.count <11}">
+            <c:if test="${fn:length(questions)>10}">
+                <c:forEach var="question" items="${questions}" end="9">
                     <article class="question question-type-normal">
                         <h2>
                             <a href="/post/view/${question.id}">${question.title}</a>
                         </h2>
                         <div class="question-author">
-                            <a href="/profile/view/${question.ownerUserId.id}" original-title="${question.ownerUserId.displayName}" class="question-author-img tooltip-n"><span></span><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/avatar.png"></a>
+                            <a href="/profile/view/${question.ownerId}"
+                               original-title="${question.ownerName}"
+                               class="tooltip-n"><span></span><img alt=""
+                                                                   src="${question.ownerProfileImageURL}"></a>
                         </div>
                         <div class="question-inner">
                             <div class="clearfix"></div>
                             <div class="question-desc short-text">${question.body}</div>
                             <div class="question-details">
-                                <span class="question-answered question-answered-done">
-                                    <c:if test="${question.acceptedAnswerId} != null">
-                                        <i class="icon-ok"></i>Resolved
-                                    </c:if>
-                                </span>
+                                                    <span class="question-answered question-answered-done">
+                                                        <c:if test="${question.acceptedAnswerId} != null">
+                                                            <i class="icon-ok"></i>Resolved
+                                                        </c:if>
+                                                    </span>
                             </div>
-                            <span class="question-date"><i class="icon-time"></i>${question.lastEditedDate}</span>
-                            <span class="question-category"><a href="#"><i class="icon-group"></i>Class: ${question.ownerClassId.classroomName}</a></span>
-                            <span class="question-comment"><a href="#"><i class="icon-comment"></i>${question.replyCount} Answer(s)</a></span>
+                                                <span class="question-date"><i
+                                                        class="icon-time"></i>${question.lastEditedDate}</span>
+                                                <span class="question-category"><a
+                                                        href="/classroom/${question.classId}"><i
+                                                        class="icon-group"></i>Class: ${question.className}</a></span>
+                                                <span class="question-comment"><a href="#"><i
+                                                        class="icon-comment"></i>${question.answerCount} Answer(s)</a></span>
                             <div class="clearfix"></div>
                         </div>
                     </article>
-                </c:if>
-            </c:forEach>
-            <c:if test="${total >10}">
-                <a href="javascript:loadMoreQuestion(${classroom.id});" class="post-read-more button color small" style="margin-bottom: 5px;" id="loadMoreQuestion">Load more...</a>
+                </c:forEach>
+            </c:if>
+            <c:if test="${fn:length(questions)<=10}">
+                <c:forEach var="question" items="${questions}">
+                    <article class="question question-type-normal">
+                        <h2>
+                            <a href="/post/view/${question.id}">${question.title}</a>
+                        </h2>
+                        <div class="question-author">
+                            <a href="/profile/view/${question.ownerId}"
+                               original-title="${question.ownerName}"
+                               class="tooltip-n"><span></span><img alt=""
+                                                                   src="${question.ownerProfileImageURL}"></a>
+                        </div>
+                        <div class="question-inner">
+                            <div class="clearfix"></div>
+                            <div class="question-desc short-text">${question.body}</div>
+                            <div class="question-details">
+                                                    <span class="question-answered question-answered-done">
+                                                        <c:if test="${question.acceptedAnswerId} != null">
+                                                            <i class="icon-ok"></i>Resolved
+                                                        </c:if>
+                                                    </span>
+                            </div>
+                                                <span class="question-date"><i
+                                                        class="icon-time"></i>${question.lastEditedDate}</span>
+                                                <span class="question-category"><a
+                                                        href="/classroom/${question.classId}"><i
+                                                        class="icon-group"></i>Class: ${question.className}</a></span>
+                                                <span class="question-comment"><a href="#"><i
+                                                        class="icon-comment"></i>${question.answerCount} Answer(s)</a></span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </article>
+                </c:forEach>
             </c:if>
         </c:if>
+        <c:if test="${empty questions}">
+            <div class="about-author clearfix">
+                No question.
+            </div>
+        </c:if>
     </div>
+    <c:if test="${fn:length(questions)>10}">
+        <a class="post-read-more button color small"
+           style="margin-bottom: 5px;" id="loadMoreQuestion">Load more</a>
+    </c:if>
 </div>
-<div class="tab-inner-warp" id="articleTag">
-    <div class="tab-inner">
+<div class="tab-inner-warp">
+    <div class="tab-inner" id="articles">
         <c:if test="${not empty articles}">
-            <c:set var="total" value="${fn:length(articles)}" />
-            <c:forEach var="article" items="${articles}" varStatus="counter">
-                <c:if test="${counter.count <11}">
+            <c:if test="${fn:length(articles)>10}">
+                <c:forEach var="article" items="${articles}" end="9">
                     <article class="post clearfix">
                         <div class="post-inner">
-                            <h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a href="/post/view/${article.id}">${article.title}</a></h2>
+                            <h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a
+                                    href="/post/view/${article.id}">${article.title}</a></h2>
                             <div class="post-meta">
-                                <span class="meta-author"><i class="icon-user"></i><a href="#">Author: ${article.ownerUserId.displayName}</a></span>
+                                <span class="meta-author"><i class="icon-user"></i><a href="#">Author: ${article.ownerName}</a></span>
                                 <span class="meta-date"><i class="icon-time"></i>${article.lastEditedDate}</span>
-                                <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">${article.replyCount} comment(s)</a></span>
-                                <span class="question-category"><a href="/classroom/${article.ownerClassId.id}"><i class="icon-group"></i>Class: ${article.ownerClassId.classroomName}</a></span>
+                                <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">${article.answerCount}
+                                    comment(s)</a></span>
+                                <span class="question-category"><a href="/classroom/${article.classId}"><i
+                                        class="icon-group"></i>Class: ${article.className}</a></span>
                             </div>
                             <div class="post-content short-text">
                                 <p>${article.body}</p>
                             </div><!-- End post-content -->
                         </div><!-- End post-inner -->
                     </article>
-                </c:if>
-            </c:forEach>
+                </c:forEach>
+            </c:if>
+            <c:if test="${fn:length(articles)<=10}">
+                <c:forEach var="article" items="${articles}">
+                    <article class="post clearfix">
+                        <div class="post-inner">
+                            <h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a
+                                    href="/post/view/${article.id}">${article.title}</a></h2>
+                            <div class="post-meta">
+                                <span class="meta-author"><i class="icon-user"></i><a href="#">Author: ${article.ownerName}</a></span>
+                                <span class="meta-date"><i class="icon-time"></i>${article.lastEditedDate}</span>
+                                <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">${article.answerCount}
+                                    comment(s)</a></span>
+                                <span class="question-category"><a href="/classroom/${article.classId}"><i
+                                        class="icon-group"></i>Class: ${article.className}</a></span>
+                            </div>
+                            <div class="post-content short-text">
+                                <p>${article.body}</p>
+                            </div><!-- End post-content -->
+                        </div><!-- End post-inner -->
+                    </article>
+                </c:forEach>
+            </c:if>
         </c:if>
-        <c:if test="${total >10}">
-            <a href="javascript:loadMoreArticle(${classroom.id});" class="post-read-more button color small" style="margin-bottom: 5px;" id="loadMoreActicle">Load more...</a>
+        <c:if test="${empty articles}">
+            <div class="about-author clearfix">
+                No article.
+            </div>
         </c:if>
     </div>
+    <c:if test="${fn:length(articles)>10}">
+        <a class="post-read-more button color small"
+           style="margin-bottom: 5px;" id="loadMoreArticle">Load more</a>
+    </c:if>
 </div>
 <div class="tab-inner-warp">
     <div class="tab-inner">
@@ -215,106 +309,152 @@
                 <a href="#" class="button medium green-button" style="float: right;margin-top: -25px;margin-right: -10px;" id="addMaterial-click"><i class="icon-upload"></i> Upload</a>
             </c:if>
         </div>
-        <table class="table table-hover" id="materialTag">
-            <tr>
-                <th>No</th>
-                <th>File name</th>
-                <th>Uploaded Date</th>
-                <th>File size</th>
-                <th>Save to</th>
-                <th></th>
-            </tr>
-            <c:set var="total" value="${fn:length(materials)}" />
-
-                <c:forEach var="material" items="${materials}" varStatus="counter">
-
-                    <c:if test="${counter.count <11}">
+        <c:if test="${not empty materials}">
+            <table class="table table-hover" id="materials">
+                <tr>
+                    <th>No</th>
+                    <th>File name</th>
+                    <th>Uploaded Date</th>
+                    <th>File size</th>
+                    <th>Save to</th>
+                </tr>
+                <c:if test="${fn:length(materials)>10}">
+                    <c:forEach var="material" items="${materials}" end="9" varStatus="counter">
                         <tr>
                             <td>${counter.count}</td>
                             <td>${material.name}</td>
                             <td>${material.creationDate}</td>
                             <td>${material.size}</td>
-                            <td><input type="hidden" value="${material.id}" name="materialId"><a id="add-to-folder-click" href="#">Folder</a> / <a href="/download/${material.id}"> Computer</a></td>
-                            <td><form action="/material/delete" method="post" style="display: none"><input type="hidden" name="materialId" value="${material.id}"></form><a href="#" onclick="removeMaterial(this)"><i class="icon-remove"></i> Delete</a></td>
+                            <td><a id="add-to-folder-click" href="#">Folder</a> / <a href="/download/${material.id}"> Computer</a></td>
                         </tr>
-                    </c:if>
-                </c:forEach>
-
-        </table>
-        <c:if test="${total >0}">
-            <a href="javascript:loadMoreMaterial(${classroom.id});" class="post-read-more button color small" style="margin-bottom: 5px;" id="loadMoreMaterial">Load more...</a>
+                    </c:forEach>
+                </c:if>
+                <c:if test="${fn:length(materials)<=10}">
+                    <c:forEach var="material" items="${materials}" varStatus="counter">
+                        <tr>
+                            <td>${counter.count}</td>
+                            <td>${material.name}</td>
+                            <td>${material.creationDate}</td>
+                            <td>${material.size}</td>
+                            <td><a id="add-to-folder-click" href="#">Folder</a> / <a href="/download/${material.id}"> Computer</a></td>
+                        </tr>
+                    </c:forEach>
+                </c:if>
+            </table>
+        </c:if>
+        <c:if test="${empty materials}">
+            <div class="about-author clearfix">
+                No material.
+            </div>
+        </c:if>
+        <c:if test="${fn:length(materials)>10}">
+            <a class="post-read-more button color small"
+               style="margin-bottom: 5px;" id="loadMoreMaterial">Load more</a>
         </c:if>
     </div>
 </div>
 <c:if test="${user.roleId.id==2}">
-    <div class="tab-inner-warp"  id="studentRequestTag">
-        <div class="tab-inner">
-            <c:if test="${not empty joinRequests}">
-                <c:set var="total" value="${fn:length(joinRequests)}" />
-
-                <c:forEach var="joinRequest" items="${joinRequests}" varStatus="counter">
-                    <c:if test="${counter.count <11}"> <!-- less than 15 -->
-                        <form id="acceptForm${joinRequest.id}" method="post" action="/acceptRequest">
-                            <input type="hidden" name="requestId" id ="requestId${joinRequest.id}"  value="${joinRequest.id}"/>
-                            <input type="hidden" name="ownerClassroomId" id="ownerClassroomId${joinRequest.id}" value="${classroom.ownerUserId.id}"/>
-                            <input type="hidden" name="currentClassroomId" id="currentClassroomId${joinRequest.id}" value="${classroom.id}"/>
-                            <div class="about-author clearfix">
-                                <div class="author-image">
-                                    <a href="#" original-title="${joinRequest.userId.displayName}" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
-                                </div>
-                                <c:if test="${user.roleId.id==2}">
-                                    <a class="" href="#" onclick="javascript:ignoreRequest('acceptForm${joinRequest.id}', ${joinRequest.id});" style="float: right">Ignore</a>
-                                    <a class="" href="#" onclick="javascript:acceptRequest('acceptForm${joinRequest.id}', ${joinRequest.userId.id}, ${joinRequest.id});" style="float: right; margin-right: 15px">Confirm</a>
-                                </c:if>
-                                <div class="author-bio">
-                                <h4><a href="#">${joinRequest.userId.displayName}</a></h4>
-                                Requested to join <a href="/classroom/${classroom.id}" style="font-size: 15px">${classroom.classroomName}</a>
-                                </div>
-                            </div>
-                        </form>
-                    </c:if>
-                </c:forEach>
-                <c:if test="${total >10}"> <!-- more than 15 -->
-                    <a href="javascript:javascript:loadMoreStudentRequest(${classroom.id})" class="post-read-more button color small">Load more...</a>
-                </c:if>
-            </c:if>
-        </div>
-    </div>
-</c:if>
-    <div class="tab-inner-warp" id="studentTag">
-        <div class="tab-inner">
-            <c:if test="${not empty students}">
-                <c:set var="total" value="${fn:length(students)}" />
-                <c:forEach var="student" items="${students}" varStatus="counter">
-                    <c:if test="${counter.count <11}">
-                        <div class="about-author clearfix" id="student${student.userId.id}">
+    <div class="tab-inner-warp">
+        <div class="tab-inner" id="requests">
+            <c:if test="${not empty requests}">
+                <c:if test="${fn:length(requests)>10}">
+                    <c:forEach var="request" items="${requests}" end="9">
+                        <div class="about-author clearfix" id="request${request.id}">
                             <div class="author-image">
-                                <a href="#" original-title="" class="tooltip-n"><img alt="" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg"></a>
+                                <a href="/profile/view/${request.studentId}" original-title="${request.studentName}"
+                                   class="tooltip-n"><img alt="" src="${request.studentProfileImageURL}"></a>
                             </div>
-                            <c:if test="${classroom.status == 1}">
-                                <c:if test="${user.roleId.id==2}">
-                                    <a class="removeBtn" href="javascript:removeStudent(${student.userId.id});" style="float: right">Remove</a>
-                                </c:if>
-                            </c:if>
-                            <div class="author-bio" style="margin-top: 25px">
-                                <h4><a href="#">${student.userId.displayName}</a></h4>
+                            <a class="ignoreRequest" onclick="ignoreRequest(this); return false;"
+                               style="float: right; cursor: pointer" id="${request.id}">Ignore</a>
+                            <a class="confirmRequest" onclick="confirmRequest(this); return false;"
+                               style="float: right; margin-right: 15px; cursor: pointer" id="${request.id}">Confirm</a>
+                            <div class="author-bio">
+                                <h4><a href="/profile/view/${request.studentId}">${request.studentName}</a></h4>
+                                Requested to join <a href="/classroom/${classroom.id}" style="font-size: 15px">${classroom.classroomName}</a>
                             </div>
                         </div>
-                    </c:if>
-                </c:forEach>
-                <c:if test="${total >10}">
-                    <a href="javascript:loadMoreStudent(${classroom.id});" class="post-read-more button color small">Load more...</a>
+                    </c:forEach>
+                </c:if>
+                <c:if test="${fn:length(requests)<=10}">
+                    <c:forEach var="request" items="${requests}">
+                        <div class="about-author clearfix" id="request${request.id}">
+                            <div class="author-image">
+                                <a href="/profile/view/${request.studentId}" original-title="${request.studentName}"
+                                   class="tooltip-n"><img alt="" src="${request.studentProfileImageURL}"></a>
+                            </div>
+                            <a class="ignoreRequest" onclick="ignoreRequest(this); return false;"
+                               style="float: right; cursor: pointer" id="${request.id}">Ignore</a>
+                            <a class="confirmRequest" onclick="confirmRequest(this); return false;"
+                               style="float: right; margin-right: 15px; cursor: pointer" id="${request.id}">Confirm</a>
+                            <div class="author-bio">
+                                <h4><a href="/profile/view/${request.studentId}">${request.studentName}</a></h4>
+                                Requested to join <a href="/classroom/${classroom.id}" style="font-size: 15px">${classroom.classroomName}</a>
+                            </div>
+                        </div>
+                    </c:forEach>
                 </c:if>
             </c:if>
-
-        </div>
-        <div class="tab-inner">
-            <c:if test="${empty students}">
-                <div class="about-author clearfix" id="no-student">
-                    No student yet!
+            <c:if test="${empty requests}">
+                <div class="about-author clearfix">
+                    No request.
                 </div>
             </c:if>
         </div>
+        <c:if test="${fn:length(requests)>10}">
+            <a class="post-read-more button color small"
+               style="margin-bottom: 5px;" id="loadMoreRequest">Load more</a>
+        </c:if>
+    </div>
+
+</c:if>
+    <div class="tab-inner-warp">
+        <div class="tab-inner" id="students">
+            <c:if test="${not empty students}">
+                <c:if test="${fn:length(students)>10}">
+                    <c:forEach var="student" items="${students}" end="9">
+                        <div class="about-author clearfix" id="student${student.classroomUserId}">
+                            <div class="author-image">
+                                <a href="/profile/view/${student.studentId}" original-title="${student.studentName}"
+                                   class="tooltip-n">
+                                    <img alt="" src="${student.studentProfileImageURL}"></a>
+                            </div>
+                                <a class="removeStudent" id="${student.classroomUserId}"
+                                   onclick="removeStudent(this); return false;"
+                                   style="float: right; cursor:pointer">Remove</a>
+                            <div class="author-bio" style="margin-top: 25px">
+                                <h4><a href="/profile/view/${student.studentId}">${student.studentName}</a></h4>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </c:if>
+                <c:if test="${fn:length(students)<=10}">
+                    <c:forEach var="student" items="${students}">
+                        <div class="about-author clearfix" id="student${student.classroomUserId}">
+                            <div class="author-image">
+                                <a href="/profile/view/${student.studentId}" original-title="${student.studentName}"
+                                   class="tooltip-n">
+                                    <img alt="" src="${student.studentProfileImageURL}"></a>
+                            </div>
+                            <a class="removeStudent" id="${student.classroomUserId}"
+                               onclick="removeStudent(this); return false;"
+                               style="float: right; cursor:pointer">Remove</a>
+                            <div class="author-bio" style="margin-top: 25px">
+                                <h4><a href="/profile/view/${student.studentId}">${student.studentName}</a></h4>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </c:if>
+            </c:if>
+            <c:if test="${empty students}">
+                <div class="about-author clearfix" id="noStudent">
+                    No student.
+                </div>
+            </c:if>
+        </div>
+        <c:if test="${fn:length(students)>10}">
+            <a class="post-read-more button color small"
+               style="margin-bottom: 5px;" id="loadMoreStudent">Load more</a>
+        </c:if>
     </div>
 </div><!-- End page-content -->
 </div><!-- End main -->
@@ -333,7 +473,7 @@
                     <p id="link-btn"></p><a href="javascript:joinClass(${classroom.id})" class="button small color" id="join">Join</a></p>
                 </c:if>
                 <c:if test="${checkClassroomUser.approval == 0 && checkClassroomUser.type == 1}">
-                    <a href="#" class="button small color" id="join">Request Send</a>
+                    <a href="#" class="button small color" id="join">Request Sent</a>
                     <%--<a href="javascript:handleClass('${classroom.id}', 1)" class="button small color" id="join">Cancel Request</a>--%>
                 </c:if>
                 <c:if test="${checkClassroomUser.approval == 0 && checkClassroomUser.type == 2}">
@@ -356,13 +496,13 @@
         </c:if>
     </c:if>
     <div class="widget widget_highest_points">
-        <h3 class="widget_title">Class Owner</h3>
+        <h3 class="widget_title">Classroom Owner</h3>
         <ul>
             <li>
                 <div class="author-img">
-                    <a href="#"><img width="60" height="60" src="${userOwner.profileImageURL}" alt=""></a>
+                    <a href="/profile/view${userOwner.id}"><img width="60" height="60" src="${userOwner.profileImageURL}" alt=""></a>
                 </div>
-                <h6><a href="#">${userOwner.displayName}</a></h6>
+                <h6><a href="/profile/view${userOwner.id}">${userOwner.displayName}</a></h6>
                 <span class="comment">${userOwner.aboutMe}</span>
             </li>
         </ul>
@@ -424,37 +564,8 @@
 
 <!-- End js -->
 <script>
-    var removeMaterial = function(e) {
-        var formDelete = $(e).parents('td').find('form');
-        $(formDelete).submit();
-        return false;
-    }
     var studentNameList = [];
     $(document).ready(function () {
-        function wrap_pop() {
-            $(".wrap-pop").click(function () {
-                $(".panel-pop").animate({"top":"-100%"},500).hide(function () {
-                    $(this).animate({"top":"-100%"},500);
-                });
-                $(this).remove();
-            });
-        }
-        $("#add-to-folder-click").click(function (e) {
-            $(".panel-pop").animate({"top":"-100%"},10).hide();
-            $("#add-to-folder").show().animate({"top":"50%"},500);
-            $("body").prepend("<div class='wrap-pop'></div>");
-            wrap_pop();
-            var materialId = $(e.currentTarget).parents('td').find("[name='materialId']").val();
-            var listHref = $('#folderList').children();
-            for( var i = 0 ; i < listHref.length ; i++) {
-                if(listHref[i].hasAttribute('href')) {
-                    oldHref = listHref[i].href;
-                    newHref = oldHref + materialId;
-                    listHref[i].href = newHref;
-                }
-            }
-            return false;
-        });
         var student = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -500,7 +611,7 @@
 //            data: "username="+username+"&password="+password,
             success: function(data){
                 if(data == "OK"){
-                    $("#join").text("Request sent!").attr("href", "#");
+                    $("#join").text("Request Sent").attr("href", "#");
 //                    $().toastmessage('showSuccessToast', 'Join class request sent!');
                 }else{
                     $().toastmessage('showErrorToast', "Join class request fail! Please try again late!");
@@ -540,7 +651,7 @@
             }
         });
     }
-    function acceptRequest(el, studentId, requestId){
+    /*function acceptRequest(el, studentId, requestId){
         var url = "/acceptRequest";
         var id = $("#requestId"+requestId).val();
         var ownerClassroomId = $("#ownerClassroomId"+requestId).val();
@@ -564,8 +675,8 @@
                 }
             }
         });
-    }
-    function ignoreRequest(el, requestId){
+    }*/
+    /*function ignoreRequest(el, requestId){
         var url = "/ignoreRequest";
         var id = $("#requestId"+requestId).val();
         var ownerClassroomId = $("#ownerClassroomId"+requestId).val();
@@ -589,8 +700,8 @@
                 }
             }
         });
-    }
-    function reloadStudent(studentId, requestId){
+    }*/
+    /*function reloadStudent(studentId, requestId){
         var url = "/getUserById";
         $.ajax({
             type: "POST",
@@ -614,8 +725,8 @@
                 }
             }
         });
-    }
-    function removeStudent(studentId){
+    }*/
+    /*function removeStudent(studentId){
         var url = "/removeStudent";
         var classId = ${classroom.id};
         var ownerId = ${classroom.ownerUserId.id}
@@ -634,7 +745,7 @@
                 }
             }
         });
-    }
+    }*/
     function handleClass(id, type){
         var url = "/handleClass";
         $.ajax({
@@ -679,177 +790,325 @@
             }
         });
     }
-    function loadMoreStudent(classroomId) {
-        var url = "/classroom/loadMoreStudent/" + classroomId;
+
+    //Load more - MinhKH
+    var nextFromQuestion = 10;
+    var nextFromArticle = 10;
+    var nextFromMaterial = 10;
+    var nextFromRequest = 10;
+    var nextFromStudent = 10;
+    $('#loadMoreQuestion').click(function (e) {
+        var url = "/classroom/question";
+        var classroomId = ${classroom.id};
         $.ajax({
             type: "POST",
             url: url,
-//        data: "classId=" + classId+"&type="+ type,
+            data: {classroomId: classroomId, nextFrom: nextFromQuestion},
             success: function (data) {
-                if (data != null) {
-                    for (i = 0; i < data.length; i++) {
-                        var html1 = $($("#studentTag").find(".tab-inner")[0]).clone();
-                        html1.find(".load-questions").remove();
-//                    html.find(".about-author").attr("id", "student"+data[i].studentId);
-//                    html.find(".removeBtn").attr("href", "javascript:removeStudent("+data[i].studentId+")");
-//                    html.find(".author-bio").html("<h4><a href='#'>"+data[i].studentName+"</a></h4>");
-
-                        var html = "<div class='about-author clearfix' id='student" + data[i].studentId + "'>" +
-                                "<div class='author-image'>" +
-                                "<a href='#' original-title='' class='tooltip-n'><img alt='' src='http://2code.info/demo/html/ask-me/images/demo/admin.jpeg'></a>" +
-                                "</div><a class='' href='javascript:removeStudent(" + data[i].studentId + ")' style='float: right'>Remove</a><div class='author-bio' style='margin-top: 25px'>" +
-                                "<h4><a href='#'>" + data[i].studentName + "</a></h4></div></div>";
-                        if (i == 0) {
-                            $("#studentTag").html("");
-                        }
-                        $("#studentTag").append($(html));
+                var questions = new Array();
+                questions = data;
+                var length = questions.length;
+                if (length > 10) {
+                    length = questions.length - 1;
+                } else {
+                    $('#loadMoreQuestion').hide();
+                }
+                for (var i = 0; i < length; i++) {
+                    var component = '<article class="question question-type-normal">' +
+                            '<h2>' +
+                            '<a href="/post/view/'+ questions[i].id + '">'+ questions[i].title
+                            +'</a>' +
+                            '</h2>' +
+                            '<div class="question-author">' +
+                            '<a href="/profile/view/'+ questions[i].ownerId + '"' +
+                            'original-title="'+ questions[i].ownerName +
+                            '" class="tooltip-n">' +
+                            '<span></span><img alt="" src="' + questions[i].ownerProfileImageURL + '"></a>' +
+                            '</div>' +
+                            '<div class="question-inner">' +
+                            '<div class="clearfix"></div>' +
+                            '<div class="question-desc short-text">'+ questions[i].body + '</div>' +
+                            '<div class="question-details">' +
+                            '<span class="question-answered question-answered-done">';
+                    if (questions[i].acceptedAnswerId===undefined) {
+                        component = component + '<i class="icon-ok"></i>Resolved';
                     }
-                } else if (data != null && data.status == "NG" && data.id == 0) {
-                    window.location.href = "/";
-                } else if (data != null && data.status == "NG" && data.id != 0) {
-                    window.location.href = "/classroom/" + data.id;
+                    component = component + '</span>' +
+                            '</div>' +
+                            '<span class="question-date"><i ' +
+                            'class="icon-time"></i>' + questions[i].lastEditedDate + '</span>' +
+                            '<span class="question-category"><a ' +
+                            'href="/classroom/' + questions[i].classId + '"><i ' +
+                            'class="icon-group"></i>Class: ' + questions[i].className + '</a></span>' +
+                            '<span class="question-comment"><a href="#"><i ' +
+                            'class="icon-comment"></i>' + questions[i].answerCount +
+                            ' Answer(s)</a></span>' +
+                            '<div class="clearfix"></div>' +
+                            '</div>' +
+                            '</article>';
+                    $('#questions').append(component);
+                    $(".tooltip-n").tipsy({fade:true,gravity:"s"});
+                }
+                nextFromQuestion = nextFromQuestion + 10;
+            }
+        })
+    });
+    $('#loadMoreArticle').click(function (e) {
+        var url = "/classroom/article";
+        var classroomId = ${classroom.id};
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {classroomId: classroomId, nextFrom: nextFromArticle},
+            success: function (data) {
+                var articles = new Array();
+                articles = data;
+                var length = articles.length;
+                if (length > 10) {
+                    length = articles.length - 1;
+                } else {
+                    $('#loadMoreArticle').hide();
+                }
+                for (var i = 0; i < length; i++) {
+                    var component = '<article class="post clearfix">'+
+                            '<div class="post-inner">'+
+                            '<h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a '+
+                            'href="/post/view/'+ articles[i].id +'">'+ articles[i].title +'</a></h2>'+
+                            '<div class="post-meta">'+
+                            '<span class="meta-author"><i class="icon-user"></i><a href="#">Author: ' +
+                            articles[i].ownerName + '</a></span>'+
+                            '<span class="meta-date"><i class="icon-time"></i>'+ articles[i].lastEditedDate +'</span>'+
+                            '<span class="meta-comment"><i class="icon-comments-alt"></i><a' +
+                            ' href="#">' + articles[i].answerCount +
+                            ' comment(s)</a></span>'+
+                            '<span class="question-category"><a href="/classroom/' + articles[i].classId + '"><i '+
+                            'class="icon-group"></i>Class: '+ articles[i].className +'</a></span>'+
+                            '</div>'+
+                            '<div class="post-content short-text">'+
+                            '<p>'+ articles[i].body +'</p>'+
+                            '</div>'+
+                            '</div>'+
+                            '</article>';
+                    $('#articles').append(component);
+                    $(".tooltip-n").tipsy({fade:true,gravity:"s"});
+                }
+                nextFromArticle = nextFromArticle + 10;
+            }
+        })
+    });
+    $('#loadMoreMaterial').click(function (e) {
+        var url = "/classroom/material";
+        var classroomId = ${classroom.id};
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {classroomId: classroomId, nextFrom: nextFromMaterial},
+            success: function (data) {
+                var materials = new Array();
+                materials = data;
+                var length = materials.length;
+                if (length > 10) {
+                    length = materials.length - 1;
+                } else {
+                    $('#loadMoreMaterial').hide();
+                }
+                var counter = nextFromMaterial + 1;
+                for (var i = 0; i < length; i++) {
+                    var component = '<tr>' +
+                            '<td>'+ counter + '</td>' +
+                    '<td>'+ materials[i].name + '</td>' +
+                    '<td>'+ materials[i].creationDate + '</td>' +
+                    '<td>' + materials[i].size + '</td>' +
+                    '<td><a id="add-to-folder-click" href="#">Folder</a> / <a href="/download/'+ materials[i].id +
+                    '">Computer</a></td>' +
+                    '</tr>';
+                    $('#materials').append(component);
+                    counter++;
+                }
+                nextFromMaterial = nextFromMaterial + 10;
+            }
+        })
+    });
+    $('#loadMoreRequest').click(function (e) {
+        var url = "/classroom/request";
+        var classroomId = ${classroom.id};
+        var classroomName = "${classroom.classroomName}";
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {classroomId: classroomId, nextFrom: nextFromRequest},
+            success: function (data) {
+                var requests = new Array();
+                requests = data;
+                var length = requests.length;
+                if (length > 10) {
+                    length = requests.length - 1;
+                } else {
+                    $('#loadMoreRequest').hide();
+                }
+                for (var i = 0; i < length; i++) {
+                    var component = '<div class="about-author clearfix">' +
+                            '<div class="author-image">' +
+                            '<a href="/profile/view/'+ requests[i].studentId +'" original-title="'
+                            + requests[i].studentName +'" ' +
+                            'class="tooltip-n"><img alt="" src="'+ requests[i].studentProfileImageURL +'"></a>' +
+                            '</div>' +
+                            '<a class="ignoreRequest" onclick="ignoreRequest(this); return false;" ' +
+                            'style="float: right; cursor: pointer" id="'+ requests[i].id +'">Ignore</a>' +
+                            '<a class="confirmRequest" onclick="confirmRequest(this); return false;" ' +
+                            'style="float: right; margin-right: 15px; cursor: pointer" id="'+ requests[i].id+
+                            '">Confirm</a>' +
+                            '<div class="author-bio">' +
+                            '<h4><a href="/profile/view/'+ requests[i].studentId +'">'+ requests[i].studentName+'</a></h4>' +
+                            'Requested to join <a href="/classroom/'+classroomId+'" style="font-size:' +
+                            ' 15px">'+ classroomName+ '</a>' +
+                            '</div>' +
+                            '</div>';
+                    $('#requests').append(component);
+                    $(".tooltip-n").tipsy({fade:true,gravity:"s"});
+                }
+                nextFromRequest = nextFromRequest + 10;
+            }
+        })
+    });
+    $('#loadMoreStudent').click(function (e) {
+        var url = "/classroom/student";
+        var classroomId = ${classroom.id};
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {classroomId: classroomId, nextFrom: nextFromStudent},
+            success: function (data) {
+                var students = new Array();
+                students = data;
+                var length = students.length;
+                if (length > 10) {
+                    length = students.length - 1;
+                } else {
+                    $('#loadMoreStudent').hide();
+                }
+                for (var i = 0; i < length; i++) {
+                    var component = '<div class="about-author clearfix" id="student'+ students[i].classroomUserId+'">' +
+                            '<div class="author-image">' +
+                            '<a href="/profile/view/'+ students[i].studentId+'" original-title="'+
+                            students[i].studentName +
+                            '" class="tooltip-n">' +
+                            '<img alt="" src="'+students[i].studentProfileImageURL+'"></a>' +
+                            '</div>' +
+                            '<a class="removeStudent" id="'+ students[i].classroomUserId+'" ' +
+                            'onclick="removeStudent(this); return false;" ' +
+                            'style="float: right; cursor:pointer">Remove</a>' +
+                            '<div class="author-bio" style="margin-top: 25px">' +
+                            '<h4><a href="/profile/view/'+ students[i].studentId+'">'+ students[i].studentName+'</a></h4>' +
+                            '</div>' +
+                            '</div>';
+                    $('#students').append(component);
+                    $(".tooltip-n").tipsy({fade:true,gravity:"s"});
+                }
+                nextFromStudent = nextFromStudent + 10;
+            }
+        })
+    });
+
+    var ignoreRequest = function (e){
+        var requestId = $(e).attr('id');
+        $.ajax({
+            type: "POST",
+            url: "/ignoreRequest",
+            data: "requestId="+ requestId,
+            success: function (data){
+                if(data === "OK"){
+                    nextFromRequest--;
+                    var request = $('#request'+requestId);
+                    var studentName = request.find("h4").find("a").text();
+                    var studentHref = request.find("h4").find("a").attr("href");
+                    request.html('You have ignored the request of <a href="'+
+                            studentHref +'">'+
+                            studentName+'</a>.');
+                    request.attr("style","background-color: #FFFFEA")
                 }
             }
         });
-    }
-    function loadMoreStudentRequest(classroomId) {
-        var url = "/classroom/loadMoreStudentRequest/" + classroomId;
+    };
+    var confirmRequest = function (e){
+        var requestId = $(e).attr('id');
         $.ajax({
             type: "POST",
-            url: url,
-            success: function (data) {
-                if (data != null) {
-                    for (i = 0; i < data.length; i++) {
-                        var html1 = $($("#studentRequestTag").find(".tab-inner")[0]).clone();
-                        html1.find(".remove-1").remove();
-                        var html =  "";
-                        html = html + "<form id='acceptForm"+data[i].joinRequest+"' method='post' action='/acceptRequest'>"+
-                        "<input type='hidden' name='requestId' id ='requestId"+data[i].joinRequest+"'  value='"+data[i].joinRequest+"'/>"+
-                        "<input type='hidden' name='ownerClassroomId' id='ownerClassroomId"+data[i].joinRequest+"' value='"+data[i].ownerUserId+"'/>"+
-                        "<input type='hidden' name='currentClassroomId' id='currentClassroomId"+data[i].joinRequest+"' value='"+data[i].classroomId+"'/>"+
-                        "<div class='about-author clearfix'>"+
-                        "<div class='author-image'>"+
-                        "<a href='#' original-title='"+data[i].userDisplayName+"' class='tooltip-n'><img alt='' src='http://2code.info/demo/html/ask-me/images/demo/admin.jpeg'></a>"+
-                        "</div>";
-                        if(data[i].userRoleId == 2){
-                            html = html +  "<a class='' href='#' onclick='javascript:ignoreRequest(acceptForm"+data[i].joinRequest+", "+data[i].joinRequest+");' style='float: right'>Ignore</a>"+
-                                    "<a class='' href='#' onclick='javascript:acceptRequest(acceptForm"+data[i].joinRequest+","+data[i].userId+", "+data[i].joinRequest+");' style='float: right; margin-right: 15px'>Confirm</a>";
-                        }
-
-
-                        html = html + "<div class='author-bio'>"+
-                        "<h4><a href='#'>"+data[i].userDisplayName+"</a></h4>"+
-                        "Requested to join <a href='/classroom/"+data[i].classroomId+"' style='font-size: 15px'>"+data[i].classroomName+"'</a>"+
-                        "</div>"+
-                        "</div>"+
-                        "</form>";
-
-                        if (i == 0) {
-                            $("#studentRequestTag").html("");
-                        }
-                        $("#studentRequestTag").append($(html));
-                    }
+            url: "/confirmRequest",
+            data: "requestId="+ requestId,
+            success: function (data){
+                if(data !== undefined){
+                    nextFromRequest--;
+                    nextFromStudent++;
+                    var student = data;
+                    var request = $('#request'+requestId);
+                    var studentName = request.find("h4").find("a").text();
+                    var studentHref = request.find("h4").find("a").attr("href");
+                    request.html('You have confirmed the request of <a href="'+
+                            studentHref +'">'+
+                            studentName+'</a>.');
+                    request.attr("style","background-color: #e5ffe5")
+                    var newStudent = '<div class="about-author clearfix" id="student'+ student.classroomUserId+'">' +
+                            '<div class="author-image">' +
+                            '<a href="/profile/view/'+ student.studentId+'" original-title="'+
+                            student.studentName +
+                            '" class="tooltip-n">' +
+                            '<img alt="" src="'+student.studentProfileImageURL+'"></a>' +
+                            '</div>' +
+                            '<a class="removeStudent" id="'+ student.classroomUserId+'" ' +
+                            'onclick="removeStudent(this); return false;" ' +
+                            'style="float: right; cursor:pointer">Remove</a>' +
+                            '<div class="author-bio" style="margin-top: 25px">' +
+                            '<h4><a href="/profile/view/'+ student.studentId+'">'+ student.studentName+'</a></h4>' +
+                            '</div>' +
+                            '</div>';
+                    $('#noStudent').remove();
+                    $('#students').prepend(newStudent);
                 }
             }
         });
-    }
-
-    function loadMoreArticle(classroomId) {
-        var url = "/classroom/loadMoreActicle/" + classroomId;
-        $.ajax({
-            type: "POST",
-            url: url,
-            success: function (data) {
-                if (data != null) {
-                    for (i = 0; i < data.length; i++) {
-                        var article = data[i];
-                        $("#loadMoreActicle").remove();
-                        var html =  "";
-                        html = html + "<article class='question question-type-normal'><h2>"+
-                                "<a href='/post/view/"+article.questionId+"'>"+article.questionTitle+"</a></h2>"+
-                                "<div class='question-author'>"+
-                                "<a href='/profile/view/"+article.questionOwnerUserId+"' original-title='"+article.questionOwnerUserName+"' " +
-                                "class='question-author-img tooltip-n'><span></span><img alt='' src='http://2code.info/demo/html/ask-me/images/demo/avatar.png'></a>"+
-                                "</div>"+
-                                "<div class='question-inner'><div class='clearfix'></div><div class='question-desc short-text'>"+article.questionBody+"</div>"+
-                                "<div class='question-details'><span class='question-answered question-answered-done'>"
-                        if(article.questionAcceptedAnswerId != null){
-                            html = html + "<i class='icon-ok'></i>Resolved</span>";
+    };
+    var removeStudent = function(e) {
+        var removeId = $(e).attr('id');
+        $(".panel-Confirm").animate({"top":"-100%"},10).hide();
+        $("#remove-student").show().animate({"top":"34%"},500);
+        $("body").prepend("<div class='wrap-pop'></div>");
+        wrap_pop();
+        var flagPanel =  $('.panelButton').click(function(e) {
+            if ($(e.currentTarget).hasClass('OK')) {
+                $.ajax({
+                    type: "POST",
+                    url: "/removeStudent",
+                    data: 'removeId=' + removeId,
+                    success: function (data) {
+                        if(data != "NG" ){
+                            nextFromStudent--;
+                            var removeElement = $('#student'+removeId);
+                            var studentName = removeElement.find("h4").find("a").text();
+                            var studentHref = removeElement.find("h4").find("a").attr("href");
+                            removeElement.html('You have removed <a href="'+
+                                    studentHref +'">'+
+                                    studentName+'</a> from classroom.');
+                            removeElement.attr("style","background-color: #FFFFEA")
+                        } else {
+                            console.log("Error");
                         }
-                        html = html + "</div>"+
-                                "<span class='question-date'><i class='icon-time'></i>"+article.questionLastEditedDate+"</span>"+
-                                "<span class='question-category'><a href='#'><i class='icon-group'></i>Class: "+article.classroomName+"</a></span>"+
-                                "<span class='question-comment'><a href='#'><i class='icon-comment'></i>"+article.replyCount+" Answer(s)</a></span>"+
-                                "<div class='clearfix'></div></div></article>";
-                        if (i == 0) {
-                            $("#articleTag").html("");
-                        }
-                        $("#articleTag").append($(html));
                     }
-                }
+                });
+                $(".panel-Confirm").animate({"top":"-100%"},500);
+                $(".wrap-pop").remove();
+            } else {
+                $(".panel-Confirm").animate({"top":"-100%"},500);
+                $(".wrap-pop").remove();
             }
-        });
-    }
-    function loadMoreQuestion(classroomId) {
-        var url = "/classroom/loadMoreQuestion/" + classroomId;
-        $.ajax({
-            type: "POST",
-            url: url,
-            success: function (data) {
-                if (data != null) {
-                    for (i = 0; i < data.length; i++) {
-                        var article = data[i];
-                        $("#loadMoreQuestion").remove();
-                        var html =  "";
-                        html = html + "<article class='question question-type-normal'><h2>"+
-                                "<a href='/post/view/"+article.questionId+"'>"+article.questionTitle+"</a></h2>"+
-                                "<div class='question-author'>"+
-                                "<a href='/profile/view/"+article.questionOwnerUserId+"' original-title='"+article.questionOwnerUserName+"' " +
-                                "class='question-author-img tooltip-n'><span></span><img alt='' src='http://2code.info/demo/html/ask-me/images/demo/avatar.png'></a>"+
-                                "</div>"+
-                                "<div class='question-inner'><div class='clearfix'></div><div class='question-desc short-text'>"+article.questionBody+"</div>"+
-                                "<div class='question-details'><span class='question-answered question-answered-done'>"
-                        if(article.questionAcceptedAnswerId != null){
-                            html = html + "<i class='icon-ok'></i>Resolved</span>";
-                        }
-                        html = html + "</div>"+
-                                "<span class='question-date'><i class='icon-time'></i>"+article.questionLastEditedDate+"</span>"+
-                                "<span class='question-category'><a href='#'><i class='icon-group'></i>Class: "+article.classroomName+"</a></span>"+
-                                "<span class='question-comment'><a href='#'><i class='icon-comment'></i>"+article.replyCount+" Answer(s)</a></span>"+
-                                "<div class='clearfix'></div></div></article>";
-                        if (i == 0) {
-                            $("#questionTag").html("");
-                        }
-                        $("#questionTag").append($(html));
-                    }
-                }
-            }
-        });
-    }
-    function loadMoreMaterial(classroomId) {
-        var url = "/classroom/loadMoreMaterial/" + classroomId;
-        $.ajax({
-            type: "POST",
-            url: url,
-            success: function (data) {
-                if (data != null) {
-                    for (i = 0; i < data.length; i++) {
-                        var material = data[i];
-                        $("#loadMoreMaterial").remove();
-                        var row =  "";
-                        row = row + "<tr><td>"+(i+1)+"</td>"+
-                        "<td>"+material.name+"</td>"+
-                        "<td>"+material.creationDate+"</td>"+
-                        "<td>"+material.size+"</td>"+
-                        "<td><a id='add-to-folder-click' href='#'>Folder</a> / <a href='/download/"+material.id+"'> Computer</a></td>"+
-                        "</tr>";
-                        if (i == 0) {
-                            $("#materialTag tbody tr").remove();
-                        }
-                        $("#materialTag tbody").append(row);
-                    }
-                }
-            }
+        })
+    };
+    function wrap_pop() {
+        $(".wrap-pop").click(function () {
+            $(".panel-Confirm").animate({"top":"-100%"},500).hide(function () {
+                $(this).animate({"top":"-100%"},500);
+            });
+            $(this).remove();
         });
     }
 </script>

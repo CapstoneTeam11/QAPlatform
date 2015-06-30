@@ -192,27 +192,56 @@
                 <div class="col-md-12">
                     <div class="boxedtitle page-title"><h2>Article</h2></div>
                     <div class="" style="display: block;">
-                        <div class="tab-inner">
+                        <div class="tab-inner" id="articles">
                             <c:if test="${not empty articles}">
-                                <c:forEach var="article" items="${articles}">
-                                    <article class="post clearfix">
-                                        <div class="post-inner">
-                                            <h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a href="/post/view/${article.id}">${article.title}</a></h2>
-                                            <div class="post-meta">
-                                                <span class="meta-author"><i class="icon-user"></i><a href="/profile/view/${article.ownerUserId.id}">Author: ${article.ownerUserId.displayName}</a></span>
-                                                <span class="meta-date"><i class="icon-time"></i>${article.lastEditedDate}</span>
-                                                <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">${article.replyCount} comment(s)</a></span>
-                                                <span class="question-category"><a href="/classroom/${article.ownerClassId.id}"><i class="icon-group"></i>Class: ${article.ownerClassId.classroomName}</a></span>
-                                            </div>
-                                            <div class="post-content short-text">
-                                                <p>${article.body}</p>
-                                            </div><!-- End post-content -->
-                                        </div><!-- End post-inner -->
-                                    </article>
-                                </c:forEach>
-                                <a href="#" class="post-read-more button color small" style="margin-bottom: 5px;">Continue reading</a>
+                                <c:if test="${fn:length(articles)>10}">
+                                    <c:forEach var="article" items="${articles}" end="9">
+                                        <article class="post clearfix">
+                                            <div class="post-inner">
+                                                <h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a
+                                                        href="/post/view/${article.id}">${article.title}</a></h2>
+                                                <div class="post-meta">
+                                                    <span class="meta-author"><i class="icon-user"></i><a href="#">Author: ${article.ownerName}</a></span>
+                                                    <span class="meta-date"><i class="icon-time"></i>${article.lastEditedDate}</span>
+                                <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">${article.answerCount}
+                                    comment(s)</a></span>
+                                <span class="question-category"><a href="/classroom/${article.classId}"><i
+                                        class="icon-group"></i>Class: ${article.className}</a></span>
+                                                </div>
+                                                <div class="post-content short-text">
+                                                    <p>${article.body}</p>
+                                                </div><!-- End post-content -->
+                                            </div><!-- End post-inner -->
+                                        </article>
+                                    </c:forEach>
+                                </c:if>
+                                <c:if test="${fn:length(articles)<=10}">
+                                    <c:forEach var="article" items="${articles}">
+                                        <article class="post clearfix">
+                                            <div class="post-inner">
+                                                <h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a
+                                                        href="/post/view/${article.id}">${article.title}</a></h2>
+                                                <div class="post-meta">
+                                                    <span class="meta-author"><i class="icon-user"></i><a href="#">Author: ${article.ownerName}</a></span>
+                                                    <span class="meta-date"><i class="icon-time"></i>${article.lastEditedDate}</span>
+                                <span class="meta-comment"><i class="icon-comments-alt"></i><a href="#">${article.answerCount}
+                                    comment(s)</a></span>
+                                <span class="question-category"><a href="/classroom/${article.classId}"><i
+                                        class="icon-group"></i>Class: ${article.className}</a></span>
+                                                </div>
+                                                <div class="post-content short-text">
+                                                    <p>${article.body}</p>
+                                                </div><!-- End post-content -->
+                                            </div><!-- End post-inner -->
+                                        </article>
+                                    </c:forEach>
+                                </c:if>
                             </c:if>
                         </div>
+                        <c:if test="${fn:length(articles)>10}">
+                            <a class="post-read-more button color small"
+                               style="margin-bottom: 5px;" id="loadMoreArticle">Load more</a>
+                        </c:if>
                     </div>
                 </div>
             </div><!-- End #article -->
@@ -224,23 +253,44 @@
                     <div class="boxedtitle page-title"><h2>Material</h2></div>
                     <div class="" style="display: block;">
                         <div class="tab-inner">
-                            <table class="table table-hover">
-                                <tr>
-                                    <th>No</th>
-                                    <th>File name</th>
-                                    <th>Uploaded Date</th>
-                                    <th>File size</th>
-                                </tr>
-                                <c:forEach var="material" items="${materials}" varStatus="counter">
+                            <c:if test="${not empty materials}">
+                                <table class="table table-hover" id="materials">
                                     <tr>
-                                        <td>${counter.count}</td>
-                                        <td>${material.name}</td>
-                                        <td>${material.creationDate}</td>
-                                        <td>${material.size}</td>
+                                        <th>No</th>
+                                        <th>File name</th>
+                                        <th>Uploaded Date</th>
+                                        <th>File size</th>
+                                        <th>Save to</th>
                                     </tr>
-                                </c:forEach>
-                            </table>
+                                    <c:if test="${fn:length(materials)>10}">
+                                        <c:forEach var="material" items="${materials}" end="9" varStatus="counter">
+                                            <tr>
+                                                <td>${counter.count}</td>
+                                                <td>${material.name}</td>
+                                                <td>${material.creationDate}</td>
+                                                <td>${material.size}</td>
+                                                <td><a id="add-to-folder-click" href="#">Folder</a> / <a href="/download/${material.id}"> Computer</a></td>
+                                            </tr>
+                                        </c:forEach>
+                                    </c:if>
+                                    <c:if test="${fn:length(materials)<=10}">
+                                        <c:forEach var="material" items="${materials}" varStatus="counter">
+                                            <tr>
+                                                <td>${counter.count}</td>
+                                                <td>${material.name}</td>
+                                                <td>${material.creationDate}</td>
+                                                <td>${material.size}</td>
+                                                <td><a id="add-to-folder-click" href="#">Folder</a> / <a href="/download/${material.id}"> Computer</a></td>
+                                            </tr>
+                                        </c:forEach>
+                                    </c:if>
+                                </table>
+                            </c:if>
                         </div>
+                        <c:if test="${fn:length(materials)>10}">
+                            <a class="post-read-more button color small"
+                               style="margin-bottom: 5px;" id="loadMoreMaterial">Load more</a>
+                        </c:if>
                     </div>
                 </div>
             </div><!-- End #material -->
@@ -313,64 +363,135 @@
                 $(this).html(text.substr(0, 400) + '.......');
             }
         });
-
-        //Load more
-        var questionPage = 2;
-        $('#loadMoreQuestion').click(function (e) {
-            var url = "newsFeed/question/" + questionPage;
-            $.ajax({
-                type: "GET",
-                url: url,
-                success: function (data) {
-                    var newsFeedQuestion = new Array();
-                    newsFeedQuestion = data;
-                    var length = newsFeedQuestion.length;
-                    if (length > 10) {
-                        length = newsFeedQuestion.length - 1;
-                    } else {
-                        $('#loadMoreQuestion').hide();
-                    }
-                    for (var i = 0; i < length; i++) {
-                        var component = '<article class="question question-type-normal">' +
-                                '<h2>' +
-                                '<a href="/post/view/'+ newsFeedQuestion[i].id + '">'+ newsFeedQuestion[i].title
-                                +'</a>' +
-                                '</h2>' +
-                                '<div class="question-author">' +
-                                '<a href="/profile/view/'+ newsFeedQuestion[i].ownerId + '"' +
-                                'original-title="'+ newsFeedQuestion[i].ownerName +
-                                '" class="tooltip-n">' +
-                                '<span></span><img alt="" src="' + newsFeedQuestion[i].ownerProfileImageURL + '"></a>' +
-                                '</div>' +
-                                '<div class="question-inner">' +
-                                '<div class="clearfix"></div>' +
-                                '<div class="question-desc short-text">'+ newsFeedQuestion[i].body + '</div>' +
-                                '<div class="question-details">' +
-                                '<span class="question-answered question-answered-done">';
-                        if (newsFeedQuestion[i].acceptedAnswerId===undefined) {
-                            component = component + '<i class="icon-ok"></i>Resolved';
-                        }
-                        component = component + '</span>' +
-                                '</div>' +
-                                '<span class="question-date"><i ' +
-                                'class="icon-time"></i>' + newsFeedQuestion[i].lastEditedDate + '</span>' +
-                                '<span class="question-category"><a ' +
-                                'href="/classroom/' + newsFeedQuestion[i].classId + '"><i ' +
-                                'class="icon-group"></i>Class: ' + newsFeedQuestion[i].className + '</a></span>' +
-                                '<span class="question-comment"><a href="#"><i ' +
-                                'class="icon-comment"></i>' + newsFeedQuestion[i].answerCount +
-                                ' Answer(s)</a></span>' +
-                                '<div class="clearfix"></div>' +
-                                '</div>' +
-                                '</article>';
-                        $('#questions').append(component);
-                        $(".tooltip-n").tipsy({fade:true,gravity:"s"});
-                    }
-                    questionPage++;
+    });
+    //Load more
+    var questionPage = 2;
+    var nextFromArticle = 10;
+    var nextFromMaterial = 10;
+    $('#loadMoreQuestion').click(function (e) {
+        var url = "newsFeed/question/" + questionPage;
+        $.ajax({
+            type: "GET",
+            url: url,
+            success: function (data) {
+                var newsFeedQuestion = new Array();
+                newsFeedQuestion = data;
+                var length = newsFeedQuestion.length;
+                if (length > 10) {
+                    length = newsFeedQuestion.length - 1;
+                } else {
+                    $('#loadMoreQuestion').hide();
                 }
-            })
-        });
-
+                for (var i = 0; i < length; i++) {
+                    var component = '<article class="question question-type-normal">' +
+                            '<h2>' +
+                            '<a href="/post/view/'+ newsFeedQuestion[i].id + '">'+ newsFeedQuestion[i].title
+                            +'</a>' +
+                            '</h2>' +
+                            '<div class="question-author">' +
+                            '<a href="/profile/view/'+ newsFeedQuestion[i].ownerId + '"' +
+                            'original-title="'+ newsFeedQuestion[i].ownerName +
+                            '" class="tooltip-n">' +
+                            '<span></span><img alt="" src="' + newsFeedQuestion[i].ownerProfileImageURL + '"></a>' +
+                            '</div>' +
+                            '<div class="question-inner">' +
+                            '<div class="clearfix"></div>' +
+                            '<div class="question-desc short-text">'+ newsFeedQuestion[i].body + '</div>' +
+                            '<div class="question-details">' +
+                            '<span class="question-answered question-answered-done">';
+                    if (newsFeedQuestion[i].acceptedAnswerId===undefined) {
+                        component = component + '<i class="icon-ok"></i>Resolved';
+                    }
+                    component = component + '</span>' +
+                            '</div>' +
+                            '<span class="question-date"><i ' +
+                            'class="icon-time"></i>' + newsFeedQuestion[i].lastEditedDate + '</span>' +
+                            '<span class="question-category"><a ' +
+                            'href="/classroom/' + newsFeedQuestion[i].classId + '"><i ' +
+                            'class="icon-group"></i>Class: ' + newsFeedQuestion[i].className + '</a></span>' +
+                            '<span class="question-comment"><a href="#"><i ' +
+                            'class="icon-comment"></i>' + newsFeedQuestion[i].answerCount +
+                            ' Answer(s)</a></span>' +
+                            '<div class="clearfix"></div>' +
+                            '</div>' +
+                            '</article>';
+                    $('#questions').append(component);
+                    $(".tooltip-n").tipsy({fade:true,gravity:"s"});
+                }
+                questionPage++;
+            }
+        })
+    });
+    $('#loadMoreArticle').click(function (e) {
+        var url = "newsFeed/article/" + nextFromArticle;
+        $.ajax({
+            type: "GET",
+            url: url,
+            success: function (data) {
+                var articles = new Array();
+                articles = data;
+                var length = articles.length;
+                if (length > 10) {
+                    length = articles.length - 1;
+                } else {
+                    $('#loadMoreArticle').hide();
+                }
+                for (var i = 0; i < length; i++) {
+                    var component = '<article class="post clearfix">'+
+                            '<div class="post-inner">'+
+                            '<h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a '+
+                            'href="/post/view/'+ articles[i].id +'">'+ articles[i].title +'</a></h2>'+
+                            '<div class="post-meta">'+
+                            '<span class="meta-author"><i class="icon-user"></i><a href="#">Author: ' +
+                            articles[i].ownerName + '</a></span>'+
+                            '<span class="meta-date"><i class="icon-time"></i>'+ articles[i].lastEditedDate +'</span>'+
+                            '<span class="meta-comment"><i class="icon-comments-alt"></i><a' +
+                            ' href="#">' + articles[i].answerCount +
+                            ' comment(s)</a></span>'+
+                            '<span class="question-category"><a href="/classroom/' + articles[i].classId + '"><i '+
+                            'class="icon-group"></i>Class: '+ articles[i].className +'</a></span>'+
+                            '</div>'+
+                            '<div class="post-content short-text">'+
+                            '<p>'+ articles[i].body +'</p>'+
+                            '</div>'+
+                            '</div>'+
+                            '</article>';
+                    $('#articles').append(component);
+                }
+                nextFromArticle = nextFromArticle + 10;
+            }
+        })
+    });
+    $('#loadMoreMaterial').click(function (e) {
+        var url = "/newsFeed/material/" + nextFromMaterial;
+        $.ajax({
+            type: "GET",
+            url: url,
+            success: function (data) {
+                var materials = new Array();
+                materials = data;
+                var length = materials.length;
+                if (length > 10) {
+                    length = materials.length - 1;
+                } else {
+                    $('#loadMoreMaterial').hide();
+                }
+                var counter = nextFromMaterial + 1;
+                for (var i = 0; i < length; i++) {
+                    var component = '<tr>' +
+                            '<td>'+ counter + '</td>' +
+                            '<td>'+ materials[i].name + '</td>' +
+                            '<td>'+ materials[i].creationDate + '</td>' +
+                            '<td>' + materials[i].size + '</td>' +
+                            '<td><a id="add-to-folder-click" href="#">Folder</a> / <a href="/download/'+ materials[i].id +
+                            '">Computer</a></td>' +
+                            '</tr>';
+                    $('#materials').append(component);
+                    counter++;
+                }
+                nextFromMaterial = nextFromMaterial + 10;
+            }
+        })
     });
 </script>
 

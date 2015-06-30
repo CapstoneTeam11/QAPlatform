@@ -17,7 +17,7 @@ public class Scheduler {
 
     public void updateRedisDB() {
         System.out.println("Start scheduler");
-        newsFeedUtilities.setNewsFeedQuestion();
+        //newsFeedUtilities.setNewsFeedQuestion();
         System.out.println("End scheduler");
     }
 }

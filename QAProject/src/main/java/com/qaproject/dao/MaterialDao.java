@@ -14,6 +14,8 @@ import java.util.List;
 public interface MaterialDao {
     public Material find(Integer id);
     List<Material> findAll();
+    List<Material> findMaterialByClassroom(Integer classroomId, Integer nextFrom);
+    List<Material> findMaterialByCategory (Integer categoryId, Integer nextFrom);
     @Transactional(propagation = Propagation.REQUIRED)
     public void persist(Material entity);
     @Transactional(propagation = Propagation.REQUIRED)

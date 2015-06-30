@@ -522,7 +522,7 @@
         var unFollow = function (e) {
             var teacherId = $(e).attr('id');
             $.ajax({
-                type: "GET",
+                type: "POST",
                 url: "/unfollowTeacher/",
                 data: "teacherId="+ teacherId,
                 success: function (data){

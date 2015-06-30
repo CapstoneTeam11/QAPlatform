@@ -1,15 +1,21 @@
 package com.qaproject.dto;
 
 /**
- * Created by TADUCTUNG on 08-Jun-15.
+ * Created by Minh on 6/28/2015.
  */
-public class StudentDto {
-    private Integer classroomUserId; //this id is used for ClassroomUser, -> classroom dashboard page
+public class RequestDto {
+    private Integer id; //this id is used for ClassroomUser
     private Integer studentId;
     private String studentName;
     private String studentProfileImageURL;
 
+    public Integer getId() {
+        return id;
+    }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Integer getStudentId() {
         return studentId;
@@ -35,12 +41,5 @@ public class StudentDto {
         this.studentProfileImageURL = studentProfileImageURL;
     }
 
-    public Integer getClassroomUserId() {
-        return classroomUserId;
-    }
 
-    public void setClassroomUserId(Integer classroomUserId) {
-        this.classroomUserId = classroomUserId;
-    }
 }
-

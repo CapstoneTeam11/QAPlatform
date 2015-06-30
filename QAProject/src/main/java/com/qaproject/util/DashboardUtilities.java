@@ -44,9 +44,9 @@ public class DashboardUtilities {
         return followerDtos;
     }
 
-    public List<ClassroomDto> loadJoinedClassrooms(Integer studentId, Integer page) {
+    public List<ClassroomDto> loadJoinedClassrooms(Integer studentId, Integer nextFrom) {
         List<ClassroomDto> classroomDtos = new ArrayList<ClassroomDto>();
-        List<ClassroomUser> classroomUsers = classroomUserDao.findJoinedClassroomUserForDashboard(studentId, page);
+        List<ClassroomUser> classroomUsers = classroomUserDao.findJoinedClassroomUserForDashboard(studentId, nextFrom);
         if (classroomUsers!=null){
             for (ClassroomUser classroomUser : classroomUsers) {
                 ClassroomDto classroomDto = ConvertEntityDto.convertClassroomUserEntityToClassroomDto(classroomUser);
@@ -68,9 +68,9 @@ public class DashboardUtilities {
         return classroomDtos;
     }
 
-    public List<ClassroomInvitationDto> loadClassroomInvitations(Integer studentId, Integer page){
+    public List<ClassroomInvitationDto> loadClassroomInvitations(Integer studentId, Integer nextFrom){
         List<ClassroomInvitationDto> classroomInvitationDtos = new ArrayList<ClassroomInvitationDto>();
-        List<ClassroomUser> classroomUsers = classroomUserDao.findInvitationClassroomUserForDashboard(studentId, page);
+        List<ClassroomUser> classroomUsers = classroomUserDao.findInvitationClassroomUserForDashboard(studentId, nextFrom);
         if (classroomUsers!=null) {
             for (ClassroomUser classroomUser : classroomUsers) {
                 ClassroomInvitationDto classroomInvitationDto =
