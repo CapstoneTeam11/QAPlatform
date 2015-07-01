@@ -168,7 +168,7 @@ body {
 	font-size: 13px;
 }
 .panel-pop h2,.login h2,.contact-us h2,#related-posts h2,.user-profile h2 {
-	border-bottom: 2px solid #dedede;
+	border-bottom: 1px solid #000000;
 	margin-bottom: 20px;
 	padding-bottom: 10px;
 	font-size: 20px;
@@ -625,11 +625,11 @@ div[class*="slider_shadow"]:before, div[class^="header_shadow"] {
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 	padding: 20px;
-	border: 1px solid #dedede;
+	border: 1px solid #000000;
 	background: #FFF;
 	-moz-box-shadow: 0 0 5px #dedede;
 	-webkit-box-shadow: 0 0 5px #dedede;
-	box-shadow: 0 0 5px #dedede;
+	box-shadow: 0 0 10px #dedede;
 }
 .page-content .widget,.widget .related-posts {
 	padding: 0 !important;
@@ -665,7 +665,7 @@ div[class*="slider_shadow"]:before, div[class^="header_shadow"] {
 .main-content .page-content .boxedtitle.page-title h2 {
 	padding: 20px 0 10px;
 	margin: 0 20px 20px 0;
-	border-bottom: 2px solid #dedede;
+	border-bottom: 1px solid #000000;
 	font-size: 20px;
 	font-weight: bold;
 }
@@ -698,11 +698,11 @@ div[class*="slider_shadow"]:before, div[class^="header_shadow"] {
 	box-sizing: border-box;
 	margin-bottom: 30px;
 	padding: 20px;
-	border: 1px solid #dedede;
+	border: 1px solid #000000;
 	background: #FFF;
 	-moz-box-shadow: 0 0 5px #dedede;
 	-webkit-box-shadow: 0 0 5px #dedede;
-	box-shadow: 0 0 5px #dedede;
+	box-shadow: 0 0 10px #dedede;
 	position: relative;
 }
 .tab-inner .question:first-child {
@@ -1086,8 +1086,8 @@ div[class*="slider_shadow"]:before, div[class^="header_shadow"] {
 	padding-bottom: 30px;
 	line-height: 22px;
 	font-size: 13px;
-	border-bottom: 1px solid #dedede;
-	color: #848991;
+	border-bottom: 1px solid #000000;
+	color: #000000;
 }
 .question-bottom-2 {
 	margin-top: 15px;
@@ -1599,7 +1599,7 @@ div[class*="slider_shadow"]:before, div[class^="header_shadow"] {
 }
 .comment {
 	margin: 0 -20px;
-	border-bottom: 1px solid #dedede;
+	border-bottom: 1px solid #000000;
 }
 .children .comment {
 	margin: 0;
@@ -1776,11 +1776,11 @@ div[class*="slider_shadow"]:before, div[class^="header_shadow"] {
 	margin-bottom: 30px;
 	color: #2f3239;
 	padding: 20px;
-	border: 1px solid #dedede;
+	border: 1px solid #000000;
 	background: #FFF;
 	-moz-box-shadow: 0 0 5px #dedede;
 	-webkit-box-shadow: 0 0 5px #dedede;
-	box-shadow: 0 0 5px #dedede;
+	box-shadow: 0 0 10px #dedede;
 }
 .widget:last-child {
 	margin-bottom: 0;
@@ -1790,7 +1790,7 @@ div[class*="slider_shadow"]:before, div[class^="header_shadow"] {
 	font-size: 16px;
 	font-weight: bold;
 	padding: 20px 0 10px;
-	border-bottom: 2px solid #dedede;
+	border-bottom: 1px solid #000000;
 	position: relative;
 }
 .widget a {
@@ -4671,11 +4671,11 @@ a.carousel-next {
 	color: #2f3239;
 	font-size: 13px;
 	padding: 20px;
-	border: 1px solid #dedede;
+	border: 1px solid #000000;
 	background: #FFF;
 	-moz-box-shadow: 0 0 5px #dedede;
 	-webkit-box-shadow: 0 0 5px #dedede;
-	box-shadow: 0 0 5px #dedede;
+	box-shadow: 0 0 10px #dedede;
 	position: relative;
 }
 .single-post {
@@ -4709,7 +4709,7 @@ a.carousel-next {
 	margin-right: 10px;
 }
 .post-title {
-	border-bottom: 2px solid #dedede;
+	border-bottom: 1px solid #000000;
 	margin-bottom: 20px;
 	padding-bottom: 10px;
 	font-size: 20px;
@@ -4757,7 +4757,7 @@ a.carousel-next {
 }
 .post-content {
 	line-height: 23px;
-	color: #848991;
+	color: #000000;
 	margin: 30px 0;
 }
 .post-content *:last-child {
@@ -5246,4 +5246,7 @@ html[xmlns] .slides {
 
 .closedStatus {
     color: #ff7f7f;
+}
+.button.color:hover{
+    background: #4c95a9;
 }

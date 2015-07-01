@@ -532,7 +532,7 @@
                         var teacherName = followedTeacher.find("h4").find("a").text();
                         followedTeacher.html('You have unfollowed <a href="/profile/view/'+ teacherId +'">'+
                                 teacherName+'</a>.');
-                        followedTeacher.attr("style","background-color: #FFFFEA")
+                        followedTeacher.attr("style","background-color: #ffff9e")
                     }
                 }
             });
@@ -551,7 +551,7 @@
                         var questionTitle = invitation.find("h4").find("a").text();
                         invitation.html('You have denied answering <a href="'+ questionHref +'">'+
                                 questionTitle+'</a>.');
-                        invitation.attr("style","background-color: #FFFFEA")
+                        invitation.attr("style","background-color: #ffff9e")
                     }
                 }
             });

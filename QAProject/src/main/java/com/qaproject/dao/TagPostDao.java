@@ -1,5 +1,7 @@
 package com.qaproject.dao;
 
+import com.qaproject.dto.TagDto;
+import com.qaproject.entity.Post;
 import com.qaproject.entity.TagPost;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -15,6 +17,7 @@ public interface TagPostDao {
     public TagPost find(Integer id);
     List<TagPost> findAll();
     public List<Integer> findRelatedPostIds(List<Integer> tagIds);
+    public List<TagDto> findTagGroupByQuestions(List<Post> questions);
     @Transactional(propagation = Propagation.REQUIRED)
     public void persist(TagPost entity);
     @Transactional(propagation = Propagation.REQUIRED)

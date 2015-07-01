@@ -465,7 +465,7 @@
                         var teacherName = followedTeacher.find("h4").find("a").text();
                         followedTeacher.html('You have unfollowed <a href="/profile/view/'+ teacherId +'">'+
                                 teacherName+'</a>.');
-                        followedTeacher.attr("style","background-color: #FFFFEA")
+                        followedTeacher.attr("style","background-color: #ffff9e")
                     }
                 }
             });
@@ -485,7 +485,7 @@
                         invitation.html('You have ignored the invitation to join <a href="'+
                                 classroomHref +'">'+
                                 classroomName+'</a>.');
-                        invitation.attr("style","background-color: #FFFFEA")
+                        invitation.attr("style","background-color: #ffff9e")
                     }
                 }
             });
@@ -508,7 +508,7 @@
                         invitation.html('You have joined <a href="'+
                                 classroomHref +'">'+
                                 classroomName+'</a>.');
-                        invitation.attr("style","background-color: #e5ffe5")
+                        invitation.attr("style","background-color: #99ff99")
                         var newJoinedClassroom = '<div class="about-author clearfix" id="classroom'+
                                 classroomId +'">' +
                                 '<div class="" style="float: left;padding-right: 20px;">' +
@@ -551,7 +551,7 @@
                                 classroom.html('You have left classroom <a href="'+
                                         classroomHref +'">'+
                                         classroomName+'</a>.');
-                                classroom.attr("style","background-color: #FFFFEA")
+                                classroom.attr("style","background-color: #ffff9e")
                             } else {
                                 console.log("Error");
                             }

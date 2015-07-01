@@ -59,10 +59,7 @@ public class HelloController {
     public String article(ModelMap model) {
         return "article";
     }
-    @RequestMapping(value = "/tracking",method = RequestMethod.GET)
-    public String tracking(ModelMap model) {
-        return "tracking";
-    }
+
 
 //    @RequestMapping(value = "/studentdashboard",method = RequestMethod.GET)
 //    public String studentdashboard(ModelMap model) {
