@@ -407,7 +407,7 @@
             <c:if test="${sessionScope.user.id==post.ownerClassId.ownerUserId.id}">
                 <div class="widget">
                     <h3 class="widget_title">Ask Teacher</h3>
-                    <a href="" id="InviteTagClick" class="button small color"> Ask Someone</a>
+                    <a href="" id="InviteTagClick" class="button small color" style="color: white"> Ask Someone</a>
                 </div>
             </c:if>
 
