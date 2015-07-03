@@ -167,15 +167,19 @@ public class PostDaoImpl extends BaseDao<Post,Integer> implements PostDao{
     }
 
     @Override
-    public List<Post> findQuestionsByOwnerUser(Integer ownerUserId, Integer nextFrom) {
-        Query query = entityManager.createQuery("Select p from Post p where p.postType=1 and" +
-                " p.ownerUserId.id=:ownerUserId order by p.id desc");
+    public List<Post> findQuestionsByOwnerUser(Integer ownerUserId, Integer lastId) {
+        Query query;
+        if (lastId==0) {
+            query = entityManager.createQuery("Select p from Post p where p.postType=1 and" +
+                    " p.ownerUserId.id=:ownerUserId order by p.id desc");
+        } else {
+            query = entityManager.createQuery("Select p from Post p where p.postType=1 and" +
+                    " p.ownerUserId.id=:ownerUserId and p.id<:lastId order by p.id desc");
+
+            query.setParameter("lastId", lastId);
+        }
         query.setParameter("ownerUserId",ownerUserId);
         List<Post> questions = null;
-        if (nextFrom < 0) {
-            nextFrom = 0;
-        }
-        query.setFirstResult(nextFrom);
         query.setMaxResults(11);
         try {
             questions = query.getResultList();
@@ -186,15 +190,19 @@ public class PostDaoImpl extends BaseDao<Post,Integer> implements PostDao{
     }
 
     @Override
-    public List<Post> findArticlesByOwnerUser(Integer ownerUserId, Integer nextFrom) {
-        Query query = entityManager.createQuery("Select p from Post p where p.postType=2 and" +
-                " p.ownerUserId.id=:ownerUserId order by p.id desc");
+    public List<Post> findArticlesByOwnerUser(Integer ownerUserId, Integer lastId) {
+        Query query;
+        if (lastId==0) {
+            query = entityManager.createQuery("Select p from Post p where p.postType=2 and" +
+                    " p.ownerUserId.id=:ownerUserId order by p.id desc");
+        } else {
+            query = entityManager.createQuery("Select p from Post p where p.postType=2 and" +
+                    " p.ownerUserId.id=:ownerUserId and p.id<:lastId order by p.id desc");
+
+            query.setParameter("lastId", lastId);
+        }
         query.setParameter("ownerUserId",ownerUserId);
         List<Post> articles = null;
-        if (nextFrom < 0) {
-            nextFrom = 0;
-        }
-        query.setFirstResult(nextFrom);
         query.setMaxResults(11);
         try {
             articles = query.getResultList();

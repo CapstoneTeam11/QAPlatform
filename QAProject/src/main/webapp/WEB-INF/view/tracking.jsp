@@ -58,7 +58,7 @@
         <section class="container" style="height:70px; display: flex; align-items: center">
             <div class="row">
                 <div class="col-md-12">
-                    <h3></h3>
+                    <h3>Top student's question topics</h3>
                 </div>
             </div><!-- End row -->
         </section><!-- End container -->
@@ -76,34 +76,31 @@
                 </div><!-- End page-content -->
             </div><!-- End main -->
             <aside class="col-md-3 sidebar">
-                <div class="widget">
-                    <h3 class="widget_title">About class</h3>
-                    <ul class="related-posts">
-                        <li class="related-item">
-                            <p></p>
-                            <div class="clear"></div><span>Feb 22, 2014</span>
-                        </li>
-                    </ul>
-                </div>
-                <c:if test="">
-                    <div class="widget widget_login" style="  min-height: 130px;">
-                        <h3 class="widget_title">Invite student</h3>
-                        <div class="pull-right" style="width: 100%;">
-                            <a href="#" id="create-folder-click" class="button medium color" style="width: 100%;text-align: center;"><i class="icon-plus-sign"></i> Invite</a>
-                        </div>
-                    </div>
-                </c:if>
                 <div class="widget widget_highest_points">
-                    <h3 class="widget_title">Class Owner</h3>
+                    <h3 class="widget_title">Hi, ${sessionScope.user.displayName}</h3>
                     <ul>
                         <li>
                             <div class="author-img">
-                                <a href="#"><img width="60" height="60" src="" alt=""></a>
+                                <a href="/profile/view/${sessionScope.user.id}"><img width="60" height="60"
+                                                                                     src="${sessionScope.user.profileImageURL}" alt=""></a>
                             </div>
-                            <h6><a href="#"></a></h6>
-                            <span class="comment"></span>
+                            <h6><a href="/profile/update">Edit profile</a></h6>
                         </li>
                     </ul>
+                </div>
+
+
+
+                <div class="widget widget_tag_cloud">
+                    <h3 class="widget_title">Tags</h3>
+                    <a href="#">projects</a>
+                    <a href="#">Portfolio</a>
+                    <a href="#">Wordpress</a>
+                    <a href="#">Html</a>
+                    <a href="#">Css</a>
+                    <a href="#">jQuery</a>
+                    <a href="#">2code</a>
+                    <a href="#">vbegy</a>
                 </div>
 
             </aside><!-- End sidebar -->
@@ -125,27 +122,40 @@
 <!-- End js -->
 <script type="text/javascript">
     window.onload = function () {
-        var chart = new CanvasJS.Chart("chartContainer",
-                {
-                    title:{
-                        text: "Olympic Medals of all Times (till 2012 Olympics)"
-                    },
-                    data: [
+        var dps = [];
+        $.ajax({
+            type: "POST",
+            url: "/tracking/load",
+            success: function(data){
+                var tags = data;
+                for (var i=0; i<tags.length;i++){
+                    var dp = {y: tags[i].count, label: tags[i].name};
+                    dps.push(dp);
+                }
+                var chart = new CanvasJS.Chart("chartContainer",
                         {
-                            type: "bar",
-                            dataPoints: [
-                                { y: 198, label: "Javascript"},
-                                { y: 201, label: "PHP"},
-                                { y: 202, label: "MVC"},
-                                { y: 236, label: "C#"},
-                                { y: 395, label: "Java"},
-                                { y: 957, label: "Spring"}
+                            animationEnabled: true,
+                            animationDuration: 2000,
+                            exportFileName: "Top_students_question_topics",
+                            exportEnabled: true,
+                            axisY:{
+                                title: "Number of topic"
+                            },
+                            title:{
+                                text: "Top students' question topics"
+                            },
+                            data: [
+                                {
+                                    type: "bar",
+                                    dataPoints: dps
+                                }
                             ]
-                        }
-                    ]
-                });
+                        });
+                chart.render();
+                $(".canvasjs-chart-credit").hide();
+            }
+        });
 
-        chart.render();
     }
 </script>
 </body>

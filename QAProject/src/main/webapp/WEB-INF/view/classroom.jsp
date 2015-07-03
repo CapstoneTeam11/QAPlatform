@@ -1042,7 +1042,7 @@
                     request.html('You have ignored the request of <a href="'+
                             studentHref +'">'+
                             studentName+'</a>.');
-                    request.attr("style","background-color: #FFFFEA")
+                    request.attr("style","background-color: #ffff9e")
                 }
             }
         });
@@ -1064,7 +1064,7 @@
                     request.html('You have confirmed the request of <a href="'+
                             studentHref +'">'+
                             studentName+'</a>.');
-                    request.attr("style","background-color: #e5ffe5")
+                    request.attr("style","background-color: #99ff99")
                     var newStudent = '<div class="about-author clearfix" id="student'+ student.classroomUserId+'">' +
                             '<div class="author-image">' +
                             '<a href="/profile/view/'+ student.studentId+'" original-title="'+
@@ -1106,7 +1106,7 @@
                             removeElement.html('You have removed <a href="'+
                                     studentHref +'">'+
                                     studentName+'</a> from classroom.');
-                            removeElement.attr("style","background-color: #FFFFEA")
+                            removeElement.attr("style","background-color: #ffff9e")
                         } else {
                             console.log("Error");
                         }

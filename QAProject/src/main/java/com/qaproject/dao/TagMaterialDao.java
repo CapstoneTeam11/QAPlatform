@@ -14,6 +14,7 @@ import java.util.List;
 public interface TagMaterialDao {
     public TagMaterial find(Integer id);
     List<TagMaterial> findAll();
+    public List<Integer> findRelatedMaterialIds (List<Integer> tagIds);
     @Transactional(propagation = Propagation.REQUIRED)
     public void persist(TagMaterial entity);
     @Transactional(propagation = Propagation.REQUIRED)

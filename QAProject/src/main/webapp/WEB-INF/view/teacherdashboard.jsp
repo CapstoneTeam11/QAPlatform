@@ -367,7 +367,7 @@
 <script>
     /*$(document).ready(function () {*/
         var nextFromFollowedTeacher = 10;
-        var ownedClassroomPage = 2;
+        var lastOwnedClassroomId = ${lastOwnedClassroomId};
         var nextFromInvitation = 10;
         $('#loadMoreTeacher').click(function (e) {
             var url = "dashboard/followedTeacher/" + nextFromFollowedTeacher;
@@ -412,7 +412,7 @@
             })
         });
         $('#loadMoreClassroom').click(function (e) {
-            var url = "dashboard/ownedClassroom/" + ownedClassroomPage;
+            var url = "dashboard/ownedClassroom/" + lastOwnedClassroomId;
             $.ajax({
                 type: "GET",
                 url: url,
@@ -425,6 +425,7 @@
                     } else {
                         $('#loadMoreClassroom').hide();
                     }
+                    lastOwnedClassroomId = ownedClassrooms[length-1].id;
                     for (var i = 0; i < length; i++) {
                         var component = '<div class="about-author clearfix" id="classroom'+ ownedClassrooms[i].id +'">'+
                                 '<div class="" style="float: left;padding-right: 20px;">'+
@@ -465,7 +466,6 @@
 
                         $('#ownedClassrooms').append(component);
                     }
-                    ownedClassroomPage++;
                 }
             })
         });
@@ -518,7 +518,7 @@
                         var teacherName = followedTeacher.find("h4").find("a").text();
                         followedTeacher.html('You have unfollowed <a href="/profile/view/'+ teacherId +'">'+
                                 teacherName+'</a>.');
-                        followedTeacher.attr("style","background-color: #FFFFEA")
+                        followedTeacher.attr("style","background-color: #ffff9e")
                     }
                 }
             });
@@ -537,7 +537,7 @@
                         var questionTitle = invitation.find("h4").find("a").text();
                         invitation.html('You have denied answering <a href="'+ questionHref +'">'+
                                 questionTitle+'</a>.');
-                        invitation.attr("style","background-color: #FFFFEA")
+                        invitation.attr("style","background-color: #ffff9e")
                     }
                 }
             });

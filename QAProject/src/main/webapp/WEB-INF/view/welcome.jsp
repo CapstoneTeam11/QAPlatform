@@ -106,7 +106,7 @@
                     </div>
                     <div class="col-md-1" style="padding-top: 25px">
                         <%--<a href="javascript:checkLogin();" class="button small color" style="height: 30px">Login</a>--%>
-                        <input type="submit" id="publish-question" value="Login"
+                        <input type="submit" id="" value="Login"
                                class="button color small submit" tabindex="3">
                     </div>
                 </div>

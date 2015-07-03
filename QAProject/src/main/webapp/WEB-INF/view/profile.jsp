@@ -394,17 +394,17 @@
     }
 
     //Load more - MinhKH
-    var nextFromQuestion = 10;
-    var nextFromArticle = 10;
-    var nextFromJoinedClassroom = 10;
-    var ownedClassroomPage = 2;
+    var lastJoinedClassroomId = ${lastClassroomId};
+    var lastOwnedClassroomId = ${lastClassroomId};
+    var lastQuestionId = ${lastQuestionId};
+    var lastArticleId = ${lastArticleId};
     $('#loadMoreQuestion').click(function (e) {
         var url = "/profile/question";
         var userProfileId = ${userProfile.id};
         $.ajax({
             type: "POST",
             url: url,
-            data: {userProfileId: userProfileId, nextFrom: nextFromQuestion},
+            data: {userProfileId: userProfileId, lastId: lastQuestionId},
             success: function (data) {
                 var questions = new Array();
                 questions = data;
@@ -414,6 +414,7 @@
                 } else {
                     $('#loadMoreQuestion').hide();
                 }
+                lastQuestionId = questions[length-1].id;
                 for (var i = 0; i < length; i++) {
                     var component = '<article class="question question-type-normal">' +
                             '<h2>' +
@@ -450,7 +451,6 @@
                     $('#questions').append(component);
                     $(".tooltip-n").tipsy({fade:true,gravity:"s"});
                 }
-                nextFromQuestion = nextFromQuestion + 10;
             }
         })
     });
@@ -460,7 +460,7 @@
         $.ajax({
             type: "POST",
             url: url,
-            data: {userProfileId: userProfileId, nextFrom: nextFromArticle},
+            data: {userProfileId: userProfileId, lastId: lastArticleId},
             success: function (data) {
                 var articles = new Array();
                 articles = data;
@@ -470,6 +470,7 @@
                 } else {
                     $('#loadMoreArticle').hide();
                 }
+                lastArticleId = articles[length-1].id;
                 for (var i = 0; i < length; i++) {
                     var component = '<article class="post clearfix">'+
                             '<div class="post-inner">'+
@@ -502,7 +503,7 @@
         $.ajax({
             type: "POST",
             url: url,
-            data: {userProfileId: userProfileId, page: ownedClassroomPage},
+            data: {userProfileId: userProfileId, lastId: lastOwnedClassroomId},
             success: function (data) {
                 var ownedClassrooms = new Array();
                 ownedClassrooms = data;
@@ -512,6 +513,7 @@
                 } else {
                     $('#loadMoreOwnedClassroom').hide();
                 }
+                lastOwnedClassroomId = ownedClassrooms[length-1].id;
                 for (var i = 0; i < length; i++) {
                     var component = '<div class="about-author clearfix" id="classroom'+ ownedClassrooms[i].id +'">'+
                             '<div class="" style="float: left;padding-right: 20px;">'+
@@ -548,7 +550,6 @@
 
                     $('#classrooms').append(component);
                 }
-                ownedClassroomPage++;
             }
         })
     });
@@ -558,7 +559,7 @@
         $.ajax({
             type: "POST",
             url: url,
-            data: {userProfileId: userProfileId, nextFrom: nextFromJoinedClassroom},
+            data: {userProfileId: userProfileId, lastId: lastJoinedClassroomId},
             success: function (data) {
                 var joinedClassrooms = new Array();
                 joinedClassrooms = data;
@@ -568,6 +569,7 @@
                 } else {
                     $('#loadMoreJoinedClassroom').hide();
                 }
+                lastJoinedClassroomId = joinedClassrooms[length-1].joinedId;
                 for (var i = 0; i < length; i++) {
                     $('#classrooms').append('<div class="about-author clearfix" id="classroom'+
                             joinedClassrooms[i].id +'">' +
@@ -584,7 +586,6 @@
                             '</div>' +
                             '</div>');
                 }
-                nextFromJoinedClassroom= nextFromJoinedClassroom +10;
             }
         })
     });

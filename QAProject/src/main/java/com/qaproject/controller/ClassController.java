@@ -392,27 +392,28 @@ public class ClassController {
         return new ReturnObjectWithStatus("OK", classroom.getId());
     }
 
-    @RequestMapping(value = "dashboard/joinedClassroom/{nextFrom}",produces = "application/json",
+    @RequestMapping(value = "dashboard/joinedClassroom/{lastId}",produces = "application/json",
             method = RequestMethod.GET)
     public @ResponseBody
-    List<ClassroomDto> loadJoinedClassroom(@PathVariable Integer nextFrom) {
+    List<ClassroomDto> loadJoinedClassroom(@PathVariable Integer lastId) {
         User user = (User) session.getAttribute("user");
         List<ClassroomDto> classroomDtos = null;
         try {
-            classroomDtos = dashboardUtilities.loadJoinedClassrooms(user.getId(), nextFrom);
+            classroomDtos = dashboardUtilities.loadJoinedClassrooms(user.getId(), lastId);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return classroomDtos;
     }
 
-    @RequestMapping(value = "dashboard/ownedClassroom/{page}",produces = "application/json",method = RequestMethod.GET)
+    @RequestMapping(value = "dashboard/ownedClassroom/{lastId}",produces = "application/json",
+            method = RequestMethod.GET)
     public @ResponseBody
-    List<ClassroomDto> loadOwnedClassroom(@PathVariable Integer page) {
+    List<ClassroomDto> loadOwnedClassroom(@PathVariable Integer lastId) {
         User user = (User) session.getAttribute("user");
         List<ClassroomDto> classroomDtos = null;
         try {
-            classroomDtos = dashboardUtilities.loadOwnedClassrooms(user.getId(), page);
+            classroomDtos = dashboardUtilities.loadOwnedClassrooms(user.getId(), lastId);
         } catch (Exception e) {
             e.printStackTrace();
         }

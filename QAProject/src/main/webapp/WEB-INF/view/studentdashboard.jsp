@@ -316,7 +316,7 @@
 <script>
     /*$(document).ready(function () {*/
         var nextFromFollowedTeacher = 10;
-        var nextFromJoinedClassroom = 10;
+        var lastJoinedClassroomId = ${lastJoinedClassroomId};
         var nextFromInvitation = 10;
         $('#loadMoreTeacher').click(function (e) {
             var url = "dashboard/followedTeacher/" + nextFromFollowedTeacher;
@@ -361,7 +361,7 @@
             })
         });
         $('#loadMoreClassroom').click(function (e) {
-            var url = "dashboard/joinedClassroom/" + nextFromJoinedClassroom;
+            var url = "dashboard/joinedClassroom/" + lastJoinedClassroomId;
             $.ajax({
                 type: "GET",
                 url: url,
@@ -374,6 +374,7 @@
                     } else {
                         $('#loadMoreClassroom').hide();
                     }
+                    lastJoinedClassroomId = joinedClassrooms[length-1].joinedId;
                     for (var i = 0; i < length; i++) {
                         $('#joinedClassrooms').append('<div class="about-author clearfix" id="classroom'+
                                 joinedClassrooms[i].id +'">' +
@@ -392,7 +393,6 @@
                                 '</div>' +
                                 '</div>');
                     }
-                    nextFromJoinedClassroom= nextFromJoinedClassroom +10;
                 }
             })
         });
@@ -451,7 +451,7 @@
                         var teacherName = followedTeacher.find("h4").find("a").text();
                         followedTeacher.html('You have unfollowed <a href="/profile/view/'+ teacherId +'">'+
                                 teacherName+'</a>.');
-                        followedTeacher.attr("style","background-color: #FFFFEA")
+                        followedTeacher.attr("style","background-color: #ffff9e")
                     }
                 }
             });
@@ -471,7 +471,7 @@
                         invitation.html('You have ignored the invitation to join <a href="'+
                                 classroomHref +'">'+
                                 classroomName+'</a>.');
-                        invitation.attr("style","background-color: #FFFFEA")
+                        invitation.attr("style","background-color: #ffff9e")
                     }
                 }
             });
@@ -494,7 +494,7 @@
                         invitation.html('You have joined <a href="'+
                                 classroomHref +'">'+
                                 classroomName+'</a>.');
-                        invitation.attr("style","background-color: #e5ffe5")
+                        invitation.attr("style","background-color: #99ff99")
                         var newJoinedClassroom = '<div class="about-author clearfix" id="classroom'+
                                 classroomId +'">' +
                                 '<div class="" style="float: left;padding-right: 20px;">' +
@@ -537,7 +537,7 @@
                                 classroom.html('You have left classroom <a href="'+
                                         classroomHref +'">'+
                                         classroomName+'</a>.');
-                                classroom.attr("style","background-color: #FFFFEA")
+                                classroom.attr("style","background-color: #ffff9e")
                             } else {
                                 console.log("Error");
                             }
