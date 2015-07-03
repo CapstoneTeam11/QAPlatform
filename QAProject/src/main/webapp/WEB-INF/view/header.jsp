@@ -10,6 +10,7 @@
         <section class="container clearfix">
             <div class="logo"
                  style="line-height: 50px"><a href="/newsfeed"><img alt="" src="/resource/assets/images/logo.png"></a></div>
+            <c:if test="${sessionScope.user!=null}">
             <nav class="">
                 <ul class="nav nav-pills notification" >
                     <li class="dropdown pull-right">
@@ -38,6 +39,7 @@
                     </li>
                 </ul>
             </nav>
+            </c:if>
         </section><!-- End container -->
     </header><!-- End header -->
 </div> <!-- End fixed container for header-->

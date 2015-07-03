@@ -1,48 +1,49 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<%--<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>--%>
+<%--<!DOCTYPE html>--%>
+<%--<html lang="en">--%>
+<%--<head>--%>
 
-    <!-- Basic Page Needs -->
-    <meta charset="utf-8">
-    <title>Ask me – Responsive Questions and Answers Template</title>
-    <meta name="description" content="Ask me Responsive Questions and Answers Template">
-    <meta name="author" content="2code.info">
+    <%--<!-- Basic Page Needs -->--%>
+    <%--<meta charset="utf-8">--%>
+    <%--<title>Ask me – Responsive Questions and Answers Template</title>--%>
+    <%--<meta name="description" content="Ask me Responsive Questions and Answers Template">--%>
+    <%--<meta name="author" content="2code.info">--%>
 
 
 
-    <!-- Mobile Specific Metas -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <%--<!-- Mobile Specific Metas -->--%>
+    <%--<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">--%>
 
-    <!-- Main Style -->
-    <link rel="stylesheet" href="/resource/assets/css/style.css">
+    <%--<!-- Main Style -->--%>
+    <%--<link rel="stylesheet" href="/resource/assets/css/style.css">--%>
 
-    <!-- Skins -->
-    <link rel="stylesheet" href="/resource/assets/css/skins/skins.css">
+    <%--<!-- Skins -->--%>
+    <%--<link rel="stylesheet" href="/resource/assets/css/skins/skins.css">--%>
 
-    <!-- Responsive Style -->
-    <link rel="stylesheet" href="/resource/assets/css/responsive.css">
+    <%--<!-- Responsive Style -->--%>
+    <%--<link rel="stylesheet" href="/resource/assets/css/responsive.css">--%>
 
-    <!-- Boostrap Style -->
-    <link rel="stylesheet" href="/resource/assets/css/bootstrap.min.css">
+    <%--<!-- Boostrap Style -->--%>
+    <%--<link rel="stylesheet" href="/resource/assets/css/bootstrap.min.css">--%>
 
-    <!-- Boostrap Theme Style -->
-    <link rel="stylesheet" href="/resource/assets/css/bootstrap-theme.min.css">
+    <%--<!-- Boostrap Theme Style -->--%>
+    <%--<link rel="stylesheet" href="/resource/assets/css/bootstrap-theme.min.css">--%>
 
-    <!-- Notification Style -->
-    <link rel="stylesheet" href="/resource/assets/css/notification.css">
+    <%--<!-- Notification Style -->--%>
+    <%--<link rel="stylesheet" href="/resource/assets/css/notification.css">--%>
+    <%--<!-- Left Notification style -->--%>
+    <%--<link rel="stylesheet" href="/resource/assets/css/jquery.growl.css"/>--%>
+    <%--<!-- Favicons -->--%>
+    <%--<link rel="shortcut icon" href="http://2code.info/demo/html/ask-me/images/favicon.ico">--%>
+    <%--<link rel="stylesheet" href="/resource/assets/js/bootstrap-tagsinput.css">--%>
+    <%--<link rel="stylesheet" href="/resource/assets/css/tag.css">--%>
 
-    <!-- Favicons -->
-    <link rel="shortcut icon" href="http://2code.info/demo/html/ask-me/images/favicon.ico">
-    <link rel="stylesheet" href="/resource/assets/js/bootstrap-tagsinput.css">
-    <link rel="stylesheet" href="/resource/assets/css/tag.css">
+<%--</head>--%>
 
-</head>
+<%--<body>--%>
 
-<body>
-
-<div class="loader"><div class="loader_html"></div></div>
-
+<%--<div class="loader"><div class="loader_html"></div></div>--%>
+<%@include file="css.jsp" %>
 <div id="wrap">
 
     <div class="panel-pop" id="signup">
@@ -233,31 +234,10 @@
 <div class="go-up"><i class="icon-chevron-up"></i></div>
 
 <!-- js -->
-<script src="/resource/assets/ckeditor/ckeditor.js"></script>
-<script src="/resource/assets/js/jquery.min.js"></script>
-<script src="/resource/assets/js/bootstrap.min.js"></script>
-<script src="/resource/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
-<script src="/resource/assets/js/jquery.easing.1.3.min.js"></script>
-<script src="/resource/assets/js/html5.js"></script>
-<script src="/resource/assets/js/twitter/jquery.tweet.js"></script>
-<script src="/resource/assets/js/jflickrfeed.min.js"></script>
-<script src="/resource/assets/js/jquery.inview.min.js"></script>
-<script src="/resource/assets/js/jquery.tipsy.js"></script>
-<script src="/resource/assets/js/tabs.js"></script>
-<script src="/resource/assets/js/jquery.flexslider.js"></script>
-<script src="/resource/assets/js/jquery.prettyPhoto.js"></script>
-<script src="/resource/assets/js/jquery.carouFredSel-6.2.1-packed.js"></script>
-<script src="/resource/assets/js/jquery.scrollTo.js"></script>
-<script src="/resource/assets/js/jquery.nav.js"></script>
-<script src="/resource/assets/js/tags.js"></script>
-<script src="/resource/assets/js/jquery.bxslider.min.js"></script>
-<script src="/resource/assets/js/custom.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.4/typeahead.bundle.min.js"></script>
-<script src="/resource/assets/js/bootstrap-tagsinput.js"></script>
-<script src="/resource/assets/js/bootstrap-tagsinput.min.js"></script>
-<script src="/resource/assets/js/bootstrapValidator.js"></script>
-<script src="/resource/assets/js/validator.js"></script>
-<script src="/resource/assets/js/handlebars-v3.0.3.js"></script>
+<%@include file="js.jsp" %>
+<c:if test="${sessionScope.user!=null}">
+    <script src="/resource/assets/js/notification.js"></script>
+</c:if>
 <!-- End js -->
 //Create Class
 
@@ -358,7 +338,7 @@
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             remote: {
-                url: 'http://localhost:8080/findAllStudentNotInClass/3/%QUERY'
+                url: 'http://localhost:8080/findAllStudent/%QUERY'
             }
         });
         student1.initialize();
@@ -370,7 +350,15 @@
             typeaheadjs: {
                 name: 'student',
                 displayKey: 'studentName',
-                source: student.ttAdapter()
+                source: student.ttAdapter(),
+                templates: {
+                    empty: [
+                        '<div class="empty-message">',
+                        'unable to find any student',
+                        '</div>'
+                    ].join('\n'),
+                    suggestion: Handlebars.compile('<div><span><img src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" class="author-imgTag"></span> <span style="white-space: nowrap">{{studentName}}</span></div>')
+                }
             }
         });
         elt2.on('itemAdded', function (event) {

@@ -9,7 +9,13 @@ public class StudentDto {
     private String studentName;
     private String studentProfileImageURL;
 
+    public StudentDto() {
+    }
 
+    public StudentDto(String studentName, Integer studentId) {
+        this.studentName = studentName;
+        this.studentId = studentId;
+    }
 
     public Integer getStudentId() {
         return studentId;

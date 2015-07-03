@@ -89,8 +89,8 @@ public class PostController {
                 NotificationDto notificationDto  = ConvertEntityDto.convertNotificationEntityToDto(notification,notification.getNotificationType(),parentId);
                 template.convertAndSend("/topic/notice/" + receiver.getId(), notificationDto);
                 }
-                template.convertAndSend("/topic/discussion/" + receiver.getId(), postDto);
             }
+            template.convertAndSend("/topic/discussion/" + parentId.getId(), postDto);
         return "OK";
     }
 
@@ -264,35 +264,47 @@ public class PostController {
         classroomDao.merge(classroom);
         
         //Notification - MinhKH
-        User sender = userDao.find(user.getId());
-        List<User> receivers = new ArrayList<User>();
         List<ClassroomUser> inClassStudents = classroomUserDao.findByClassroom(classroom);
+        ClassroomUser classroomTeacher = new ClassroomUser();
+        classroomTeacher.setUserId(classroom.getOwnerUserId());;
+        inClassStudents.add(classroomTeacher);
         if (inClassStudents!=null){
-            for (ClassroomUser classroomUser : inClassStudents){
-                receivers.add(classroomUser.getUserId());
-            }
-        }
-        Post object = postDao.findLastCreatedPostByOwner(sender);
-        if (object!=null) { // if Post is inserted successfully in DB
-            if (sender.getRoleId().getId()==Constant.UR_STUDENT_ROLE){ // if student: receivers contain classroom owner
-                receivers.add(post.getOwnerClassId().getOwnerUserId());
-                notificationUtilities.insertNotification(receivers,sender,object.getId(),
-                        Constant.NT_STUDENT_CREATE_POST, Constant.IV_FALSE);
-            }
-            if (sender.getRoleId().getId()==Constant.UR_TEACHER_ROLE) { //if teacher: receivers contain followers
-                List<Follower> followers = followerDao.findByTeacher(sender.getId());
-                if (followers!=null) {
-                    for(Follower follower:followers){
-                        User currentFollower = follower.getFollowerId();
-                        if (!receivers.contains(currentFollower)){ // if follower is not inClassroom student
-                            receivers.add(follower.getFollowerId());
-                        }
+            if(user.getRoleId().getId()==Constant.STUDENT) {
+                for (ClassroomUser classroomUser : inClassStudents){
+                    if(user.getId()!=classroomUser.getUserId().getId()){
+                        Notification notification = new Notification();
+                        notification.setReceiverId(classroomUser.getUserId());
+                        notification.setSenderId(user);
+                        notification.setObjectId(post.getId());
+                        notification.setNotificationType(Constant.NT_STUDENT_CREATE_POST);
+                        notification.setIsViewed(Constant.IV_FALSE);
+                        notificationDao.persist(notification);
+                        NotificationDto notificationDto  = ConvertEntityDto.convertNotificationEntityToDto(notification,notification.getNotificationType(),post);
+                        template.convertAndSend("/topic/notice/" + classroomUser.getUserId().getId(), notificationDto);
                     }
+
                 }
-                notificationUtilities.insertNotification(receivers,sender,object.getId(),
-                        Constant.NT_TEACHER_CREATE_POST, Constant.IV_FALSE);
+
+            } else {
+                List<User> users = userDao.findUserNotificationByCreatePostTeacher(classroom.getOwnerUserId().getId(),classroom.getId());
+                for (User userInvi : users){
+                    if(user.getId()!=userInvi.getId()){
+                        Notification notification = new Notification();
+                        notification.setReceiverId(userInvi);
+                        notification.setSenderId(user);
+                        notification.setObjectId(post.getId());
+                        notification.setNotificationType(Constant.NT_TEACHER_CREATE_POST);
+                        notification.setIsViewed(Constant.IV_FALSE);
+                        notificationDao.persist(notification);
+                        NotificationDto notificationDto  = ConvertEntityDto.convertNotificationEntityToDto(notification,notification.getNotificationType(),post);
+                        template.convertAndSend("/topic/notice/" + userInvi.getId(), notificationDto);
+                    }
+
+                }
             }
+
         }
+
 
         return "redirect:/post/view/" + post.getId();
     }

@@ -5,6 +5,7 @@ import com.qaproject.dto.*;
 import com.qaproject.entity.*;
 import com.qaproject.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -43,6 +44,10 @@ public class ClassController {
     ClassroomUtilities classroomUtilities;
     @Autowired
     HttpSession session;
+    @Autowired
+    NotificationDao notificationDao;
+    @Autowired
+    SimpMessagingTemplate template;
 
     @RequestMapping(value = "/createClass",method = RequestMethod.GET)
     public String createClass(ModelMap model, HttpServletRequest request) {
@@ -116,149 +121,131 @@ public class ClassController {
         boolean flag = false;
         for (int i =0; i< listStudentId.length; i++){
                 // make unique row invite
-                List<ClassroomUser> checkClassromUsers = classroomUserDao.findByUserClassroom(user.getId(), room.getId());
+            User receiver = userDao.find(Integer.parseInt(listStudentId[i]));
+            List<ClassroomUser> checkClassromUsers = classroomUserDao.findByUserClassroom(receiver.getId(), room.getId());
                 if(checkClassromUsers == null || checkClassromUsers.size()==0) {
                     ClassroomUser classroomUser = new ClassroomUser();
-                    Classroom classroom = new Classroom();
-                    classroom.setId(room.getId());
-                    classroomUser.setClassroomId(classroom);
-                    classroomUser.setUserId(new User(Integer.parseInt(listStudentId[i])));
-                    classroomUser.setType(2);
-                    classroomUser.setApproval(0);
+                    classroomUser.setClassroomId(room);
+                    classroomUser.setUserId(receiver);
+                    classroomUser.setType(Constant.IA_TYPE_INVITE_STUDENT);
+                    classroomUser.setApproval(Constant.IA_NOT_APPROVAL);
                     classroomUserDao.persist(classroomUser);
-                }else{
-                    ClassroomUser classroomUser = checkClassromUsers.get(0);
-                    classroomUser.setType(1);
-                    classroomUser.setApproval(0);
-                    classroomUserDao.merge(classroomUser);
+                    Notification notification = new Notification();
+                    notification.setReceiverId(receiver);
+                    notification.setSenderId(user);
+                    notification.setObjectId(room.getId());
+                    notification.setNotificationType(Constant.NT_INVITE_TO_JOIN_CLASS);
+                    notification.setIsViewed(Constant.IV_FALSE);
+                    notificationDao.persist(notification);
+                    NotificationDto notificationDto  = ConvertEntityDto.convertNotificationEntityToDto(notification,notification.getNotificationType(),room);
+                    template.convertAndSend("/topic/notice/" + receiver.getId(), notificationDto);
                 }
         }
 
         //Notification - MinhKH
         List<Follower> followers = followerDao.findByTeacher(user.getId());
-        List<User> receivers = new ArrayList<User>();
         User sender = userDao.find(user.getId());
-        Classroom object = classroomDao.findLastCreatedClassroomByOwner(sender);
-
-        if (followers!=null) {
-            for (Follower follower:followers){
-                receivers.add(follower.getFollowerId());
+        if(room!=null) {
+            for (Follower receiver : followers){
+                if(receiver.getId()!=user.getId()) {
+                    Notification notification = new Notification();
+                    notification.setReceiverId(receiver.getFollowerId());
+                    notification.setSenderId(sender);
+                    notification.setObjectId(room.getId());
+                    notification.setNotificationType(Constant.NT_TEACHER_CREATE_CLASS);
+                    notification.setIsViewed(Constant.IV_FALSE);
+                    notificationDao.persist(notification);
+                    NotificationDto notificationDto  = ConvertEntityDto.convertNotificationEntityToDto(notification,notification.getNotificationType(),room);
+                    template.convertAndSend("/topic/notice/" + receiver.getFollowerId(), notificationDto);
+                }
             }
         }
-        if(object!=null) {
-            Integer objectId = object.getId();
-            notificationUtilities.insertNotification(receivers,sender,objectId, Constant.NT_TEACHER_CREATE_CLASS,
-                    Constant.IV_FALSE);
-        }
 
-
-
-//        objectWithStatus.setId(room.getId());
-//        objectWithStatus.setStatus("OK");
         return "redirect:/classroom/"+room.getId();
     }
     @RequestMapping(value= "/requestJoinClass/{id}",method= RequestMethod.GET)
     @ResponseBody
-    public String requestJoinClass(@PathVariable("id") String classroomId, Model model, HttpServletRequest request) {
+    public String requestJoinClass(@PathVariable("id") Integer classroomId, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         User user = (User)session.getAttribute("user");
         if (user == null){
             return "NG";
         }
+        Classroom classroom = classroomDao.find(classroomId);
         // make unique row invite
-        List<ClassroomUser> checkClassromUsers = classroomUserDao.findByUserClassroom(user.getId(), Integer.parseInt(classroomId));
+        List<ClassroomUser> checkClassromUsers = classroomUserDao.findByUserClassroom(user.getId(), classroomId);
         if(checkClassromUsers == null || checkClassromUsers.size()==0) {
             ClassroomUser classroomUser = new ClassroomUser();
-            Classroom classroom = new Classroom();
-            classroom.setId(Integer.parseInt(classroomId));
             classroomUser.setClassroomId(classroom);
             classroomUser.setUserId(user);
-            classroomUser.setType(1);
-            classroomUser.setApproval(0);
+            classroomUser.setType(Constant.IA_TYPE_REQUEST_CLASS);
+            classroomUser.setApproval(Constant.IA_NOT_APPROVAL);
             try {
                 classroomUserDao.persist(classroomUser);
             } catch (Exception e) {
                 return "NG";
             }
-        } else {
-            ClassroomUser classroomUser = checkClassromUsers.get(0);
-            classroomUser.setType(1);
-            classroomUser.setApproval(0);
-            classroomUserDao.merge(classroomUser);
+            Notification notification = new Notification();
+            notification.setReceiverId(classroom.getOwnerUserId());
+            notification.setSenderId(user);
+            notification.setObjectId(classroomId);
+            notification.setNotificationType(Constant.NT_REQUEST_TO_JOIN_CLASS);
+            notification.setIsViewed(Constant.IV_FALSE);
+            notificationDao.persist(notification);
+            NotificationDto notificationDto  = ConvertEntityDto.convertNotificationEntityToDto(notification,notification.getNotificationType(),classroom);
+            template.convertAndSend("/topic/notice/" + classroom.getOwnerUserId().getId(), notificationDto);
+
         }
 
         //Notification - MinhKH
-        User sender = userDao.find(user.getId());
-        ClassroomUser object = classroomUserDao.findLastRequestByStudent(sender);
-        if (object!=null) {
-            User receiver = object.getClassroomId().getOwnerUserId();
-            notificationUtilities.insertNotification(receiver,sender,object.getId(),
-                    Constant.NT_REQUEST_TO_JOIN_CLASS,Constant.IV_FALSE);
-        }
+//        User sender = userDao.find(user.getId());
+//        ClassroomUser object = classroomUserDao.findLastRequestByStudent(sender);
+//        if (object!=null) {
+//            User receiver = object.getClassroomId().getOwnerUserId();
+//            notificationUtilities.insertNotification(receiver,sender,object.getId(),
+//                    Constant.NT_REQUEST_TO_JOIN_CLASS,Constant.IV_FALSE);
+//        }
 
         return "OK";
     }
     @RequestMapping(value= "/inviteJoinClass/{id}",method= RequestMethod.POST)
     @ResponseBody
-    public String inviteJoinClass(@RequestParam("studentName") String studentName, @PathVariable("id") String classroomId,
+    public String inviteJoinClass(@RequestParam("studentName") String studentName, @PathVariable("id") Integer classroomId,
                                   Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        if (user==null) {
+            return "NG";
+        }
         String[] listStudentId = studentName.split(",");
         boolean flag = false;
+        Classroom classroom = classroomDao.find(classroomId);
         for (int i =0; i< listStudentId.length; i++){
-            User user = userDao.find(Integer.parseInt(listStudentId[i]));
+            User receiver = userDao.find(Integer.parseInt(listStudentId[i]));
             if( user!=null ){
                 // make unique row invite
-                List<ClassroomUser> checkClassromUsers = classroomUserDao.findByUserClassroom(user.getId(), Integer.parseInt(classroomId));
+                List<ClassroomUser> checkClassromUsers = classroomUserDao.findByUserClassroom(receiver.getId(), classroomId);
                 if(checkClassromUsers == null || checkClassromUsers.size()==0){
                     ClassroomUser classroomUser = new ClassroomUser();
-                    Classroom classroom = new Classroom();
-                    classroom.setId(Integer.parseInt(classroomId));
                     classroomUser.setClassroomId(classroom);
-                    classroomUser.setUserId(user);
-                    classroomUser.setType(2);
-                    classroomUser.setApproval(0);
+                    classroomUser.setUserId(receiver);
+                    classroomUser.setType(Constant.IA_TYPE_INVITE_STUDENT);
+                    classroomUser.setApproval(Constant.IA_NOT_APPROVAL);
                     classroomUserDao.persist(classroomUser);
-                }else {
-                    ClassroomUser classroomUser = checkClassromUsers.get(0);
-                    classroomUser.setType(2);
-                    classroomUser.setApproval(0);
-                    classroomUserDao.merge(classroomUser);
+                    Notification notification = new Notification();
+                    notification.setReceiverId(receiver);
+                    notification.setSenderId(user);
+                    notification.setObjectId(classroomId);
+                    notification.setNotificationType(Constant.NT_INVITE_TO_JOIN_CLASS);
+                    notification.setIsViewed(Constant.IV_FALSE);
+                    notificationDao.persist(notification);
+                    NotificationDto notificationDto  = ConvertEntityDto.convertNotificationEntityToDto(notification,notification.getNotificationType(),classroom);
+                    template.convertAndSend("/topic/notice/" + receiver.getId(), notificationDto);
                 }
             }else{
                 flag = true;
             }
         }
-
-        User user = (User) session.getAttribute("user");
-        if (user==null) {
-            return "NG";
-        }
-        //Notification - MinhKH
-        User sender = userDao.find(user.getId());
-        Classroom object = classroomDao.find(Integer.parseInt(classroomId));
-        List<User> receivers = new ArrayList<User>();
-        if (object!=null && listStudentId!=null) {
-            List<Integer> iStudentIds = new ArrayList<Integer>();
-            for (int i =0 ; i<listStudentId.length; i++){
-                Integer iStudentId = null;
-                try {
-                    iStudentId = Integer.parseInt(listStudentId[i]);
-                } catch (NumberFormatException e){
-                    e.printStackTrace();
-                }
-                iStudentIds.add(iStudentId);
-            }
-            List<ClassroomUser> classroomUsers = classroomUserDao.findLastInvitationsByStudents(iStudentIds);
-            if (classroomUsers!=null){
-                for(ClassroomUser classroomUser : classroomUsers) {
-                    receivers.add(classroomUser.getUserId());
-                }
-            }
-            notificationUtilities.insertNotification(receivers,sender,object.getId(),
-                    Constant.NT_INVITE_TO_JOIN_CLASS,Constant.IV_FALSE);
-        }
-
         if (flag){
             return "NG";
         }

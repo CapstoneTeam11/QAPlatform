@@ -30,5 +30,10 @@ public class Constant {
     // UR = User Role
     public static final int UR_STUDENT_ROLE = 1;
     public static final int UR_TEACHER_ROLE = 2;
+    //Invite - accept
+    public static final int IA_TYPE_INVITE_STUDENT = 2;
+    public static final int IA_TYPE_REQUEST_CLASS = 1;
+    public static final int IA_NOT_APPROVAL = 0;
+    public static final int IA_APPROVAL = 1;
 
 }

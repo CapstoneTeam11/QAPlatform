@@ -1,53 +1,53 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Minh
-  Date: 6/9/2015
-  Time: 3:37 PM
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<%--&lt;%&ndash;--%>
+  <%--Created by IntelliJ IDEA.--%>
+  <%--User: Minh--%>
+  <%--Date: 6/9/2015--%>
+  <%--Time: 3:37 PM--%>
+  <%--To change this template use File | Settings | File Templates.--%>
+<%--&ndash;%&gt;--%>
+<%--<%@ page contentType="text/html;charset=UTF-8" language="java" %>--%>
+<%--<!DOCTYPE html>--%>
+<%--<html lang="en">--%>
+<%--<head>--%>
 
-    <!-- Basic Page Needs -->
-    <meta charset="utf-8">
-    <title>Ask me – Responsive Questions and Answers Template</title>
-    <meta name="description" content="Ask me Responsive Questions and Answers Template">
-    <meta name="author" content="2code.info">
+    <%--<!-- Basic Page Needs -->--%>
+    <%--<meta charset="utf-8">--%>
+    <%--<title>Ask me – Responsive Questions and Answers Template</title>--%>
+    <%--<meta name="description" content="Ask me Responsive Questions and Answers Template">--%>
+    <%--<meta name="author" content="2code.info">--%>
 
 
 
-    <!-- Mobile Specific Metas -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <%--<!-- Mobile Specific Metas -->--%>
+    <%--<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">--%>
 
-    <!-- Main Style -->
-    <link rel="stylesheet" href="/resource/assets/css/style.css">
+    <%--<!-- Main Style -->--%>
+    <%--<link rel="stylesheet" href="/resource/assets/css/style.css">--%>
 
-    <!-- Skins -->
-    <link rel="stylesheet" href="/resource/assets/css/skins/skins.css">
+    <%--<!-- Skins -->--%>
+    <%--<link rel="stylesheet" href="/resource/assets/css/skins/skins.css">--%>
 
-    <!-- Responsive Style -->
-    <link rel="stylesheet" href="/resource/assets/css/responsive.css">
+    <%--<!-- Responsive Style -->--%>
+    <%--<link rel="stylesheet" href="/resource/assets/css/responsive.css">--%>
 
-    <!-- Boostrap Style -->
-    <link rel="stylesheet" href="/resource/assets/css/bootstrap.min.css">
+    <%--<!-- Boostrap Style -->--%>
+    <%--<link rel="stylesheet" href="/resource/assets/css/bootstrap.min.css">--%>
 
-    <!-- Boostrap Theme Style -->
-    <link rel="stylesheet" href="/resource/assets/css/bootstrap-theme.min.css">
+    <%--<!-- Boostrap Theme Style -->--%>
+    <%--<link rel="stylesheet" href="/resource/assets/css/bootstrap-theme.min.css">--%>
 
-    <!-- Notification Style -->
-    <link rel="stylesheet" href="/resource/assets/css/notification.css">
+    <%--<!-- Notification Style -->--%>
+    <%--<link rel="stylesheet" href="/resource/assets/css/notification.css">--%>
 
-    <!-- Favicons -->
-    <link rel="shortcut icon" href="http://2code.info/demo/html/ask-me/images/favicon.ico">
+    <%--<!-- Favicons -->--%>
+    <%--<link rel="shortcut icon" href="http://2code.info/demo/html/ask-me/images/favicon.ico">--%>
 
-</head>
+<%--</head>--%>
 
-<body>
+<%--<body>--%>
 
-<div class="loader"><div class="loader_html"></div></div>
-
+<%--<div class="loader"><div class="loader_html"></div></div>--%>
+<%@include file="css.jsp" %>
 <div id="wrap">
 
     <div class="panel-pop" id="signup">
@@ -175,24 +175,10 @@
 <div class="go-up"><i class="icon-chevron-up"></i></div>
 
 <!-- js -->
-<script src="/resource/assets/js/jquery.min.js"></script>
-<script src="/resource/assets/js/bootstrap.min.js"></script>
-<script src="/resource/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
-<script src="/resource/assets/js/jquery.easing.1.3.min.js"></script>
-<script src="/resource/assets/js/html5.js"></script>
-<script src="/resource/assets/js/twitter/jquery.tweet.js"></script>
-<script src="/resource/assets/js/jflickrfeed.min.js"></script>
-<script src="/resource/assets/js/jquery.inview.min.js"></script>
-<script src="/resource/assets/js/jquery.tipsy.js"></script>
-<script src="/resource/assets/js/tabs.js"></script>
-<script src="/resource/assets/js/jquery.flexslider.js"></script>
-<script src="/resource/assets/js/jquery.prettyPhoto.js"></script>
-<script src="/resource/assets/js/jquery.carouFredSel-6.2.1-packed.js"></script>
-<script src="/resource/assets/js/jquery.scrollTo.js"></script>
-<script src="/resource/assets/js/jquery.nav.js"></script>
-<script src="/resource/assets/js/tags.js"></script>
-<script src="/resource/assets/js/jquery.bxslider.min.js"></script>
-<script src="/resource/assets/js/custom.js"></script>
+<%@include file="js.jsp" %>
+<c:if test="${sessionScope.user!=null}">
+    <script src="/resource/assets/js/notification.js"></script>
+</c:if>
 
 <!-- End js -->
 

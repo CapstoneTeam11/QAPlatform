@@ -36,7 +36,7 @@ $.ajax({
 })
 
 $('#notifiDropdown').click(function(e) {
-    if(($(e.currentTarget).attr('aria-expanded'))=='false') {
+    if(($(e.currentTarget).attr('aria-expanded'))=='false' || ($(e.currentTarget).attr('aria-expanded'))==undefined) {
         var url = '/notification/'+userId;
         $.ajax({
             type : "GET",
@@ -72,6 +72,31 @@ $('#notifiDropdown').click(function(e) {
     }
 
 })
+    /**
+     * Created by khangtnse60992 on 7/1/2015.
+     */
+    var socket = new SockJS("/ws");
+    var stompClient = Stomp.over(socket);
+// Callback function to be called when stomp client is connected to server
+    var connectCallback = function () {
+        stompClient.subscribe('/topic/notice/'+$('#userIdFlag').val(), notification);
+    };
+
+// Callback function to be called when stomp client could not connect to server
+    var errorCallback = function (error) {
+        alert(error.headers.message);
+    };
+    stompClient.connect("guest", "guest", connectCallback, errorCallback);
+    function notification(notification) {
+        var notification = JSON.parse(notification.body);
+        var currentCount = $('#countNotifi').html() * 1;
+        $('#countNotifi').html(currentCount + 1);
+        $.growl.notice({
+            message: '<div class="activity-item"> <i class="fa fa-heart text-danger"></i> <div class="activity">' + notification.senderDisplayName + '' +
+                '<a href="'+ notification.href +'">' + notification.content  + '</a> <span> few seconds ago</span> </div> </div>',
+            location: "bl"
+        });
+    }
 })
 $(document).on('click', function(e) {
     if($(e.currentTarget).attr('id')!='notifiDropdown') {

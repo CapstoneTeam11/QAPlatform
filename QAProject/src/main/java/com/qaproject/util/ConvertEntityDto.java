@@ -141,7 +141,7 @@ public class ConvertEntityDto {
             }
             if (notificationType == Constant.NT_TEACHER_CREATE_POST ||
                     notificationType == Constant.NT_USER_REPLY ||
-                    notificationType == Constant.NT_INVITE_TO_ANSWER_POST) {
+                    notificationType == Constant.NT_INVITE_TO_ANSWER_POST || notificationType == Constant.NT_STUDENT_CREATE_POST) {
                 if (!(object instanceof Post)) {
                     return notificationDto;
                 }

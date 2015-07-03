@@ -1,14 +1,19 @@
 package com.qaproject.controller;
 
+import com.qaproject.dao.NotificationDao;
 import com.qaproject.dao.PostDao;
 import com.qaproject.dao.PostInvitationDao;
 import com.qaproject.dao.UserDao;
+import com.qaproject.dto.NotificationDto;
+import com.qaproject.entity.Notification;
 import com.qaproject.entity.Post;
 import com.qaproject.entity.PostInvitation;
 import com.qaproject.entity.User;
 import com.qaproject.util.Constant;
+import com.qaproject.util.ConvertEntityDto;
 import com.qaproject.util.NotificationUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +45,12 @@ public class PostInvitationController {
     @Autowired
     NotificationUtilities notificationUtilities;
 
+    @Autowired
+    NotificationDao notificationDao;
+
+    @Autowired
+    SimpMessagingTemplate template;
+
     @RequestMapping(value = "/teacherInvitation",method = RequestMethod.POST)
     public String teacherInvitation(@RequestParam List<Integer> userId,
                                     @RequestParam("postId") Integer postId) {
@@ -56,23 +67,16 @@ public class PostInvitationController {
             postInvitation.setPostId(post);
             postInvitation.setTeacherId(teacher);
             postInvitationDao.persist(postInvitation);
+            Notification notification = new Notification();
+            notification.setReceiverId(teacher);
+            notification.setSenderId(user);
+            notification.setObjectId(post.getId());
+            notification.setNotificationType(Constant.NT_INVITE_TO_ANSWER_POST);
+            notification.setIsViewed(Constant.IV_FALSE);
+            notificationDao.persist(notification);
+            NotificationDto notificationDto  = ConvertEntityDto.convertNotificationEntityToDto(notification, notification.getNotificationType(), post);
+            template.convertAndSend("/topic/notice/" + teacher.getId(), notificationDto);
         }
-
-        //Notification - MinhKH
-        User sender = userDao.find(user.getId());
-        Post object = post;
-        if (object!=null) {
-            List<PostInvitation> postInvitations = postInvitationDao.findLastInvitationsByTeachers(userId);
-            List<User> receivers = new ArrayList<User>();
-            if (postInvitations!=null) {
-                for (PostInvitation postInvitation:postInvitations) {
-                    receivers.add(postInvitation.getTeacherId());
-                }
-            }
-            notificationUtilities.insertNotification(receivers,sender,object.getId(),
-                    Constant.NT_INVITE_TO_ANSWER_POST, Constant.IV_FALSE);
-        }
-
         return "redirect:/post/view/"+postId;
     }
 
