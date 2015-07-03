@@ -107,14 +107,17 @@ public class ClassroomUserDaoImpl extends BaseDao<ClassroomUser,Integer> impleme
     }
 
     @Override
-    public List<ClassroomUser> findRequestsByClassroom(Integer classroomId, Integer nextFrom) {
-        Query query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.classroomId.id=:classroomId and "+
-                "cu.approval=0 and cu.type=1 order by cu.id desc");
-        query.setParameter("classroomId",classroomId);
-        if (nextFrom < 0) {
-            nextFrom = 0;
+    public List<ClassroomUser> findRequestsByClassroom(Integer classroomId, Integer lastId) {
+        Query query;
+        if (lastId==0){
+            query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.classroomId.id=:classroomId and "+
+                    "cu.approval=0 and cu.type=1 order by cu.id desc");
+        }else {
+            query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.classroomId.id=:classroomId and "+
+                    "cu.approval=0 and cu.type=1 and cu.id<:lastId order by cu.id desc");
+            query.setParameter("lastId",lastId);
         }
-        query.setFirstResult(nextFrom);
+        query.setParameter("classroomId",classroomId);
         query.setMaxResults(11);
         List<ClassroomUser> requests = null;
         try {
@@ -126,14 +129,17 @@ public class ClassroomUserDaoImpl extends BaseDao<ClassroomUser,Integer> impleme
     }
 
     @Override
-    public List<ClassroomUser> findStudentsByClassroom(Integer classroomId, Integer nextFrom) {
-        Query query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.classroomId.id=:classroomId and "+
-                "cu.approval=1 order by cu.id desc");
-        query.setParameter("classroomId",classroomId);
-        if (nextFrom < 0) {
-            nextFrom = 0;
+    public List<ClassroomUser> findStudentsByClassroom(Integer classroomId, Integer lastId) {
+        Query query;
+        if (lastId==0){
+            query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.classroomId.id=:classroomId and "+
+                    "cu.approval=1 order by cu.id desc");
+        }else {
+            query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.classroomId.id=:classroomId and "+
+                    "cu.approval=1 and cu.id<:lastId order by cu.id desc");
+            query.setParameter("lastId",lastId);
         }
-        query.setFirstResult(nextFrom);
+        query.setParameter("classroomId",classroomId);
         query.setMaxResults(11);
         List<ClassroomUser> students = null;
         try {

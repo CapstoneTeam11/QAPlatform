@@ -29,8 +29,8 @@ public class ClassroomUtilities {
     @Autowired
     ClassroomUserDao classroomUserDao;
 
-    public List<PostDto> loadQuestions(Integer classroomId, Integer nextFrom){
-        List<Post> questions = postDao.findQuestionByOwnerClassroom(classroomId,nextFrom);
+    public List<PostDto> loadQuestions(Integer classroomId, Integer lastId){
+        List<Post> questions = postDao.findQuestionByOwnerClassroom(classroomId,lastId);
         List<PostDto> questionDtos = new ArrayList<PostDto>();
         if (questions!=null) {
             for(Post question: questions){
@@ -48,8 +48,8 @@ public class ClassroomUtilities {
         return questionDtos;
     }
 
-    public List<PostDto> loadArticles(Integer classroomId, Integer nextFrom){
-        List<Post> articles = postDao.findArticleByOwnerClassroom(classroomId, nextFrom);
+    public List<PostDto> loadArticles(Integer classroomId, Integer lastId){
+        List<Post> articles = postDao.findArticleByOwnerClassroom(classroomId, lastId);
         List<PostDto> articleDtos = new ArrayList<PostDto>();
         if (articles!=null) {
             for(Post article: articles){
@@ -68,9 +68,9 @@ public class ClassroomUtilities {
         return articleDtos;
     }
 
-    public List<MaterialDto> loadMaterials(Integer classroomId, Integer nextFrom) {
+    public List<MaterialDto> loadMaterials(Integer classroomId, Integer lastId) {
         List<MaterialDto> materialDtos = new ArrayList<MaterialDto>();
-        List<Material> materials = materialDao.findMaterialByClassroom(classroomId,nextFrom);
+        List<Material> materials = materialDao.findMaterialByClassroom(classroomId,lastId);
         if (materials!=null) {
             for (Material material:materials){
                 MaterialDto materialDto = ConvertEntityDto.convertMaterialEntityToDto(material);
@@ -80,9 +80,9 @@ public class ClassroomUtilities {
         return materialDtos;
     }
 
-    public List<RequestDto> loadRequests(Integer classroomId, Integer nextFrom) {
+    public List<RequestDto> loadRequests(Integer classroomId, Integer lastId) {
         List<RequestDto> requestDtos = new ArrayList<RequestDto>();
-        List<ClassroomUser> requests = classroomUserDao.findRequestsByClassroom(classroomId,nextFrom);
+        List<ClassroomUser> requests = classroomUserDao.findRequestsByClassroom(classroomId,lastId);
         if (requests!=null){
             for (ClassroomUser request :requests){
                 if (request!=null) {
@@ -94,9 +94,9 @@ public class ClassroomUtilities {
         return requestDtos;
     }
 
-    public List<StudentDto> loadStudents(Integer classroomId, Integer nextFrom) {
+    public List<StudentDto> loadStudents(Integer classroomId, Integer lastId) {
         List<StudentDto> studentDtos = new ArrayList<StudentDto>();
-        List<ClassroomUser> students = classroomUserDao.findStudentsByClassroom(classroomId, nextFrom);
+        List<ClassroomUser> students = classroomUserDao.findStudentsByClassroom(classroomId, lastId);
         if (students!=null){
             for (ClassroomUser student :students){
                 if (student!=null) {

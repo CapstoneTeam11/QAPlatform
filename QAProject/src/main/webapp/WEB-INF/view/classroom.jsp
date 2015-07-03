@@ -87,7 +87,7 @@
 <div class="panel-pop" id="add-to-folder">
     <h2>Add to folder<i class="icon-remove"></i></h2>
     <div style="height: auto; max-height: 300px; overflow-x: hidden;" id="folderList">
-        <c:forEach var="folder" items="${sessionScope.user.folderList}">
+        <c:forEach var="folder" items="${user.folderList}">
             <a href="/library/add/${folder.id}/" class="list-group-item">
                 <h4 class="list-group-item-heading">${folder.name} </h4>
             </a>
@@ -126,7 +126,7 @@
 
         </div>
         <div class="" style="margin-top: 20px">
-            <c:if test="${userOwner.id == user.id}">
+            <c:if test="${classroom.ownerUserId.id == user.id}">
                 <div class="btn-group">
                     <a data-toggle="dropdown" href="" aria-expanded="false"><i class="icon-cog" style="color: black;font-weight: bold;font-size: 20px;"></i><span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu" style="left: -127px;" id="activeBtn">
@@ -150,7 +150,7 @@
     <li class="tab"><a href="#" class="current">Question</a></li>
     <li class="tab"><a href="#">Article</a></li>
     <li class="tab"><a href="#">Material</a></li>
-    <c:if test="${user.roleId.id==2}">
+    <c:if test="${user.id==classroom.ownerUserId.id}">
         <li class="tab"><a href="#">Join Request</a></li>
     </c:if>
     <li class="tab"><a href="#">Student</a></li>
@@ -321,7 +321,9 @@
                             <td>${material.creationDate}</td>
                             <td>${material.size}</td>
                             <td><input type="hidden" value="${material.id}" name="materialId"><a id="add-to-folder-click" href="#">Folder</a> / <a href="/download/${material.id}"> Computer</a></td>
-                            <td><form action="/material/delete" method="post" style="display: none"><input type="hidden" name="materialId" value="${material.id}"></form><a href="#" onclick="removeMaterial(this)"><i class="icon-remove"></i> Delete</a></td>                        </tr>
+                            <c:if test="${user.id==classroom.ownerUserId.id}">
+                                <td><form action="/material/delete" method="post" style="display: none"><input type="hidden" name="materialId" value="${material.id}"></form><a href="#" onclick="removeMaterial(this)"><i class="icon-remove"></i> Delete</a></td>
+                            </c:if>
                     </c:forEach>
                 </c:if>
                 <c:if test="${fn:length(materials)<=10}">
@@ -332,7 +334,9 @@
                             <td>${material.creationDate}</td>
                             <td>${material.size}</td>
                             <td><input type="hidden" value="${material.id}" name="materialId"><a id="add-to-folder-click" href="#">Folder</a> / <a href="/download/${material.id}"> Computer</a></td>
-                            <td><form action="/material/delete" method="post" style="display: none"><input type="hidden" name="materialId" value="${material.id}"></form><a href="#" onclick="removeMaterial(this)"><i class="icon-remove"></i> Delete</a></td>                        </tr>
+                            <c:if test="${user.id==classroom.ownerUserId.id}">
+                                <td><form action="/material/delete" method="post" style="display: none"><input type="hidden" name="materialId" value="${material.id}"></form><a href="#" onclick="removeMaterial(this)"><i class="icon-remove"></i> Delete</a></td>
+                            </c:if>
                         </tr>
                     </c:forEach>
                 </c:if>
@@ -349,7 +353,7 @@
         </c:if>
     </div>
 </div>
-<c:if test="${user.roleId.id==2}">
+<c:if test="${user.id==classroom.ownerUserId.id}">
     <div class="tab-inner-warp">
         <div class="tab-inner" id="requests">
             <c:if test="${not empty requests}">
@@ -414,9 +418,11 @@
                                    class="tooltip-n">
                                     <img alt="" src="${student.studentProfileImageURL}"></a>
                             </div>
+                            <c:if test="${user.id==classroom.ownerUserId.id}">
                                 <a class="removeStudent" id="${student.classroomUserId}"
                                    onclick="removeStudent(this); return false;"
                                    style="float: right; cursor:pointer">Remove</a>
+                            </c:if>
                             <div class="author-bio" style="margin-top: 25px">
                                 <h4><a href="/profile/view/${student.studentId}">${student.studentName}</a></h4>
                             </div>
@@ -431,9 +437,11 @@
                                    class="tooltip-n">
                                     <img alt="" src="${student.studentProfileImageURL}"></a>
                             </div>
-                            <a class="removeStudent" id="${student.classroomUserId}"
-                               onclick="removeStudent(this); return false;"
-                               style="float: right; cursor:pointer">Remove</a>
+                            <c:if test="${user.id==classroom.ownerUserId.id}">
+                                <a class="removeStudent" id="${student.classroomUserId}"
+                                   onclick="removeStudent(this); return false;"
+                                   style="float: right; cursor:pointer">Remove</a>
+                            </c:if>
                             <div class="author-bio" style="margin-top: 25px">
                                 <h4><a href="/profile/view/${student.studentId}">${student.studentName}</a></h4>
                             </div>
@@ -496,10 +504,10 @@
         <ul>
             <li>
                 <div class="author-img">
-                    <a href="/profile/view${userOwner.id}"><img width="60" height="60" src="${userOwner.profileImageURL}" alt=""></a>
+                    <a href="/profile/view${classroom.ownerUserId.id}"><img width="60" height="60" src="${classroom.ownerUserId.profileImageURL}" alt=""></a>
                 </div>
-                <h6><a href="/profile/view${userOwner.id}">${userOwner.displayName}</a></h6>
-                <span class="comment">${userOwner.aboutMe}</span>
+                <h6><a href="/profile/view${classroom.ownerUserId.id}">${classroom.ownerUserId.displayName}</a></h6>
+                <span class="comment">${classroom.ownerUserId.aboutMe}</span>
             </li>
         </ul>
     </div>
@@ -536,7 +544,7 @@
 </div><!-- End create folder -->
 <!-- js -->
 <%@include file="js.jsp" %>
-<c:if test="${sessionScope.user!=null}">
+<c:if test="${user!=null}">
     <script src="/resource/assets/js/notification.js"></script>
 </c:if>
 <!-- End js -->
@@ -809,18 +817,19 @@
     }
 
     //Load more - MinhKH
-    var nextFromQuestion = 10;
-    var nextFromArticle = 10;
-    var nextFromMaterial = 10;
-    var nextFromRequest = 10;
-    var nextFromStudent = 10;
+    var lastQuestionId = ${lastQuestionId};
+    var lastArticleId = ${lastArticleId};
+    var lastMaterialId = ${lastClassroomUserId};
+    var lastRequestId = ${lastRequestId};
+    var lastClassroomUserId = ${lastClassroomUserId};
+    var materialCounter = 11;
     $('#loadMoreQuestion').click(function (e) {
         var url = "/classroom/question";
         var classroomId = ${classroom.id};
         $.ajax({
             type: "POST",
             url: url,
-            data: {classroomId: classroomId, nextFrom: nextFromQuestion},
+            data: {classroomId: classroomId, lastId: lastQuestionId},
             success: function (data) {
                 var questions = new Array();
                 questions = data;
@@ -830,6 +839,7 @@
                 } else {
                     $('#loadMoreQuestion').hide();
                 }
+                lastQuestionId = questions[length-1].id;
                 for (var i = 0; i < length; i++) {
                     var component = '<article class="question question-type-normal">' +
                             '<h2>' +
@@ -866,7 +876,6 @@
                     $('#questions').append(component);
                     $(".tooltip-n").tipsy({fade:true,gravity:"s"});
                 }
-                nextFromQuestion = nextFromQuestion + 10;
             }
         })
     });
@@ -876,7 +885,7 @@
         $.ajax({
             type: "POST",
             url: url,
-            data: {classroomId: classroomId, nextFrom: nextFromArticle},
+            data: {classroomId: classroomId, lastId: lastArticleId},
             success: function (data) {
                 var articles = new Array();
                 articles = data;
@@ -886,6 +895,7 @@
                 } else {
                     $('#loadMoreArticle').hide();
                 }
+                lastArticleId= articles[length-1].id;
                 for (var i = 0; i < length; i++) {
                     var component = '<article class="post clearfix">'+
                             '<div class="post-inner">'+
@@ -909,17 +919,18 @@
                     $('#articles').append(component);
                     $(".tooltip-n").tipsy({fade:true,gravity:"s"});
                 }
-                nextFromArticle = nextFromArticle + 10;
             }
         })
     });
     $('#loadMoreMaterial').click(function (e) {
+        var currentUser = ${user.id};
+        var ownedUser = ${classroom.ownerUserId.id};
         var url = "/classroom/material";
         var classroomId = ${classroom.id};
         $.ajax({
             type: "POST",
             url: url,
-            data: {classroomId: classroomId, nextFrom: nextFromMaterial},
+            data: {classroomId: classroomId, lastId: lastMaterialId},
             success: function (data) {
                 var materials = new Array();
                 materials = data;
@@ -929,20 +940,25 @@
                 } else {
                     $('#loadMoreMaterial').hide();
                 }
-                var counter = nextFromMaterial + 1;
+                lastMaterialId = materials[length-1].id;
                 for (var i = 0; i < length; i++) {
                     var component = '<tr>' +
-                            '<td>'+ counter + '</td>' +
+                            '<td>'+ materialCounter + '</td>' +
                     '<td>'+ materials[i].name + '</td>' +
                     '<td>'+ materials[i].creationDate + '</td>' +
                     '<td>' + materials[i].size + '</td>' +
                     '<td><a id="add-to-folder-click" href="#">Folder</a> / <a href="/download/'+ materials[i].id +
-                    '">Computer</a></td>' +
-                    '</tr>';
+                    '">Computer</a></td>';
+                    if (currentUser==ownedUser){
+                        component = component +
+                                '<td><form action="/material/delete" method="post" style="display: none">' +
+                                '<input type="hidden" name="materialId" value="'+ materials[i].id +'"></form>' +
+                                '<a href="#" onclick="removeMaterial(this)"><i class="icon-remove"></i> Delete</a></td>';
+                    }
+                    component = component + '</tr>';
                     $('#materials').append(component);
-                    counter++;
+                    materialCounter++;
                 }
-                nextFromMaterial = nextFromMaterial + 10;
             }
         })
     });
@@ -953,7 +969,7 @@
         $.ajax({
             type: "POST",
             url: url,
-            data: {classroomId: classroomId, nextFrom: nextFromRequest},
+            data: {classroomId: classroomId, lastId: lastRequestId},
             success: function (data) {
                 var requests = new Array();
                 requests = data;
@@ -963,8 +979,9 @@
                 } else {
                     $('#loadMoreRequest').hide();
                 }
+                lastRequestId = requests[length-1].id;
                 for (var i = 0; i < length; i++) {
-                    var component = '<div class="about-author clearfix">' +
+                    var component = '<div class="about-author clearfix" id="request'+ requests[i].id+'">' +
                             '<div class="author-image">' +
                             '<a href="/profile/view/'+ requests[i].studentId +'" original-title="'
                             + requests[i].studentName +'" ' +
@@ -984,17 +1001,18 @@
                     $('#requests').append(component);
                     $(".tooltip-n").tipsy({fade:true,gravity:"s"});
                 }
-                nextFromRequest = nextFromRequest + 10;
             }
         })
     });
     $('#loadMoreStudent').click(function (e) {
+        var currentUser = ${user.id};
+        var ownedUser = ${classroom.ownerUserId.id};
         var url = "/classroom/student";
         var classroomId = ${classroom.id};
         $.ajax({
             type: "POST",
             url: url,
-            data: {classroomId: classroomId, nextFrom: nextFromStudent},
+            data: {classroomId: classroomId, lastId: lastClassroomUserId},
             success: function (data) {
                 var students = new Array();
                 students = data;
@@ -1004,6 +1022,7 @@
                 } else {
                     $('#loadMoreStudent').hide();
                 }
+                lastClassroomUserId = students[length-1].classroomUserId;
                 for (var i = 0; i < length; i++) {
                     var component = '<div class="about-author clearfix" id="student'+ students[i].classroomUserId+'">' +
                             '<div class="author-image">' +
@@ -1011,10 +1030,14 @@
                             students[i].studentName +
                             '" class="tooltip-n">' +
                             '<img alt="" src="'+students[i].studentProfileImageURL+'"></a>' +
-                            '</div>' +
-                            '<a class="removeStudent" id="'+ students[i].classroomUserId+'" ' +
-                            'onclick="removeStudent(this); return false;" ' +
-                            'style="float: right; cursor:pointer">Remove</a>' +
+                            '</div>';
+                            if (currentUser==ownedUser){
+                                component = component +
+                                        '<a class="removeStudent" id="'+ students[i].classroomUserId+'" ' +
+                                        'onclick="removeStudent(this); return false;" ' +
+                                        'style="float: right; cursor:pointer">Remove</a>';
+                            }
+                            component = component +
                             '<div class="author-bio" style="margin-top: 25px">' +
                             '<h4><a href="/profile/view/'+ students[i].studentId+'">'+ students[i].studentName+'</a></h4>' +
                             '</div>' +
@@ -1022,7 +1045,6 @@
                     $('#students').append(component);
                     $(".tooltip-n").tipsy({fade:true,gravity:"s"});
                 }
-                nextFromStudent = nextFromStudent + 10;
             }
         })
     });
@@ -1035,7 +1057,6 @@
             data: "requestId="+ requestId,
             success: function (data){
                 if(data === "OK"){
-                    nextFromRequest--;
                     var request = $('#request'+requestId);
                     var studentName = request.find("h4").find("a").text();
                     var studentHref = request.find("h4").find("a").attr("href");
@@ -1055,8 +1076,6 @@
             data: "requestId="+ requestId,
             success: function (data){
                 if(data !== undefined){
-                    nextFromRequest--;
-                    nextFromStudent++;
                     var student = data;
                     var request = $('#request'+requestId);
                     var studentName = request.find("h4").find("a").text();
@@ -1099,7 +1118,6 @@
                     data: 'removeId=' + removeId,
                     success: function (data) {
                         if(data != "NG" ){
-                            nextFromStudent--;
                             var removeElement = $('#student'+removeId);
                             var studentName = removeElement.find("h4").find("a").text();
                             var studentHref = removeElement.find("h4").find("a").attr("href");

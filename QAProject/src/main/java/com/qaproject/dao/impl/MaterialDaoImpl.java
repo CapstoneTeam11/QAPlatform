@@ -15,14 +15,17 @@ import java.util.List;
 @Repository
 public class MaterialDaoImpl extends BaseDao<Material,Integer> implements MaterialDao {
     @Override
-    public List<Material> findMaterialByClassroom(Integer classroomId, Integer nextFrom) {
-        Query query = entityManager.createQuery("Select m from Material m where m.ownerClassId.id=:classroomId " +
-                "order by m.id desc ");
-        query.setParameter("classroomId",classroomId);
-        if (nextFrom < 0) {
-            nextFrom = 0;
+    public List<Material> findMaterialByClassroom(Integer classroomId, Integer lastId) {
+        Query query;
+        if (lastId==0){
+            query = entityManager.createQuery("Select m from Material m where m.ownerClassId.id=:classroomId " +
+                    "order by m.id desc ");
+        } else {
+            query = entityManager.createQuery("Select m from Material m where m.ownerClassId.id=:classroomId " +
+                    "and m.id<:lastId order by m.id desc ");
+            query.setParameter("lastId",lastId);
         }
-        query.setFirstResult(nextFrom);
+        query.setParameter("classroomId",classroomId);
         query.setMaxResults(11);
         List<Material> materials = null;
         try{

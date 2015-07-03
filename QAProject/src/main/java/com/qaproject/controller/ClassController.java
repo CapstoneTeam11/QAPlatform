@@ -260,22 +260,48 @@ public class ClassController {
             return "redirect:403";
         }
         Classroom classroom = classroomDao.find(id);
-        int idOwner = classroom.getOwnerUserId().getId();
-        User ownerClassroom = userDao.find(idOwner);
+        user = userDao.find(user.getId());
 
         //get questions, articles, materials, request to join - MinhKH
         List<PostDto> questions = classroomUtilities.loadQuestions(id, 0);
+        Integer lastQuestionId = 0;
+        if (questions!=null) {
+            if (questions.size()>10){
+                lastQuestionId = questions.get(questions.size()-2).getId();
+            }
+        }
         List<PostDto> articles = classroomUtilities.loadArticles(id,0);
+        Integer lastArticleId = 0;
+        if (articles!=null) {
+            if (articles.size()>10){
+                lastArticleId = articles.get(articles.size()-2).getId();
+            }
+        }
         List<MaterialDto> materials = classroomUtilities.loadMaterials(id,0);
+        Integer lastMaterialId = 0;
+        if (materials!=null) {
+            if (materials.size()>10){
+                lastMaterialId = materials.get(materials.size()-2).getId();
+            }
+        }
         List<RequestDto> requests = classroomUtilities.loadRequests(id,0);
+        Integer lastRequestId = 0;
+        if (requests!=null) {
+            if (requests.size()>10){
+                lastRequestId = requests.get(requests.size()-2).getId();
+            }
+        }
         List<StudentDto> students = classroomUtilities.loadStudents(id,0);
-
-
+        Integer lastClassroomUserId = 0;
+        if (students!=null) {
+            if (students.size()>10){
+                lastClassroomUserId = students.get(students.size()-2).getClassroomUserId();
+            }
+        }
 
         if (questions.size()==0 && articles.size()==0 && materials.size()==0 && requests.size()==0
                 && students.size() ==0) {
             model.addAttribute("classroom", classroom);
-            model.addAttribute("userOwner", ownerClassroom);
             model.addAttribute("user", user);
             return "classroomWelcome";
         }
@@ -288,23 +314,27 @@ public class ClassController {
             checkClassroomUser = checkClassroomUsers.get(0);
         }
         model.addAttribute("questions",questions);
+        model.addAttribute("lastQuestionId",lastQuestionId);
         model.addAttribute("articles",articles);
+        model.addAttribute("lastArticleId",lastArticleId);
         model.addAttribute("materials",materials);
+        model.addAttribute("lastMaterialId",lastMaterialId);
         model.addAttribute("requests",requests);
+        model.addAttribute("lastRequestId",lastRequestId);
         model.addAttribute("students",students);
+        model.addAttribute("lastClassroomUserId",lastClassroomUserId);
         model.addAttribute("classroom", classroom);
-        model.addAttribute("userOwner", ownerClassroom);
-        model.addAttribute("user", user);
+        model.addAttribute("user",user);
         model.addAttribute("checkClassroomUser", checkClassroomUser);
         return "classroom";
     }
 
     @RequestMapping(value = "/classroom/question",method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public List<PostDto> loadMoreQuestion(@RequestParam Integer classroomId, @RequestParam Integer nextFrom) {
+    public List<PostDto> loadMoreQuestion(@RequestParam Integer classroomId, @RequestParam Integer lastId) {
         List<PostDto> questionDtos = new ArrayList<PostDto>();
         try {
-            questionDtos = classroomUtilities.loadQuestions(classroomId,nextFrom);
+            questionDtos = classroomUtilities.loadQuestions(classroomId,lastId);
         } catch (Exception e){
 
         }
@@ -313,10 +343,10 @@ public class ClassController {
 
     @RequestMapping(value = "/classroom/article",method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public List<PostDto> loadMoreArticle(@RequestParam Integer classroomId, @RequestParam Integer nextFrom) {
+    public List<PostDto> loadMoreArticle(@RequestParam Integer classroomId, @RequestParam Integer lastId) {
         List<PostDto> articleDtos = new ArrayList<PostDto>();
         try {
-            articleDtos = classroomUtilities.loadArticles(classroomId, nextFrom);
+            articleDtos = classroomUtilities.loadArticles(classroomId, lastId);
         } catch (Exception e){
 
         }
@@ -325,10 +355,10 @@ public class ClassController {
 
     @RequestMapping(value = "/classroom/material",method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public List<MaterialDto> loadMoreMaterial(@RequestParam Integer classroomId, @RequestParam Integer nextFrom) {
+    public List<MaterialDto> loadMoreMaterial(@RequestParam Integer classroomId, @RequestParam Integer lastId) {
         List<MaterialDto> materialDtos = new ArrayList<MaterialDto>();
         try {
-            materialDtos = classroomUtilities.loadMaterials(classroomId, nextFrom);
+            materialDtos = classroomUtilities.loadMaterials(classroomId, lastId);
         } catch (Exception e){
 
         }
@@ -337,10 +367,10 @@ public class ClassController {
 
     @RequestMapping(value = "/classroom/request",method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public List<RequestDto> loadMoreRequest(@RequestParam Integer classroomId, @RequestParam Integer nextFrom) {
+    public List<RequestDto> loadMoreRequest(@RequestParam Integer classroomId, @RequestParam Integer lastId) {
         List<RequestDto> requestDtos = new ArrayList<RequestDto>();
         try {
-            requestDtos = classroomUtilities.loadRequests(classroomId, nextFrom);
+            requestDtos = classroomUtilities.loadRequests(classroomId, lastId);
         } catch (Exception e){
 
         }
@@ -349,10 +379,10 @@ public class ClassController {
 
     @RequestMapping(value = "/classroom/student",method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public List<StudentDto> loadMoreStudent(@RequestParam Integer classroomId, @RequestParam Integer nextFrom) {
+    public List<StudentDto> loadMoreStudent(@RequestParam Integer classroomId, @RequestParam Integer lastId) {
         List<StudentDto> studentDtos = new ArrayList<StudentDto>();
         try {
-            studentDtos = classroomUtilities.loadStudents(classroomId, nextFrom);
+            studentDtos = classroomUtilities.loadStudents(classroomId, lastId);
         } catch (Exception e){
 
         }

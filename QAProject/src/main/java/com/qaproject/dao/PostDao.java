@@ -23,8 +23,8 @@ public interface PostDao {
     public List<Post> findRepliesByParentId(Integer parentId);
     public List<Post> findRepliesWasAcceptedByParentId(Integer parentId);
     public List<Post> findQuestionByOwnerClassroom(Classroom ownerClassroom);
-    public List<Post> findQuestionByOwnerClassroom(Integer classroomId, Integer nextFrom);
-    public List<Post> findArticleByOwnerClassroom(Integer classroomId, Integer nextFrom);
+    public List<Post> findQuestionByOwnerClassroom(Integer classroomId, Integer lastId);
+    public List<Post> findArticleByOwnerClassroom(Integer classroomId, Integer lastId);
     public List<Post> findArticleByCategory(Integer categoryId, Integer nextFrom);
     public List<Post> findQuestionsByOwnerUser(Integer ownerUserId, Integer lastId);
     public List<Post> findArticlesByOwnerUser(Integer ownerUserId, Integer lastId);
