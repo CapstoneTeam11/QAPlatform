@@ -330,7 +330,7 @@
 <script>
     /*$(document).ready(function () {*/
         var nextFromFollowedTeacher = 10;
-        var nextFromJoinedClassroom = 10;
+        var lastJoinedClassroomId = ${lastJoinedClassroomId};
         var nextFromInvitation = 10;
         $('#loadMoreTeacher').click(function (e) {
             var url = "dashboard/followedTeacher/" + nextFromFollowedTeacher;
@@ -375,7 +375,7 @@
             })
         });
         $('#loadMoreClassroom').click(function (e) {
-            var url = "dashboard/joinedClassroom/" + nextFromJoinedClassroom;
+            var url = "dashboard/joinedClassroom/" + lastJoinedClassroomId;
             $.ajax({
                 type: "GET",
                 url: url,
@@ -388,6 +388,7 @@
                     } else {
                         $('#loadMoreClassroom').hide();
                     }
+                    lastJoinedClassroomId = joinedClassrooms[length-1].joinedId;
                     for (var i = 0; i < length; i++) {
                         $('#joinedClassrooms').append('<div class="about-author clearfix" id="classroom'+
                                 joinedClassrooms[i].id +'">' +
@@ -406,7 +407,6 @@
                                 '</div>' +
                                 '</div>');
                     }
-                    nextFromJoinedClassroom= nextFromJoinedClassroom +10;
                 }
             })
         });

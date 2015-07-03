@@ -71,24 +71,35 @@ public class ProfileController {
             }
         }
 
-
+        Integer lastClassroomId=0;
         List<ClassroomDto> classrooms = new ArrayList<ClassroomDto>();
         if (userProfile.getRoleId().getId()==1){ // if user is student, find joined classrooms
             classrooms = profileUtilities.loadJoinedClassrooms(userProfileId,0);
+            if (classrooms!=null) {
+                if (classrooms.size()>10){
+                    lastClassroomId = classrooms.get(classrooms.size()-2).getJoinedId();
+                }
+            }
         }
         if (userProfile.getRoleId().getId()==2){ // if user is teacher, find owner classrooms
-            classrooms = profileUtilities.loadOwnedClassrooms(userProfileId,1); //load by page
+            classrooms = profileUtilities.loadOwnedClassrooms(userProfileId,0);
+            if (classrooms!=null) {
+                if (classrooms.size()>10){
+                    lastClassroomId = classrooms.get(classrooms.size()-2).getId();
+                }
+            }
         }
 
 
         model.addAttribute("questionCount", (questions!=null) ? questions.size():0);
         model.addAttribute("articleCount", (articles!=null) ? articles.size():0);
-        model.addAttribute("classroomCount", classrooms.size());
+        model.addAttribute("classroomCount", (classrooms!=null) ? classrooms.size():0);
         model.addAttribute("questions",questions);
         model.addAttribute("lastQuestionId",lastQuestionId);
         model.addAttribute("articles",articles);
         model.addAttribute("lastArticleId",lastArticleId);
         model.addAttribute("classrooms",classrooms);
+        model.addAttribute("lastClassroomId",lastClassroomId);
         model.addAttribute("isFollow",isFollow);
         model.addAttribute("userProfile", userProfile);
 
@@ -121,10 +132,10 @@ public class ProfileController {
 
     @RequestMapping(value = "/profile/joinedClassroom",method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public List<ClassroomDto> loadMoreJoinedClassroom(@RequestParam Integer userProfileId, @RequestParam Integer nextFrom) {
+    public List<ClassroomDto> loadMoreJoinedClassroom(@RequestParam Integer userProfileId, @RequestParam Integer lastId) {
         List<ClassroomDto> classroomDtos = new ArrayList<ClassroomDto>();
         try {
-            classroomDtos = profileUtilities.loadJoinedClassrooms(userProfileId, nextFrom);
+            classroomDtos = profileUtilities.loadJoinedClassrooms(userProfileId, lastId);
         } catch (Exception e){
 
         }
@@ -134,10 +145,10 @@ public class ProfileController {
     @RequestMapping(value = "/profile/ownedClassroom",method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public List<ClassroomDto> loadMoreOwnedClassroom(@RequestParam Integer userProfileId,
-                                                   @RequestParam Integer page) {
+                                                   @RequestParam Integer lastId) {
         List<ClassroomDto> classroomDtos = new ArrayList<ClassroomDto>();
         try {
-            classroomDtos = profileUtilities.loadOwnedClassrooms(userProfileId, page);
+            classroomDtos = profileUtilities.loadOwnedClassrooms(userProfileId, lastId);
         } catch (Exception e){
 
         }

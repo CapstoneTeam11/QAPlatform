@@ -80,7 +80,13 @@ public class TeacherController {
             return "403";
         }
         //check if teacher have any post or following others
-        List<ClassroomDto> ownedClassrooms = dashboardUtilities.loadOwnedClassrooms(user.getId(), 1);
+        List<ClassroomDto> ownedClassrooms = dashboardUtilities.loadOwnedClassrooms(user.getId(), 0);
+        Integer lastOwnedClassroomId = 0;
+        if (ownedClassrooms!=null) {
+            if (ownedClassrooms.size()>10){
+                lastOwnedClassroomId = ownedClassrooms.get(ownedClassrooms.size()-2).getId();
+            }
+        }
         List<FollowerDto> followedTeachers = dashboardUtilities.loadFollowedTeachers(user.getId(), 0);
         List<PostInvitationDto> invitations = dashboardUtilities.loadPostInvitations(user.getId(), 0);
         if (ownedClassrooms.size()==0 && followedTeachers.size()==0 && invitations.size()==0) {
@@ -88,6 +94,7 @@ public class TeacherController {
         }
         model.addAttribute("invitations",invitations);
         model.addAttribute("ownedClassrooms",ownedClassrooms);
+        model.addAttribute("lastOwnedClassroomId",lastOwnedClassroomId);
         model.addAttribute("followedTeachers",followedTeachers);
         return "teacherdashboard";
     }

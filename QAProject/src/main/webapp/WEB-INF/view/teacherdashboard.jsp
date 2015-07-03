@@ -381,7 +381,7 @@
 <script>
     /*$(document).ready(function () {*/
         var nextFromFollowedTeacher = 10;
-        var ownedClassroomPage = 2;
+        var lastOwnedClassroomId = ${lastOwnedClassroomId};
         var nextFromInvitation = 10;
         $('#loadMoreTeacher').click(function (e) {
             var url = "dashboard/followedTeacher/" + nextFromFollowedTeacher;
@@ -426,7 +426,7 @@
             })
         });
         $('#loadMoreClassroom').click(function (e) {
-            var url = "dashboard/ownedClassroom/" + ownedClassroomPage;
+            var url = "dashboard/ownedClassroom/" + lastOwnedClassroomId;
             $.ajax({
                 type: "GET",
                 url: url,
@@ -439,6 +439,7 @@
                     } else {
                         $('#loadMoreClassroom').hide();
                     }
+                    lastOwnedClassroomId = ownedClassrooms[length-1].id;
                     for (var i = 0; i < length; i++) {
                         var component = '<div class="about-author clearfix" id="classroom'+ ownedClassrooms[i].id +'">'+
                                 '<div class="" style="float: left;padding-right: 20px;">'+
@@ -479,7 +480,6 @@
 
                         $('#ownedClassrooms').append(component);
                     }
-                    ownedClassroomPage++;
                 }
             })
         });

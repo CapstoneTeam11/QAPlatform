@@ -62,14 +62,17 @@ public class ClassroomUserDaoImpl extends BaseDao<ClassroomUser,Integer> impleme
     }
 
     @Override
-    public List<ClassroomUser> findJoinedClassroomUserForDashboard (Integer studentId, Integer nextFrom){
-        Query query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.userId.id=:studentId and "+
-                "cu.approval=1 order by cu.classroomId.activeTime desc");
-        query.setParameter("studentId",studentId);
-        if (nextFrom < 0) {
-            nextFrom = 0;
+    public List<ClassroomUser> findJoinedClassroomUserForDashboard (Integer studentId, Integer lastId){
+        Query query;
+        if (lastId==0){
+            query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.userId.id=:studentId and "+
+                    "cu.approval=1 order by cu.id desc");
+        } else {
+            query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.userId.id=:studentId and "+
+                    "cu.approval=1 and cu.id<:lastId order by cu.id desc");
+            query.setParameter("lastId",lastId);
         }
-        query.setFirstResult(nextFrom);
+        query.setParameter("studentId",studentId);
         query.setMaxResults(11);
         List<ClassroomUser> classroomUsers = null;
         try {

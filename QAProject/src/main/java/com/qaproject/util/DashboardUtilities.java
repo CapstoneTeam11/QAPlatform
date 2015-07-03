@@ -44,9 +44,9 @@ public class DashboardUtilities {
         return followerDtos;
     }
 
-    public List<ClassroomDto> loadJoinedClassrooms(Integer studentId, Integer nextFrom) {
+    public List<ClassroomDto> loadJoinedClassrooms(Integer studentId, Integer lastId) {
         List<ClassroomDto> classroomDtos = new ArrayList<ClassroomDto>();
-        List<ClassroomUser> classroomUsers = classroomUserDao.findJoinedClassroomUserForDashboard(studentId, nextFrom);
+        List<ClassroomUser> classroomUsers = classroomUserDao.findJoinedClassroomUserForDashboard(studentId, lastId);
         if (classroomUsers!=null){
             for (ClassroomUser classroomUser : classroomUsers) {
                 ClassroomDto classroomDto = ConvertEntityDto.convertClassroomUserEntityToClassroomDto(classroomUser);
@@ -56,9 +56,9 @@ public class DashboardUtilities {
         return classroomDtos;
     }
 
-    public List<ClassroomDto> loadOwnedClassrooms(Integer ownerUserId, Integer page) {
+    public List<ClassroomDto> loadOwnedClassrooms(Integer ownerUserId, Integer lastId) {
         List<ClassroomDto> classroomDtos = new ArrayList<ClassroomDto>();
-        List<Classroom> classrooms = classroomDao.findOwnedClassroomForDashboard(ownerUserId, page);
+        List<Classroom> classrooms = classroomDao.findOwnedClassroomForDashboard(ownerUserId, lastId);
         if (classrooms!=null){
             for (Classroom classroom : classrooms) {
                 ClassroomDto classroomDto = ConvertEntityDto.convertClassroomEntityToDto(classroom);

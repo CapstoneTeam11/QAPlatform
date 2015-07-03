@@ -9,6 +9,7 @@ public class ClassroomDto {
     private String classroomName;
     private String classroomDescription;
     private Integer status;
+    private Integer joinedId; //use for student with joined classroom
 
     public Integer getId() {
         return id;
@@ -48,5 +49,13 @@ public class ClassroomDto {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Integer getJoinedId() {
+        return joinedId;
+    }
+
+    public void setJoinedId(Integer joinedId) {
+        this.joinedId = joinedId;
     }
 }

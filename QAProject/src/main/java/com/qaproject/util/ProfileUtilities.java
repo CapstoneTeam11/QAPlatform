@@ -61,11 +61,11 @@ public class ProfileUtilities {
         return questionDtos;
     }
 
-    public List<ClassroomDto> loadJoinedClassrooms(Integer studentId, Integer nextFrom) {
-        return dashboardUtilities.loadJoinedClassrooms(studentId,nextFrom);
+    public List<ClassroomDto> loadJoinedClassrooms(Integer studentId, Integer lastId) {
+        return dashboardUtilities.loadJoinedClassrooms(studentId,lastId);
     }
 
-    public List<ClassroomDto> loadOwnedClassrooms(Integer ownerUserId, Integer page) {
-        return dashboardUtilities.loadOwnedClassrooms(ownerUserId,page);
+    public List<ClassroomDto> loadOwnedClassrooms(Integer ownerUserId, Integer lastId) {
+        return dashboardUtilities.loadOwnedClassrooms(ownerUserId,lastId);
     }
 }

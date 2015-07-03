@@ -410,8 +410,8 @@
     }
 
     //Load more - MinhKH
-    var nextFromJoinedClassroom = 10;
-    var ownedClassroomPage = 2;
+    var lastJoinedClassroomId = ${lastClassroomId};
+    var lastOwnedClassroomId = ${lastClassroomId};
     var lastQuestionId = ${lastQuestionId};
     var lastArticleId = ${lastArticleId};
     $('#loadMoreQuestion').click(function (e) {
@@ -519,7 +519,7 @@
         $.ajax({
             type: "POST",
             url: url,
-            data: {userProfileId: userProfileId, page: ownedClassroomPage},
+            data: {userProfileId: userProfileId, lastId: lastOwnedClassroomId},
             success: function (data) {
                 var ownedClassrooms = new Array();
                 ownedClassrooms = data;
@@ -529,6 +529,7 @@
                 } else {
                     $('#loadMoreOwnedClassroom').hide();
                 }
+                lastOwnedClassroomId = ownedClassrooms[length-1].id;
                 for (var i = 0; i < length; i++) {
                     var component = '<div class="about-author clearfix" id="classroom'+ ownedClassrooms[i].id +'">'+
                             '<div class="" style="float: left;padding-right: 20px;">'+
@@ -565,7 +566,6 @@
 
                     $('#classrooms').append(component);
                 }
-                ownedClassroomPage++;
             }
         })
     });
@@ -575,7 +575,7 @@
         $.ajax({
             type: "POST",
             url: url,
-            data: {userProfileId: userProfileId, nextFrom: nextFromJoinedClassroom},
+            data: {userProfileId: userProfileId, lastId: lastJoinedClassroomId},
             success: function (data) {
                 var joinedClassrooms = new Array();
                 joinedClassrooms = data;
@@ -585,6 +585,7 @@
                 } else {
                     $('#loadMoreJoinedClassroom').hide();
                 }
+                lastJoinedClassroomId = joinedClassrooms[length-1].joinedId;
                 for (var i = 0; i < length; i++) {
                     $('#classrooms').append('<div class="about-author clearfix" id="classroom'+
                             joinedClassrooms[i].id +'">' +
@@ -601,7 +602,6 @@
                             '</div>' +
                             '</div>');
                 }
-                nextFromJoinedClassroom= nextFromJoinedClassroom +10;
             }
         })
     });

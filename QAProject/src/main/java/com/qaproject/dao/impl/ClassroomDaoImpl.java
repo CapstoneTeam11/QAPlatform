@@ -50,16 +50,19 @@ public class ClassroomDaoImpl extends BaseDao<Classroom,Integer> implements Clas
     }
 
     @Override
-    public List<Classroom> findOwnedClassroomForDashboard(Integer ownerUserId, Integer page) {
+    public List<Classroom> findOwnedClassroomForDashboard(Integer ownerUserId, Integer lastId) {
         List<Classroom> classrooms = null;
-        Query query = entityManager.createQuery("Select c from Classroom c where c.ownerUserId.id= :ownerUserId " +
-                "order by c.activeTime desc");
-        query.setParameter("ownerUserId",ownerUserId);
-        if (page < 1) {
-            page = 1;
+        Query query;
+        if (lastId==0){
+            query = entityManager.createQuery("Select c from Classroom c where c.ownerUserId.id= :ownerUserId " +
+                    "order by c.id desc");
+        } else {
+            query = entityManager.createQuery("Select c from Classroom c where c.ownerUserId.id= :ownerUserId " +
+                    "and c.id<:lastId order by c.id desc");
+            query.setParameter("lastId",lastId);
         }
-        query.setFirstResult((page - 1) * Constant.NUMBER_PAGE);
-        query.setMaxResults(Constant.NUMBER_PAGE+1);
+        query.setParameter("ownerUserId",ownerUserId);
+        query.setMaxResults(11);
         try {
             classrooms = query.getResultList();
         } catch (NoResultException e){
