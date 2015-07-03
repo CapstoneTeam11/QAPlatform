@@ -57,9 +57,22 @@ public class ProfileController {
         }
         Integer userProfileId = userProfile.getId();
         List<PostDto> questions = profileUtilities.loadProfileQuestions(userProfileId,0);
+        Integer lastQuestionId=0;
+        if (questions!=null) {
+            if (questions.size()>10){
+                lastQuestionId = questions.get(questions.size()-2).getId();
+            }
+        }
         List<PostDto> articles = profileUtilities.loadProfileArticles(userProfileId, 0);
-        List<ClassroomDto> classrooms = new ArrayList<ClassroomDto>();
+        Integer lastArticleId=0;
+        if (articles!=null) {
+            if (articles.size()>10){
+                lastArticleId = articles.get(articles.size()-2).getId();
+            }
+        }
 
+
+        List<ClassroomDto> classrooms = new ArrayList<ClassroomDto>();
         if (userProfile.getRoleId().getId()==1){ // if user is student, find joined classrooms
             classrooms = profileUtilities.loadJoinedClassrooms(userProfileId,0);
         }
@@ -72,7 +85,9 @@ public class ProfileController {
         model.addAttribute("articleCount", (articles!=null) ? articles.size():0);
         model.addAttribute("classroomCount", classrooms.size());
         model.addAttribute("questions",questions);
+        model.addAttribute("lastQuestionId",lastQuestionId);
         model.addAttribute("articles",articles);
+        model.addAttribute("lastArticleId",lastArticleId);
         model.addAttribute("classrooms",classrooms);
         model.addAttribute("isFollow",isFollow);
         model.addAttribute("userProfile", userProfile);
@@ -82,10 +97,10 @@ public class ProfileController {
 
     @RequestMapping(value = "/profile/question",method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public List<PostDto> loadMoreQuestion(@RequestParam Integer userProfileId, @RequestParam Integer nextFrom) {
+    public List<PostDto> loadMoreQuestion(@RequestParam Integer userProfileId, @RequestParam Integer lastId) {
         List<PostDto> questionDtos = new ArrayList<PostDto>();
         try {
-            questionDtos = profileUtilities.loadProfileQuestions(userProfileId,nextFrom);
+            questionDtos = profileUtilities.loadProfileQuestions(userProfileId,lastId);
         } catch (Exception e){
 
         }
@@ -94,10 +109,10 @@ public class ProfileController {
 
     @RequestMapping(value = "/profile/article",method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public List<PostDto> loadMoreArticle(@RequestParam Integer userProfileId, @RequestParam Integer nextFrom) {
+    public List<PostDto> loadMoreArticle(@RequestParam Integer userProfileId, @RequestParam Integer lastId) {
         List<PostDto> articleDtos = new ArrayList<PostDto>();
         try {
-            articleDtos = profileUtilities.loadProfileArticles(userProfileId, nextFrom);
+            articleDtos = profileUtilities.loadProfileArticles(userProfileId, lastId);
         } catch (Exception e){
 
         }

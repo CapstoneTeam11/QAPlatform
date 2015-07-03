@@ -410,17 +410,17 @@
     }
 
     //Load more - MinhKH
-    var nextFromQuestion = 10;
-    var nextFromArticle = 10;
     var nextFromJoinedClassroom = 10;
     var ownedClassroomPage = 2;
+    var lastQuestionId = ${lastQuestionId};
+    var lastArticleId = ${lastArticleId};
     $('#loadMoreQuestion').click(function (e) {
         var url = "/profile/question";
         var userProfileId = ${userProfile.id};
         $.ajax({
             type: "POST",
             url: url,
-            data: {userProfileId: userProfileId, nextFrom: nextFromQuestion},
+            data: {userProfileId: userProfileId, lastId: lastQuestionId},
             success: function (data) {
                 var questions = new Array();
                 questions = data;
@@ -430,6 +430,7 @@
                 } else {
                     $('#loadMoreQuestion').hide();
                 }
+                lastQuestionId = questions[length-1].id;
                 for (var i = 0; i < length; i++) {
                     var component = '<article class="question question-type-normal">' +
                             '<h2>' +
@@ -466,7 +467,6 @@
                     $('#questions').append(component);
                     $(".tooltip-n").tipsy({fade:true,gravity:"s"});
                 }
-                nextFromQuestion = nextFromQuestion + 10;
             }
         })
     });
@@ -476,7 +476,7 @@
         $.ajax({
             type: "POST",
             url: url,
-            data: {userProfileId: userProfileId, nextFrom: nextFromArticle},
+            data: {userProfileId: userProfileId, lastId: lastArticleId},
             success: function (data) {
                 var articles = new Array();
                 articles = data;
@@ -486,6 +486,7 @@
                 } else {
                     $('#loadMoreArticle').hide();
                 }
+                lastArticleId = articles[length-1].id;
                 for (var i = 0; i < length; i++) {
                     var component = '<article class="post clearfix">'+
                             '<div class="post-inner">'+

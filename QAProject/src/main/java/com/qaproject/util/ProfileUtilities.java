@@ -21,8 +21,8 @@ public class ProfileUtilities {
     @Autowired
     DashboardUtilities dashboardUtilities;
 
-    public List<PostDto> loadProfileArticles(Integer ownerUserId, Integer nextFrom) {
-        List<Post> articles = postDao.findArticlesByOwnerUser(ownerUserId, nextFrom);
+    public List<PostDto> loadProfileArticles(Integer ownerUserId, Integer lastId) {
+        List<Post> articles = postDao.findArticlesByOwnerUser(ownerUserId, lastId);
         List<PostDto> articleDtos = new ArrayList<PostDto>();
         if (articles != null) {
             for (Post article : articles) {
@@ -41,8 +41,8 @@ public class ProfileUtilities {
         return articleDtos;
     }
 
-    public List<PostDto> loadProfileQuestions(Integer ownerUserId, Integer nextFrom) {
-        List<Post> questions = postDao.findQuestionsByOwnerUser(ownerUserId, nextFrom);
+    public List<PostDto> loadProfileQuestions(Integer ownerUserId, Integer lastId) {
+        List<Post> questions = postDao.findQuestionsByOwnerUser(ownerUserId, lastId);
         List<PostDto> questionDtos = new ArrayList<PostDto>();
         if (questions != null) {
             for (Post question : questions) {
