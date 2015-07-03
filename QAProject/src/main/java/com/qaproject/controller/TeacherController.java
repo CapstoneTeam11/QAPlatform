@@ -96,10 +96,17 @@ public class TeacherController {
         }
 
         List<PostInvitationDto> invitations = dashboardUtilities.loadPostInvitations(user.getId(), 0);
+        Integer lastPostInvitationId = 0;
+        if (invitations!=null){
+            if (invitations.size()>10){
+                lastPostInvitationId = invitations.get(invitations.size()-2).getId();
+            }
+        }
         if (ownedClassrooms.size()==0 && followedTeachers.size()==0 && invitations.size()==0) {
             return "teacherdashboardWelcome";
         }
         model.addAttribute("invitations",invitations);
+        model.addAttribute("lastPostInvitationId",lastPostInvitationId);
         model.addAttribute("ownedClassrooms",ownedClassrooms);
         model.addAttribute("lastOwnedClassroomId",lastOwnedClassroomId);
         model.addAttribute("followedTeachers",followedTeachers);

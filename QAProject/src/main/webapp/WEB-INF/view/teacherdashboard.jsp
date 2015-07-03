@@ -368,7 +368,7 @@
     /*$(document).ready(function () {*/
         var lastFollowedTeacherId = ${lastFollowedTeacherId};
         var lastOwnedClassroomId = ${lastOwnedClassroomId};
-        var nextFromInvitation = 10;
+        var lastPostInvitationId = ${lastPostInvitationId};
         $('#loadMoreTeacher').click(function (e) {
             var url = "dashboard/followedTeacher/" + lastFollowedTeacherId;
             $.ajax({
@@ -470,7 +470,7 @@
             })
         });
         $('#loadMoreInvitation').click(function (e) {
-            var url = "dashboard/postInvitation/" + nextFromInvitation;
+            var url = "dashboard/postInvitation/" + lastPostInvitationId;
             $.ajax({
                 type: "GET",
                 url: url,
@@ -483,13 +483,16 @@
                     } else {
                         $('#loadMoreInvitation').hide();
                     }
+                    lastPostInvitationId = invitations[length-1].id;
                     for (var i = 0; i < length; i++) {
-                        $('#invitations').append('<div class="about-author clearfix">' +
+                        $('#invitations').append('<div class="about-author clearfix" id="invitation'+ invitations[i].id +'">' +
                                 '<div class="" style="float: left;padding-right: 20px;">' +
                                 '<a href="#" original-title="admin" class=""><img alt="" ' +
                                 ' src="https://askwarks.files.wordpress.com/2012/06/icon-conversation.png"></a>' +
                                 '</div>' +
-                                '<a class="" href="#" style="float: right">Remove</a>' +
+                                '<a id="'+ invitations[i].id +'" ' +
+                                'class="removeInvitation" style="float: right; cursor:pointer" ' +
+                                'onclick="removeInvitation(this);return false" >Remove</a>' +
                                 '<div class="author-bio">' +
                                 '<h4><a href="/post/view/'+ invitations[i].postId
                                 +'">' + invitations[i].postTitle + '</a></h4>' +
@@ -501,7 +504,6 @@
                                 '</div>' +
                                 '</div>');
                     }
-                    invitationPage = nextFromInvitation + 10;
                 }
             })
         });
@@ -530,7 +532,6 @@
                 data: 'invitationId=' + invitationId,
                 success: function (data){
                     if(data === "OK"){
-                        nextFromInvitation--;
                         var invitation = $('#invitation'+invitationId);
                         var questionHref = invitation.find("h4").find("a").attr("href");
                         var questionTitle = invitation.find("h4").find("a").text();

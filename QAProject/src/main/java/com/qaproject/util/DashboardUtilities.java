@@ -68,9 +68,9 @@ public class DashboardUtilities {
         return classroomDtos;
     }
 
-    public List<ClassroomInvitationDto> loadClassroomInvitations(Integer studentId, Integer nextFrom){
+    public List<ClassroomInvitationDto> loadClassroomInvitations(Integer studentId, Integer lastId){
         List<ClassroomInvitationDto> classroomInvitationDtos = new ArrayList<ClassroomInvitationDto>();
-        List<ClassroomUser> classroomUsers = classroomUserDao.findInvitationClassroomUserForDashboard(studentId, nextFrom);
+        List<ClassroomUser> classroomUsers = classroomUserDao.findInvitationClassroomUserForDashboard(studentId, lastId);
         if (classroomUsers!=null) {
             for (ClassroomUser classroomUser : classroomUsers) {
                 ClassroomInvitationDto classroomInvitationDto =
@@ -81,9 +81,9 @@ public class DashboardUtilities {
         return classroomInvitationDtos;
     }
 
-    public List<PostInvitationDto> loadPostInvitations(Integer teacherId, Integer nextFrom){
+    public List<PostInvitationDto> loadPostInvitations(Integer teacherId, Integer lastId){
         List<PostInvitationDto> postInvitationDtos = new ArrayList<PostInvitationDto>();
-        List<PostInvitation> postInvitations = postInvitationDao.findPostInvitationForDashboard(teacherId,nextFrom);
+        List<PostInvitation> postInvitations = postInvitationDao.findPostInvitationForDashboard(teacherId,lastId);
         if (postInvitations!=null) {
             for (PostInvitation postInvitation : postInvitations) {
                 PostInvitationDto postInvitationDto = ConvertEntityDto.convertPostInvitationEntityToDto(postInvitation);

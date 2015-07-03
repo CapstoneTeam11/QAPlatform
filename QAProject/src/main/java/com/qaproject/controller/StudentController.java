@@ -55,11 +55,18 @@ public class StudentController {
             }
         }
         List<ClassroomInvitationDto> invitations = dashboardUtilities.loadClassroomInvitations(user.getId(),0);
+        Integer lastClassroomInvitationId = 0;
+        if (invitations!=null) {
+            if (invitations.size()>10){
+                lastClassroomInvitationId = invitations.get(invitations.size()-2).getId();
+            }
+        }
 
         if (followedTeachers.size()==0 && joinedClassrooms.size()==0 && invitations.size()==0){
             return "studentdashboardWelcome";
         }
         model.addAttribute("invitations",invitations);
+        model.addAttribute("lastClassroomInvitationId",lastClassroomInvitationId);
         model.addAttribute("followedTeachers", followedTeachers);
         model.addAttribute("lastFollowedTeacherId", lastFollowedTeacherId);
         model.addAttribute("joinedClassrooms", joinedClassrooms);

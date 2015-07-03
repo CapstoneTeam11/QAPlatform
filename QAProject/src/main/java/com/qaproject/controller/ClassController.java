@@ -420,14 +420,14 @@ public class ClassController {
         return classroomDtos;
     }
 
-    @RequestMapping(value = "dashboard/classroomInvitation/{nextFrom}",produces = "application/json",
+    @RequestMapping(value = "dashboard/classroomInvitation/{lastId}",produces = "application/json",
             method = RequestMethod.GET)
     public @ResponseBody
-    List<ClassroomInvitationDto> loadClassroomInvitation(@PathVariable Integer nextFrom) {
+    List<ClassroomInvitationDto> loadClassroomInvitation(@PathVariable Integer lastId) {
         User user = (User) session.getAttribute("user");
         List<ClassroomInvitationDto> classroomInvitationDtos = null;
         try {
-            classroomInvitationDtos = dashboardUtilities.loadClassroomInvitations(user.getId(), nextFrom);
+            classroomInvitationDtos = dashboardUtilities.loadClassroomInvitations(user.getId(), lastId);
         } catch (Exception e) {
             e.printStackTrace();
         }

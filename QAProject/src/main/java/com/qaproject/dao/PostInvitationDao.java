@@ -15,7 +15,7 @@ public interface PostInvitationDao {
     public PostInvitation find(Integer id);
     List<PostInvitation> findAll();
     List<PostInvitation> findLastInvitationsByTeachers (List<Integer> teacherIds);
-    List<PostInvitation> findPostInvitationForDashboard(Integer teacherId, Integer page);
+    List<PostInvitation> findPostInvitationForDashboard(Integer teacherId, Integer lastId);
     @Transactional(propagation = Propagation.REQUIRED)
     public void persist(PostInvitation entity);
     @Transactional(propagation = Propagation.REQUIRED)

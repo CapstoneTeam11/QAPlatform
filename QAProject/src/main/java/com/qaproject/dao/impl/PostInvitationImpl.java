@@ -31,15 +31,19 @@ public class PostInvitationImpl extends BaseDao<PostInvitation,Integer> implemen
     }
 
     @Override
-    public List<PostInvitation> findPostInvitationForDashboard(Integer teacherId, Integer nextFrom) {
+    public List<PostInvitation> findPostInvitationForDashboard(Integer teacherId, Integer lastId) {
         List<PostInvitation> postInvitations = null;
-        Query query = entityManager.createQuery("Select pi from PostInvitation pi where pi.teacherId.id=:teacherId " +
-                "order by pi.id desc");
-        query.setParameter("teacherId",teacherId);
-        if (nextFrom < 0) {
-            nextFrom = 0;
+        Query query;
+        if (lastId==0){
+            query = entityManager.createQuery("Select pi from PostInvitation pi where pi.teacherId.id=:teacherId " +
+                    "order by pi.id desc");
+        }else {
+            query = entityManager.createQuery("Select pi from PostInvitation pi where pi.teacherId.id=:teacherId " +
+                    "and pi.id<:lastId order by pi.id desc");
+            query.setParameter("lastId",lastId);
         }
-        query.setFirstResult(nextFrom);
+
+        query.setParameter("teacherId",teacherId);
         query.setMaxResults(11);
         try {
             postInvitations = query.getResultList();

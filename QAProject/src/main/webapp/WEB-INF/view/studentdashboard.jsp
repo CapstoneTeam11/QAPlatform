@@ -317,7 +317,7 @@
     /*$(document).ready(function () {*/
         var lastFollowedTeacherId = ${lastFollowedTeacherId};
         var lastJoinedClassroomId = ${lastJoinedClassroomId};
-        var nextFromInvitation = 10;
+        var lastClassroomInvitationId = ${lastClassroomInvitationId};
         $('#loadMoreTeacher').click(function (e) {
             var url = "dashboard/followedTeacher/" + lastFollowedTeacherId;
             $.ajax({
@@ -397,7 +397,7 @@
             })
         });
         $('#loadMoreInvitation').click(function (e) {
-            var url = "dashboard/classroomInvitation/" + nextFromInvitation;
+            var url = "dashboard/classroomInvitation/" + lastClassroomInvitationId;
             $.ajax({
                 type: "GET",
                 url: url,
@@ -410,6 +410,7 @@
                     } else {
                         $('#loadMoreInvitation').hide();
                     }
+                    lastClassroomInvitationId = invitations[length-1].id;
                     for (var i = 0; i < length; i++) {
                         $('#invitations').append('<div class="about-author clearfix" id=invitation' +
                                 invitations[i].id + '>' +
@@ -434,7 +435,6 @@
                                 '</div>' +
                                 '</div>');
                     }
-                    nextFromInvitation= nextFromInvitation + 10;
                 }
             })
         });
@@ -463,7 +463,6 @@
                 data: "invitationId="+ invitationId,
                 success: function (data){
                     if(data === "OK"){
-                        nextFromInvitation--;
                         var invitation = $('#invitation'+invitationId);
                         var classroomName = invitation.find("h4").find("a").text();
                         var classroomHref = invitation.find("h4").find("a").attr("href");
@@ -483,7 +482,6 @@
                 data: "invitationId="+ invitationId,
                 success: function (data){
                     if(data !== ""){
-                        nextFromInvitation--;
                         var invitation = $('#invitation'+invitationId);
                         var classroomName = invitation.find("h4").find("a").text();
                         var classroomHref = invitation.find("h4").find("a").attr("href");
