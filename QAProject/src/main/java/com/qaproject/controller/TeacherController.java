@@ -88,6 +88,13 @@ public class TeacherController {
             }
         }
         List<FollowerDto> followedTeachers = dashboardUtilities.loadFollowedTeachers(user.getId(), 0);
+        Integer lastFollowedTeacherId = 0;
+        if (followedTeachers!=null) {
+            if (followedTeachers.size()>10){
+                lastFollowedTeacherId = followedTeachers.get(followedTeachers.size()-2).getId();
+            }
+        }
+
         List<PostInvitationDto> invitations = dashboardUtilities.loadPostInvitations(user.getId(), 0);
         if (ownedClassrooms.size()==0 && followedTeachers.size()==0 && invitations.size()==0) {
             return "teacherdashboardWelcome";
@@ -96,6 +103,7 @@ public class TeacherController {
         model.addAttribute("ownedClassrooms",ownedClassrooms);
         model.addAttribute("lastOwnedClassroomId",lastOwnedClassroomId);
         model.addAttribute("followedTeachers",followedTeachers);
+        model.addAttribute("lastFollowedTeacherId", lastFollowedTeacherId);
         return "teacherdashboard";
     }
 }

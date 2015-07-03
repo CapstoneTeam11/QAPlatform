@@ -366,11 +366,11 @@
 </c:if>
 <script>
     /*$(document).ready(function () {*/
-        var nextFromFollowedTeacher = 10;
+        var lastFollowedTeacherId = ${lastFollowedTeacherId};
         var lastOwnedClassroomId = ${lastOwnedClassroomId};
         var nextFromInvitation = 10;
         $('#loadMoreTeacher').click(function (e) {
-            var url = "dashboard/followedTeacher/" + nextFromFollowedTeacher;
+            var url = "dashboard/followedTeacher/" + lastFollowedTeacherId;
             $.ajax({
                 type: "GET",
                 url: url,
@@ -383,6 +383,7 @@
                     } else {
                         $('#loadMoreTeacher').hide();
                     }
+                    lastFollowedTeacherId = followedTeachers[length-1].id;
                     for (var i = 0; i < length; i++) {
                         var component = '<div class="about-author clearfix" id="teacher'+
                                 followedTeachers[i].teacherId +
@@ -407,7 +408,6 @@
                         $('#followedTeachers').append(component);
                         $(".tooltip-n").tipsy({fade:true,gravity:"s"});
                     }
-                    nextFromFollowedTeacher=nextFromFollowedTeacher+10;
                 }
             })
         });
@@ -513,7 +513,6 @@
                 data: "teacherId="+ teacherId,
                 success: function (data){
                     if(data === "OK"){
-                        nextFromFollowedTeacher--;
                         var followedTeacher = $('#teacher'+teacherId);
                         var teacherName = followedTeacher.find("h4").find("a").text();
                         followedTeacher.html('You have unfollowed <a href="/profile/view/'+ teacherId +'">'+

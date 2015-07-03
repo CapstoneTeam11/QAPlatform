@@ -24,14 +24,14 @@ public class FollowerController {
     @Autowired
     HttpSession session;
 
-    @RequestMapping(value = "dashboard/followedTeacher/{nextFrom}",produces = "application/json",
+    @RequestMapping(value = "dashboard/followedTeacher/{lastId}",produces = "application/json",
             method = RequestMethod.GET)
     public @ResponseBody
-    List<FollowerDto> loadFollowedTeacher(@PathVariable Integer nextFrom) {
+    List<FollowerDto> loadFollowedTeacher(@PathVariable Integer lastId) {
         User user = (User) session.getAttribute("user");
         List<FollowerDto> followerDtos = null;
         try {
-            followerDtos = dashboardUtilities.loadFollowedTeachers(user.getId(),nextFrom);
+            followerDtos = dashboardUtilities.loadFollowedTeachers(user.getId(),lastId);
         } catch (Exception e) {
             e.printStackTrace();
         }

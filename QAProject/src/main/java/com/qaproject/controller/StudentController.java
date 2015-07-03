@@ -41,6 +41,12 @@ public class StudentController {
         }
 
         List<FollowerDto> followedTeachers = dashboardUtilities.loadFollowedTeachers(user.getId(), 0);
+        Integer lastFollowedTeacherId = 0;
+        if (followedTeachers!=null) {
+            if (followedTeachers.size()>10){
+                lastFollowedTeacherId = followedTeachers.get(followedTeachers.size()-2).getId();
+            }
+        }
         List<ClassroomDto> joinedClassrooms = dashboardUtilities.loadJoinedClassrooms(user.getId(), 0);
         Integer lastJoinedClassroomId = 0;
         if (joinedClassrooms!=null) {
@@ -55,6 +61,7 @@ public class StudentController {
         }
         model.addAttribute("invitations",invitations);
         model.addAttribute("followedTeachers", followedTeachers);
+        model.addAttribute("lastFollowedTeacherId", lastFollowedTeacherId);
         model.addAttribute("joinedClassrooms", joinedClassrooms);
         model.addAttribute("lastJoinedClassroomId",lastJoinedClassroomId);
         return "studentdashboard";
