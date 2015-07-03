@@ -18,19 +18,37 @@ import java.util.List;
 @Repository
 public class TagPostDaoImpl extends BaseDao<TagPost,Integer> implements TagPostDao {
     @Override
-    public List<Integer> findRelatedPostIds(List<Integer> tagIds) {
-        List<Integer> relatedPostIds = null;
+    public List<Integer> findRelatedQuestionIds(List<Integer> tagIds) {
+        List<Integer> relatedQuestionIds = null;
         Query query = entityManager.createQuery("Select tp.postId.id from TagPost tp WHERE tp.tagId.id in :tagIds " +
+                "and tp.postId.postType=1 " +
                 "group by tp.postId " +
                 "order by count(tp.tagId) DESC");
         query.setParameter("tagIds",tagIds);
-        query.setMaxResults(5);
+        query.setMaxResults(10);
         try {
-            relatedPostIds = query.getResultList();
+            relatedQuestionIds = query.getResultList();
         } catch (Exception e){
             e.printStackTrace();
         }
-        return relatedPostIds;
+        return relatedQuestionIds;
+    }
+
+    @Override
+    public List<Integer> findRelatedArticlesIds(List<Integer> tagIds) {
+        List<Integer> relatedArticleIds = null;
+        Query query = entityManager.createQuery("Select tp.postId.id from TagPost tp WHERE tp.tagId.id in :tagIds " +
+                "and tp.postId.postType=2 " +
+                "group by tp.postId " +
+                "order by count(tp.tagId) DESC");
+        query.setParameter("tagIds",tagIds);
+        query.setMaxResults(10);
+        try {
+            relatedArticleIds = query.getResultList();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return relatedArticleIds;
     }
 
     @Override

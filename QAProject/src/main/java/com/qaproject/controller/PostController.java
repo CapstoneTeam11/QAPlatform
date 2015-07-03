@@ -8,7 +8,6 @@ import com.qaproject.util.ConvertEntityDto;
 import com.qaproject.util.DashboardUtilities;
 import com.qaproject.util.NotificationUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -49,6 +48,10 @@ public class PostController {
     NotificationUtilities notificationUtilities;
     @Autowired
     NotificationDao notificationDao;
+    @Autowired
+    TagMaterialDao tagMaterialDao;
+    @Autowired
+    MaterialDao materialDao;
     @Autowired
     SimpMessagingTemplate template;
 
@@ -139,26 +142,58 @@ public class PostController {
                 }
             }
         }
-        //get related postId - MinhKH
+
+        //get tag list of post
         List<Integer> tagIds = new ArrayList<Integer>();
         for (int i = 0; i < post.getTagPostList().size(); i++) {
             tagIds.add(post.getTagPostList().get(i).getTagId().getId());
         }
-        List<Integer> relatedPostIds = tagPostDao.findRelatedPostIds(tagIds);
-        List<Post> relatedPosts = new ArrayList<Post>();
-        if (relatedPostIds != null) {
-            for (int i = 0; i < relatedPostIds.size(); i++) {
-                int currentRelatedPostId = relatedPostIds.get(i);
-                if (currentRelatedPostId != post.getId()) {
-                    Post relatedPost = postDao.find(currentRelatedPostId);
-                    relatedPosts.add(relatedPost);
+
+        //get related questions - MinhKH
+        List<Integer> relatedQuestionIds = tagPostDao.findRelatedQuestionIds(tagIds);
+        List<Post> relatedQuestions = new ArrayList<Post>();
+        if (relatedQuestionIds != null) {
+            for (int i = 0; i < relatedQuestionIds.size(); i++) {
+                int currentRelatedQuestionId = relatedQuestionIds.get(i);
+                if (currentRelatedQuestionId != post.getId()) {
+                    Post relatedQuestion = postDao.find(currentRelatedQuestionId);
+                    relatedQuestions.add(relatedQuestion);
                 }
             }
         }
+
+        //get related articles
+        List<Post> relatedArticles = new ArrayList<Post>();
+        List<Integer> relatedArticlesIds = tagPostDao.findRelatedArticlesIds(tagIds);
+        if (relatedArticlesIds != null) {
+            for (int i = 0; i < relatedArticlesIds.size(); i++) {
+                int currentRelatedArticlesId = relatedArticlesIds.get(i);
+                if (currentRelatedArticlesId != post.getId()) {
+                    Post relatedArticle = postDao.find(currentRelatedArticlesId);
+                    relatedArticles.add(relatedArticle);
+                }
+
+            }
+        }
+
+        //get related materials
+        List<Material> relatedMaterials = new ArrayList<Material>();
+        List<Integer> relatedMaterialIds = tagMaterialDao.findRelatedMaterialIds(tagIds);
+        if (relatedMaterialIds != null) {
+            for (int i = 0; i < relatedMaterialIds.size(); i++) {
+                int currentRelatedMaterialId = relatedMaterialIds.get(i);
+                    Material relatedMaterial = materialDao.find(currentRelatedMaterialId);
+                relatedMaterials.add(relatedMaterial);
+            }
+        }
+
+
         //get List Post answer
         List<Post> postAnswers = postDao.findPostChilds(id, 0);
         model.addAttribute("post", post);
-        model.addAttribute("relatedPosts", relatedPosts);
+        model.addAttribute("relatedArticles", relatedArticles);
+        model.addAttribute("relatedMaterials", relatedMaterials);
+        model.addAttribute("relatedQuestions", relatedQuestions);
         model.addAttribute("postAnswers", postAnswers);
         if (user != null) {
             WantAnswerPost wantAnswerPost = post.checkWantToAnswer(user.getId());

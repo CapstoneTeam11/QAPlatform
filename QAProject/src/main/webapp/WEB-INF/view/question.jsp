@@ -203,7 +203,7 @@
                     <span class="question-date"><i class="icon-time"></i>${post.lastEditedDate}</span>
                     <span class="question-category"><a href="/classroom/${post.ownerClassId.id}"><i
                             class="icon-group"></i>Class: ${post.ownerClassId.classroomName}</a></span>
-                    <span class="question-category"><a href="#"><i
+                    <span class="question-category"><a href="/profile/view/${post.ownerClassId.ownerUserId.id}"><i
                             class="icon-user"></i>Teacher: ${post.ownerClassId.ownerUserId.displayName}</a></span>
                     <span class="question-view"><i class="icon-eye-open"></i>${post.viewer} view(s)</span>
                     <span class="question-tags">
@@ -251,124 +251,125 @@
                         <textarea id="question-details" aria-required="true" cols="58" rows="8"></textarea>
                     </div>
                     <p class="form-submit">
-                        <input name="submit" type="submit" id="submit" value="Post your answer"
+                        <input name="submit" type="submit" id="submit" value="Submit your answer"
                                class="button small color">
                     </p>
                 </form>
             </div>
             </c:if>
-
-            <div id="commentlist" class="page-content">
-                <div class="boxedtitle page-title"><h2>Answers ( <span class="color">${fn:length(postAnswers)}</span> )
-                </h2></div>
-                <ol class="commentlist clearfix" id="commentListDetail">
-                    <c:if test="${fn:length(postAnswers) > 10}">
-                        <c:forEach var="postAnswer" items="${postAnswers}" end="9">
-                            <li class="comment">
-                                <div class="comment-body comment-body-answered clearfix">
-                                    <div class="avatar"><img alt=""
-                                                             src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg">
-                                    </div>
-                                    <div class="comment-text">
-                                        <div class="author clearfix"  style="display: flex">
-                                            <div style="width: 30%">
-                                                <div class="comment-author"><a href="#">${postAnswer.ownerUserId.displayName}</a>
-                                                </div>
-                                                <div class="comment-meta">
-                                                    <div class="date"><i class="icon-time"></i>${postAnswer.creationDate}</div>
-                                                </div>
-                                            </div>
-                                            <div class="acceptAnswerIcon" id="answerIcon${postAnswer.id}">
-                                                <c:if test="${postAnswer.acceptedAnswerId==1}">
-                                                    <i class="icon-ok"></i>
-                                                </c:if>
-                                            </div>
-                                                <%--Add javascript to chang "<i class="icon-thumbs-up"></i>Accept" to "Unaccept"--%>
-                                            <div style="width: 75%;display: flex">
-                                                <div style="width: 100%;float: right;">
-                                                    <input type="hidden" name="postAnswerId" value="${postAnswer.id}">
-                                                    <c:if test="${postAnswer.acceptedAnswerId !=1 && sessionScope.user.id==post.ownerUserId.id}">
-                                                        <a class="button small color acceptAnswer answerFlag" style="float: right" onclick="answerFlag(this)">Accept</a>
-                                                    </c:if>
-                                                    <c:if test="${postAnswer.acceptedAnswerId==1 && sessionScope.user.id==post.ownerUserId.id}">
-                                                        <a class="button small color unacceptAnswer answerFlag" style="float: right" onclick="answerFlag(this)">Unaccept</a>
-                                                    </c:if>
-                                                </div>
-                                                <div style="float: right;margin-left: 2%;">
-                                                    <c:if test="${sessionScope.user.id == postAnswer.ownerUserId.id}" >
-                                                    <div class="btn-group">
-                                                        <a data-toggle="dropdown" href="" aria-expanded="false"><span class="caretBig"></span></a>
-                                                        <ul class="actionAnswer dropdown-menu" role="menu" >
-                                                            <li><a href="#" onclick="editAnswer(this);return false;">Edit</a></li>
-                                                            <li><a href="#" onclick="deleteAnswer(this);return false;">Delete</a></li>
-                                                            <li><a ></a></li>
-                                                        </ul>
+            <c:if test="${not empty postAnswers}">
+                <div id="commentlist" class="page-content">
+                    <div class="boxedtitle page-title"><h2>Answers ( <span class="color">${fn:length(postAnswers)}</span> )
+                    </h2></div>
+                    <ol class="commentlist clearfix" id="commentListDetail">
+                        <c:if test="${fn:length(postAnswers) > 10}">
+                            <c:forEach var="postAnswer" items="${postAnswers}" end="9">
+                                <li class="comment">
+                                    <div class="comment-body comment-body-answered clearfix">
+                                        <div class="avatar"><img alt=""
+                                                                 src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg">
+                                        </div>
+                                        <div class="comment-text">
+                                            <div class="author clearfix"  style="display: flex">
+                                                <div style="width: 30%">
+                                                    <div class="comment-author"><a href="#">${postAnswer.ownerUserId.displayName}</a>
                                                     </div>
+                                                    <div class="comment-meta">
+                                                        <div class="date"><i class="icon-time"></i>${postAnswer.creationDate}</div>
+                                                    </div>
+                                                </div>
+                                                <div class="acceptAnswerIcon" id="answerIcon${postAnswer.id}">
+                                                    <c:if test="${postAnswer.acceptedAnswerId==1}">
+                                                        <i class="icon-ok"></i>
                                                     </c:if>
                                                 </div>
+                                                    <%--Add javascript to chang "<i class="icon-thumbs-up"></i>Accept" to "Unaccept"--%>
+                                                <div style="width: 75%;display: flex">
+                                                    <div style="width: 100%;float: right;">
+                                                        <input type="hidden" name="postAnswerId" value="${postAnswer.id}">
+                                                        <c:if test="${postAnswer.acceptedAnswerId !=1 && sessionScope.user.id==post.ownerUserId.id}">
+                                                            <a class="button small color acceptAnswer answerFlag" style="float: right" onclick="answerFlag(this)">Accept</a>
+                                                        </c:if>
+                                                        <c:if test="${postAnswer.acceptedAnswerId==1 && sessionScope.user.id==post.ownerUserId.id}">
+                                                            <a class="button small color unacceptAnswer answerFlag" style="float: right" onclick="answerFlag(this)">Unaccept</a>
+                                                        </c:if>
+                                                    </div>
+                                                    <div style="float: right;margin-left: 2%;">
+                                                        <c:if test="${sessionScope.user.id == postAnswer.ownerUserId.id}" >
+                                                            <div class="btn-group">
+                                                                <a data-toggle="dropdown" href="" aria-expanded="false"><span class="caretBig"></span></a>
+                                                                <ul class="actionAnswer dropdown-menu" role="menu" >
+                                                                    <li><a href="#" onclick="editAnswer(this);return false;">Edit</a></li>
+                                                                    <li><a href="#" onclick="deleteAnswer(this);return false;">Delete</a></li>
+                                                                    <li><a ></a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </c:if>
+                                                    </div>
+                                                </div>
                                             </div>
+                                            <div class="textComment"><p class="textBody">${postAnswer.body}</p></div>
                                         </div>
-                                        <div class="textComment"><p class="textBody">${postAnswer.body}</p></div>
                                     </div>
-                                </div>
-                            </li>
-                        </c:forEach>
-                    </c:if>
-                    <c:if test="${fn:length(postAnswers) <= 10}">
-                        <c:forEach var="postAnswer" items="${postAnswers}">
-                            <li class="comment">
-                                <div class="comment-body comment-body-answered clearfix">
-                                    <div class="avatar"><img alt=""
-                                                             src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg">
-                                    </div>
-                                    <div class="comment-text">
-                                        <div class="author clearfix"  style="display: flex">
-                                            <div style="width: 30%">
-                                                <div class="comment-author"><a href="#">${postAnswer.ownerUserId.displayName}</a>
-                                                </div>
-                                                <div class="comment-meta">
-                                                    <div class="date"><i class="icon-time"></i>${postAnswer.creationDate}</div>
-                                                </div>
-                                            </div>
-                                            <div class="acceptAnswerIcon" id="answerIcon${postAnswer.id}">
-                                                <c:if test="${postAnswer.acceptedAnswerId==1}">
-                                                    <i class="icon-ok"></i>
-                                                </c:if>
-                                            </div>
-                                                <%--Add javascript to chang "<i class="icon-thumbs-up"></i>Accept" to "Unaccept"--%>
-                                            <div style="width: 75%;display: flex">
-                                                <div style="width: 100%;float: right;">
-                                                    <input type="hidden" name="postAnswerId" value="${postAnswer.id}">
-                                                    <c:if test="${postAnswer.acceptedAnswerId !=1 && sessionScope.user.id==post.ownerUserId.id}">
-                                                        <a class="button small color acceptAnswer answerFlag" style="float: right" onclick="answerFlag(this)">Accept</a>
-                                                    </c:if>
-                                                    <c:if test="${postAnswer.acceptedAnswerId==1 && sessionScope.user.id==post.ownerUserId.id}">
-                                                        <a class="button small color unacceptAnswer answerFlag" style="float: right" onclick="answerFlag(this)">Unaccept</a>
-                                                    </c:if>
-                                                </div>
-                                                <div style="float: right;margin-left: 2%;">
-                                                    <c:if test="${sessionScope.user.id == postAnswer.ownerUserId.id}" >
-                                                        <div class="btn-group">
-                                                            <a data-toggle="dropdown" href="" aria-expanded="false"><span class="caretBig"></span></a>
-                                                            <ul class="actionAnswer dropdown-menu " role="menu" >
-                                                                <li><a href="#" onclick="editAnswer(this);return false;">Edit</a></li>
-                                                                <li><a onclick="deleteAnswer(this);return false;">Delete</a></li>
-                                                                <li><a ></a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </c:if>
-                                                </div>
-                                            </div>
+                                </li>
+                            </c:forEach>
+                        </c:if>
+                        <c:if test="${fn:length(postAnswers) <= 10}">
+                            <c:forEach var="postAnswer" items="${postAnswers}">
+                                <li class="comment">
+                                    <div class="comment-body comment-body-answered clearfix">
+                                        <div class="avatar"><img alt=""
+                                                                 src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg">
                                         </div>
-                                        <div class="textComment"><p class="textBody">${postAnswer.body}</p></div>
+                                        <div class="comment-text">
+                                            <div class="author clearfix"  style="display: flex">
+                                                <div style="width: 30%">
+                                                    <div class="comment-author"><a href="#">${postAnswer.ownerUserId.displayName}</a>
+                                                    </div>
+                                                    <div class="comment-meta">
+                                                        <div class="date"><i class="icon-time"></i>${postAnswer.creationDate}</div>
+                                                    </div>
+                                                </div>
+                                                <div class="acceptAnswerIcon" id="answerIcon${postAnswer.id}">
+                                                    <c:if test="${postAnswer.acceptedAnswerId==1}">
+                                                        <i class="icon-ok"></i>
+                                                    </c:if>
+                                                </div>
+                                                    <%--Add javascript to chang "<i class="icon-thumbs-up"></i>Accept" to "Unaccept"--%>
+                                                <div style="width: 75%;display: flex">
+                                                    <div style="width: 100%;float: right;">
+                                                        <input type="hidden" name="postAnswerId" value="${postAnswer.id}">
+                                                        <c:if test="${postAnswer.acceptedAnswerId !=1 && sessionScope.user.id==post.ownerUserId.id}">
+                                                            <a class="button small color acceptAnswer answerFlag" style="float: right" onclick="answerFlag(this)">Accept</a>
+                                                        </c:if>
+                                                        <c:if test="${postAnswer.acceptedAnswerId==1 && sessionScope.user.id==post.ownerUserId.id}">
+                                                            <a class="button small color unacceptAnswer answerFlag" style="float: right" onclick="answerFlag(this)">Unaccept</a>
+                                                        </c:if>
+                                                    </div>
+                                                    <div style="float: right;margin-left: 2%;">
+                                                        <c:if test="${sessionScope.user.id == postAnswer.ownerUserId.id}" >
+                                                            <div class="btn-group">
+                                                                <a data-toggle="dropdown" href="" aria-expanded="false"><span class="caretBig"></span></a>
+                                                                <ul class="actionAnswer dropdown-menu " role="menu" >
+                                                                    <li><a href="#" onclick="editAnswer(this);return false;">Edit</a></li>
+                                                                    <li><a onclick="deleteAnswer(this);return false;">Delete</a></li>
+                                                                    <li><a ></a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </c:if>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="textComment"><p class="textBody">${postAnswer.body}</p></div>
+                                        </div>
                                     </div>
-                                </div>
-                            </li>
-                    </c:forEach>
-                    </c:if>
-                </ol>
-                <!-- End commentlist -->
-            </div>
+                                </li>
+                            </c:forEach>
+                        </c:if>
+                    </ol>
+                    <!-- End commentlist -->
+                </div>
+            </c:if>
             <c:if test="${fn:length(postAnswers) > 10}">
             <div><a class="post-read-more button color small" style="margin-bottom: 20px;" id="loadMore">Continue reading</a></div>
             </c:if>
@@ -391,13 +392,46 @@
                 </ul>
             </div>
 
-            <c:if test="${not empty relatedPosts}">
+            <div class="widget widget_tag_cloud">
+                <h3 class="widget_title">Tags</h3>
+                <c:forEach var="tag" items="${post.tagPostList}">
+                    <a href="#">${tag.tagId.tagName}</a>
+                </c:forEach>
+            </div>
+
+            <c:if test="${not empty relatedQuestions}">
                 <div class="widget">
                     <h3 class="widget_title">Related Questions</h3>
                     <ul class="related-posts">
-                        <c:forEach var="relatedPost" items="${relatedPosts}">
+                        <c:forEach var="relatedQuestion" items="${relatedQuestions}">
                             <li class="related-item">
-                                <a href="${relatedPost.id}">${relatedPost.title}</a>
+                                <a href="/post/view/${relatedQuestion.id}">${relatedQuestion.title}</a>
+                            </li>
+                        </c:forEach>
+                    </ul>
+                </div>
+            </c:if>
+
+            <c:if test="${not empty relatedArticles}">
+                <div class="widget">
+                    <h3 class="widget_title">Related Articles</h3>
+                    <ul class="related-posts">
+                        <c:forEach var="relatedArticle" items="${relatedArticles}">
+                            <li class="related-item">
+                                <a href="/post/view/${relatedArticle.id}">${relatedArticle.title}</a>
+                            </li>
+                        </c:forEach>
+                    </ul>
+                </div>
+            </c:if>
+
+            <c:if test="${not empty relatedMaterials}">
+                <div class="widget">
+                    <h3 class="widget_title">Related Materials</h3>
+                    <ul class="related-posts">
+                        <c:forEach var="relatedMaterial" items="${relatedMaterials}">
+                            <li class="related-item">
+                                <a href="/download/${relatedMaterial.id}">${relatedMaterial.name}</a>
                             </li>
                         </c:forEach>
                     </ul>
@@ -411,12 +445,7 @@
                 </div>
             </c:if>
 
-            <div class="widget widget_tag_cloud">
-                <h3 class="widget_title">Tags</h3>
-                <c:forEach var="tag" items="${post.tagPostList}">
-                    <a href="#">${tag.tagId.tagName}</a>
-                </c:forEach>
-            </div>
+
 
         </aside>
         <!-- End sidebar -->

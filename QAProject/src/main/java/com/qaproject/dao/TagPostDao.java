@@ -16,7 +16,8 @@ import java.util.List;
 public interface TagPostDao {
     public TagPost find(Integer id);
     List<TagPost> findAll();
-    public List<Integer> findRelatedPostIds(List<Integer> tagIds);
+    public List<Integer> findRelatedQuestionIds(List<Integer> tagIds);
+    public List<Integer> findRelatedArticlesIds(List<Integer> tagIds);
     public List<TagDto> findTagGroupByQuestions(List<Post> questions);
     @Transactional(propagation = Propagation.REQUIRED)
     public void persist(TagPost entity);
