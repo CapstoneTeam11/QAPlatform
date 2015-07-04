@@ -129,15 +129,14 @@
         <input type="text" aria-required="true" value="Search in ${classroom.classroomName} class" onfocus="if(this.value=='Search in ${classroom.classroomName} class')this.value='';"
                onblur="if(this.value=='')this.value='Search in ${classroom.classroomName} class';" style="width: 100%">
     </div>
-    <div class="col-md-6 col-sm-6">
-        <div class="col-md-11 col-sm-9" id="createPost">
-            <c:if test="${classroom.status == 1}">
-                <a href="/post/create/${classroom.id}" class="button medium green-button" style="float: right"><i class="icon-pencil"></i> Create post</a>
-            </c:if>
-
-        </div>
-        <div class="" style="margin-top: 20px">
-            <c:if test="${classroom.ownerUserId.id == user.id}">
+    <div class="col-md-6 col-sm-6" id="createPost">
+        <c:if test="${classroom.ownerUserId.id == user.id}">
+            <div class="col-md-11 col-sm-9">
+                <c:if test="${classroom.status == 1}">
+                    <a href="/post/create/${classroom.id}" class="button medium green-button" style="float: right"><i class="icon-pencil"></i> Create post</a>
+                </c:if>
+            </div>
+            <div class="" style="margin-top: 20px">
                 <div class="btn-group">
                     <a data-toggle="dropdown" href="" aria-expanded="false"><i class="icon-cog" style="color: black;font-weight: bold;font-size: 20px;"></i><span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu" style="left: -127px;" id="activeBtn">
@@ -149,8 +148,13 @@
                         </c:if>
                     </ul>
                 </div>
+            </div>
+        </c:if>
+        <c:if test="${not empty checkClassroomUser}">
+            <c:if test="${checkClassroomUser.approval!=2 && checkClassroomUser.approval!=0 && classroom.status==1}">
+                <a href="/post/create/${classroom.id}" class="button medium green-button" style="float: right"><i class="icon-pencil"></i> Create post</a>
             </c:if>
-        </div>
+        </c:if>
     </div>
 
     </div>
@@ -853,6 +857,9 @@
                     $("#link-btn").html('<a class="button small color" onclick="leaveClassroom(this); return false;">' +
                     'Leave' +
                     '</a>');
+                    $('#createPost').html('<a href="/post/create/'+ classroomId +
+                        '" class="button medium green-button" style="float: right">'+
+                        '<i class="icon-pencil"></i> Create post</a>');
                 }
             }
         });
@@ -875,6 +882,7 @@
                         $("#link-btn").html('<a class="button small color" onclick="joinClassroom(this); return false;">' +
                                 'Join' +
                                 '</a>');
+                        $('#createPost').html('');
                     } else {
                         console.log("Error");
                     }
