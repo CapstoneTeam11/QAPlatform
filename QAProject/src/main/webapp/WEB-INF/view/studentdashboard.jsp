@@ -146,7 +146,7 @@
                             </c:if>
                         </c:if>
                         <c:if test="${empty joinedClassrooms}">
-                            <div class="about-author clearfix">
+                            <div class="about-author clearfix" id="noJoinedClassroom">
                                 No joined classroom
                             </div>
                         </c:if>
@@ -506,7 +506,8 @@
                                 '</h4>' +
                                 classroomDescription +
                                 '</div>' +
-                                '</div>'
+                                '</div>';
+                        $('#noJoinedClassroom').remove();
                         $('#joinedClassrooms').prepend(newJoinedClassroom);
                     }
                 }
@@ -515,37 +516,40 @@
         var leaveClassroom = function(e) {
             var classroomId = $(e).attr('id');
             $(".panel-Confirm").animate({"top":"-100%"},10).hide();
-            $("#leave-classroom").show().animate({"top":"34%"},500);
+            $(".panel-Confirm").show().animate({"top":"34%"},500);
+            $(".panel-Confirm").attr("id",classroomId);
             $("body").prepend("<div class='wrap-pop'></div>");
             wrap_pop();
-            var flagPanel =  $('.panelButton').click(function(e) {
-                if ($(e.currentTarget).hasClass('OK')) {
-                    $.ajax({
-                        type: "POST",
-                        url: "/leaveClassroom",
-                        data: 'classroomId=' + classroomId,
-                        success: function (data) {
-                            if(data != "NG" ){
-                                var classroom = $('#classroom'+classroomId);
-                                var classroomName = classroom.find("h4").find("a").text();
-                                var classroomHref = classroom.find("h4").find("a").attr("href");
-                                classroom.html('You have left classroom <a href="'+
-                                        classroomHref +'">'+
-                                        classroomName+'</a>.');
-                                classroom.attr("style","background-color: #ffff9e")
-                            } else {
-                                console.log("Error");
-                            }
-                        }
-                    });
-                    $(".panel-Confirm").animate({"top":"-100%"},500);
-                    $(".wrap-pop").remove();
-                } else {
-                    $(".panel-Confirm").animate({"top":"-100%"},500);
-                    $(".wrap-pop").remove();
-                }
-            })
+
         };
+        $('.panelButton').click(function(e) {
+            var classroomId = $(".panel-Confirm").attr("id");
+            if ($(e.currentTarget).hasClass('OK')) {
+                $.ajax({
+                    type: "POST",
+                    url: "/leaveClassroom",
+                    data: 'classroomId=' + classroomId,
+                    success: function (data) {
+                        if(data != "NG" ){
+                            var classroom = $('#classroom'+classroomId);
+                            var classroomName = classroom.find("h4").find("a").text();
+                            var classroomHref = classroom.find("h4").find("a").attr("href");
+                            classroom.html('You have left classroom <a href="'+
+                                    classroomHref +'">'+
+                                    classroomName+'</a>.');
+                            classroom.attr("style","background-color: #ffff9e")
+                        } else {
+                            console.log("Error");
+                        }
+                    }
+                });
+                $(".panel-Confirm").animate({"top":"-100%"},500);
+                $(".wrap-pop").remove();
+            } else {
+                $(".panel-Confirm").animate({"top":"-100%"},500);
+                $(".wrap-pop").remove();
+            }
+        });
         function wrap_pop() {
             $(".wrap-pop").click(function () {
                 $(".panel-Confirm").animate({"top":"-100%"},500).hide(function () {
