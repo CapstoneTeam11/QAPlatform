@@ -68,4 +68,26 @@ public class MaterialDaoImpl extends BaseDao<Material,Integer> implements Materi
         }
         return materials;
     }
+
+    @Override
+    public List<Material> findMaterialLikeName(String searchKey, Integer lastId) {
+        Query query;
+        if (lastId==0){
+            query = entityManager.createQuery("Select m from Material m where m.name like :searchKey " +
+                    "order by m.id desc ");
+        } else {
+            query = entityManager.createQuery("Select m from Material m where m.name like :searchKey " +
+                    "and m.id<:lastId order by m.id desc ");
+            query.setParameter("lastId",lastId);
+        }
+        query.setParameter("searchKey",'%' + searchKey + '%');
+        query.setMaxResults(11);
+        List<Material> materials = null;
+        try{
+            materials = query.getResultList();
+        } catch (NoResultException e){
+            e.printStackTrace();
+        }
+        return materials;
+    }
 }

@@ -18,6 +18,7 @@ public interface MaterialDao {
     List<Material> findMaterialByClassroom(Integer classroomId, Integer lastId);
     List<Material> findMaterialByCategory (Integer categoryId, Integer nextFrom);
     List<Material> findMaterialByOwnerClassroom(Classroom classroom);
+    List<Material> findMaterialLikeName(String searchKey, Integer lastId);
     @Transactional(propagation = Propagation.REQUIRED)
     public void persist(Material entity);
     @Transactional(propagation = Propagation.REQUIRED)

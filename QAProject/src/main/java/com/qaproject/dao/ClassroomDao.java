@@ -20,6 +20,7 @@ public interface ClassroomDao {
     List<Classroom> findByOwnerUser(Integer ownerUserId);
     List<Classroom> findOwnedClassroomForDashboard (Integer ownerUserId, Integer lastId);
     Classroom findLastCreatedClassroomByOwner (User owner);
+    List<Classroom> findClassroomLikeClassroomName(String searchKey, Integer lastId);
     @Transactional(propagation = Propagation.REQUIRED)
     public void persist(Classroom entity);
     @Transactional(propagation = Propagation.REQUIRED)
