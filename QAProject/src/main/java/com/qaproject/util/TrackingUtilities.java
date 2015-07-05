@@ -6,7 +6,6 @@ import com.qaproject.dao.TagPostDao;
 import com.qaproject.dto.TagDto;
 import com.qaproject.entity.Classroom;
 import com.qaproject.entity.Post;
-import com.qaproject.entity.TagPost;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -37,7 +36,7 @@ public class TrackingUtilities {
                 }
                 questions.addAll(currentQuestions);
             }
-            tagDtos = tagPostDao.findTagGroupByQuestions(questions);
+            tagDtos = tagPostDao.findTagInQuestions(questions);
         }
         return tagDtos;
     }

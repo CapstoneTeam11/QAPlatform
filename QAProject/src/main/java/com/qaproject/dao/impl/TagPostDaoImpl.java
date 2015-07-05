@@ -18,14 +18,16 @@ import java.util.List;
 @Repository
 public class TagPostDaoImpl extends BaseDao<TagPost,Integer> implements TagPostDao {
     @Override
-    public List<Integer> findRelatedQuestionIds(List<Integer> tagIds) {
+    public List<Integer> findRelatedQuestionIds(List<Integer> tagIds, Integer maxResult) {
         List<Integer> relatedQuestionIds = null;
         Query query = entityManager.createQuery("Select tp.postId.id from TagPost tp WHERE tp.tagId.id in :tagIds " +
                 "and tp.postId.postType=1 " +
                 "group by tp.postId " +
                 "order by count(tp.tagId) DESC");
         query.setParameter("tagIds",tagIds);
-        query.setMaxResults(10);
+        if (maxResult>0) {
+            query.setMaxResults(10);
+        }
         try {
             relatedQuestionIds = query.getResultList();
         } catch (Exception e){
@@ -35,14 +37,16 @@ public class TagPostDaoImpl extends BaseDao<TagPost,Integer> implements TagPostD
     }
 
     @Override
-    public List<Integer> findRelatedArticlesIds(List<Integer> tagIds) {
+    public List<Integer> findRelatedArticlesIds(List<Integer> tagIds, Integer maxResult) {
         List<Integer> relatedArticleIds = null;
         Query query = entityManager.createQuery("Select tp.postId.id from TagPost tp WHERE tp.tagId.id in :tagIds " +
                 "and tp.postId.postType=2 " +
                 "group by tp.postId " +
                 "order by count(tp.tagId) DESC");
         query.setParameter("tagIds",tagIds);
-        query.setMaxResults(10);
+        if (maxResult>0) {
+            query.setMaxResults(10);
+        }
         try {
             relatedArticleIds = query.getResultList();
         } catch (Exception e){
@@ -52,7 +56,23 @@ public class TagPostDaoImpl extends BaseDao<TagPost,Integer> implements TagPostD
     }
 
     @Override
-    public List<TagDto> findTagGroupByQuestions(List<Post> questions) {
+    public List<Integer> findArticlesIdsInTags(List<Integer> tagIds) {
+        List<Integer> articleIds = null;
+        Query query = entityManager.createQuery("Select tp.postId.id from TagPost tp WHERE tp.tagId.id in :tagIds " +
+                "and tp.postId.postType=2 " +
+                "group by tp.postId " +
+                "order by count(tp.tagId)");
+        query.setParameter("tagIds",tagIds);
+        try {
+            articleIds = query.getResultList();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return articleIds;
+    }
+
+    @Override
+    public List<TagDto> findTagInQuestions(List<Post> questions) {
         Query query = entityManager.createQuery("Select tp.tagId.id, tp.tagId.tagName, " +
                 "count(tp.postId) as tagCount from TagPost tp where tp.postId" +
                 " in :questions group by tp.tagId order by tagCount");

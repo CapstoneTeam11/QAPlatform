@@ -2,6 +2,7 @@ package com.qaproject.dao.impl;
 
 import com.qaproject.dao.BaseDao;
 import com.qaproject.dao.MaterialDao;
+import com.qaproject.entity.Classroom;
 import com.qaproject.entity.Material;
 import org.springframework.stereotype.Repository;
 
@@ -46,6 +47,19 @@ public class MaterialDaoImpl extends BaseDao<Material,Integer> implements Materi
         }
         query.setFirstResult(nextFrom);
         query.setMaxResults(11);
+        List<Material> materials = null;
+        try{
+            materials = query.getResultList();
+        } catch (NoResultException e){
+            e.printStackTrace();
+        }
+        return materials;
+    }
+
+    @Override
+    public List<Material> findMaterialByOwnerClassroom(Classroom classroom) {
+        Query query = entityManager.createQuery("Select m from Material m where m.ownerClassId=:classroom order by m.id");
+        query.setParameter("classroom",classroom);
         List<Material> materials = null;
         try{
             materials = query.getResultList();

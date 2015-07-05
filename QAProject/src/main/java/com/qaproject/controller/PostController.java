@@ -150,7 +150,7 @@ public class PostController {
         }
 
         //get related questions - MinhKH
-        List<Integer> relatedQuestionIds = tagPostDao.findRelatedQuestionIds(tagIds);
+        List<Integer> relatedQuestionIds = tagPostDao.findRelatedQuestionIds(tagIds,10);
         List<Post> relatedQuestions = new ArrayList<Post>();
         if (relatedQuestionIds != null) {
             for (int i = 0; i < relatedQuestionIds.size(); i++) {
@@ -164,7 +164,7 @@ public class PostController {
 
         //get related articles
         List<Post> relatedArticles = new ArrayList<Post>();
-        List<Integer> relatedArticlesIds = tagPostDao.findRelatedArticlesIds(tagIds);
+        List<Integer> relatedArticlesIds = tagPostDao.findRelatedArticlesIds(tagIds,10);
         if (relatedArticlesIds != null) {
             for (int i = 0; i < relatedArticlesIds.size(); i++) {
                 int currentRelatedArticlesId = relatedArticlesIds.get(i);
@@ -178,7 +178,7 @@ public class PostController {
 
         //get related materials
         List<Material> relatedMaterials = new ArrayList<Material>();
-        List<Integer> relatedMaterialIds = tagMaterialDao.findRelatedMaterialIds(tagIds);
+        List<Integer> relatedMaterialIds = tagMaterialDao.findRelatedMaterialIds(tagIds,10);
         if (relatedMaterialIds != null) {
             for (int i = 0; i < relatedMaterialIds.size(); i++) {
                 int currentRelatedMaterialId = relatedMaterialIds.get(i);
