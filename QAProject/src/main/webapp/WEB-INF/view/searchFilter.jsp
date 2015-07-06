@@ -20,7 +20,7 @@
     </section><!-- End container -->
 </div><!-- End breadcrumbs -->
 
-<section class="container main-content page-left-sidebar">
+<section class="container main-content page-left-sidebar" style="min-height: 260px">
 <div class="row">
 <div class="col-md-10 col-md-offset-1">
 
