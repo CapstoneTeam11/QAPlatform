@@ -84,15 +84,15 @@
         <div class="col-md-9">
 
             <div id="searchbar" class="row">
-                <form method="POST" action="/search">
+                <form method="GET" action="/search">
                     <div class="" style="padding-left: 15px">
                         <select name="filter" style="width: 15%; float: left; margin-top: 5px; padding-bottom: 4px">
                             <option value="0">All</option>
                             <option value="1">Question</option>
                             <option value="2">Article</option>
                             <option value="3">Material</option>
-                            <option value="4">User</option>
-                            <option value="5">Classroom</option>
+                            <option value="4">Classroom</option>
+                            <option value="5">User</option>
                         </select>
                         <input name="searchKey" type="text" aria-required="true"
                                value="Find article, question, class or teacher here..."
@@ -456,7 +456,7 @@
         })
     });
     $('#loadMoreMaterial').click(function (e) {
-        var url = "/newsFeed/material/" + nextFromMaterial;
+        var url = "newsFeed/material/" + nextFromMaterial;
         $.ajax({
             type: "GET",
             url: url,

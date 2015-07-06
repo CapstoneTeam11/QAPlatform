@@ -106,4 +106,64 @@ public class SearchUtilities {
         }
         return userDtos;
     }
+
+    public List<PostDto> getQuestions (String searchKey, Integer lastId) {
+        List<Post> questions = postDao.findQuestionLikeTitle(searchKey,lastId);
+        List<PostDto> questionDtos = new ArrayList<PostDto>();
+        if (questions!=null) {
+            for (Post question: questions){
+                PostDto questionDto = ConvertEntityDto.convertPostEntityToDto(question,0);
+                questionDtos.add(questionDto);
+            }
+        }
+        return questionDtos;
+    }
+
+    public List<PostDto> getArticles (String searchKey, Integer lastId) {
+        List<Post> articles = postDao.findArticleLikeTitle(searchKey, lastId);
+        List<PostDto> articleDtos = new ArrayList<PostDto>();
+        if (articles!=null) {
+            for (Post article: articles){
+                PostDto articleDto = ConvertEntityDto.convertPostEntityToDto(article,0);
+                articleDtos.add(articleDto);
+            }
+        }
+        return articleDtos;
+    }
+
+    public List<MaterialDto> getMaterials (String searchKey, Integer lastId) {
+        List<Material> materials = materialDao.findMaterialLikeName(searchKey, lastId);
+        List<MaterialDto> materialDtos = new ArrayList<MaterialDto>();
+        if (materials!=null) {
+            for (Material material: materials){
+                MaterialDto materialDto = ConvertEntityDto.convertMaterialEntityToDto(material);
+                materialDtos.add(materialDto);
+            }
+        }
+        return materialDtos;
+    }
+
+    public List<ClassroomDto> getClassrooms (String searchKey, Integer lastId) {
+        List<Classroom> classrooms = classroomDao.findClassroomLikeClassroomName(searchKey, lastId);
+        List<ClassroomDto> classroomDtos = new ArrayList<ClassroomDto>();
+        if (classrooms!=null) {
+            for (Classroom classroom: classrooms){
+                ClassroomDto classroomDto = ConvertEntityDto.convertClassroomEntityToDto(classroom);
+                classroomDtos.add(classroomDto);
+            }
+        }
+        return classroomDtos;
+    }
+
+    public List<UserDto> getUsers (String searchKey, Integer lastId) {
+        List<User> users = userDao.findUserLikeDisplayName(searchKey, lastId);
+        List<UserDto> userDtos = new ArrayList<UserDto>();
+        if (users!=null) {
+            for (User user: users){
+                UserDto userDto = ConvertEntityDto.convertUserEntityToDto(user);
+                userDtos.add(userDto);
+            }
+        }
+        return userDtos;
+    }
 }

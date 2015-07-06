@@ -10,7 +10,6 @@
 
 
 <%@include file="header.jsp" %>
-
 <div class="breadcrumbs" style="margin-top: 86px">
     <section class="container" style="height:70px; display: flex; align-items: center">
         <div class="row">
@@ -26,18 +25,18 @@
 <div class="col-md-10 col-md-offset-1">
 
 <div id="searchbar" class="row">
-    <form method="POST" action="/search">
+    <form method="GET" action="/search">
         <div class="" style="padding-left: 15px">
             <select name="filter" style="width: 15%; float: left; margin-top: 5px; padding-bottom: 4px">
                 <option value="0">All</option>
                 <option value="1">Question</option>
                 <option value="2">Article</option>
                 <option value="3">Material</option>
-                <option value="4">User</option>
-                <option value="5">Classroom</option>
+                <option value="4">Classroom</option>
+                <option value="5">User</option>
             </select>
             <input name="searchKey" type="text" aria-required="true"
-                   value="${searchKey}"
+                   value="${param.searchKey}"
                    style="width: 72%; margin-top:5px; float: left;">
             <input href="#" class="button small color" style="padding-bottom: 9px; width: 12%;
                         text-align: center" type="submit" value="Search">
@@ -51,10 +50,10 @@
     4353 <a href="#classroom">classrooms</a>,
     43 <a href="#user">users</a> are found
 </div>
-
 <div class="divider"><span></span></div>
+<span class="anchor-result-page" id="question"></span>
 <c:if test="${not empty questions}">
-    <div id="question" class="row">
+    <div class="row">
     <div class="col-md-12">
         <div class="boxedtitle page-title" style="margin-bottom: 5px !important;">
             <h2>
@@ -80,21 +79,20 @@
                 </c:forEach>
             </div>
         </div>
-        <form method="POST" action="/search/question">
-            <input type="hidden" value="${searchKey}" name="searchKey">
-            <a class="post-read-more button color small"
-               style="margin: 5px 0px;" >View all question results</a>
+        <form method="GET" action="/search">
+            <input type="hidden" value="1" name="filter">
+            <input type="hidden" value="${param.searchKey}" name="searchKey">
+            <input class="post-read-more button color small"
+                   style="margin: 5px 0px;" type="submit" value="View all question results">
         </form>
     </div>
-
-
     </div><!-- End question -->
     <div class="divider"><span></span></div>
 </c:if>
 
-
+    <span class="anchor-result-page" id="article"></span>
     <c:if test="${not empty articles}">
-        <div id="article" class="row">
+        <div  class="row">
             <div class="col-md-12">
                 <div class="boxedtitle page-title" style="margin-bottom: 5px !important;">
                     <h2>
@@ -120,18 +118,20 @@
                         </c:forEach>
                     </div>
                 </div>
-                <form method="POST" action="/search/article">
-                    <input type="hidden" value="${searchKey}" name="searchKey">
-                    <a class="post-read-more button color small"
-                       style="margin: 5px 0px;" >View all article results</a>
+                <form method="GET" action="/search">
+                    <input type="hidden" value="2" name="filter">
+                    <input type="hidden" value="${param.searchKey}" name="searchKey">
+                    <input class="post-read-more button color small"
+                           style="margin: 5px 0px;" type="submit" value="View all article results">
                 </form>
             </div>
         </div><!-- End articles -->
         <div class="divider"><span></span></div>
     </c:if>
 
+    <span class="anchor-result-page" id="material"></span>
     <c:if test="${not empty materials}">
-    <div id="material" class="row">
+    <div  class="row">
     <div class="col-md-12">
         <div class="boxedtitle page-title" style="margin-bottom: 5px !important;">
             <h2>
@@ -160,19 +160,21 @@
                         </c:forEach>
                 </table>
             </div>
-            <form method="POST" action="/search/material">
-                <input type="hidden" value="${searchKey}" name="searchKey">
-                <a class="post-read-more button color small"
-                   style="margin: 5px 0px;" >View all material results</a>
+            <form method="GET" action="/search">
+                <input type="hidden" value="3" name="filter">
+                <input type="hidden" value="${param.searchKey}" name="searchKey">
+                <input class="post-read-more button color small"
+                       style="margin: 5px 0px;" type="submit" value="View all material results">
             </form>
         </div>
     </div>
     </div><!-- End #material -->
-    <div class="divider"><span></span></div>
+        <div  class="divider"><span></span></div>
     </c:if>
 
+    <span class="anchor-result-page" id="classroom"></span>
     <c:if test="${not empty classrooms}">
-        <div id="classroom" class="row">
+        <div class="row">
             <div class="col-md-12">
                 <div class="boxedtitle page-title" style="margin-bottom: 5px !important;">
                     <h2>
@@ -199,18 +201,20 @@
                         </c:forEach>
                     </div>
                 </div>
-                <form method="POST" action="/search/classroom">
-                    <input type="hidden" value="${searchKey}" name="searchKey">
-                    <a class="post-read-more button color small"
-                       style="margin: 5px 0px;" >View all classroom results</a>
+                <form method="GET" action="/search">
+                    <input type="hidden" value="4" name="filter">
+                    <input type="hidden" value="${param.searchKey}" name="searchKey">
+                    <input class="post-read-more button color small"
+                           style="margin: 5px 0px;" type="submit" value="View all classroom results">
                 </form>
             </div>
-        </div><!-- End articles -->
+        </div><!-- End classrooms -->
         <div class="divider"><span></span></div>
     </c:if>
 
+<span class="anchor-result-page" id="user"></span>
 <c:if test="${not empty users}">
-    <div id="user" class="row">
+    <div class="row">
         <div class="col-md-12">
             <div class="boxedtitle page-title" style="margin-bottom: 5px !important;">
                 <h2>
@@ -240,13 +244,14 @@
                     </c:forEach>
                 </ol>
             </div>
-            <form method="POST" action="/search/user">
-                <input type="hidden" value="${searchKey}" name="searchKey">
-                <a class="post-read-more button color small"
-                   style="margin: 5px 0px;" >View all user results</a>
+            <form method="GET" action="/search">
+                <input type="hidden" value="5" name="filter">
+                <input type="hidden" value="${param.searchKey}" name="searchKey">
+                <input class="post-read-more button color small"
+                   style="margin: 5px 0px;" type="submit" value="View all user results">
             </form>
         </div>
-    </div><!-- End articles -->
+    </div><!-- End users -->
 </c:if>
 
 </div><!-- End main -->
@@ -273,135 +278,6 @@
                 $(this).html(text.substr(0, 400) + '.......');
             }
         });
-    });
-    //Load more
-    var questionPage = 2;
-    var nextFromArticle = 10;
-    var nextFromMaterial = 10;
-    $('#loadMoreQuestion').click(function (e) {
-        var url = "newsFeed/question/" + questionPage;
-        $.ajax({
-            type: "GET",
-            url: url,
-            success: function (data) {
-                var newsFeedQuestion = new Array();
-                newsFeedQuestion = data;
-                var length = newsFeedQuestion.length;
-                if (length > 10) {
-                    length = newsFeedQuestion.length - 1;
-                } else {
-                    $('#loadMoreQuestion').hide();
-                }
-                for (var i = 0; i < length; i++) {
-                    var component = '<article class="question question-type-normal">' +
-                            '<h2>' +
-                            '<a href="/post/view/'+ newsFeedQuestion[i].id + '">'+ newsFeedQuestion[i].title
-                            +'</a>' +
-                            '</h2>' +
-                            '<div class="question-author">' +
-                            '<a href="/profile/view/'+ newsFeedQuestion[i].ownerId + '"' +
-                            'original-title="'+ newsFeedQuestion[i].ownerName +
-                            '" class="tooltip-n">' +
-                            '<span></span><img alt="" src="' + newsFeedQuestion[i].ownerProfileImageURL + '"></a>' +
-                            '</div>' +
-                            '<div class="question-inner">' +
-                            '<div class="clearfix"></div>' +
-                            '<div class="question-desc short-text">'+ newsFeedQuestion[i].body + '</div>' +
-                            '<div class="question-details">' +
-                            '<span class="question-answered question-answered-done">';
-                    if (newsFeedQuestion[i].acceptedAnswerId===undefined) {
-                        component = component + '<i class="icon-ok"></i>Resolved';
-                    }
-                    component = component + '</span>' +
-                            '</div>' +
-                            '<span class="question-date"><i ' +
-                            'class="icon-time"></i>' + newsFeedQuestion[i].lastEditedDate + '</span>' +
-                            '<span class="question-category"><a ' +
-                            'href="/classroom/' + newsFeedQuestion[i].classId + '"><i ' +
-                            'class="icon-group"></i>Class: ' + newsFeedQuestion[i].className + '</a></span>' +
-                            '<span class="question-comment"><a href="#"><i ' +
-                            'class="icon-comment"></i>' + newsFeedQuestion[i].answerCount +
-                            ' Answer(s)</a></span>' +
-                            '<div class="clearfix"></div>' +
-                            '</div>' +
-                            '</article>';
-                    $('#questions').append(component);
-                    $(".tooltip-n").tipsy({fade:true,gravity:"s"});
-                }
-                questionPage++;
-            }
-        })
-    });
-    $('#loadMoreArticle').click(function (e) {
-        var url = "newsFeed/article/" + nextFromArticle;
-        $.ajax({
-            type: "GET",
-            url: url,
-            success: function (data) {
-                var articles = new Array();
-                articles = data;
-                var length = articles.length;
-                if (length > 10) {
-                    length = articles.length - 1;
-                } else {
-                    $('#loadMoreArticle').hide();
-                }
-                for (var i = 0; i < length; i++) {
-                    var component = '<article class="post clearfix">'+
-                            '<div class="post-inner">'+
-                            '<h2 class="post-title"><span class="post-type"><i class="icon-file-alt"></i></span><a '+
-                            'href="/post/view/'+ articles[i].id +'">'+ articles[i].title +'</a></h2>'+
-                            '<div class="post-meta">'+
-                            '<span class="meta-author"><i class="icon-user"></i><a href="#">Author: ' +
-                            articles[i].ownerName + '</a></span>'+
-                            '<span class="meta-date"><i class="icon-time"></i>'+ articles[i].lastEditedDate +'</span>'+
-                            '<span class="meta-comment"><i class="icon-comments-alt"></i><a' +
-                            ' href="#">' + articles[i].answerCount +
-                            ' comment(s)</a></span>'+
-                            '<span class="question-category"><a href="/classroom/' + articles[i].classId + '"><i '+
-                            'class="icon-group"></i>Class: '+ articles[i].className +'</a></span>'+
-                            '</div>'+
-                            '<div class="post-content short-text">'+
-                            '<p>'+ articles[i].body +'</p>'+
-                            '</div>'+
-                            '</div>'+
-                            '</article>';
-                    $('#articles').append(component);
-                }
-                nextFromArticle = nextFromArticle + 10;
-            }
-        })
-    });
-    $('#loadMoreMaterial').click(function (e) {
-        var url = "/newsFeed/material/" + nextFromMaterial;
-        $.ajax({
-            type: "GET",
-            url: url,
-            success: function (data) {
-                var materials = new Array();
-                materials = data;
-                var length = materials.length;
-                if (length > 10) {
-                    length = materials.length - 1;
-                } else {
-                    $('#loadMoreMaterial').hide();
-                }
-                var counter = nextFromMaterial + 1;
-                for (var i = 0; i < length; i++) {
-                    var component = '<tr>' +
-                            '<td>'+ counter + '</td>' +
-                            '<td>'+ materials[i].name + '</td>' +
-                            '<td>'+ materials[i].creationDate + '</td>' +
-                            '<td>' + materials[i].size + '</td>' +
-                            '<td><a id="add-to-folder-click" href="#">Folder</a> / <a href="/download/'+ materials[i].id +
-                            '">Computer</a></td>' +
-                            '</tr>';
-                    $('#materials').append(component);
-                    counter++;
-                }
-                nextFromMaterial = nextFromMaterial + 10;
-            }
-        })
     });
 </script>
 

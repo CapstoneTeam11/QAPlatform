@@ -5153,3 +5153,10 @@ html[xmlns] .slides {
 .button.color:hover{
     background: #4c95a9;
 }
+
+.anchor-result-page{
+    display: block;
+    height: 60px; /*same height as header*/
+    margin-top: -60px; /*same height as header*/
+    visibility: hidden;
+}
