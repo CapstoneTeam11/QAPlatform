@@ -845,7 +845,7 @@ jQuery(document).ready(function($) {
 		currentClass : "current_page_item",
 		changeHash : false,
 		scrollSpeed : 750,
-		scrollOffset : parseFloat(jQuery("#header").innerHeight())+60
+		scrollOffset : parseFloat(jQuery("#header").innerHeight())+25
 	});
 	
 	/* Lightbox */
