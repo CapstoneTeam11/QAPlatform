@@ -900,7 +900,7 @@
     //Load more - MinhKH
     var lastQuestionId = ${lastQuestionId};
     var lastArticleId = ${lastArticleId};
-    var lastMaterialId = ${lastClassroomUserId};
+    var lastMaterialId = ${lastMaterialId};
     var lastRequestId = ${lastRequestId};
     var lastClassroomUserId = ${lastClassroomUserId};
     var materialCounter = 11;
