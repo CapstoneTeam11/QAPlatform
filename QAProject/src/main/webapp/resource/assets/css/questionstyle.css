@@ -48,11 +48,7 @@
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0077b3', GradientType=0);
 }
-#email-error, #password-error, #confirm_password-error, #professional-error {
-    width: 100% !important;
-    color: red !important;
-    font-size: 12px !important;
-}
+
 .dropdown-menu>li>form {
     display: block;
     padding: 3px 20px;

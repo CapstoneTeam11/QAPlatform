@@ -119,19 +119,13 @@
                     <div class="boxedtitle page-title"><h2>Create class</h2></div>
 
                     <div class="form-style form-style-3" id="question-submit">
-                        <form method="post" action="/createClass1">
+                        <form method="post" action="/createClass" id="classAction">
                             <div class="form-inputs clearfix">
                                 <p>
                                     <label class="required">Class name<span>*</span></label>
                                     <input type="text" id="question-title" name="classroomName">
                                     <span class="form-description">Please enter name of class you want to create.</span>
                                 </p>
-                                <%--<p>--%>
-                                    <%--<label>Tags</label>--%>
-                                    <%--<input type="text" class="input" name="question_tags" id="question_tags" data-seperator=",">--%>
-                                    <%--<span class="form-description">Please choose  suitable Keywords Ex : <span class="color">question , poll</span> .</span>--%>
-                                <%--</p>--%>
-
                                 <div style="display: flex;height: 42px;">
                                     <p style="width: 18% !important;">
                                         <label class="required">Tag<span>*</span></label>
@@ -188,7 +182,7 @@
                     <ul>
                         <li>
                             <div class="author-img">
-                                <a href="#"><img width="60" height="60" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" alt=""></a>
+                                <a href="#"><img width="60" height="60" src="${user.profileImageURL}" alt=""></a>
                             </div>
                             <h6><a href="#">${user.displayName}</a></h6>
                             <span class="comment">${user.aboutMe}</span>
@@ -212,18 +206,6 @@
                     </div>
                 </div>--%>
 
-                <div class="widget widget_tag_cloud">
-                    <h3 class="widget_title">Tags</h3>
-                    <a href="#">projects</a>
-                    <a href="#">Portfolio</a>
-                    <a href="#">Wordpress</a>
-                    <a href="#">Html</a>
-                    <a href="#">Css</a>
-                    <a href="#">jQuery</a>
-                    <a href="#">2code</a>
-                    <a href="#">vbegy</a>
-                </div>
-
             </aside><!-- End sidebar -->
         </div><!-- End row -->
     </section><!-- End container -->
@@ -239,9 +221,9 @@
     <script src="/resource/assets/js/notification.js"></script>
 </c:if>
 <!-- End js -->
-//Create Class
 
 <script>
+
     var createTag = function(e){
         var flag = 0;
         for( var i = 0 ; i < elt.tagsinput('items').length ; i ++) {
@@ -322,7 +304,15 @@
             typeaheadjs: {
                 name: 'student',
                 displayKey: 'studentName',
-                source: student.ttAdapter()
+                source: student.ttAdapter(),
+                templates: {
+                    empty: [
+                        '<div class="empty-message">',
+                        'unable to find any student or this student was invited or request to your class',
+                        '</div>'
+                    ].join('\n'),
+                    suggestion: Handlebars.compile('<div><span><img src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" class="author-imgTag"></span> <span style="white-space: nowrap">{{studentName}}</span></div>')
+                }
             }
         });
         elt1.on('itemAdded', function (event) {
@@ -333,42 +323,7 @@
             var tagId = "#tag" + event.item.id;
             $(tagId).remove();
         });
-        ///////////////////////////////////////
-        var student1 = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            remote: {
-                url: 'http://localhost:8080/findAllStudent/%QUERY'
-            }
-        });
-        student1.initialize();
-        var elt2 = $('#tagsuggest2');
-        var hiddenTag = $('#hiddenTag2');
-        elt2.tagsinput({
-            itemValue: 'studentId',
-            itemText: 'studentName',
-            typeaheadjs: {
-                name: 'student',
-                displayKey: 'studentName',
-                source: student.ttAdapter(),
-                templates: {
-                    empty: [
-                        '<div class="empty-message">',
-                        'unable to find any student',
-                        '</div>'
-                    ].join('\n'),
-                    suggestion: Handlebars.compile('<div><span><img src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" class="author-imgTag"></span> <span style="white-space: nowrap">{{studentName}}</span></div>')
-                }
-            }
-        });
-        elt2.on('itemAdded', function (event) {
-            var studentId = event.item.id;
-            hiddenTag.append("<input type='hidden' name='tagId' value=" + studentId + " id=tag" + studentId + ">");
-        });
-        elt2.on('itemRemoved', function (event) {
-            var tagId = "#tag" + event.item.id;
-            $(tagId).remove();
-        });
+
     });
     function createClass(){
         var classname = $("#question-title").val();

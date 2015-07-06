@@ -25,3 +25,4 @@
 <script src="/resource/assets/js/bootstrap-tagsinput.js"></script>
 <script src="/resource/assets/js/bootstrap-tagsinput.min.js"></script>
 <script src="/resource/assets/js/handlebars-v3.0.3.js"></script>
+<script src="/resource/assets/js/jquery.validate.min.js"></script>

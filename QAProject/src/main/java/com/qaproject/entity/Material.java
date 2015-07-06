@@ -2,6 +2,7 @@ package com.qaproject.entity;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -31,7 +32,8 @@ public class Material {
     private Double size;
     @Column(name = "FileURL")
     private String fileURL;
-
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "materialId",orphanRemoval = true)
+    private List<TagMaterial> tagMaterials;
 
     public Integer getId() {
         return id;
@@ -87,5 +89,16 @@ public class Material {
 
     public void setFileURL(String fileURL) {
         this.fileURL = fileURL;
+    }
+
+    public List<TagMaterial> getTagMaterials() {
+        if(tagMaterials==null) {
+            tagMaterials = new ArrayList<TagMaterial>();
+        }
+        return tagMaterials;
+    }
+
+    public void setTagMaterials(List<TagMaterial> tagMaterials) {
+        this.tagMaterials = tagMaterials;
     }
 }

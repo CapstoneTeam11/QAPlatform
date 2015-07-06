@@ -68,6 +68,15 @@
     <h2>Upload Material<i class="icon-remove"></i></h2>
     <div class="form-style form-style-3">
         <form method="post" action="/upload" enctype="multipart/form-data">
+            <div style="display: flex;height: 42px;">
+                <p style="width: 18% !important;">
+                    <label class="required">Tag<span>*</span></label>
+                </p>
+                <div style="width: 82%">
+                    <input type="text" class="input" name="tag" id="tagsuggest"/>
+                </div>
+                <div id="hiddenTag"></div>
+            </div>
             <div class="form-inputs clearfix">
                 <p>
                     <input type="file" name="fileUpload" size="50">
@@ -555,6 +564,18 @@
         $(formDelete).submit();
         return false;
     }
+    var createTag = function(e){
+        var flag = 0;
+        for( var i = 0 ; i < elt.tagsinput('items').length ; i ++) {
+            if($('.tt-input').val()==elt.tagsinput('items')[i].name) {
+                flag = 1;
+            }
+        }
+        if(flag==0) {
+            $('#tagsuggest').tagsinput('add', { id: Math.round((Math.random()*10000))*-1, name: $('.tt-input').val() });
+            $('.tt-input').val("");
+        }
+    };
     var studentNameList = [];
     $(document).ready(function () {
         function wrap_pop() {
@@ -581,6 +602,46 @@
             }
             return false;
         });
+        var tag = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: 'http://localhost:8080/tag/%QUERY'
+            }
+        });
+        tag.initialize();
+        elt = $('#tagsuggest');
+        var hiddenTag = $('#hiddenTag');
+        elt.tagsinput({
+            itemValue: 'id',
+            itemText: 'name',
+            typeaheadjs: {
+                name: 'tag',
+                displayKey: 'name',
+                source: tag.ttAdapter(),
+                templates: {
+                    empty: [
+                        '<div style="display: flex"><span class="unableFind"> unable to find tag</span> <span><a class="button color small" id="createTag" onclick="createTag()" style="margin-left: 5px">Create Now</a></span></div>'
+                    ].join('\n'),
+                    suggestion: Handlebars.compile('<div><span style="white-space: nowrap">{{name}}</span></div>')
+                }
+            }
+        });
+        elt.on('itemAdded', function (event) {
+            var idTag = event.item.id;
+            if(idTag < 0) {
+                var name = event.item.name;
+                hiddenTag.append("<input type='hidden' name='newTag' value=" + name + " id=tag" + idTag + ">");
+            } else {
+                hiddenTag.append("<input type='hidden' name='tagId' value=" + idTag + " id=tag" + idTag + ">");
+            }
+        });
+        elt.on('itemRemoved', function (event) {
+            var tagId = "#tag" + event.item.id;
+            $(tagId).remove();
+        });
+
+
         var student = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -590,7 +651,7 @@
         });
         student.initialize();
         var elt1 = $('#tagsuggest1');
-        var hiddenTag = $('#hiddenTag1');
+        var hiddenTagStudent = $('#hiddenTag1');
         elt1.tagsinput({
             itemValue: 'studentId',
             itemText: 'studentName',
@@ -601,21 +662,23 @@
                 templates: {
                     empty: [
                         '<div class="empty-message">',
-                        'unable to find any student',
+                        'unable to find any student or this student was invited or request to your class',
                         '</div>'
                     ].join('\n'),
-                    suggestion: Handlebars.compile('<div><span><img src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" class="author-imgTag"></span> <span style="white-space: nowrap">{{studentName}}</span></div>')
+                    suggestion: Handlebars.compile('<div><span><img src="{{studentProfileImageURL}}" class="author-imgTag"></span> <span style="white-space: nowrap">{{studentName}}</span></div>')
                 }
             }
         });
         elt1.on('itemAdded', function (event) {
             var studentId = event.item.id;
-            hiddenTag.append("<input type='hidden' name='tagId' value=" + studentId + " id=tag" + studentId + ">");
+            hiddenTagStudent.append("<input type='hidden' name='tagId' value=" + studentId + " id=tag" + studentId + ">");
         });
         elt1.on('itemRemoved', function (event) {
             var tagId = "#tag" + event.item.id;
             $(tagId).remove();
         });
+
+    });
 
         /*short test for list of posts - MinhKH*/
         $(".short-text").each(function () {
@@ -624,7 +687,6 @@
                 $(this).html(text.substr(0, 400) + '.......');
             }
         });
-    });
     function joinClass(id){
         var url = "/requestJoinClass/"+id;
         $.ajax({

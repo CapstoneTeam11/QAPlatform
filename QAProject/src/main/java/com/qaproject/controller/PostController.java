@@ -583,5 +583,22 @@ public class PostController {
         }
         return "redirect:/post/view/" + post.getId();
     }
+    @RequestMapping(value = "/post/count/{id}", method = RequestMethod.POST,produces = "application/json")
+    public String updateView(@PathVariable Integer id) {
+        //authorize
+        Post post = null;
+        try {
+            post = postDao.find(id);
+            if(post.getViewer()==null) {
+                post.setViewer(0);
+            } else {
+                post.setViewer(post.getViewer()+1);
+            }
+            postDao.merge(post);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "redirect:/post/view/" + post.getId();
+    }
 
 }

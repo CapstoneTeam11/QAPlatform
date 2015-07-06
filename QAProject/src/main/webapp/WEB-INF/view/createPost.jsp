@@ -133,13 +133,13 @@
                     <div class="boxedtitle page-title"><h2>Create post</h2></div>
 
                     <div class="form-style form-style-3" id="question-submit">
-                        <form method="post" action="/post/create">
+                        <form method="post" action="/post/create" id="formvalidate">
                             <input type="hidden" name="classId" value="${classId}">
 
                             <div>
                                 <p>
                                     <label class="required">Title<span>*</span></label>
-                                    <input type="text" id="question-title" name="postName">
+                                    <input type="text" id="question-title" name="postName" maxlength="255">
                                     <span class="form-description">Please choose an appropriate title for the question to answer it even easier .</span>
                                 </p>
 
@@ -202,7 +202,7 @@
                         <div class="boxedtitle page-title"><h2>Create post</h2></div>
 
                         <div class="form-style form-style-3" id="question-submit">
-                            <form method="post" action="/post/update">
+                            <form method="post" action="/post/update" id="formvalidate">
                                 <input type="hidden" name="id" value="${post.id}">
                                 <c:forEach var="tag" items="${post.tagPostList}">
                                     <input type="hidden" name="tagUpdateId" value="${tag.tagId.id}">
@@ -211,7 +211,7 @@
                                 <div>
                                     <p>
                                         <label class="required">Title<span>*</span></label>
-                                        <input type="text" id="question-title" name="postName" value="${post.title}">
+                                        <input type="text" id="question-title" name="postName" value="${post.title}" maxlength="255">
                                         <span class="form-description">Please choose an appropriate title for the question to answer it even easier .</span>
                                     </p>
 
@@ -341,6 +341,7 @@
 <c:if test="${post==null}">
 <script>
     $(document).ready(function () {
+
         $('#publish-question').click(function (e) {
             var detail = CKEDITOR.instances['question-details'].getData()
             var postDetail = $('#postDetail')

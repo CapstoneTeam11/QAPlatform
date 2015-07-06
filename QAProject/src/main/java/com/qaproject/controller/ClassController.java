@@ -63,16 +63,17 @@ public class ClassController {
         model.addAttribute("user",user);
         return "createClass";
     }
-    @RequestMapping(value= "/createClass1",method= RequestMethod.POST)
+    @RequestMapping(value= "/createClass",method= RequestMethod.POST)
 //    @ResponseBody
     public String createClass(@RequestParam("classroomName") String classroomName,
                            @RequestParam("classroomDescription") String classroomDescription,
                            @RequestParam("categoryId") String categoryId,
                            @RequestParam("tag") String tag,
                            @RequestParam(value = "newTag", required = false)  List<String> newTag,
-                           @RequestParam("studentList") String studentList, Model model, HttpServletRequest request) {
+                           @RequestParam(value = "studentList",required = false) String studentList, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         User user = (User)session.getAttribute("user");
+
 //        ReturnObjectWithStatus objectWithStatus =new ReturnObjectWithStatus();
         if(user == null){
 //            objectWithStatus.setStatus("NG");
@@ -80,6 +81,9 @@ public class ClassController {
         }else if(user.getRoleId().getId()==1){
 //            objectWithStatus.setStatus("403");
             return "redirect:403";
+        }
+        if(classroomName.length() < 10 || classroomName.length() > 127) {
+            return "createClass";
         }
         Classroom room = new Classroom();
         Category category = new Category();

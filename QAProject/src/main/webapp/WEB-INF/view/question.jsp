@@ -244,7 +244,6 @@
                                                                 <ul class="actionAnswer dropdown-menu" role="menu" >
                                                                     <li><a href="#" onclick="editAnswer(this);return false;">Edit</a></li>
                                                                     <li><a href="#" onclick="deleteAnswer(this);return false;">Delete</a></li>
-                                                                    <li><a ></a></li>
                                                                 </ul>
                                                             </div>
                                                         </c:if>
@@ -296,7 +295,6 @@
                                                                 <ul class="actionAnswer dropdown-menu " role="menu" >
                                                                     <li><a href="#" onclick="editAnswer(this);return false;">Edit</a></li>
                                                                     <li><a onclick="deleteAnswer(this);return false;">Delete</a></li>
-                                                                    <li><a ></a></li>
                                                                 </ul>
                                                             </div>
                                                         </c:if>
@@ -405,6 +403,7 @@
 
 <!-- js -->
 <%@include file="js.jsp" %>
+<script src="/resource/assets/js/js.cookie.js"></script>
 <c:if test="${sessionScope.user!=null}">
 <script src="/resource/assets/js/notification.js"></script>
 </c:if>
@@ -555,47 +554,49 @@
         });
 
     }
+    var deleteId
+    var deleteDiv
     var deleteAnswer = function(e) {
-        var deleteId = $(e).parents('.comment-text').find("[name='postAnswerId']").val();
-        var deleteDiv = $(e).parents('.comment')
-        var postDto = {'id' : deleteId };
-        var url = '/post/deleteAnswer';
+         deleteId = $(e).parents('.comment-text').find("[name='postAnswerId']").val();
+         deleteDiv = $(e).parents('.comment')
         $(".panel-Confirm").animate({"top":"-100%"},10).hide();
         $("#delete-comment").show().animate({"top":"34%"},500);
         $("body").prepend("<div class='wrap-pop'></div>");
         wrap_pop()
-        var flagPanel =  $('.panelButton').click(function(e) {
-            if ($(e.currentTarget).hasClass('OK')) {
-                $.ajax({
-                    type: "POST",
-                    url: url,
-                    data: postDto,
-                    success: function (data) {
-                        if(data != "NG" ){
-                            deleteDiv.remove();
-                        } else {
-                            console.log("Error");
-                        }
-                    }
-                });
-                $(".panel-Confirm").animate({"top":"-100%"},500);
-                $(".wrap-pop").remove();
-            } else {
-                $(".panel-Confirm").animate({"top":"-100%"},500);
-                $(".wrap-pop").remove();
-            }
-        })
+    };
+    $('.panelButton').click(function(e) {
 
-    }
+        var postDto = {'id' : deleteId };
+        var url = '/post/deleteAnswer';
+        if ($(e.currentTarget).hasClass('OK')) {
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: postDto,
+                success: function (data) {
+                    if(data != "NG" ){
+                        deleteDiv.remove();
+                    } else {
+                        console.log("Error");
+                    }
+                }
+            });
+            $(".panel-Confirm").animate({"top":"-100%"},500);
+            $(".wrap-pop").remove();
+        } else {
+            $(".panel-Confirm").animate({"top":"-100%"},500);
+            $(".wrap-pop").remove();
+        }
+    })
     $(document).ready(function () {
         var listAnswer = new Array()
         listAnswer = $( "input[name='postAnswerId']" )
         var lastestId = listAnswer.last().val();
-        function getCommentDiv(ownerName,lastEditDate) {
+        function getCommentDiv(ownerName,lastEditDate,imageUrl) {
             var commentDiv = '<li class="comment">'+
                     '<div class="comment-body comment-body-answered clearfix">'+
                     '<div class="avatar"><img alt=""'+
-                    'src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg">'+
+                    'src="'+ imageUrl +'">'+
                     '</div>'+
                     '<div class="comment-text">'+
                     '<div class="author clearfix"  style="display: flex">'+
@@ -682,12 +683,12 @@
             if(postOwnerId==userId) {
                     //user is post Owner
                     if(userId==post.ownerId) {
-                        var divAppend = getCommentDiv(post.ownerName, post.lastEditedDate) +
+                        var divAppend = getCommentDiv(post.ownerName, post.lastEditedDate,post.ownerProfileImageURL) +
                                 notAcceptAnswerIconDiv(post.id) + acceptAnswerDiv() +
                                 acceptAnswerAction() + postActionUser() + answerBody(post.body)
                         $('#commentListDetail').prepend(divAppend);
                     } else {
-                        var divAppend = getCommentDiv(post.ownerName,post.lastEditedDate) +
+                        var divAppend = getCommentDiv(post.ownerName,post.lastEditedDate,post.ownerProfileImageURL) +
                                 notAcceptAnswerIconDiv(post.id) + acceptAnswerDiv() +
                                 acceptAnswerAction() + answerBody(post.body)
                         $('#commentListDetail').prepend(divAppend);
@@ -696,13 +697,13 @@
             } else {
                     //user is post Owner
                     if(userId==post.ownerId) {
-                        var divAppend = getCommentDiv(post.ownerName, post.lastEditedDate) +
+                        var divAppend = getCommentDiv(post.ownerName, post.lastEditedDate,post.ownerProfileImageURL) +
                                 notAcceptAnswerIconDiv(post.id) +
                                 acceptAnswerAction() + postActionUser() + answerBody(post.body)
 
                         $('#commentListDetail').prepend(divAppend);
                     } else {
-                        var divAppend = getCommentDiv(post.ownerName,post.lastEditedDate) +
+                        var divAppend = getCommentDiv(post.ownerName,post.lastEditedDate,post.ownerProfileImageURL) +
                                 notAcceptAnswerIconDiv(post.id) +
                                 acceptAnswerAction() + answerBody(post.body)
                         $('#commentListDetail').prepend(divAppend);
@@ -713,10 +714,40 @@
         }
 
         // Connect to server via websocket
-        stompClient.connect("guest", "guest", connectCallback, errorCallback);
+            stompClient.connect("guest", "guest", connectCallback, errorCallback);
 //        $('.answerFlag').delegate('click',function (e) {
 //
 //        });
+            if(Cookies.get('post')==undefined) {
+                Cookies.set('post', '${post.id}');
+            } else {
+                var postIds = Cookies.get('post');
+                var listPost = new Array();
+                var flag =0 ;
+                listPost = postIds.split(',');
+                for(var i = 0 ; i < listPost.length ;i++) {
+                    if(listPost[i]==${post.id}) {
+                        flag = 1;
+                        break;
+                    }
+                }
+                if(flag==0) {
+                    postIds = postIds + "," + ${post.id};
+                    var url = "/post/count/${post.id}"
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        success: function (data) {
+                            if(data != "NG" ){
+                            } else {
+                                console.log("Error");
+                            }
+                        }
+                    });
+                }
+                Cookies.set('post', postIds);
+            }
+
 
         $('#wantAnswer').click(function (e) {
             if($('#wantAnswer').hasClass('wantAnswerId')) {
@@ -793,13 +824,13 @@
                             if(post[i].acceptedAnswerId==1) {
                                 //user is post Owner
                                 if(userId==post[i].ownerId) {
-                                    var divAppend = getCommentDiv(post[i].ownerName,post[i].lastEditedDate) +
+                                    var divAppend = getCommentDiv(post[i].ownerName,post[i].lastEditedDate,post[i].ownerProfileImageURL) +
                                                     acceptAnswerIconDiv(post[i].id) + unacceptAnswerDiv() +
                                                     acceptAnswerAction() + postActionUser() + answerBody(post[i].body)
 
                                     $('#commentListDetail').append(divAppend);
                                 } else {
-                                    var divAppend = getCommentDiv(post[i].ownerName,post[i].lastEditedDate) +
+                                    var divAppend = getCommentDiv(post[i].ownerName,post[i].lastEditedDate,post[i].ownerProfileImageURL) +
                                             acceptAnswerIconDiv(post[i].id) + unacceptAnswerDiv() +
                                             acceptAnswerAction() + answerBody(post[i].body)
                                     $('#commentListDetail').append(divAppend);
@@ -808,13 +839,13 @@
                             } else {
                                 //user is post Owner
                                 if(userId==post[i].ownerId) {
-                                    var divAppend = getCommentDiv(post[i].ownerName, post[i].lastEditedDate) +
+                                    var divAppend = getCommentDiv(post[i].ownerName, post[i].lastEditedDate,post[i].ownerProfileImageURL) +
                                             notAcceptAnswerIconDiv(post[i].id) + acceptAnswerDiv() +
                                             acceptAnswerAction() + postActionUser() + answerBody(post[i].body)
 
                                     $('#commentListDetail').append(divAppend);
                                 } else {
-                                    var divAppend = getCommentDiv(post[i].ownerName,post[i].lastEditedDate) +
+                                    var divAppend = getCommentDiv(post[i].ownerName,post[i].lastEditedDate,post[i].ownerProfileImageURL) +
                                             notAcceptAnswerIconDiv(post[i].id) + acceptAnswerDiv() +
                                             acceptAnswerAction() + answerBody(post[i].body)
                                     $('#commentListDetail').append(divAppend);
@@ -827,13 +858,13 @@
                             if(post[i].acceptedAnswerId==1) {
                                 //user is post Owner
                                 if(userId==post[i].ownerId) {
-                                    var divAppend = getCommentDiv(post[i].ownerName,post[i].lastEditedDate) +
+                                    var divAppend = getCommentDiv(post[i].ownerName,post[i].lastEditedDate,post[i].ownerProfileImageURL) +
                                             acceptAnswerIconDiv(post[i].id) +
                                             acceptAnswerAction() + postActionUser() + answerBody(post[i].body)
 
                                     $('#commentListDetail').append(divAppend);
                                 } else {
-                                    var divAppend = getCommentDiv(post[i].ownerName,post[i].lastEditedDate) +
+                                    var divAppend = getCommentDiv(post[i].ownerName,post[i].lastEditedDate,post[i].ownerProfileImageURL) +
                                             acceptAnswerIconDiv(post[i].id)  +
                                             acceptAnswerAction() + answerBody(post[i].body)
                                     $('#commentListDetail').append(divAppend);
@@ -842,13 +873,13 @@
                             } else {
                                 //user is post Owner
                                 if(userId==post[i].ownerId) {
-                                    var divAppend = getCommentDiv(post[i].ownerName, post[i].lastEditedDate) +
+                                    var divAppend = getCommentDiv(post[i].ownerName, post[i].lastEditedDate,post[i].ownerProfileImageURL) +
                                             notAcceptAnswerIconDiv(post[i].id) +
                                             acceptAnswerAction() + postActionUser() + answerBody(post[i].body)
 
                                     $('#commentListDetail').append(divAppend);
                                 } else {
-                                    var divAppend = getCommentDiv(post[i].ownerName,post[i].lastEditedDate) +
+                                    var divAppend = getCommentDiv(post[i].ownerName,post[i].lastEditedDate,post[i].ownerProfileImageURL) +
                                             notAcceptAnswerIconDiv(post[i].id) +
                                             acceptAnswerAction() + answerBody(post[i].body)
                                     $('#commentListDetail').append(divAppend);

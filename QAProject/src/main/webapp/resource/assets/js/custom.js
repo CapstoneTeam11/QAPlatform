@@ -665,7 +665,7 @@ jQuery(document).ready(function($) {
 //		var question_title = jQuery("#question_title").val();
 //		jQuery.post("ask_question.html",question_title,function () {
 //			window.location.href = "ask_question.html?question_title="+question_title;
-//			jQuery("#question-title").val(question_title);
+//			jQuery("#questiontitle").val(question_title);
 //		})
 //		return false;
 //	});
@@ -677,7 +677,7 @@ jQuery(document).ready(function($) {
 	    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 	}
 	
-//	jQuery("#question-title").val(getParameterByName("question_title"));
+//	jQuery("#questiontitle").val(getParameterByName("question_title"));
 //
 //	jQuery('#question_tags').tag();
 	

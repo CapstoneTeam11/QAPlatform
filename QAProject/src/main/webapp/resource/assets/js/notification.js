@@ -56,9 +56,7 @@ $('#notifiDropdown').click(function(e) {
 
             }
         })
-    } else {
         $('#countNotifi').html("");
-        $('#notificationAppend').empty();
         var url = '/notification/setview/' + userId;
         $.ajax({
             type: "POST",
@@ -69,6 +67,8 @@ $('#notifiDropdown').click(function(e) {
                 }
             }
         })
+    } else {
+        $('#notificationAppend').empty();
     }
 
 })
@@ -101,18 +101,7 @@ $('#notifiDropdown').click(function(e) {
 $(document).on('click', function(e) {
     if($(e.currentTarget).attr('id')!='notifiDropdown') {
         if($('#notificationAppend').children().length > 0) {
-            $('#countNotifi').html("");
             $('#notificationAppend').empty();
-            var url = '/notification/setview/' + userId;
-            $.ajax({
-                type: "POST",
-                url: url,
-                success: function (data) {
-                    if(data!='OK') {
-                        console.log("Error");
-                    }
-                }
-            })
     }
 }
 });

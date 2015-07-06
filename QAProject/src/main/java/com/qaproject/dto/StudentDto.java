@@ -17,6 +17,12 @@ public class StudentDto {
         this.studentId = studentId;
     }
 
+    public StudentDto(String studentName, Integer studentId, String studentProfileImageURL) {
+        this.studentId = studentId;
+        this.studentName = studentName;
+        this.studentProfileImageURL = studentProfileImageURL;
+    }
+
     public Integer getStudentId() {
         return studentId;
     }

@@ -52,43 +52,67 @@
 <%@include file="css.jsp" %>
 <div id="wrap">
 
-<div class="panel-pop" id="addMaterial">
-    <h2>Upload Material<i class="icon-remove"></i></h2>
-    <div class="form-style form-style-3">
-        <form method="post" action="/upload" enctype="multipart/form-data">
-            <div class="form-inputs clearfix">
-                <p>
-                    <input type="file" name="fileUpload" size="50">
+    <div class="panel-pop" id="addMaterial">
+        <h2>Upload Material<i class="icon-remove"></i></h2>
+        <div class="form-style form-style-3">
+            <form method="post" action="/upload" enctype="multipart/form-data">
+                <div style="display: flex;height: 42px;">
+                    <p style="width: 18% !important;">
+                        <label class="required">Tag<span>*</span></label>
+                    </p>
+                    <div style="width: 82%">
+                        <input type="text" class="input" name="tag" id="tagsuggest"/>
+                    </div>
+                    <div id="hiddenTag"></div>
+                </div>
+                <div class="form-inputs clearfix">
+                    <p>
+                        <input type="file" name="fileUpload" size="50">
+                    </p>
+                </div>
+                <p class="form-submit">
+                    <c:if test="${classroom.status == 1}">
+                        <input type="submit" value="Upload" class="button color small submit">
+                    </c:if>
+                    <input type="hidden" name="classId" value="${classroom.id}">
                 </p>
-            </div>
-            <p class="form-submit">
-                <input type="submit" value="Upload" class="button color small submit">
-                <input type="hidden" name="classId" value="1">
-            </p>
-        </form>
-        <div class="clearfix"></div>
-    </div>
-</div><!-- End upload material -->
+            </form>
+            <div class="clearfix"></div>
+        </div>
+    </div><!-- End upload material -->
+    <div class="panel-pop" id="create-folder">
+        <h2>Invite student join to class<i class="icon-remove"></i></h2>
+        <div class="form-style form-style-3">
+            <form method="post" action="/folder/create">
+                <div class="form-inputs clearfix">
+                    <div style="display: flex;height: 42px;">
+                        <p style="width: 18% !important;">
+                            <label class="required">Student<span>*</span></label>
+                        </p>
+                        <div style="width: 82%">
+                            <input type="text" class="input" name="tag" id="tagsuggest1"/>
+                        </div>
+                        <div id="hiddenTag1"></div>
+                    </div>
+                </div>
+                <p class="form-submit">
+                    <a href="javascript:inviteStudent(${classroom.id})" class="button color small submit">Invite</a>
+                </p>
+            </form>
+            <div class="clearfix"></div>
+        </div>
+    </div><!-- End create folder -->
+    <div class="panel-pop" id="add-to-folder">
+        <h2>Add to folder<i class="icon-remove"></i></h2>
+        <div style="height: auto; max-height: 300px; overflow-x: hidden;" id="folderList">
+            <c:forEach var="folder" items="${user.folderList}">
+                <a href="/library/add/${folder.id}/" class="list-group-item">
+                    <h4 class="list-group-item-heading">${folder.name} </h4>
+                </a>
+            </c:forEach>
+        </div>
+    </div><!-- End add to folder -->
 
-<div class="panel-pop" id="add-to-folder">
-    <h2>Add to folder<i class="icon-remove"></i></h2>
-    <div style="height: auto; max-height: 300px; overflow-x: hidden;">
-
-        <a href="/library/add/1/4" class="list-group-item">
-            <h4 class="list-group-item-heading">Java </h4>
-        </a>
-        <a href="#" class="list-group-item">
-            <h4 class="list-group-item-heading">C# </h4>
-        </a>
-        <a href="#" class="list-group-item">
-            <h4 class="list-group-item-heading">Document 4</h4>
-        </a>
-        <a href="#" class="list-group-item">
-            <h4 class="list-group-item-heading">Piture 5</h4>
-        </a>
-
-    </div>
-</div><!-- End add to folder -->
 
 
 
@@ -128,6 +152,7 @@
     </div><!-- End page-content -->
 </div><!-- End main -->
 <aside class="col-md-3 sidebar">
+        <c:if test="${sessionScope.user.roleId.id==1}">
         <div class="widget">
             <h3 class="widget_title">About class</h3>
             <ul class="related-posts">
@@ -138,7 +163,8 @@
             </ul>
             <a href="javascript:joinClass(${classroom.id})" class="button small color" id="join">Join</a>
         </div>
-        <c:if test="${user.roleId.id==2}">
+        </c:if>
+        <c:if test="${sessionScope.user.id==classroom.ownerUserId.id}">
             <div class="widget widget_login" style="  min-height: 130px;">
                 <h3 class="widget_title">Invite student</h3>
                 <div class="pull-right" style="width: 100%;">
@@ -151,10 +177,10 @@
             <ul>
                 <li>
                     <div class="author-img">
-                        <a href="#"><img width="60" height="60" src="${userOwner.profileImageURL}" alt=""></a>
+                        <a href="#"><img width="60" height="60" src="${classroom.ownerUserId.profileImageURL}" alt=""></a>
                     </div>
-                    <h6><a href="#">${userOwner.displayName}</a></h6>
-                    <span class="comment">${userOwner.aboutMe}</span>
+                    <h6><a href="#">${classroom.ownerUserId.displayName}</a></h6>
+                    <span class="comment">${classroom.ownerUserId.aboutMe}</span>
                 </li>
             </ul>
         </div>
@@ -193,7 +219,15 @@
             typeaheadjs: {
                 name: 'student',
                 displayKey: 'studentName',
-                source: student.ttAdapter()
+                source: student.ttAdapter(),
+                templates: {
+                    empty: [
+                        '<div class="empty-message">',
+                        'unable to find any student or this student was invited or request to your class',
+                        '</div>'
+                    ].join('\n'),
+                    suggestion: Handlebars.compile('<div><span><img src="{{studentProfileImageURL}}" class="author-imgTag"></span> <span style="white-space: nowrap">{{studentName}}</span></div>')
+                }
             }
         });
         elt1.on('itemAdded', function (event) {
@@ -238,11 +272,14 @@
             url: url,
             data: "studentName="+name,
             success: function(data){
-//                if(data == "OK"){
-//                    $().toastmessage('showSuccessToast', 'Invatition Sent!');
-//                }else{
-//                    $().toastmessage('showErrorToast', "Invatition Fails!");
-//                }
+                if(data == "OK"){
+                    $('.panel-pop h2 i').click();
+                    $('#tagsuggest1').tagsinput('removeAll');
+                }else{
+                    $('.panel-pop h2 i').click();
+                    $('#tagsuggest1').tagsinput('removeAll');
+                }
+
             }
         });
     }

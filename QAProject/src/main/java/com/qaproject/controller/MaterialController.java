@@ -1,13 +1,7 @@
 package com.qaproject.controller;
 
-import com.qaproject.dao.ClassroomDao;
-import com.qaproject.dao.FolderDao;
-import com.qaproject.dao.MaterialDao;
-import com.qaproject.dao.UserDao;
-import com.qaproject.entity.Classroom;
-import com.qaproject.entity.Folder;
-import com.qaproject.entity.Material;
-import com.qaproject.entity.User;
+import com.qaproject.dao.*;
+import com.qaproject.entity.*;
 import com.qaproject.util.Utilities;
 import com.sun.deploy.net.HttpResponse;
 import org.apache.commons.io.IOUtils;
@@ -24,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.nio.file.FileAlreadyExistsException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -41,7 +36,8 @@ public class MaterialController {
     ClassroomDao classroomDao;
     @Autowired
     HttpSession session;
-
+    @Autowired
+    TagDao tagDao;
 
     @RequestMapping(value = "/material", method = RequestMethod.GET)
     public String material(ModelMap model) {
@@ -134,6 +130,8 @@ public class MaterialController {
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public String upload(@RequestParam Integer classId,
+                         @RequestParam List<Integer> tagId,
+                         @RequestParam(required = false) List<String> newTag,
                          @RequestParam CommonsMultipartFile[] fileUpload,
                          ModelMap model) {
         Classroom classroom = classroomDao.find(classId);
@@ -171,6 +169,25 @@ public class MaterialController {
                     material.setOwnerClassId(classroom);
                     material.setSize(((Long) aFile.getSize()).doubleValue());
                     material.setCreationDate(new Date());
+                    List<TagMaterial> tagMaterials = new ArrayList<TagMaterial>();
+                    for (int i = 0; i < tagId.size(); i++) {
+                        TagMaterial tagMaterial = new TagMaterial();
+                        tagMaterial.setMaterialId(material);
+                        tagMaterial.setTagId(tagDao.find(tagId.get(i)));
+                        tagMaterials.add(tagMaterial);
+                    }
+                    if (newTag != null) {
+                        for (int i = 0; i < newTag.size(); i++) {
+                            TagMaterial tagMaterial = new TagMaterial();
+                            tagMaterial.setMaterialId(material);
+                            Tag tag = new Tag();
+                            tag.setTagName(newTag.get(i));
+                            tagDao.persist(tag);
+                            tagMaterial.setTagId(tag);
+                            tagMaterials.add(tagMaterial);
+                        }
+                    }
+                    material.getTagMaterials().addAll(tagMaterials);
                     materialDao.persist(material);
                 }
 

@@ -5146,10 +5146,15 @@ html[xmlns] .slides {
     color: red;
 }
 
-
+#email-error, #password-error, #confirm_password-error, #professional-error {
+    width: 100% !important;
+    color: red !important;
+    font-size: 12px !important;
+}
 .closedStatus {
     color: #ff7f7f;
 }
 .button.color:hover{
     background: #4c95a9;
 }
+
