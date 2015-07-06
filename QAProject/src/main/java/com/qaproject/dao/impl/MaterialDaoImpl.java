@@ -2,6 +2,7 @@ package com.qaproject.dao.impl;
 
 import com.qaproject.dao.BaseDao;
 import com.qaproject.dao.MaterialDao;
+import com.qaproject.entity.Classroom;
 import com.qaproject.entity.Material;
 import org.springframework.stereotype.Repository;
 
@@ -45,6 +46,41 @@ public class MaterialDaoImpl extends BaseDao<Material,Integer> implements Materi
             nextFrom = 0;
         }
         query.setFirstResult(nextFrom);
+        query.setMaxResults(11);
+        List<Material> materials = null;
+        try{
+            materials = query.getResultList();
+        } catch (NoResultException e){
+            e.printStackTrace();
+        }
+        return materials;
+    }
+
+    @Override
+    public List<Material> findMaterialByOwnerClassroom(Classroom classroom) {
+        Query query = entityManager.createQuery("Select m from Material m where m.ownerClassId=:classroom order by m.id");
+        query.setParameter("classroom",classroom);
+        List<Material> materials = null;
+        try{
+            materials = query.getResultList();
+        } catch (NoResultException e){
+            e.printStackTrace();
+        }
+        return materials;
+    }
+
+    @Override
+    public List<Material> findMaterialLikeName(String searchKey, Integer lastId) {
+        Query query;
+        if (lastId==0){
+            query = entityManager.createQuery("Select m from Material m where m.name like :searchKey " +
+                    "order by m.id desc ");
+        } else {
+            query = entityManager.createQuery("Select m from Material m where m.name like :searchKey " +
+                    "and m.id<:lastId order by m.id desc ");
+            query.setParameter("lastId",lastId);
+        }
+        query.setParameter("searchKey",'%' + searchKey + '%');
         query.setMaxResults(11);
         List<Material> materials = null;
         try{

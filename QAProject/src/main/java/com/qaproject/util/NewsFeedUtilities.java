@@ -33,15 +33,21 @@ public class NewsFeedUtilities {
     ClassroomUserDao classroomUserDao;
     @Autowired
     MaterialDao materialDao;
+    @Autowired
+    TagUserDao tagUserDao;
+    @Autowired
+    TagPostDao tagPostDao;
+    @Autowired
+    TagMaterialDao tagMaterialDao;
 
-    private final String QUESTION_IN_KNOW = "QIK_";
-    private final String QUESTION_IN_CLASS = "QIC_";
-    private final String QUESTION_IN_FOLLOWER = "QIF_";
+    private final String QUESTION = "QTN_";
+    private final String ARTICLE = "ATC_";
+    private final String MATERIAL = "MTR_";
     private final Integer STUDENT = 1;
     private final Integer TEACHER = 2;
     private final Integer ACCEPTED = 1;
 
-    public void setNewsFeedQuestion() {
+    public void setNewsFeed() {
         List<User> users = userDao.findAll();
         if (users == null) {
             return;
@@ -51,12 +57,18 @@ public class NewsFeedUtilities {
             setQuestionsInClass(user, jedis);
             setQuestionsInFollower(user, jedis);
             setQuestionsInKnow(user, jedis);
+            setArticlesInTags(user,jedis);
+            setArticlesInKnow(user,jedis);
+            setMaterialInTags(user,jedis);
+            setMaterialInKnow(user,jedis);
         }
     }
 
     public void setNewsFeedQuestionAfterRegister(User user) {
         Jedis jedis = new Jedis("localhost");
         setQuestionsInKnow(user,jedis);
+        setArticlesInKnow(user,jedis);
+        setMaterialInKnow(user,jedis);
     }
 
     public void setNewsFeedQuestionAfterCreatePost(Post question){
@@ -66,9 +78,9 @@ public class NewsFeedUtilities {
         }
         Jedis jedis = new Jedis("localhost");
         for (User user: users){
-            setQuestionInClass(user,jedis,question);
-            setQuestionsInFollower(user,jedis,question);
-            setQuestionsInKnow(user,jedis,question);
+            //setQuestionInClass(user,jedis,question);
+            //setQuestionsInFollower(user,jedis,question);
+            //setQuestionsInKnow(user,jedis,question);
         }
     }
 
@@ -78,12 +90,12 @@ public class NewsFeedUtilities {
         }
         Integer from = Constant.NUMBER_PAGE*(page -1);
         Integer to = Constant.NUMBER_PAGE*page +1 ;
-        List<Post> questions = getNewsFeedQuestions(userId);
-        if (to>questions.size()) {
-            to = questions.size();
-        }
+        List<Post> questions = getQuestionsFromRedis(userId);
         List<PostDto> questionDtos = new ArrayList<PostDto>();
         if (questions != null) {
+            if (to>questions.size()) {
+                to = questions.size();
+            }
             List<Post> subQuestion = questions.subList(from,to);
             for(Post question: subQuestion) {
                 Integer answerCount = 0;
@@ -100,62 +112,53 @@ public class NewsFeedUtilities {
         return questionDtos;
     }
 
-    public List<PostDto> loadNewsFeedArticles (Integer categoryId, Integer nextFrom){
-        List<Post> articles = postDao.findArticleByCategory(categoryId, nextFrom);
-        List<PostDto> articleDtos = new ArrayList<PostDto>();
+    public List<PostDto> loadNewsFeedArticles(Integer userId, Integer nextFrom) {
+        List<Post> articles = getArticlesFromRedis(userId);
+        if (nextFrom<0) {
+            nextFrom = 0;
+        }
+        Integer from = nextFrom;
+        Integer to = nextFrom+(Constant.NUMBER_PAGE+1);
+        List<PostDto> articlesDtos = new ArrayList<PostDto>();
         if (articles!=null) {
-            for(Post article: articles){
-                if (article !=null) {
+            if (to>articles.size()) {
+                to=articles.size();
+            }
+            List<Post> subArticles = articles.subList(from,to);
+            for(Post article: subArticles) {
+                Integer answerCount = 0;
+                if (article!=null) {
                     List<Post> answers = postDao.findRepliesByParentId(article.getId());
                     if (answers!=null) {
-                        Integer answerCount = answers.size();
-                        PostDto articleDto = ConvertEntityDto.convertPostEntityToDto(article,answerCount);
-                        articleDtos.add(articleDto);
+                        answerCount = answers.size();
                     }
-
                 }
-
+                PostDto articleDto = ConvertEntityDto.convertPostEntityToDto(article,answerCount);
+                articlesDtos.add(articleDto);
             }
         }
-        return articleDtos;
+        return  articlesDtos;
     }
 
-    public List<MaterialDto> loadNewsFeedMaterials(Integer categoryId, Integer nextFrom) {
+    public List<MaterialDto> loadNewsFeedMaterials(Integer userId, Integer nextFrom) {
+        List<Material> materials = getMaterialsFromRedis(userId);
+        if (nextFrom<0) {
+            nextFrom = 0;
+        }
+        Integer from = nextFrom;
+        Integer to = nextFrom+(Constant.NUMBER_PAGE+1);
         List<MaterialDto> materialDtos = new ArrayList<MaterialDto>();
-        List<Material> materials = materialDao.findMaterialByCategory(categoryId,nextFrom);
         if (materials!=null) {
-            for (Material material:materials){
+            if (to>materials.size()) {
+                to=materials.size();
+            }
+            List<Material> subMaterials = materials.subList(from,to);
+            for(Material material: subMaterials) {
                 MaterialDto materialDto = ConvertEntityDto.convertMaterialEntityToDto(material);
                 materialDtos.add(materialDto);
             }
         }
-        return materialDtos;
-    }
-
-    public List<Post> getNewsFeedQuestions(Integer userId) {
-        Integer start = 0;
-        Integer stop = 100;
-        List<Post> inClass = getQuestionsByPrefixKey(QUESTION_IN_CLASS, userId, start, stop);
-        List<Post> inFollower = getQuestionsByPrefixKey(QUESTION_IN_FOLLOWER, userId, start, stop);
-        List<Post> inKnow = getQuestionsByPrefixKey(QUESTION_IN_KNOW, userId, start, stop);
-
-        List<Post> newsFeedQuestions = new ArrayList<Post>();
-        if (inClass.size()>0) {
-            for(Post question : inClass){
-                addToQuestionList(newsFeedQuestions,question);
-            }
-        }
-        if (inFollower.size()>0) {
-            for(Post question : inFollower){
-                addToQuestionList(newsFeedQuestions,question);
-            }
-        }
-        if (inKnow.size()>0) {
-            for(Post question : inKnow){
-                addToQuestionList(newsFeedQuestions,question);
-            }
-        }
-        return newsFeedQuestions;
+        return  materialDtos;
     }
 
     /*set user news feed question in their class for all question*/
@@ -194,7 +197,7 @@ public class NewsFeedUtilities {
         }
         for (Post question : questions) {
             try {
-                jedis.zadd(QUESTION_IN_CLASS + Integer.toString(user.getId()),
+                jedis.zadd(QUESTION + Integer.toString(user.getId()),
                         calculateScore(user, question), Integer.toString(question.getId()));
             } catch (Exception e) {
 
@@ -203,7 +206,7 @@ public class NewsFeedUtilities {
     }
 
     /*set user news feed question in their class for specific question*/
-    private void setQuestionInClass(User user, Jedis jedis, Post question){
+    /*private void setQuestionInClass(User user, Jedis jedis, Post question){
         boolean isSet = false;
         Classroom classroomOfQuestion = question.getOwnerClassId();
         if (user.getRoleId().getId()==TEACHER) {
@@ -224,6 +227,7 @@ public class NewsFeedUtilities {
             for (ClassroomUser classroomUser:classroomUsers) {
                 if (classroomUser.getClassroomId().equals(classroomOfQuestion)){
                     isSet = true;
+                    break;
                 }
             }
         }
@@ -235,7 +239,7 @@ public class NewsFeedUtilities {
 
             }
         }
-    }
+    }*/
 
     /*set user news feed question in their follower for all question*/
     private void setQuestionsInFollower(User user, Jedis jedis) {
@@ -261,8 +265,11 @@ public class NewsFeedUtilities {
         }
         for (Post question : questions) {
             try {
-                jedis.zadd(QUESTION_IN_FOLLOWER + Integer.toString(user.getId()),
-                        calculateScore(user, question), Integer.toString(question.getId()));
+                // if question did not already exist in Redis DB
+                if (jedis.zrank(QUESTION + Integer.toString(user.getId()),Integer.toString(question.getId()))==null) {
+                    jedis.zadd(QUESTION + Integer.toString(user.getId()),
+                            calculateScore(user, question), Integer.toString(question.getId()));
+                }
             } catch (Exception e){
 
             }
@@ -270,8 +277,10 @@ public class NewsFeedUtilities {
     }
 
     /*set user news feed question in their follower for specific question*/
-    private void setQuestionsInFollower(User user, Jedis jedis, Post question){
+    /*private void setQuestionsInFollower(User user, Jedis jedis, Post question){
         List<Follower> followedTeachers = followerDao.findByFollower(user);
+        List<User> teachers = new ArrayList<User>();
+        User teacherOfQuestion  = question.getOwnerUserId();
         boolean isSet = false;
         if (followedTeachers == null) {
             return;
@@ -280,13 +289,10 @@ public class NewsFeedUtilities {
             if (followedTeacher == null) {
                 continue;
             }
-            List<Post> currentQuestions = postDao.findQuestionsByOwnerUser(followedTeacher.getTeacherId());
-            if (currentQuestions == null) {
-                continue;
-            }
-            if (currentQuestions.contains(question)) {
-                isSet = true;
-            }
+            teachers.add(followedTeacher.getTeacherId());
+        }
+        if (teachers.contains(teachers)) {
+            isSet = true;
         }
         if (isSet) {
             try {
@@ -296,7 +302,7 @@ public class NewsFeedUtilities {
 
             }
         }
-    }
+    }*/
 
     /*set user's news feed questions in their knowledge for all question*/
     private void setQuestionsInKnow(User user, Jedis jedis) {
@@ -322,33 +328,27 @@ public class NewsFeedUtilities {
         }
         for (Post question : questions) {
             try {
-                jedis.zadd(QUESTION_IN_KNOW + Integer.toString(user.getId())
-                        , calculateScore(user, question), Integer.toString(question.getId()));
+                // if question did not already exist in Redis DB
+                if (jedis.zrank(QUESTION + Integer.toString(user.getId()),Integer.toString(question.getId()))==null) {
+                    jedis.zadd(QUESTION + Integer.toString(user.getId()),
+                            calculateScore(user, question), Integer.toString(question.getId()));
+                }
             } catch (Exception e) {
 
             }
         }
     }
 
-    /*set user's news feed questions in their knowledge and not in their class, not in their follower for specific question*/
-    private void setQuestionsInKnow(User user, Jedis jedis, Post question){
+    /*set user's news feed questions in their knowledge for specific question*/
+    /*private void setQuestionsInKnow(User user, Jedis jedis, Post question){
         List<Classroom> classrooms = classroomDao.findByCategory(user.getCategoryId());
+        Classroom classroomOfQuestion = question.getOwnerClassId();
         boolean isSet = false;
         if (classrooms == null) {
             return;
         }
-        List<Post> questions = new ArrayList<Post>();
-        for (Classroom classroom : classrooms) {
-            if (classroom == null) {
-                continue;
-            }
-            List<Post> currentQuestions = postDao.findQuestionByOwnerClassroom(classroom);
-            if (currentQuestions == null) {
-                continue;
-            }
-            if (currentQuestions.contains(question)){
-                isSet = true;
-            }
+        if (classrooms.contains(classroomOfQuestion)) {
+            isSet = true;
         }
         if (isSet) {
             try {
@@ -358,25 +358,146 @@ public class NewsFeedUtilities {
 
             }
         }
-    }
+    }*/
 
-    /*Use this to instead duplicate element in list*/
-    private void addToQuestionList(List<Post> list, Post question){
-        if (list==null || question == null){
+    /*set user's news feed articles in their tags for all articles*/
+    private void setArticlesInTags(User user, Jedis jedis) {
+        List<TagUser> tagUsers = tagUserDao.findTagByUser(user);
+        if (tagUsers==null) {
             return;
         }
-        if (list.contains(question)){
+        List<Integer> tagIds = new ArrayList<Integer>();
+        for (TagUser tagUser : tagUsers) {
+            if (tagUser==null) {
+                continue;
+            }
+            tagIds.add(tagUser.getTagId().getId());
+        }
+        if (tagIds==null || tagIds.size()<=0){
             return;
-        } else {
-            list.add(question);
+        }
+        List<Integer> articleIds = tagPostDao.findArticlesIdsInTags(tagIds);
+        if (articleIds==null) {
+            return;
+        }
+        Double fakeScore = 1000.0;
+        for (Integer articleId : articleIds) {
+            try {
+                jedis.zadd(ARTICLE + Integer.toString(user.getId()), fakeScore, Integer.toString(articleId));
+            } catch (Exception e) {
+
+            }
+            fakeScore = fakeScore + 1;
         }
     }
 
-    private List<Post> getQuestionsByPrefixKey(String prefixKey, Integer userId, Integer start, Integer stop) {
+    private void setArticlesInKnow(User user, Jedis jedis) {
+        List<Classroom> classrooms = classroomDao.findByCategory(user.getCategoryId());
+        if (classrooms == null) {
+            return;
+        }
+        List<Post> articles = new ArrayList<Post>();
+        for (Classroom classroom : classrooms) {
+            if (classroom == null) {
+                continue;
+            }
+            List<Post> currentArticles = postDao.findArticleByOwnerClassroom(classroom);
+            if (currentArticles == null) {
+                continue;
+            }
+            for (Post currentArticle : currentArticles) {
+                if (currentArticle == null) {
+                    continue;
+                }
+                articles.add(currentArticle);
+            }
+        }
+        Double fakeScore = 1.0;
+        for (Post article : articles) {
+            try {
+                // if article did not already exist in Redis DB
+                if (jedis.zrank(ARTICLE + Integer.toString(user.getId()),Integer.toString(article.getId()))==null) {
+                    jedis.zadd(ARTICLE + Integer.toString(user.getId()),fakeScore, Integer.toString(article.getId()));
+                }
+            } catch (Exception e) {
+
+            }
+            fakeScore = fakeScore + 1;
+        }
+    }
+
+    private void setMaterialInTags(User user, Jedis jedis){
+        List<TagUser> tagUsers = tagUserDao.findTagByUser(user);
+        if (tagUsers==null) {
+            return;
+        }
+        List<Integer> tagIds = new ArrayList<Integer>();
+        for (TagUser tagUser : tagUsers) {
+            if (tagUser==null) {
+                continue;
+            }
+            tagIds.add(tagUser.getTagId().getId());
+        }
+        if (tagIds==null || tagIds.size()<=0){
+            return;
+        }
+        List<Integer> materialIds = tagMaterialDao.findMaterialIdsInTags(tagIds);
+        if (materialIds==null) {
+            return;
+        }
+        Double fakeScore = 1000.0;
+        for (Integer materialId : materialIds) {
+            try {
+                jedis.zadd(MATERIAL + Integer.toString(user.getId()), fakeScore, Integer.toString(materialId));
+            } catch (Exception e) {
+
+            }
+            fakeScore = fakeScore + 1;
+        }
+    }
+
+    private void setMaterialInKnow(User user, Jedis jedis){
+        List<Classroom> classrooms = classroomDao.findByCategory(user.getCategoryId());
+        if (classrooms == null) {
+            return;
+        }
+        List<Material> materials = new ArrayList<Material>();
+        for (Classroom classroom : classrooms) {
+            if (classroom == null) {
+                continue;
+            }
+            List<Material> currentMaterials = materialDao.findMaterialByOwnerClassroom(classroom);
+            if (currentMaterials == null) {
+                continue;
+            }
+            for (Material currentMaterial : currentMaterials) {
+                if (currentMaterial == null) {
+                    continue;
+                }
+                materials.add(currentMaterial);
+            }
+        }
+        Double fakeScore = 1.0;
+        for (Material material : materials) {
+            try {
+                // if article did not already exist in Redis DB
+                if (jedis.zrank(MATERIAL + Integer.toString(user.getId()),Integer.toString(material.getId()))==null) {
+                    jedis.zadd(MATERIAL + Integer.toString(user.getId()),fakeScore, Integer.toString(material.getId()));
+                }
+            } catch (Exception e) {
+
+            }
+            fakeScore = fakeScore + 1;
+        }
+    }
+
+    private List<Post> getQuestionsFromRedis(Integer userId) {
+        Integer start = 0;
+        Integer stop = 1000;
         List<Post> questions = new ArrayList<Post>();
         try {
             Jedis jedis = new Jedis("localhost");
-            Set<String> questionIdsSet = jedis.zrevrange(prefixKey + Integer.toString(userId), start, stop);
+            Set<String> questionIdsSet = jedis.zrevrange(QUESTION + Integer.toString(userId), start, stop);
             for (String sId : questionIdsSet) {
                 Integer iId = Integer.parseInt(sId);
                 Post currentQuestion = postDao.find(iId);
@@ -389,6 +510,48 @@ public class NewsFeedUtilities {
             e.printStackTrace();
         }
         return questions;
+    }
+
+    private List<Post> getArticlesFromRedis(Integer userId){
+        Integer start = 0;
+        Integer stop = 1000;
+        List<Post> articles = new ArrayList<Post>();
+        try {
+            Jedis jedis = new Jedis("localhost");
+            Set<String> articleIdsSet = jedis.zrevrange(ARTICLE + Integer.toString(userId),start,stop);
+            for (String sId : articleIdsSet) {
+                Integer iId = Integer.parseInt(sId);
+                Post currentArticle = postDao.find(iId);
+                if (currentArticle != null) {
+                    articles.add(currentArticle);
+                }
+            }
+            return articles;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return articles;
+    }
+
+    private List<Material> getMaterialsFromRedis(Integer userId){
+        Integer start = 0;
+        Integer stop = 1000;
+        List<Material> materials = new ArrayList<Material>();
+        try {
+            Jedis jedis = new Jedis("localhost");
+            Set<String> materialIdsSet = jedis.zrevrange(MATERIAL + Integer.toString(userId),start,stop);
+            for (String sId : materialIdsSet) {
+                Integer iId = Integer.parseInt(sId);
+                Material currentMaterial = materialDao.find(iId);
+                if (currentMaterial != null) {
+                    materials.add(currentMaterial);
+                }
+            }
+            return materials;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return materials;
     }
 
     private Double calculateScore(User user, Post question) {
@@ -425,40 +588,4 @@ public class NewsFeedUtilities {
         return score;
     }
 
-    private Double calculate(Post question, User user) {
-        List<Post> answers = postDao.findRepliesByParentId(question.getId());
-        DateTime toDate = new DateTime();
-        DateTime maxDate = new DateTime(question.getLastEditedDate());
-        int iView = question.getViewer();
-        int iWantAnswer = wantAnswerDao.countWantAnswerByPost(question);
-        int iAnswer = 0;
-        int iAcceptAnswer = 0;
-        int iTeacherAcceptAnswer = 0;
-        int iDay = 0;
-        boolean isTeacherAcceptAnswer = false;
-        if (answers != null) {
-            iAnswer = answers.size();
-            for (Post answer : answers) {
-                DateTime newDate = new DateTime(answer.getLastEditedDate());
-                if (newDate.isAfter(maxDate)) {
-                    maxDate = new DateTime(newDate);
-                }
-                if (answer.getAcceptedAnswerId() != 0) {
-                    iAcceptAnswer++;
-                    if (answer.getOwnerUserId().equals(user)) {
-                        isTeacherAcceptAnswer = true;
-                    }
-                }
-            }
-        }
-        if (isTeacherAcceptAnswer == true) {
-            iTeacherAcceptAnswer = Math.round(iWantAnswer / 3);
-        }
-        iDay = Hours.hoursBetween(maxDate, toDate).getHours();
-        System.out.println("Hours is: " + iDay);
-
-        Double score = 3.0 * iWantAnswer + 2.0 * iView + iAnswer - iDay - 3.0 * iAcceptAnswer - iTeacherAcceptAnswer;
-        System.out.println("Question: " + question.getId() + " Score: " + score);
-        return score;
-    }
 }

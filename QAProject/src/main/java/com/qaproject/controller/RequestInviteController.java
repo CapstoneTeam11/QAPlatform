@@ -65,6 +65,21 @@ public class RequestInviteController {
         return new ReturnObjectWithStatus("OK", classId);
     }
 
+    @RequestMapping(value = "/acceptInvitation",method = RequestMethod.POST)
+    @ResponseBody
+    public String acceptInvitation(@RequestParam Integer classroomId) {
+        //authorize
+        User user = (User) session.getAttribute("user");
+        ClassroomUser classroomUser = classroomUserDao.findClassroomByClassroomAndUser(user.getId(),classroomId);
+        try {
+            classroomUser.setApproval(1); //  student confirm the invitation
+            classroomUserDao.merge(classroomUser);
+        } catch (Exception e){
+            return "NG";
+        }
+        return "OK";
+    }
+
     @RequestMapping(value = "/ignoreRequest",method = RequestMethod.POST)
     @ResponseBody
     public String ignoreRequest(@RequestParam Integer requestId) {

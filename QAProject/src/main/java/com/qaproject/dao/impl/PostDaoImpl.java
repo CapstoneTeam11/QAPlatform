@@ -11,6 +11,9 @@ import com.qaproject.util.ConvertEntityDto;
 import org.springframework.stereotype.Repository;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,6 +110,20 @@ public class PostDaoImpl extends BaseDao<Post,Integer> implements PostDao{
 
         }
         return questions;
+    }
+
+    @Override
+    public List<Post> findArticleByOwnerClassroom(Classroom ownerClassroom) {
+        Query query = entityManager.createQuery("Select p from Post p where p.postType=2 and" +
+                " p.ownerClassId=:ownerClassroom order by  p.id  ",Post.class);
+        query.setParameter("ownerClassroom",ownerClassroom);
+        List<Post> articles = null;
+        try {
+            articles = query.getResultList();
+        } catch (NoResultException e){
+
+        }
+        return articles;
     }
 
     @Override
@@ -209,6 +226,52 @@ public class PostDaoImpl extends BaseDao<Post,Integer> implements PostDao{
             query.setParameter("lastId", lastId);
         }
         query.setParameter("ownerUserId",ownerUserId);
+        List<Post> articles = null;
+        query.setMaxResults(11);
+        try {
+            articles = query.getResultList();
+        } catch (NoResultException e){
+
+        }
+        return articles;
+    }
+
+    @Override
+    public List<Post> findQuestionLikeTitle(String searchKey, Integer lastId) {
+        Query query;
+        if (lastId==0) {
+            query = entityManager.createQuery("Select p from Post p where p.postType=1 and" +
+                    " p.title LIKE :searchKey order by p.id desc");
+        } else {
+            query = entityManager.createQuery("Select p from Post p where p.postType=1 and" +
+                    " p.title LIKE :searchKey and p.id<:lastId order by p.id desc");
+
+            query.setParameter("lastId", lastId);
+        }
+        query.setParameter("searchKey",'%' + searchKey + '%');
+        List<Post> questions = null;
+        query.setMaxResults(11);
+        try {
+            questions = query.getResultList();
+        } catch (NoResultException e){
+
+        }
+        return questions;
+    }
+
+    @Override
+    public List<Post> findArticleLikeTitle(String searchKey, Integer lastId) {
+        Query query;
+        if (lastId==0) {
+            query = entityManager.createQuery("Select p from Post p where p.postType=2 and" +
+                    " p.title LIKE :searchKey order by p.id desc");
+        } else {
+            query = entityManager.createQuery("Select p from Post p where p.postType=2 and" +
+                    " p.title LIKE :searchKey and p.id<:lastId order by p.id desc");
+
+            query.setParameter("lastId", lastId);
+        }
+        query.setParameter("searchKey",'%' + searchKey + '%');
         List<Post> articles = null;
         query.setMaxResults(11);
         try {

@@ -136,4 +136,26 @@ public class UserDaoImpl extends BaseDao<User,Integer> implements UserDao {
         }
         return users;
     }
+
+    @Override
+    public List<User> findUserLikeDisplayName(String searchKey, Integer lastId) {
+        Query query;
+        if (lastId==0){
+            query = entityManager.createQuery("Select u from User u where u.displayName like :searchKey " +
+                    "order by u.id desc ");
+        } else {
+            query = entityManager.createQuery("Select u from User u where u.displayName like :searchKey " +
+                    "and u.id<:lastId order by u.id desc ");
+            query.setParameter("lastId",lastId);
+        }
+        query.setParameter("searchKey",'%' + searchKey + '%');
+        query.setMaxResults(11);
+        List<User> users = null;
+        try{
+            users = query.getResultList();
+        } catch (NoResultException e){
+            e.printStackTrace();
+        }
+        return users;
+    }
 }

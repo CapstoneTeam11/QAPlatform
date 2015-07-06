@@ -80,7 +80,7 @@
     font-weight: bold;
     font-size: 14px;
 }
-.panelButton {
+.panelButton, .panelLeaveButton {
     float: left;
     width: 44%;
 }

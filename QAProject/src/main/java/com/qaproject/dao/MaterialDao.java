@@ -1,5 +1,6 @@
 package com.qaproject.dao;
 
+import com.qaproject.entity.Classroom;
 import com.qaproject.entity.Material;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -16,6 +17,8 @@ public interface MaterialDao {
     List<Material> findAll();
     List<Material> findMaterialByClassroom(Integer classroomId, Integer lastId);
     List<Material> findMaterialByCategory (Integer categoryId, Integer nextFrom);
+    List<Material> findMaterialByOwnerClassroom(Classroom classroom);
+    List<Material> findMaterialLikeName(String searchKey, Integer lastId);
     @Transactional(propagation = Propagation.REQUIRED)
     public void persist(Material entity);
     @Transactional(propagation = Propagation.REQUIRED)

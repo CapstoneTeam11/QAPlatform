@@ -213,6 +213,16 @@ public class ConvertEntityDto {
         return studentDto;
     }
 
+    public static UserDto convertUserEntityToDto(User user){
+        UserDto userDto = new UserDto();
+        if (user!=null) {
+            userDto.setId(user.getId());
+            userDto.setAboutMe(user.getAboutMe());
+            userDto.setDisplayName(user.getDisplayName());
+            userDto.setProfileImageURL(user.getProfileImageURL());
+        }
+        return userDto;
+    }
 
 
     public static String ConvertDateTime(Date date) {

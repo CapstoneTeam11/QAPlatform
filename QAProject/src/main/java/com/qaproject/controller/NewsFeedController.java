@@ -9,7 +9,6 @@ import com.qaproject.dto.PostDto;
 import com.qaproject.entity.*;
 import com.qaproject.util.NewsFeedUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -68,9 +66,8 @@ public class NewsFeedController {
 
         //get suggested posts - materials
         List<PostDto> suggestedQuestions = newsFeedUtilities.loadNewsFeedQuestions(user.getId(), 1); //load by page
-        List<PostDto> suggestedArticles = newsFeedUtilities.loadNewsFeedArticles(user.getCategoryId().getId(),
-                0); //load by nextFrom
-        List<MaterialDto> suggestedMaterials = newsFeedUtilities.loadNewsFeedMaterials(user.getCategoryId().getId(),0);
+        List<PostDto> suggestedArticles = newsFeedUtilities.loadNewsFeedArticles(user.getId(), 0); //load by nextFrom
+        List<MaterialDto> suggestedMaterials = newsFeedUtilities.loadNewsFeedMaterials(user.getId(),0);
 
         //Check if User is student
         if (user.getRoleId().getId()==1){
@@ -117,7 +114,7 @@ public class NewsFeedController {
         User user = (User) session.getAttribute("user");
         List<MaterialDto> materialDtos = null;
         try {
-            materialDtos = newsFeedUtilities.loadNewsFeedMaterials(user.getCategoryId().getId(), nextFrom);
+            materialDtos = newsFeedUtilities.loadNewsFeedMaterials(user.getId(), nextFrom);
         } catch (Exception e) {
             e.printStackTrace();
         }

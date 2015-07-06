@@ -84,19 +84,25 @@
         <div class="col-md-9">
 
             <div id="searchbar" class="row">
-                <div class="" style="padding-left: 15px">
-                    <select style="width: 15%; float: left; margin-top: 5px; padding-bottom: 4px">
-                        <option value="">All</option>
-                        <option value="1">Question</option>
-                        <option value="2">Article</option>
-                        <option value="2">Material</option>
-                        <option value="2">Teacher</option>
-                    </select>
-                    <input type="text" aria-required="true" value="Find article, question, class or teacher here..." onfocus="if(this.value=='Find article, question, class or teacher here...')this.value='';"
-                           onblur="if(this.value=='')this.value='Find article, question, class or teacher here...';" style="width: 72%; margin-top:5px; float: left;">
-                    <a href="#" class="button small color" style="padding-bottom: 9px; width: 12%; text-align: center">Search</a>
-                </div>
-
+                <form method="GET" action="/search">
+                    <div class="" style="padding-left: 15px">
+                        <select name="filter" style="width: 15%; float: left; margin-top: 5px; padding-bottom: 4px">
+                            <option value="0">All</option>
+                            <option value="1">Question</option>
+                            <option value="2">Article</option>
+                            <option value="3">Material</option>
+                            <option value="4">Classroom</option>
+                            <option value="5">User</option>
+                        </select>
+                        <input name="searchKey" type="text" aria-required="true"
+                               value="Find article, question, class or teacher here..."
+                               onfocus="if(this.value=='Find article, question, class or teacher here...')this.value='';"
+                               onblur="if(this.value=='')this.value='Find article, question, class or teacher here...';"
+                               style="width: 72%; margin-top:5px; float: left;">
+                        <input href="#" class="button small color" style="padding-bottom: 9px; width: 12%;
+                        text-align: center" type="submit" value="Search">
+                    </div>
+                </form>
             </div><!-- End #searchbar -->
 
             <div class="divider"><span></span></div>
@@ -450,7 +456,7 @@
         })
     });
     $('#loadMoreMaterial').click(function (e) {
-        var url = "/newsFeed/material/" + nextFromMaterial;
+        var url = "newsFeed/material/" + nextFromMaterial;
         $.ajax({
             type: "GET",
             url: url,

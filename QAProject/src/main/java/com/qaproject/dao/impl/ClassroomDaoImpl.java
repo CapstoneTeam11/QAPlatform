@@ -85,4 +85,26 @@ public class ClassroomDaoImpl extends BaseDao<Classroom,Integer> implements Clas
         }
         return classroom;
     }
+
+    @Override
+    public List<Classroom> findClassroomLikeClassroomName(String searchKey, Integer lastId) {
+        List<Classroom> classrooms = null;
+        Query query;
+        if (lastId==0){
+            query = entityManager.createQuery("Select c from Classroom c where c.classroomName like :searchKey " +
+                    "order by c.id desc");
+        } else {
+            query = entityManager.createQuery("Select c from Classroom c where c.classroomName like :searchKey " +
+                    "and c.id<:lastId order by c.id desc");
+            query.setParameter("lastId",lastId);
+        }
+        query.setParameter("searchKey",'%' + searchKey + '%');
+        query.setMaxResults(11);
+        try {
+            classrooms = query.getResultList();
+        } catch (NoResultException e){
+            e.printStackTrace();
+        }
+        return classrooms;
+    }
 }

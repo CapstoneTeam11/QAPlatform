@@ -194,7 +194,7 @@ public class ClassroomUserDaoImpl extends BaseDao<ClassroomUser,Integer> impleme
     }
 
     @Override
-    public ClassroomUser findJoinedClassroomByClassroomAndUser(Integer studentId, Integer classroomId) {
+    public ClassroomUser findClassroomByClassroomAndUser(Integer studentId, Integer classroomId) {
         Query query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.userId.id=:studentId and " +
                 "cu.classroomId.id=:classroomId");
         query.setParameter("studentId",studentId);
@@ -202,7 +202,12 @@ public class ClassroomUserDaoImpl extends BaseDao<ClassroomUser,Integer> impleme
         query.setMaxResults(1);
         ClassroomUser classroomUser = null;
         try {
-            classroomUser =(ClassroomUser) query.getResultList().get(0);
+            List<ClassroomUser> classroomUsers = query.getResultList();
+            if (classroomUsers!=null){
+                if (classroomUsers.size()>0){
+                    classroomUser =classroomUsers.get(0);
+                }
+            }
         } catch (NoResultException e){
 
         }

@@ -167,39 +167,37 @@ public class ClassController {
 
         return "redirect:/classroom/"+room.getId();
     }
-    @RequestMapping(value= "/requestJoinClass/{id}",method= RequestMethod.GET)
+    @RequestMapping(value= "/requestJoinClass",method= RequestMethod.POST)
     @ResponseBody
-    public String requestJoinClass(@PathVariable("id") Integer classroomId, Model model, HttpServletRequest request) {
-        HttpSession session = request.getSession();
+    public String requestJoinClass(@RequestParam Integer classroomId) {
         User user = (User)session.getAttribute("user");
         if (user == null){
             return "NG";
         }
         Classroom classroom = classroomDao.find(classroomId);
-        // make unique row invite
-        List<ClassroomUser> checkClassromUsers = classroomUserDao.findByUserClassroom(user.getId(), classroomId);
-        if(checkClassromUsers == null || checkClassromUsers.size()==0) {
-            ClassroomUser classroomUser = new ClassroomUser();
-            classroomUser.setClassroomId(classroom);
-            classroomUser.setUserId(user);
-            classroomUser.setType(Constant.IA_TYPE_REQUEST_CLASS);
-            classroomUser.setApproval(Constant.IA_NOT_APPROVAL);
-            try {
-                classroomUserDao.persist(classroomUser);
-            } catch (Exception e) {
-                return "NG";
-            }
-            Notification notification = new Notification();
-            notification.setReceiverId(classroom.getOwnerUserId());
-            notification.setSenderId(user);
-            notification.setObjectId(classroomId);
-            notification.setNotificationType(Constant.NT_REQUEST_TO_JOIN_CLASS);
-            notification.setIsViewed(Constant.IV_FALSE);
-            notificationDao.persist(notification);
-            NotificationDto notificationDto  = ConvertEntityDto.convertNotificationEntityToDto(notification,notification.getNotificationType(),classroom);
-            template.convertAndSend("/topic/notice/" + classroom.getOwnerUserId().getId(), notificationDto);
-
+        ClassroomUser classroomUser = classroomUserDao.findClassroomByClassroomAndUser(user.getId(),classroomId);
+        if (classroomUser==null) {
+            classroomUser = new ClassroomUser();
         }
+        classroomUser.setClassroomId(classroom);
+        classroomUser.setUserId(user);
+        classroomUser.setType(Constant.IA_TYPE_REQUEST_CLASS);
+        classroomUser.setApproval(Constant.IA_NOT_APPROVAL);
+        try {
+            classroomUserDao.merge(classroomUser);
+        } catch (Exception e) {
+            return "NG";
+        }
+        Notification notification = new Notification();
+        notification.setReceiverId(classroom.getOwnerUserId());
+        notification.setSenderId(user);
+        notification.setObjectId(classroomId);
+        notification.setNotificationType(Constant.NT_REQUEST_TO_JOIN_CLASS);
+        notification.setIsViewed(Constant.IV_FALSE);
+        notificationDao.persist(notification);
+        NotificationDto notificationDto  = ConvertEntityDto.convertNotificationEntityToDto(notification,notification.getNotificationType(),classroom);
+        template.convertAndSend("/topic/notice/" + classroom.getOwnerUserId().getId(), notificationDto);
+
 
         //Notification - MinhKH
 //        User sender = userDao.find(user.getId());
@@ -312,11 +310,8 @@ public class ClassController {
 
 
         // check if acceptRequest or not
-        List<ClassroomUser> checkClassroomUsers = classroomUserDao.findByUserClassroom(user.getId(), id);
-        ClassroomUser checkClassroomUser = null;
-        if(checkClassroomUsers != null && checkClassroomUsers.size()>0){
-            checkClassroomUser = checkClassroomUsers.get(0);
-        }
+        ClassroomUser checkClassroomUser = classroomUserDao.findClassroomByClassroomAndUser(user.getId(), id);
+
         model.addAttribute("questions",questions);
         model.addAttribute("lastQuestionId",lastQuestionId);
         model.addAttribute("articles",articles);
@@ -503,7 +498,7 @@ public class ClassController {
     public String leaveClassroom(@RequestParam Integer classroomId) {
         //authorize
         User user = (User) session.getAttribute("user");
-        ClassroomUser classroomUser = classroomUserDao.findJoinedClassroomByClassroomAndUser(user.getId(),classroomId);
+        ClassroomUser classroomUser = classroomUserDao.findClassroomByClassroomAndUser(user.getId(),classroomId);
         try {
             classroomUserDao.delete(classroomUser);
         } catch (Exception e){

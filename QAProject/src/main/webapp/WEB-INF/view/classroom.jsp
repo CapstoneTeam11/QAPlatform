@@ -53,13 +53,24 @@
 <%--<div class="loader"><div class="loader_html"></div></div>--%>
 <%@include file="css.jsp" %>
 <div id="wrap">
-<div class="panel-Confirm" id="remove-student">
-    <h2>Leave classroom</h2>
+<div class="panel-Confirm remove-Student">
+    <h2>Remove student</h2>
     <div>
         <p class="panelMessage">Do you want to remove this student?</p>
         <p>
             <input type="submit" value="Cancel"  class="button color small cancel panelButton" >
             <input type="submit" value="OK"  class="button color small OK panelButton" style="margin-left: 3%;">
+        </p>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<div class="panel-Confirm leave-Classroom">
+    <h2>Leave Classroom</h2>
+    <div>
+        <p class="panelMessage">Do you want to leave this classroom?</p>
+        <p>
+            <input type="submit" value="Cancel"  class="button color small cancel panelLeaveButton" >
+            <input type="submit" value="OK"  class="button color small OK panelLeaveButton" style="margin-left: 3%;">
         </p>
         <div class="clearfix"></div>
     </div>
@@ -127,15 +138,14 @@
         <input type="text" aria-required="true" value="Search in ${classroom.classroomName} class" onfocus="if(this.value=='Search in ${classroom.classroomName} class')this.value='';"
                onblur="if(this.value=='')this.value='Search in ${classroom.classroomName} class';" style="width: 100%">
     </div>
-    <div class="col-md-6 col-sm-6">
-        <div class="col-md-11 col-sm-9" id="createPost">
-            <c:if test="${classroom.status == 1}">
-                <a href="/post/create/${classroom.id}" class="button medium green-button" style="float: right"><i class="icon-pencil"></i> Create post</a>
-            </c:if>
-
-        </div>
-        <div class="" style="margin-top: 20px">
-            <c:if test="${classroom.ownerUserId.id == user.id}">
+    <div class="col-md-6 col-sm-6" id="createPost">
+        <c:if test="${classroom.ownerUserId.id == user.id}">
+            <div class="col-md-11 col-sm-9">
+                <c:if test="${classroom.status == 1}">
+                    <a href="/post/create/${classroom.id}" class="button medium green-button" style="float: right"><i class="icon-pencil"></i> Create post</a>
+                </c:if>
+            </div>
+            <div class="" style="margin-top: 20px">
                 <div class="btn-group">
                     <a data-toggle="dropdown" href="" aria-expanded="false"><i class="icon-cog" style="color: black;font-weight: bold;font-size: 20px;"></i><span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu" style="left: -127px;" id="activeBtn">
@@ -147,8 +157,13 @@
                         </c:if>
                     </ul>
                 </div>
+            </div>
+        </c:if>
+        <c:if test="${not empty checkClassroomUser}">
+            <c:if test="${checkClassroomUser.approval!=2 && checkClassroomUser.approval!=0 && classroom.status==1}">
+                <a href="/post/create/${classroom.id}" class="button medium green-button" style="float: right"><i class="icon-pencil"></i> Create post</a>
             </c:if>
-        </div>
+        </c:if>
     </div>
 
     </div>
@@ -483,17 +498,29 @@
         <c:if test="${user.roleId.id==1}">
             <c:if test="${classroom.status == 1}">
                 <c:if test="${empty checkClassroomUser || checkClassroomUser.approval == 2}">
-                    <p id="link-btn"></p><a href="javascript:joinClass(${classroom.id})" class="button small color" id="join">Join</a></p>
+                    <p id="link-btn">
+                        <a class="button small color" onclick="joinClassroom(this); return false;">
+                            Join
+                        </a>
+                    </p>
                 </c:if>
                 <c:if test="${checkClassroomUser.approval == 0 && checkClassroomUser.type == 1}">
-                    <a href="#" class="button small color" id="join">Request Sent</a>
+                    <a href="#" class="button small color">Request Sent</a>
                     <%--<a href="javascript:handleClass('${classroom.id}', 1)" class="button small color" id="join">Cancel Request</a>--%>
                 </c:if>
                 <c:if test="${checkClassroomUser.approval == 0 && checkClassroomUser.type == 2}">
-                    <p id="link-btn"><a href="javascript:handleClass('${classroom.id}', 2)" class="button small color" id="join">Accept Invitation</a></p>
+                    <p id="link-btn">
+                        <a class="button small color" onclick="acceptInvitation(this); return false;">
+                            Accept Invitation
+                        </a>
+                    </p>
                 </c:if>
                 <c:if test="${checkClassroomUser.approval == 1}">
-                    <p id="link-btn"><a href="javascript:handleClass(${classroom.id}, 3)" class="button small color" id="join">Leave</a></p>
+                    <p id="link-btn">
+                        <a class="button small color" onclick="leaveClassroom(this); return false;">
+                            Leave
+                        </a>
+                    </p>
                 </c:if>
             </c:if>
         </c:if>
@@ -687,23 +714,8 @@
                 $(this).html(text.substr(0, 400) + '.......');
             }
         });
-    function joinClass(id){
-        var url = "/requestJoinClass/"+id;
-        $.ajax({
-            type: "GET",
-            url: url,
-//            data: "username="+username+"&password="+password,
-            success: function(data){
-                if(data == "OK"){
-                    $("#join").text("Request Sent").attr("href", "#");
-//                    $().toastmessage('showSuccessToast', 'Join class request sent!');
-                }else{
-                    $().toastmessage('showErrorToast', "Join class request fail! Please try again late!");
-                }
+    });
 
-            }
-        });
-    }
     function inviteStudent(id){
         var url = "/inviteJoinClass/"+id;
         var name = $("#tagsuggest1").val();
@@ -833,7 +845,7 @@
             }
         });
     }*/
-    function handleClass(id, type){
+   /* function handleClass(id, type){
         var url = "/handleClass";
         $.ajax({
             type: "POST",
@@ -856,7 +868,7 @@
                 }
             }
         });
-    }
+    }*/
     function closeClass(classId, type) {
         var url = "/openCloseClass";
         $.ajax({
@@ -878,10 +890,80 @@
         });
     }
 
+
+    //handle accept invitation - leave class - MinhKH
+    var joinClassroom = function(e){
+        var classroomId = ${classroom.id};
+        var url = "/requestJoinClass";
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: "classroomId="+ classroomId,
+            success: function(data){
+                if(data == "OK"){
+                    $("#link-btn").html('<a class="button small color" href="">' +
+                            'Request sent' +
+                            '</a>');
+                }else{
+                }
+            }
+        });
+    }
+    var acceptInvitation = function (e) {
+        var classroomId = ${classroom.id};
+        $.ajax({
+            type: "POST",
+            url: "/acceptInvitation",
+            data: "classroomId="+ classroomId,
+            success: function (data){
+                if(data === "OK"){
+                    $("#link-btn").html('<a class="button small color" onclick="leaveClassroom(this); return false;">' +
+                    'Leave' +
+                    '</a>');
+                    $('#createPost').html('<a href="/post/create/'+ classroomId +
+                        '" class="button medium green-button" style="float: right">'+
+                        '<i class="icon-pencil"></i> Create post</a>');
+                }
+            }
+        });
+    };
+    var leaveClassroom = function(e) {
+        $(".leave-Classroom").animate({"top":"-100%"},10).hide();
+        $(".leave-Classroom").show().animate({"top":"34%"},500);
+        $("body").prepend("<div class='wrap-pop'></div>");
+        wrap_pop();
+    };
+    $('.panelLeaveButton').click(function(e) {
+        var classroomId = ${classroom.id};
+        if ($(e.currentTarget).hasClass('OK')) {
+            $.ajax({
+                type: "POST",
+                url: "/leaveClassroom",
+                data: 'classroomId=' + classroomId,
+                success: function (data) {
+                    if(data != "NG" ){
+                        $("#link-btn").html('<a class="button small color" onclick="joinClassroom(this); return false;">' +
+                                'Join' +
+                                '</a>');
+                        $('#createPost').html('');
+                    } else {
+                        console.log("Error");
+                    }
+                }
+            });
+            $(".leave-Classroom").animate({"top":"-100%"},500);
+            $(".wrap-pop").remove();
+        } else {
+            $(".leave-Classroom").animate({"top":"-100%"},500);
+            $(".wrap-pop").remove();
+        }
+    });
+
+
     //Load more - MinhKH
     var lastQuestionId = ${lastQuestionId};
     var lastArticleId = ${lastArticleId};
-    var lastMaterialId = ${lastClassroomUserId};
+    var lastMaterialId = ${lastMaterialId};
     var lastRequestId = ${lastRequestId};
     var lastClassroomUserId = ${lastClassroomUserId};
     var materialCounter = 11;
@@ -1168,38 +1250,41 @@
     };
     var removeStudent = function(e) {
         var removeId = $(e).attr('id');
-        $(".panel-Confirm").animate({"top":"-100%"},10).hide();
-        $("#remove-student").show().animate({"top":"34%"},500);
+        $(".remove-Student").animate({"top":"-100%"},10).hide();
+        $(".remove-Student").show().animate({"top":"34%"},500);
+        $(".remove-Student").attr('id',removeId);
         $("body").prepend("<div class='wrap-pop'></div>");
         wrap_pop();
-        var flagPanel =  $('.panelButton').click(function(e) {
-            if ($(e.currentTarget).hasClass('OK')) {
-                $.ajax({
-                    type: "POST",
-                    url: "/removeStudent",
-                    data: 'removeId=' + removeId,
-                    success: function (data) {
-                        if(data != "NG" ){
-                            var removeElement = $('#student'+removeId);
-                            var studentName = removeElement.find("h4").find("a").text();
-                            var studentHref = removeElement.find("h4").find("a").attr("href");
-                            removeElement.html('You have removed <a href="'+
-                                    studentHref +'">'+
-                                    studentName+'</a> from classroom.');
-                            removeElement.attr("style","background-color: #ffff9e")
-                        } else {
-                            console.log("Error");
-                        }
-                    }
-                });
-                $(".panel-Confirm").animate({"top":"-100%"},500);
-                $(".wrap-pop").remove();
-            } else {
-                $(".panel-Confirm").animate({"top":"-100%"},500);
-                $(".wrap-pop").remove();
-            }
-        })
+
     };
+    $('.panelButton').click(function(e) {
+        var removeId = $(".remove-Student").attr('id');
+        if ($(e.currentTarget).hasClass('OK')) {
+            $.ajax({
+                type: "POST",
+                url: "/removeStudent",
+                data: 'removeId=' + removeId,
+                success: function (data) {
+                    if(data != "NG" ){
+                        var removeElement = $('#student'+removeId);
+                        var studentName = removeElement.find("h4").find("a").text();
+                        var studentHref = removeElement.find("h4").find("a").attr("href");
+                        removeElement.html('You have removed <a href="'+
+                                studentHref +'">'+
+                                studentName+'</a> from classroom.');
+                        removeElement.attr("style","background-color: #ffff9e")
+                    } else {
+                        console.log("Error");
+                    }
+                }
+            });
+            $(".remove-Student").animate({"top":"-100%"},500);
+            $(".wrap-pop").remove();
+        } else {
+            $(".remove-Student").animate({"top":"-100%"},500);
+            $(".wrap-pop").remove();
+        }
+    });
     function wrap_pop() {
         $(".wrap-pop").click(function () {
             $(".panel-Confirm").animate({"top":"-100%"},500).hide(function () {
