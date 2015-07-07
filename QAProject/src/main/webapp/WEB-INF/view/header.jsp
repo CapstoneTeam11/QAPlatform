@@ -32,7 +32,12 @@
                     <li class="parent-list" style="margin-right: 5px"><a>Hi, ${sessionScope.user.displayName} <span class="menu-nav-arrow"></span></a>
                         <ul style="overflow: hidden; height: auto; padding-top: 0px; margin-top: 0px; padding-bottom: 0px; margin-bottom: 0px; display: none;">
                             <li><a href="/dashboard">Dashboard</a></li>
+                            <c:if test="${sessionScope.user.roleId.id==1}">
                             <li><a href="/material">Material</a></li>
+                            </c:if>
+                            <c:if test="${sessionScope.user.roleId.id==2}">
+                                <li><a href="/tracking">Tracking</a></li>
+                            </c:if>
                             <li><a href="/profile/view/${sessionScope.user.id}">Profile</a></li>
                             <li><a href="/logout">Logout</a></li>
                         </ul>

@@ -41,6 +41,9 @@ public class NewsFeedUtilities {
     TagMaterialDao tagMaterialDao;
 
     private final String QUESTION = "QTN_";
+    private final String QUESTION_IN_CLASS = "QIC_";
+    private final String QUESTION_IN_FOLLOW = "QIF_";
+    private final String QUESTION_IN_KNOW ="QIK_";
     private final String ARTICLE = "ATC_";
     private final String MATERIAL = "MTR_";
     private final Integer STUDENT = 1;
@@ -197,7 +200,7 @@ public class NewsFeedUtilities {
         }
         for (Post question : questions) {
             try {
-                jedis.zadd(QUESTION + Integer.toString(user.getId()),
+                jedis.zadd(QUESTION_IN_CLASS + Integer.toString(user.getId()),
                         calculateScore(user, question), Integer.toString(question.getId()));
             } catch (Exception e) {
 
@@ -266,8 +269,8 @@ public class NewsFeedUtilities {
         for (Post question : questions) {
             try {
                 // if question did not already exist in Redis DB
-                if (jedis.zrank(QUESTION + Integer.toString(user.getId()),Integer.toString(question.getId()))==null) {
-                    jedis.zadd(QUESTION + Integer.toString(user.getId()),
+                if (jedis.zrank(QUESTION_IN_CLASS + Integer.toString(user.getId()),Integer.toString(question.getId()))==null) {
+                    jedis.zadd(QUESTION_IN_FOLLOW + Integer.toString(user.getId()),
                             calculateScore(user, question), Integer.toString(question.getId()));
                 }
             } catch (Exception e){
@@ -329,8 +332,9 @@ public class NewsFeedUtilities {
         for (Post question : questions) {
             try {
                 // if question did not already exist in Redis DB
-                if (jedis.zrank(QUESTION + Integer.toString(user.getId()),Integer.toString(question.getId()))==null) {
-                    jedis.zadd(QUESTION + Integer.toString(user.getId()),
+                if (jedis.zrank(QUESTION_IN_FOLLOW + Integer.toString(user.getId()),Integer.toString(question.getId()))==null
+                        && jedis.zrank(QUESTION_IN_CLASS + Integer.toString(user.getId()),Integer.toString(question.getId()))==null) {
+                    jedis.zadd(QUESTION_IN_KNOW + Integer.toString(user.getId()),
                             calculateScore(user, question), Integer.toString(question.getId()));
                 }
             } catch (Exception e) {
@@ -497,8 +501,25 @@ public class NewsFeedUtilities {
         List<Post> questions = new ArrayList<Post>();
         try {
             Jedis jedis = new Jedis("localhost");
-            Set<String> questionIdsSet = jedis.zrevrange(QUESTION + Integer.toString(userId), start, stop);
-            for (String sId : questionIdsSet) {
+            Set<String> questionInClassIdsSet = jedis.zrevrange(QUESTION_IN_CLASS + Integer.toString(userId), start, stop);
+            Set<String> questionInFollowIdsSet = jedis.zrevrange(QUESTION_IN_FOLLOW + Integer.toString(userId), start,
+                    stop);
+            Set<String> questionInKnowIdsSet = jedis.zrevrange(QUESTION_IN_KNOW + Integer.toString(userId), start, stop);
+            for (String sId : questionInClassIdsSet) {
+                Integer iId = Integer.parseInt(sId);
+                Post currentQuestion = postDao.find(iId);
+                if (currentQuestion != null) {
+                    questions.add(currentQuestion);
+                }
+            }
+            for (String sId : questionInFollowIdsSet) {
+                Integer iId = Integer.parseInt(sId);
+                Post currentQuestion = postDao.find(iId);
+                if (currentQuestion != null) {
+                    questions.add(currentQuestion);
+                }
+            }
+            for (String sId : questionInKnowIdsSet) {
                 Integer iId = Integer.parseInt(sId);
                 Post currentQuestion = postDao.find(iId);
                 if (currentQuestion != null) {
