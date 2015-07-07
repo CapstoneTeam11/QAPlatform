@@ -32,7 +32,9 @@ public interface PostDao {
     public List<Post> findQuestionsByOwnerUser(Integer ownerUserId, Integer lastId);
     public List<Post> findArticlesByOwnerUser(Integer ownerUserId, Integer lastId);
     public List<Post> findQuestionLikeTitle(String searchKey, Integer lastId);
+    public Integer countQuestionLikeTitle(String searchKey);
     public List<Post> findArticleLikeTitle(String searchKey, Integer lastId);
+    public Integer countArticleLikeTitle(String searchKey);
     public List<PostDto> loadMoreAnswer(Integer id,Integer page);
     public Post findLastCreatedPostByOwner(User ownerUser);
     public Post findLastCreatedReplyByOwner(User ownerUser);

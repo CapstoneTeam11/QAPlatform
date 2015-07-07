@@ -44,11 +44,25 @@
     </form>
 </div><!-- End #searchbar -->
 <div id="result-count" style="margin-bottom: 5px;float: right;font-style: italic;">
-    242 <a href="#question">questions</a>,
-    334 <a href="#article">articles</a>,
-    654 <a href="#material">materials</a>,
-    4353 <a href="#classroom">classrooms</a>,
-    43 <a href="#user">users</a> are found
+    Found
+    <c:if test="${countQuestion>0}">
+        ${countQuestion} <a href="#question">questions</a>,
+    </c:if>
+    <c:if test="${countArticle>0}">
+        ${countArticle} <a href="#article">articles</a>,
+    </c:if>
+    <c:if test="${countMaterial>0}">
+        ${countMaterial} <a href="#material">materials</a>,
+    </c:if>
+    <c:if test="${countClassroom>0}">
+        ${countClassroom} <a href="#classroom">classrooms</a>,
+    </c:if>
+    <c:if test="${countUser>0}">
+        ${countUser} <a href="#user">users.</a>
+    </c:if>
+    <c:if test="${countQuestion==0 && countArticle==0 && countMaterial==0 && countClassroom ==0 && countUser==0}">
+        no matched result.
+    </c:if>
 </div>
 <div class="divider"><span></span></div>
 <span class="anchor-result-page" id="question"></span>
@@ -58,7 +72,8 @@
         <div class="boxedtitle page-title" style="margin-bottom: 5px !important;">
             <h2>
                 Question
-                <span style="font-size: 15px; text-transform: none"> (${fn:length(questions)} of 222 result)</span>
+                <span style="font-size: 15px; text-transform: none"> (${fn:length(questions)} of
+                ${countQuestion}) result</span>
             </h2>
         </div>
 
@@ -97,7 +112,8 @@
                 <div class="boxedtitle page-title" style="margin-bottom: 5px !important;">
                     <h2>
                         Article
-                        <span style="font-size: 15px; text-transform: none"> (${fn:length(articles)} of 222 result)</span>
+                        <span style="font-size: 15px; text-transform: none"> (${fn:length(articles)} of ${countArticle}
+                        result)</span>
                     </h2>
                 </div>
 
@@ -136,7 +152,8 @@
         <div class="boxedtitle page-title" style="margin-bottom: 5px !important;">
             <h2>
                 Material
-                <span style="font-size: 15px; text-transform: none"> (${fn:length(materials)} of 222 result)</span>
+                <span style="font-size: 15px; text-transform: none"> (${fn:length(materials)} of ${countMaterial}
+                    result)</span>
             </h2>
         </div>
         <div class="" style="display: block;">
@@ -179,7 +196,7 @@
                 <div class="boxedtitle page-title" style="margin-bottom: 5px !important;">
                     <h2>
                         Classroom
-                        <span style="font-size: 15px; text-transform: none"> (${fn:length(classrooms)} of 222
+                        <span style="font-size: 15px; text-transform: none"> (${fn:length(classrooms)} of ${countClassroom}
                             result)</span>
                     </h2>
                 </div>
@@ -219,7 +236,8 @@
             <div class="boxedtitle page-title" style="margin-bottom: 5px !important;">
                 <h2>
                     User
-                    <span style="font-size: 15px; text-transform: none"> (${fn:length(users)} of 222 result)</span>
+                    <span style="font-size: 15px; text-transform: none"> (${fn:length(users)} of ${countUser}
+                        result)</span>
                 </h2>
             </div>
 

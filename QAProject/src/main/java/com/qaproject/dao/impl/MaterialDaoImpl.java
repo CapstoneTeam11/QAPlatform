@@ -113,4 +113,17 @@ public class MaterialDaoImpl extends BaseDao<Material,Integer> implements Materi
         }
         return materials;
     }
+
+    @Override
+    public Integer countMaterialLikeName(String searchKey) {
+        Query query = entityManager.createQuery("Select COUNT(m.id) from Material m where m.name like :searchKey");
+        query.setParameter("searchKey",'%' + searchKey + '%');
+        Integer count = 0;
+        try {
+            count = ((Long) query.getSingleResult()).intValue();
+        } catch (NoResultException e){
+
+        }
+        return count;
+    }
 }

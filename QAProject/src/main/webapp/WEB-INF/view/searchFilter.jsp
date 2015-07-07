@@ -44,11 +44,13 @@
     </form>
 </div><!-- End #searchbar -->
 <div id="result-count" style="margin-bottom: 5px;float: right;font-style: italic;">
-    242 <a href="#question">questions</a>,
-    334 <a href="#article">articles</a>,
-    654 <a href="#material">materials</a>,
-    4353 <a href="#classroom">classrooms</a>,
-    43 <a href="#user">users</a> are found
+    Found
+    <c:if test="${countResult>0}">
+        ${countResult} results.
+    </c:if>
+    <c:if test="${countResult==0}">
+        no matched result.
+    </c:if>
 </div>
 <div class="divider"><span></span></div>
 <span class="anchor-result-page" id="question"></span>
