@@ -14,7 +14,7 @@
     <section class="container" style="height:70px; display: flex; align-items: center">
         <div class="row">
             <div class="col-md-12">
-                <h3>Search results for <span style="font-size: 20px; font-style: italic">${searchKey}</span></h3>
+                <h3>Search results for <span style="font-size: 20px; font-style: italic">${param.searchKey}</span></h3>
             </div>
         </div><!-- End row -->
     </section><!-- End container -->

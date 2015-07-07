@@ -263,6 +263,7 @@
         </c:if>
     </div>
     <c:if test="${fn:length(questions)>10}">
+        <div id="loading" style="text-align: center; display: none"><img src="/resource/assets/images/loader.GIF"></div>
         <a class="post-read-more button color small"
            style="margin-bottom: 5px;" id="loadMoreQuestion">Load more</a>
     </c:if>
@@ -329,7 +330,8 @@
         <div class="col-md-3 col-sm-6" style="float: right">
             <c:if test="${classroom.status == 1}">
             <c:if test="${classroom.ownerUserId.id == user.id}">
-                <a href="#" class="button medium green-button" style="float: right;margin-top: -25px;margin-right: -10px;" id="addMaterial-click"><i class="icon-upload"></i> Upload</a>
+                <a href="#" class="button medium green-button" style="float: right;margin-top: -25px;margin-right:
+                -10px;" id="addMaterial-click"><i class="icon-lo"></i> Upload</a>
             </c:if>
             </c:if>
         </div>
@@ -978,12 +980,21 @@
             type: "POST",
             url: url,
             data: {classroomId: classroomId, lastId: lastQuestionId},
+            beforeSend: function(){
+                $('#loadMoreQuestion').hide();
+                $('#loading').show();
+
+            },
+            complete: function() {
+                $('#loading').hide();
+            },
             success: function (data) {
                 var questions = new Array();
                 questions = data;
                 var length = questions.length;
                 if (length > 10) {
                     length = questions.length - 1;
+                    $('#loadMoreQuestion').show();
                 } else {
                     $('#loadMoreQuestion').hide();
                 }
@@ -1161,6 +1172,10 @@
             type: "POST",
             url: url,
             data: {classroomId: classroomId, lastId: lastClassroomUserId},
+            beforeSend: function(){
+
+                $('#loadMoreStudent').text('Loading...');
+            },
             success: function (data) {
                 var students = new Array();
                 students = data;
