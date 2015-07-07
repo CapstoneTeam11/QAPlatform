@@ -32,6 +32,27 @@ public class SearchUtilities {
     @Autowired
     ClassroomDao classroomDao;
 
+    public Integer countQuestion(String searchKey){
+        return postDao.countQuestionLikeTitle(searchKey);
+    }
+
+    public Integer countArticle(String searchKey){
+        return postDao.countArticleLikeTitle(searchKey);
+    }
+
+    public Integer countMaterial(String searchKey){
+        return materialDao.countMaterialLikeName(searchKey);
+    }
+
+    public Integer countClassroom(String searchKey){
+        return classroomDao.countClassroomLikeClassroomName(searchKey);
+    }
+
+    public Integer countUser(String searchKey){
+        return userDao.countUserLikeDisplayName(searchKey);
+    }
+
+
     public List<PostDto> getTopThreeQuestions (String searchKey) {
         List<Post> questions = postDao.findQuestionLikeTitle(searchKey,0);
         List<PostDto> questionDtos = new ArrayList<PostDto>();
@@ -46,6 +67,8 @@ public class SearchUtilities {
         }
         return questionDtos;
     }
+
+
 
     public List<PostDto> getTopThreeArticles (String searchKey) {
         List<Post> articles = postDao.findArticleLikeTitle(searchKey, 0);

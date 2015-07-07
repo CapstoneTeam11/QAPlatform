@@ -40,6 +40,12 @@ public class SearchController {
         List<MaterialDto> materials = new ArrayList<MaterialDto>();
         List<ClassroomDto> classrooms = new ArrayList<ClassroomDto>();
         List<UserDto> users = new ArrayList<UserDto>();
+        Integer countQuestion = 0;
+        Integer countArticle = 0;
+        Integer countMaterial = 0;
+        Integer countClassroom = 0;
+        Integer countUser = 0;
+        Integer countResult = 0;
         if (filter<0 || filter>5) {
             filter=0;
         }
@@ -49,9 +55,15 @@ public class SearchController {
             materials = searchUtilities.getTopThreeMaterials(searchKey);
             classrooms = searchUtilities.getTopThreeClassrooms(searchKey);
             users = searchUtilities.getTopThreeUsers(searchKey);
+            countQuestion = searchUtilities.countQuestion(searchKey);
+            countArticle = searchUtilities.countArticle(searchKey);
+            countMaterial = searchUtilities.countMaterial(searchKey);
+            countClassroom = searchUtilities.countClassroom(searchKey);
+            countUser = searchUtilities.countUser(searchKey);
         }
         if (filter==1) {
             questions = searchUtilities.getQuestions(searchKey,0);
+            countResult = searchUtilities.countQuestion(searchKey);
             Integer lastQuestionId = 0;
             if (questions!=null) {
                 if (questions.size()>10){
@@ -62,6 +74,7 @@ public class SearchController {
         }
         if (filter==2) {
             articles = searchUtilities.getArticles(searchKey,0);
+            countResult = searchUtilities.countArticle(searchKey);
             Integer lastArticleId = 0;
             if (articles!=null) {
                 if (articles.size()>10){
@@ -72,6 +85,7 @@ public class SearchController {
         }
         if (filter==3) {
             materials = searchUtilities.getMaterials(searchKey,0);
+            countResult = searchUtilities.countMaterial(searchKey);
             Integer lastMaterialId = 0;
             if (materials!=null) {
                 if (materials.size()>10){
@@ -82,6 +96,7 @@ public class SearchController {
         }
         if (filter==4) {
             classrooms = searchUtilities.getClassrooms(searchKey,0);
+            countResult = searchUtilities.countClassroom(searchKey);
             Integer lastClassroomId = 0;
             if (classrooms!=null) {
                 if (classrooms.size()>10){
@@ -92,6 +107,7 @@ public class SearchController {
         }
         if (filter==5) {
             users = searchUtilities.getUsers(searchKey,0);
+            countResult = searchUtilities.countUser(searchKey);
             Integer lastUserId = 0;
             if (users!=null) {
                 if (users.size()>10){
@@ -100,6 +116,12 @@ public class SearchController {
             }
             model.addAttribute("lastUserId",lastUserId);
         }
+        model.addAttribute("countResult",countResult);
+        model.addAttribute("countQuestion",countQuestion);
+        model.addAttribute("countArticle",countArticle);
+        model.addAttribute("countMaterial",countMaterial);
+        model.addAttribute("countClassroom",countClassroom);
+        model.addAttribute("countUser",countUser);
         model.addAttribute("questions",questions);
         model.addAttribute("articles",articles);
         model.addAttribute("materials",materials);

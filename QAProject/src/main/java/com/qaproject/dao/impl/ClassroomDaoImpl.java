@@ -17,6 +17,20 @@ import java.util.List;
  */
 @Repository
 public class ClassroomDaoImpl extends BaseDao<Classroom,Integer> implements ClassroomDao {
+    @Override
+    public Integer countClassroomLikeClassroomName(String searchKey) {
+        Query query = entityManager.createQuery("Select Count(c.id) from Classroom c " +
+                "where c.classroomName like :searchKey");
+        query.setParameter("searchKey",'%' + searchKey + '%');
+        Integer count = 0;
+        try {
+            count = ((Long) query.getSingleResult()).intValue();
+        } catch (NoResultException e){
+
+        }
+        return count;
+    }
+
     /**
      * MinhKH
      * Using to get suggest classrooms by category

@@ -24,6 +24,7 @@ public interface UserDao {
     public List<User> findUserNotificationByPost(Integer postId);
     public List<User> findUserNotificationByCreatePostTeacher(Integer teacherId,Integer classId);
     public List<User> findUserLikeDisplayName(String searchKey, Integer lastId);
+    Integer countUserLikeDisplayName(String searchKey);
     @Transactional(propagation = Propagation.REQUIRED)
     public void persist(User entity);
     @Transactional(propagation = Propagation.REQUIRED)

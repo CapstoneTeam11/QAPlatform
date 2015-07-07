@@ -176,4 +176,17 @@ public class UserDaoImpl extends BaseDao<User,Integer> implements UserDao {
         query = entityManager.createQuery("select count(u) from User u");
         return ((Long)query.getSingleResult()).intValue();
     }
+
+	@Override
+    public Integer countUserLikeDisplayName(String searchKey) {
+        Query query = entityManager.createQuery("Select Count(u.id) from User u where u.displayName like :searchKey");
+        query.setParameter("searchKey",'%' + searchKey + '%');
+        Integer count = 0;
+        try {
+            count = ((Long) query.getSingleResult()).intValue();
+        } catch (NoResultException e){
+
+        }
+        return count;
+    }
 }

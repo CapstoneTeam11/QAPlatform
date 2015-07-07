@@ -306,6 +306,21 @@ public class PostDaoImpl extends BaseDao<Post,Integer> implements PostDao{
     }
 
     @Override
+    public Integer countQuestionLikeTitle(String searchKey) {
+        Query query = entityManager.createQuery("Select COUNT(p.id) from Post p where p.postType=1 and" +
+                    " p.title LIKE :searchKey");
+
+        query.setParameter("searchKey",'%' + searchKey + '%');
+        Integer count = 0;
+        try {
+            count = ((Long) query.getSingleResult()).intValue();
+        } catch (NoResultException e){
+
+        }
+        return count;
+    }
+
+    @Override
     public List<Post> findArticleLikeTitle(String searchKey, Integer lastId) {
         Query query;
         if (lastId==0) {
@@ -326,6 +341,21 @@ public class PostDaoImpl extends BaseDao<Post,Integer> implements PostDao{
 
         }
         return articles;
+    }
+
+    @Override
+    public Integer countArticleLikeTitle(String searchKey) {
+        Query query = entityManager.createQuery("Select COUNT(p.id) from Post p where p.postType=2 and" +
+                " p.title LIKE :searchKey");
+
+        query.setParameter("searchKey",'%' + searchKey + '%');
+        Integer count = 0;
+        try {
+            count = ((Long) query.getSingleResult()).intValue();
+        } catch (NoResultException e){
+
+        }
+        return count;
     }
 
     @Override

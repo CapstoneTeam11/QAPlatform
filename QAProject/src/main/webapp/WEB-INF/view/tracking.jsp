@@ -136,8 +136,6 @@
                         {
                             animationEnabled: true,
                             animationDuration: 2000,
-                            exportFileName: "Top_students_question_topics",
-                            exportEnabled: true,
                             axisY:{
                                 title: "Number of topic"
                             },
