@@ -30,7 +30,7 @@ public class User {
     @Column(name = "ProfileImageURL")
     private String profileImageURL;
     @Column(name = "Status")
-    private Character status;
+    private Integer status;
     @OneToMany(mappedBy = "ownerUserId")
     private List<Classroom> classroomList;
     @OneToMany(mappedBy = "ownerUserId")
@@ -122,11 +122,11 @@ public class User {
         this.profileImageURL = profileImageURL;
     }
 
-    public Character getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Character status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

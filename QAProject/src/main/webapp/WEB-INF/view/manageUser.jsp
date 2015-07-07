@@ -60,7 +60,7 @@
         <section class="container" style="height:70px; display: flex; align-items: center">
             <div class="row">
                 <div class="col-md-12">
-                    <h3>Class</h3>
+                    <h3>Manage User</h3>
                 </div>
             </div><!-- End row -->
         </section><!-- End container -->
@@ -68,13 +68,40 @@
 
     <section class="container main-content page-left-sidebar">
         <div class="row">
-            <div class="col-md-9">
+            <div class="col-md-9" style="float: left">
 
-
+                <table class="table table-hover">
+                    <tr>
+                        <th>id</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th></th>
+                    </tr>
+                    <c:forEach var="user" items="${users}">
+                        <tr>
+                            <td>${user.id}</td>
+                            <td>${user.displayName}</td>
+                            <td>${user.email}</td>
+                            <td><input type="hidden" name="userId" value="${user.id}"><c:if test="${user.status==0}">
+                                <a class="unlock actionUser"  style="font-size: 23px"><i class="icon-unlock"></i></a>
+                            </c:if><c:if test="${user.status!=0}">
+                               <a class="lock actionUser"  style="font-size: 23px"><i class="icon-lock"></i></a>
+                            </c:if></td>
+                        </tr>
+                    </c:forEach>
+                </table>
+                <div class="col-lg-12 text-center ">
+                <div class="gigantic pagination" style="float: left;margin-left: 18%">
+                    <a href="#" class="first" data-action="first">&laquo;</a>
+                    <a href="#" class="previous" data-action="previous">&lsaquo;</a>
+                    <input type="text" readonly="readonly"/>
+                    <a href="#" class="next" data-action="next">&rsaquo;</a>
+                    <a href="#" class="last" data-action="last">&rsaquo;</a>
+                </div>
+                </div>
             </div><!-- End main -->
 
 
-            </aside><!-- End sidebar -->
         </div><!-- End row -->
     </section><!-- End container -->
 
@@ -85,3 +112,65 @@
 
 <!-- js -->
 <%@include file="js.jsp" %>
+<script src="/resource/assets/js/notification.js"></script>
+<script src="/resource/assets/js/jquery.jqpagination.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.urlPath').val($(location).attr('href'));
+        var urls = $(location).attr('pathname').split("/")
+        var urlPath = "";
+        for (i = 1; i < urls.length - 1; i++) {
+            urlPath = urlPath + "/" + urls[i];
+        }
+        var origin = $(location).attr('origin');
+        $('.pagination').jqPagination({
+            link_string: origin + urlPath + '/{page_number}',
+            max_page: ${maxpage},
+            current_page: ${currentPage},
+            paged: function (page) {
+                window.location = origin + urlPath + '/' + page;
+            }
+        });
+        $('.actionUser').click(function(e) {
+            var id =  $(e.currentTarget).prev('input').val();
+            if($(e.currentTarget).hasClass('unlock')) {
+                var url = "/manage/lock"
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data : "id="+id,
+                    success: function (data) {
+                        if(data != "NG" ){
+                            var lockIcon =  $(e.currentTarget).children().first();
+                            lockIcon.removeClass('icon-unlock');
+                            lockIcon.addClass('icon-lock');
+                            $(e.currentTarget).removeClass('unlock');
+                            $(e.currentTarget).addClass('lock')
+                        } else {
+                            console.log("Error");
+                        }
+                    }
+                });
+            } else {
+                var url = "/manage/unlock"
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data : "id="+id,
+                    success: function (data) {
+                        if(data != "NG" ){
+                            var lockIcon =  $(e.currentTarget).children().first();
+                            lockIcon.removeClass('icon-lock');
+                            lockIcon.addClass('icon-unlock');
+                            $(e.currentTarget).removeClass('lock');
+                            $(e.currentTarget).addClass('unlock')
+                        } else {
+                            console.log("Error");
+                        }
+                    }
+                });
+            }
+        })
+    })
+
+</script>

@@ -11,6 +11,7 @@ import com.qaproject.dto.StudentDto;
 import com.qaproject.dto.TeacherDto;
 import com.qaproject.dto.UserWithRoleDto;
 import com.qaproject.entity.*;
+import com.qaproject.util.Constant;
 import com.qaproject.util.NewsFeedUtilities;
 import com.sun.javafx.sg.PGShape;
 import org.hibernate.Session;
@@ -139,12 +140,12 @@ public class UserController {
         Category category = new Category();
         category.setId(Integer.parseInt(cate));
         user.setCategoryId(category);
+        user.setStatus(0);
         if(role.equalsIgnoreCase("student")){
            user.setRoleId(roleDao.find(1));
         }else{
             user.setRoleId(roleDao.find(2));
         }
-
         userDao.persist(user);
         session.setAttribute("user", user);
         newsFeedUtilities.setNewsFeedQuestionAfterRegister(user);
@@ -232,4 +233,61 @@ public class UserController {
         //studentDto.setImageStudent(user.getProfileImageURL());
         return studentDto;
     }
+    @RequestMapping(value = "/manage/user/{page}",method = RequestMethod.GET)
+    public String viewAll(@PathVariable Integer page,ModelMap model) {
+        User user = (User) session.getAttribute("user");
+        if(user==null) {
+            return "403";
+        }
+        if(user.getRoleId().getId()!=3) {
+            return "403";
+        }
+        List<User> users = userDao.findAllUser(page);
+        int numberUser = userDao.findNumberAllUser();
+        model.addAttribute("users",users);
+        model.addAttribute("currentPage",page);
+        model.addAttribute("maxpage",Math.ceil(numberUser * 1.0 / Constant.NUMBER_PAGE));
+        return "manageUser";
+    }
+    @RequestMapping(value = "/manage/lock",method = RequestMethod.POST)
+    public @ResponseBody  String lockUser(@RequestParam Integer id) {
+        //authorize
+        User user = (User) session.getAttribute("user");
+        if(user==null) {
+            return "NG";
+        }
+        if(user.getRoleId().getId()!=3) {
+            return "NG";
+        }
+        try {
+            User userLock = userDao.find(id);
+            userLock.setStatus(1);
+            userDao.merge(userLock);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "NG";
+        }
+        return "OK";
+    }
+    @RequestMapping(value = "/manage/unlock",method = RequestMethod.POST)
+    public @ResponseBody  String unlockUser(@RequestParam Integer id) {
+        //authorize
+        User user = (User) session.getAttribute("user");
+        if(user==null) {
+            return "NG";
+        }
+        if(user.getRoleId().getId()!=3) {
+            return "NG";
+        }
+        try {
+            User userLock = userDao.find(id);
+            userLock.setStatus(0);
+            userDao.merge(userLock);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "NG";
+        }
+        return "OK";
+    }
+
 }

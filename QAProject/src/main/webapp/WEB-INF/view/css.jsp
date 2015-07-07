@@ -50,7 +50,7 @@
     <link rel="stylesheet" href="/resource/assets/js/bootstrap-tagsinput.css">
     <link rel="stylesheet" href="/resource/assets/css/tag.css">
     <link rel="stylesheet" href="/resource/assets/css/questionstyle.css">
-
+    <link rel="stylesheet" href="/resource/assets/css/jqpagination.css">
 </head>
 
 <body>

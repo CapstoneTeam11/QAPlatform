@@ -1365,8 +1365,8 @@ div[class*="slider_shadow"]:before, div[class^="header_shadow"] {
 	margin-bottom: 0;
 }
 .pagination a,.pagination span {
-	margin: 5px 5px 0 0;
-	padding: 5px 11px;
+	/*margin: 5px 5px 0 0;*/
+	/*padding: 5px 11px;*/
 	background-color: #dedede;
 	float: left;
 	-moz-border-radius: 2px;

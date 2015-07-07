@@ -19,6 +19,8 @@ public interface UserDao {
     public List<User> findTeacherPostInvitation(String name,Integer portId);
     public List<User> findAllStudentNotInClass(int classId, String username);
     public List<User> findAllStudent(String username);
+    public List<User> findAllUser(int page);
+    public Integer findNumberAllUser();
     public List<User> findUserNotificationByPost(Integer postId);
     public List<User> findUserNotificationByCreatePostTeacher(Integer teacherId,Integer classId);
     public List<User> findUserLikeDisplayName(String searchKey, Integer lastId);

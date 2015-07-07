@@ -4,6 +4,7 @@ import com.qaproject.dao.BaseDao;
 import com.qaproject.dao.UserDao;
 import com.qaproject.entity.Post;
 import com.qaproject.entity.User;
+import com.qaproject.util.Constant;
 import org.springframework.stereotype.Repository;
 
 import javax.jws.soap.SOAPBinding;
@@ -157,5 +158,22 @@ public class UserDaoImpl extends BaseDao<User,Integer> implements UserDao {
             e.printStackTrace();
         }
         return users;
+    }
+    @Override
+    public List<User> findAllUser(int page) {
+        Query query;
+        query = entityManager.createQuery("select u from User u order by id asc", User.class);
+        if (page < 1) {
+            page = 1;
+        }
+        query.setFirstResult((page-1)* Constant.NUMBER_PAGE);
+        query.setMaxResults(Constant.NUMBER_PAGE+1);
+        return query.getResultList();
+    }
+    @Override
+    public Integer findNumberAllUser() {
+        Query query;
+        query = entityManager.createQuery("select count(u) from User u");
+        return ((Long)query.getSingleResult()).intValue();
     }
 }

@@ -11,6 +11,7 @@ public class Constant {
     public static final int OPEN_POST = 1 ;
     public static final int TEACHER = 2;
     public static final int STUDENT = 1;
+    public static final int ADMIN = 3;
 
     // NT = Notification Type
     public static final int NT_TEACHER_CREATE_CLASS = 1;
