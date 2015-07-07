@@ -328,6 +328,76 @@ public class ClassController {
         return "classroom";
     }
 
+    @RequestMapping(value = "/classroom/search",method = RequestMethod.GET)
+    public String classroomSearch(ModelMap model, @RequestParam Integer classroomId, @RequestParam String searchKey) {
+        User user = (User) session.getAttribute("user");
+        if(user==null) {
+            return "redirect:403";
+        }
+        Classroom classroom = classroomDao.find(classroomId);
+        user = userDao.find(user.getId());
+
+        //get questions, articles, materials, request to join - MinhKH
+        List<PostDto> questions = classroomUtilities.findQuestions(classroomId,searchKey, 0);
+        Integer lastQuestionId = 0;
+        if (questions!=null) {
+            if (questions.size()>10){
+                lastQuestionId = questions.get(questions.size()-2).getId();
+            }
+        }
+        List<PostDto> articles = classroomUtilities.findArticles(classroomId,searchKey,0);
+        Integer lastArticleId = 0;
+        if (articles!=null) {
+            if (articles.size()>10){
+                lastArticleId = articles.get(articles.size()-2).getId();
+            }
+        }
+        List<MaterialDto> materials = classroomUtilities.findMaterials(classroomId,searchKey, 0);
+        Integer lastMaterialId = 0;
+        if (materials!=null) {
+            if (materials.size()>10){
+                lastMaterialId = materials.get(materials.size()-2).getId();
+            }
+        }
+        List<RequestDto> requests = classroomUtilities.findRequests(classroomId,searchKey,0);
+        Integer lastRequestId = 0;
+        if (requests!=null) {
+            if (requests.size()>10){
+                lastRequestId = requests.get(requests.size()-2).getId();
+            }
+        }
+        List<StudentDto> students = classroomUtilities.findStudents(classroomId,searchKey, 0);
+        Integer lastClassroomUserId = 0;
+        if (students!=null) {
+            if (students.size()>10){
+                lastClassroomUserId = students.get(students.size()-2).getClassroomUserId();
+            }
+        }
+
+        if (questions.size()==0 && articles.size()==0 && materials.size()==0 && requests.size()==0
+                && students.size() ==0) {
+        }
+
+
+        // check if acceptRequest or not
+        ClassroomUser checkClassroomUser = classroomUserDao.findClassroomByClassroomAndUser(user.getId(), classroomId);
+
+        model.addAttribute("questions",questions);
+        model.addAttribute("lastQuestionId",lastQuestionId);
+        model.addAttribute("articles",articles);
+        model.addAttribute("lastArticleId",lastArticleId);
+        model.addAttribute("materials",materials);
+        model.addAttribute("lastMaterialId",lastMaterialId);
+        model.addAttribute("requests",requests);
+        model.addAttribute("lastRequestId",lastRequestId);
+        model.addAttribute("students",students);
+        model.addAttribute("lastClassroomUserId",lastClassroomUserId);
+        model.addAttribute("classroom", classroom);
+        model.addAttribute("user",user);
+        model.addAttribute("checkClassroomUser", checkClassroomUser);
+        return "classroomSearch";
+    }
+
     @RequestMapping(value = "/classroom/question",method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public List<PostDto> loadMoreQuestion(@RequestParam Integer classroomId, @RequestParam Integer lastId) {
@@ -382,6 +452,71 @@ public class ClassController {
         List<StudentDto> studentDtos = new ArrayList<StudentDto>();
         try {
             studentDtos = classroomUtilities.loadStudents(classroomId, lastId);
+        } catch (Exception e){
+
+        }
+        return studentDtos;
+    }
+
+    @RequestMapping(value = "/classroom/search/question",method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public List<PostDto> loadMoreQuestion(@RequestParam Integer classroomId, @RequestParam Integer lastId,
+                                          @RequestParam String searchKey) {
+        List<PostDto> questionDtos = new ArrayList<PostDto>();
+        try {
+            questionDtos = classroomUtilities.findQuestions(classroomId,searchKey,lastId);
+        } catch (Exception e){
+
+        }
+        return questionDtos;
+    }
+
+    @RequestMapping(value = "/classroom/search/article",method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public List<PostDto> loadMoreArticle(@RequestParam Integer classroomId, @RequestParam Integer lastId,
+                                         @RequestParam String searchKey) {
+        List<PostDto> articleDtos = new ArrayList<PostDto>();
+        try {
+            articleDtos = classroomUtilities.findArticles(classroomId,searchKey, lastId);
+        } catch (Exception e){
+
+        }
+        return articleDtos;
+    }
+
+    @RequestMapping(value = "/classroom/search/material",method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public List<MaterialDto> loadMoreMaterial(@RequestParam Integer classroomId, @RequestParam Integer lastId,
+                                              @RequestParam String searchKey) {
+        List<MaterialDto> materialDtos = new ArrayList<MaterialDto>();
+        try {
+            materialDtos = classroomUtilities.findMaterials(classroomId,searchKey,lastId);
+        } catch (Exception e){
+
+        }
+        return materialDtos;
+    }
+
+    @RequestMapping(value = "/classroom/search/request",method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public List<RequestDto> loadMoreRequest(@RequestParam Integer classroomId, @RequestParam Integer lastId,
+                                            @RequestParam String searchKey) {
+        List<RequestDto> requestDtos = new ArrayList<RequestDto>();
+        try {
+            requestDtos = classroomUtilities.findRequests(classroomId,searchKey, lastId);
+        } catch (Exception e){
+
+        }
+        return requestDtos;
+    }
+
+    @RequestMapping(value = "/classroom/search/student",method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public List<StudentDto> loadMoreStudent(@RequestParam Integer classroomId, @RequestParam Integer lastId,
+                                            @RequestParam String searchKey) {
+        List<StudentDto> studentDtos = new ArrayList<StudentDto>();
+        try {
+            studentDtos = classroomUtilities.findStudents(classroomId,searchKey, lastId);
         } catch (Exception e){
 
         }

@@ -107,4 +107,85 @@ public class ClassroomUtilities {
         }
         return studentDtos;
     }
+
+    public List<PostDto> findQuestions(Integer classroomId, String searchKey, Integer lastId){
+        List<Post> questions = postDao.findQuestionByOwnerClassroomLikeTitle(classroomId, searchKey, lastId);
+        List<PostDto> questionDtos = new ArrayList<PostDto>();
+        if (questions!=null) {
+            for(Post question: questions){
+                if (question !=null) {
+                    List<Post> answers = postDao.findRepliesByParentId(question.getId());
+                    if (answers!=null) {
+                        Integer answerCount = answers.size();
+                        PostDto questionDto = ConvertEntityDto.convertPostEntityToDto(question,answerCount);
+                        questionDtos.add(questionDto);
+                    }
+                }
+
+            }
+        }
+        return questionDtos;
+    }
+
+    public List<PostDto> findArticles(Integer classroomId, String searchKey, Integer lastId){
+        List<Post> articles = postDao.findArticleByOwnerClassroomLikeTitle(classroomId, searchKey, lastId);
+        List<PostDto> articleDtos = new ArrayList<PostDto>();
+        if (articles!=null) {
+            for(Post article: articles){
+                if (article !=null) {
+                    List<Post> answers = postDao.findRepliesByParentId(article.getId());
+                    if (answers!=null) {
+                        Integer answerCount = answers.size();
+                        PostDto articleDto = ConvertEntityDto.convertPostEntityToDto(article,answerCount);
+                        articleDtos.add(articleDto);
+                    }
+
+                }
+
+            }
+        }
+        return articleDtos;
+    }
+
+    public List<MaterialDto> findMaterials(Integer classroomId, String searchKey, Integer lastId) {
+        List<MaterialDto> materialDtos = new ArrayList<MaterialDto>();
+        List<Material> materials = materialDao.findMaterialByClassroomLikeName(classroomId,searchKey,lastId);
+        if (materials!=null) {
+            for (Material material:materials){
+                MaterialDto materialDto = ConvertEntityDto.convertMaterialEntityToDto(material);
+                materialDtos.add(materialDto);
+            }
+        }
+        return materialDtos;
+    }
+
+    public List<RequestDto> findRequests(Integer classroomId, String searchKey, Integer lastId) {
+        List<RequestDto> requestDtos = new ArrayList<RequestDto>();
+        List<ClassroomUser> requests = classroomUserDao.findRequestsByClassroomLikeStudentName(classroomId,searchKey,
+                lastId);
+        if (requests!=null){
+            for (ClassroomUser request :requests){
+                if (request!=null) {
+                    RequestDto requestDto = ConvertEntityDto.convertClassroomUserEntityToRequestDto(request);
+                    requestDtos.add(requestDto);
+                }
+            }
+        }
+        return requestDtos;
+    }
+
+    public List<StudentDto> findStudents(Integer classroomId, String searchKey, Integer lastId) {
+        List<StudentDto> studentDtos = new ArrayList<StudentDto>();
+        List<ClassroomUser> students = classroomUserDao.findStudentsByClassroomLikeStudentName(classroomId,
+                searchKey, lastId);
+        if (students!=null){
+            for (ClassroomUser student :students){
+                if (student!=null) {
+                    StudentDto studentDto = ConvertEntityDto.convertClassroomUserEntityToStudentDto(student);
+                    studentDtos.add(studentDto);
+                }
+            }
+        }
+        return studentDtos;
+    }
 }

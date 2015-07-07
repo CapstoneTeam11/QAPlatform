@@ -23,6 +23,29 @@ import java.util.List;
 @Repository
 public class ClassroomUserDaoImpl extends BaseDao<ClassroomUser,Integer> implements ClassroomUserDao{
     @Override
+    public List<ClassroomUser> findRequestsByClassroomLikeStudentName(Integer classroomId, String searchKey, Integer lastId) {
+        Query query;
+        if (lastId==0){
+            query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.classroomId.id=:classroomId and "+
+                    "cu.approval=0 and cu.type=1 and cu.userId.displayName like :searchKey order by cu.id desc");
+        }else {
+            query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.classroomId.id=:classroomId and "+
+                    "cu.approval=0 and cu.type=1 and cu.userId.displayName like :searchKey and cu.id<:lastId order by cu.id desc");
+            query.setParameter("lastId",lastId);
+        }
+        query.setParameter("searchKey",'%' + searchKey + '%');
+        query.setParameter("classroomId",classroomId);
+        query.setMaxResults(11);
+        List<ClassroomUser> requests = null;
+        try {
+            requests = query.getResultList();
+        } catch (NoResultException e){
+            e.printStackTrace();
+        }
+        return requests;
+    }
+
+    @Override
     public List<ClassroomUser> findByClassroom(Classroom classroom) {
         List<ClassroomUser> classroomUsers = null;
         Query query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.classroomId=:classroom ");
@@ -139,6 +162,29 @@ public class ClassroomUserDaoImpl extends BaseDao<ClassroomUser,Integer> impleme
                     "cu.approval=1 and cu.id<:lastId order by cu.id desc");
             query.setParameter("lastId",lastId);
         }
+        query.setParameter("classroomId",classroomId);
+        query.setMaxResults(11);
+        List<ClassroomUser> students = null;
+        try {
+            students = query.getResultList();
+        } catch (NoResultException e){
+            e.printStackTrace();
+        }
+        return students;
+    }
+
+    @Override
+    public List<ClassroomUser> findStudentsByClassroomLikeStudentName(Integer classroomId, String searchKey, Integer lastId) {
+        Query query;
+        if (lastId==0){
+            query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.classroomId.id=:classroomId and "+
+                    "cu.approval=1 and cu.userId.displayName like :searchKey order by cu.id desc");
+        }else {
+            query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.classroomId.id=:classroomId and "+
+                    "cu.approval=1 and cu.userId.displayName like :searchKey and cu.id<:lastId order by cu.id desc");
+            query.setParameter("lastId",lastId);
+        }
+        query.setParameter("searchKey",'%' + searchKey + '%');
         query.setParameter("classroomId",classroomId);
         query.setMaxResults(11);
         List<ClassroomUser> students = null;

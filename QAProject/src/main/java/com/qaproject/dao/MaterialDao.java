@@ -16,6 +16,7 @@ public interface MaterialDao {
     public Material find(Integer id);
     List<Material> findAll();
     List<Material> findMaterialByClassroom(Integer classroomId, Integer lastId);
+    List<Material> findMaterialByClassroomLikeName(Integer classroomId, String searchKey, Integer lastId);
     List<Material> findMaterialByCategory (Integer categoryId, Integer nextFrom);
     List<Material> findMaterialByOwnerClassroom(Classroom classroom);
     List<Material> findMaterialLikeName(String searchKey, Integer lastId);

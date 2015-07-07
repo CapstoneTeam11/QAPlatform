@@ -135,8 +135,12 @@
     <div class="clearfix"></div>
     <div class="row">
     <div class="col-md-6 col-sm-6">
+        <form method="GET" action="/classroom/search">
+        <input type="hidden" value="${classroom.id}" name="classroomId">
         <input type="text" aria-required="true" value="Search in ${classroom.classroomName} class" onfocus="if(this.value=='Search in ${classroom.classroomName} class')this.value='';"
-               onblur="if(this.value=='')this.value='Search in ${classroom.classroomName} class';" style="width: 100%">
+               onblur="if(this.value=='')this.value='Search in ${classroom.classroomName} class';"
+               style="width: 100%" name="searchKey">
+        </form>
     </div>
     <div class="col-md-6 col-sm-6" id="createPost">
         <c:if test="${classroom.ownerUserId.id == user.id}">
@@ -324,7 +328,9 @@
     <div class="tab-inner">
         <div class="col-md-3 col-sm-6" style="float: right">
             <c:if test="${classroom.status == 1}">
+            <c:if test="${classroom.ownerUserId.id == user.id}">
                 <a href="#" class="button medium green-button" style="float: right;margin-top: -25px;margin-right: -10px;" id="addMaterial-click"><i class="icon-upload"></i> Upload</a>
+            </c:if>
             </c:if>
         </div>
         <c:if test="${not empty materials}">
@@ -704,9 +710,6 @@
             var tagId = "#tag" + event.item.id;
             $(tagId).remove();
         });
-
-    });
-
         /*short test for list of posts - MinhKH*/
         $(".short-text").each(function () {
             text = $(this).text();
@@ -715,6 +718,7 @@
             }
         });
     });
+
 
     function inviteStudent(id){
         var url = "/inviteJoinClass/"+id;
