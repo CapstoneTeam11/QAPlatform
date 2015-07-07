@@ -157,9 +157,11 @@
                             <ul class="dropdown-menu" role="menu" style="left: -127px;">
                                 <c:if test="${sessionScope.user.id==post.ownerUserId.id}">
                                     <li><a href="/post/update/${post.id}">Edit</a></li>
+                                </c:if>
+                                <c:if test="${sessionScope.user.id==post.ownerUserId.id || sessionScope.user.roleId.id==3}">
                                     <li><a href="#" id="deletePost">Delete</a></li>
                                 </c:if>
-                                <c:if test="${sessionScope.user.id==post.ownerClassId.ownerUserId.id}">
+                                <c:if test="${sessionScope.user.id==post.ownerClassId.ownerUserId.id || sessionScope.user.roleId.id==3 }">
                                     <c:if test="${post.status!=0}">
                                         <form action="/post/closePost" method="post" id="closeOpenPostForm" hidden="true"><input type="hidden" name="id" value="${post.id}"></form>
                                         <li><a href="#" id="closeOpenPost">Close</a></li>
@@ -210,7 +212,7 @@
                                 <li class="comment">
                                     <div class="comment-body comment-body-answered clearfix">
                                         <div class="avatar"><img alt=""
-                                                                 src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg">
+                                                                 src="${postAnswer.ownerUserId.profileImageURL}">
                                         </div>
                                         <div class="comment-text">
                                             <div class="author clearfix"  style="display: flex">
@@ -247,6 +249,14 @@
                                                                 </ul>
                                                             </div>
                                                         </c:if>
+                                                        <c:if test="${sessionScope.user.roleId.id==3}" >
+                                                            <div class="btn-group">
+                                                                <a data-toggle="dropdown" href="" aria-expanded="false"><span class="caretBig"></span></a>
+                                                                <ul class="actionAnswer dropdown-menu " role="menu" >
+                                                                    <li><a onclick="deleteAnswer(this);return false;">Delete</a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </c:if>
                                                     </div>
                                                 </div>
                                             </div>
@@ -261,7 +271,7 @@
                                 <li class="comment">
                                     <div class="comment-body comment-body-answered clearfix">
                                         <div class="avatar"><img alt=""
-                                                                 src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg">
+                                                                 src="${postAnswer.ownerUserId.profileImageURL}">
                                         </div>
                                         <div class="comment-text">
                                             <div class="author clearfix"  style="display: flex">
@@ -294,6 +304,14 @@
                                                                 <a data-toggle="dropdown" href="" aria-expanded="false"><span class="caretBig"></span></a>
                                                                 <ul class="actionAnswer dropdown-menu " role="menu" >
                                                                     <li><a href="#" onclick="editAnswer(this);return false;">Edit</a></li>
+                                                                    <li><a onclick="deleteAnswer(this);return false;">Delete</a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </c:if>
+                                                        <c:if test="${sessionScope.user.roleId.id==3}" >
+                                                            <div class="btn-group">
+                                                                <a data-toggle="dropdown" href="" aria-expanded="false"><span class="caretBig"></span></a>
+                                                                <ul class="actionAnswer dropdown-menu " role="menu" >
                                                                     <li><a onclick="deleteAnswer(this);return false;">Delete</a></li>
                                                                 </ul>
                                                             </div>
