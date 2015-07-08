@@ -2884,7 +2884,7 @@ select {
 	outline: none;
 	font-size: 13px;
 	border-radius: 0;
-	-webkit-appearance: button;
+	/*-webkit-appearance: button;*/
 	-webkit-user-select: none;
 	color: #2f3239;
 	border: 1px solid #dedede;

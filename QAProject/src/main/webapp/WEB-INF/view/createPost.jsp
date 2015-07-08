@@ -296,7 +296,7 @@
                         <li>
                             <div class="author-img">
                                 <a href="#"><img width="60" height="60"
-                                                 src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" alt=""></a>
+                                                 src="${post.ownerUserId.profileImageURL}" alt=""></a>
                             </div>
                             <h6><a href="#">${post.ownerClassId.ownerUserId.displayName}</a></h6>
                             <span class="comment">${post.ownerClassId.ownerUserId.aboutMe}</span>

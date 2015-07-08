@@ -233,7 +233,7 @@ public class UserController {
         //studentDto.setImageStudent(user.getProfileImageURL());
         return studentDto;
     }
-    @RequestMapping(value = "/manage/user/{page}",method = RequestMethod.GET)
+    @RequestMapping(value = "/manage/{page}",method = RequestMethod.GET)
     public String viewAll(@PathVariable Integer page,ModelMap model) {
         User user = (User) session.getAttribute("user");
         if(user==null) {
@@ -243,12 +243,33 @@ public class UserController {
             return "403";
         }
         List<User> users = userDao.findAllUser(page);
+        List<Category> categories = categoryDao.findParent();
         int numberUser = userDao.findNumberAllUser();
+        model.addAttribute("categories",categories);
         model.addAttribute("users",users);
         model.addAttribute("currentPage",page);
         model.addAttribute("maxpage",Math.ceil(numberUser * 1.0 / Constant.NUMBER_PAGE));
         return "manageUser";
     }
+
+    @RequestMapping(value = "/manage/parent",method = RequestMethod.POST)
+    public String createParent(@RequestParam String name) {
+        Category category = new Category();
+        category.setCategoryName(name);
+        category.setParentId(0);
+        categoryDao.persist(category);
+        return "redirect:/manage/1";
+    }
+    @RequestMapping(value = "/manage/child",method = RequestMethod.POST)
+    public String createParent(@RequestParam String name,@RequestParam Integer parentId) {
+        Category category = new Category();
+        category.setCategoryName(name);
+        category.setParentId(parentId);
+        categoryDao.persist(category);
+        return "redirect:/manage/1";
+    }
+
+
     @RequestMapping(value = "/manage/lock",method = RequestMethod.POST)
     public @ResponseBody  String lockUser(@RequestParam Integer id) {
         //authorize
