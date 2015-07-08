@@ -514,7 +514,7 @@
                 for (var i = 0; i < length; i++) {
                     var component = '<article class="question user-question">' +
                             '<h3>' +
-                            '<a href="/post/view/'+ classrooms[i].id+'">'+classrooms[i].classroomName+'</a>' +
+                            '<a href="/classroom/'+ classrooms[i].id+'">'+classrooms[i].classroomName+'</a>' +
                             '</h3>' +
                             '<div class="question-type-main"><i class="icon-group"></i>Question</div>' +
                             '<div class="question-content">' +

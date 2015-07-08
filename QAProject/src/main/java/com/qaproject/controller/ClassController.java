@@ -53,8 +53,9 @@ public class ClassController {
     public String createClass(ModelMap model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         User user = (User)session.getAttribute("user");
-        if(user == null){
-            return "welcome";
+        if (user == null) {
+            session.setAttribute("currentPage","redirect:/createClass");
+            return "redirect:/";
         }else if(user.getRoleId().getId()==1){
             return "redirect:403";
         }
@@ -77,7 +78,8 @@ public class ClassController {
 //        ReturnObjectWithStatus objectWithStatus =new ReturnObjectWithStatus();
         if(user == null){
 //            objectWithStatus.setStatus("NG");
-            return "redirect:403";
+            session.setAttribute("currentPage","redirect:/createClass");
+            return "redirect:/";
         }else if(user.getRoleId().getId()==1){
 //            objectWithStatus.setStatus("403");
             return "redirect:403";
@@ -259,7 +261,8 @@ public class ClassController {
     public String classroom(ModelMap model, @PathVariable(value = "id")Integer id) {
         User user = (User) session.getAttribute("user");
         if(user==null) {
-            return "redirect:403";
+            session.setAttribute("currentPage","redirect:/classroom/"+id);
+            return "redirect:/";
         }
         Classroom classroom = classroomDao.find(id);
         user = userDao.find(user.getId());
@@ -332,7 +335,9 @@ public class ClassController {
     public String classroomSearch(ModelMap model, @RequestParam Integer classroomId, @RequestParam String searchKey) {
         User user = (User) session.getAttribute("user");
         if(user==null) {
-            return "redirect:403";
+            session.setAttribute("currentPage",
+                    "redirect:/classroom/search?classroomId="+classroomId+"&searchKey="+searchKey);
+            return "redirect:/";
         }
         Classroom classroom = classroomDao.find(classroomId);
         user = userDao.find(user.getId());
@@ -561,6 +566,9 @@ public class ClassController {
     public @ResponseBody
     List<ClassroomDto> loadJoinedClassroom(@PathVariable Integer lastId) {
         User user = (User) session.getAttribute("user");
+        if (user==null) {
+            return null;
+        }
         List<ClassroomDto> classroomDtos = null;
         try {
             classroomDtos = dashboardUtilities.loadJoinedClassrooms(user.getId(), lastId);

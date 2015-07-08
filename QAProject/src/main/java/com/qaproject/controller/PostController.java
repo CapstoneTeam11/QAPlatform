@@ -106,6 +106,10 @@ public class PostController {
         }
 
         User user = (User) session.getAttribute("user");
+        if (user == null) {
+            session.setAttribute("currentPage","redirect:/post/view/"+id);
+            return "redirect:/";
+        }
         if (user != null) {
             if (0 != post.getStatus()) {
                 //check user can comment or not .
@@ -223,6 +227,15 @@ public class PostController {
     @RequestMapping(value = "/post/create/{id}", method = RequestMethod.GET)
     public String createDispath(@PathVariable Integer id, ModelMap model) {
         Classroom classroom = classroomDao.find(id);
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            session.setAttribute("currentPage","redirect:/post/create/"+id);
+            return "redirect:/";
+        }
+        //Check User have joint to Class
+        if (classroom.checkUserExist(user) == false) {
+            return "/classroom/"+id;
+        }
         if (classroom==null) {
             return "404";
         }
@@ -239,6 +252,7 @@ public class PostController {
             return "404";
         }
         if (user == null) {
+            session.setAttribute("currentPage","redirect:/post/update/"+id);
             return "redirect:/";
         }
         if (post.getOwnerUserId().getId() != user.getId()) {
@@ -262,11 +276,12 @@ public class PostController {
         User user = (User) session.getAttribute("user");
         Classroom classroom = classroomDao.find(classId);
         if (user == null) {
+            session.setAttribute("currentPage","redirect:/post/create/"+classId);
             return "redirect:/";
         }
         //Check User have joint to Class
         if (classroom.checkUserExist(user) == false) {
-            return "redirect:/";
+            return "/classroom/"+classId;
         }
         Post post = new Post();
         post.setTitle(postName);

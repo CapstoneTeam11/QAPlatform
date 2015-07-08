@@ -295,15 +295,15 @@
                 }
             },
             messages: {
-                email: "Please enter a valid email address",
+                email: "Please enter a valid email address.",
                 password: {
-                    required: "Please provide a password",
-                    minlength: "Your password must be at least 8 characters long"
+                    required: "Please provide a password.",
+                    minlength: "Your password must be at least 8 characters long."
                 },
                 confirm_password: {
-                    required: "Please provide a password",
-                    minlength: "Your password must be at least 8 characters long",
-                    equalTo: "Please enter the same password as above"
+                    required: "Please provide a password.",
+                    minlength: "Your password must be at least 8 characters long.",
+                    equalTo: "Please enter the same password as above."
                 }
             }
         });

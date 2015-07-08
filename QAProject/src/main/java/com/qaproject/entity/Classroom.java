@@ -169,7 +169,7 @@ public class Classroom {
             return true;
         }
         for(int i = 0 ; i < classroomUserList.size();i++) {
-            if(classroomUserList.get(i).getUserId().getId()==user.getId()){
+            if(classroomUserList.get(i).getUserId().getId()==user.getId() && classroomUserList.get(i).getApproval()==1){
                 return true;
             }
         }
