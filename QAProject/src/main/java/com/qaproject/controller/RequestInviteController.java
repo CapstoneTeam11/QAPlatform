@@ -70,6 +70,9 @@ public class RequestInviteController {
     public String acceptInvitation(@RequestParam Integer classroomId) {
         //authorize
         User user = (User) session.getAttribute("user");
+        if (user==null){
+            return "NG";
+        }
         ClassroomUser classroomUser = classroomUserDao.findClassroomByClassroomAndUser(user.getId(),classroomId);
         try {
             classroomUser.setApproval(1); //  student confirm the invitation
@@ -84,6 +87,10 @@ public class RequestInviteController {
     @ResponseBody
     public String ignoreRequest(@RequestParam Integer requestId) {
         //authorize
+        User user = (User) session.getAttribute("user");
+        if (user==null){
+            return "NG";
+        }
         ClassroomUser classroomUser = classroomUserDao.find(requestId);
         try {
             classroomUser.setApproval(2); // 2 = ignore
@@ -98,6 +105,10 @@ public class RequestInviteController {
     @ResponseBody
     public StudentDto confirmRequest(@RequestParam Integer requestId) {
         //authorize
+        User user = (User) session.getAttribute("user");
+        if (user==null){
+            return null;
+        }
         ClassroomUser classroomUser = classroomUserDao.find(requestId);
         StudentDto studentDto = new StudentDto();
         try {
@@ -114,6 +125,10 @@ public class RequestInviteController {
     @ResponseBody
     public String removeStudent(@RequestParam Integer removeId) {
         //authorize
+        User user = (User) session.getAttribute("user");
+        if (user==null){
+            return "NG";
+        }
         ClassroomUser classroomUser = classroomUserDao.find(removeId);
         try {
             classroomUserDao.delete(classroomUser);

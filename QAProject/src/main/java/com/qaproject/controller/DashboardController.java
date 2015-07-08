@@ -23,7 +23,8 @@ public class DashboardController {
     public String editProfile(Model model, HttpServletRequest request) {
         //Check is User
         User user = (User) session.getAttribute("user");
-        if(user==null) {
+        if (user == null) {
+            session.setAttribute("currentPage","redirect:/dashboard");
             return "redirect:/";
         }
         if (user.getRoleId().getId()==1) {

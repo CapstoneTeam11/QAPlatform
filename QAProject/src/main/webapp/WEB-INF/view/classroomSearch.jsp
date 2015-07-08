@@ -863,6 +863,7 @@ var joinClassroom = function(e){
                         'Request sent' +
                         '</a>');
             }else{
+                window.location.href="/";
             }
         }
     });

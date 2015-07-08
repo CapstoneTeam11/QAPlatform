@@ -130,7 +130,14 @@
 
                 <div class="page-content ask-question">
                     <c:if test="${post==null}">
-                    <div class="boxedtitle page-title"><h2>Create post</h2></div>
+                    <div class="boxedtitle page-title">
+                        <h2>
+                            Create post
+                            <span style="float: right;font-size: 12px;color: black;margin-top: 12px;">
+                                (<span style="color:red">*</span>) required filed
+                            </span>
+                        </h2>
+                    </div>
 
                     <div class="form-style form-style-3" id="question-submit">
                         <form method="post" action="/post/create" id="formvalidate">
@@ -143,7 +150,7 @@
                                     </div>
                                     <div class="col-md-10">
                                         <input type="text" id="question-title" name="postName" maxlength="255"
-                                               width="100%">
+                                               style="width: 100%">
                                         <%--<span class="form-description">Please choose an appropriate title for the question to answer it even easier .</span>--%>
                                     </div>
                                 </div>
@@ -198,7 +205,7 @@
                                         <textarea id="questionDetails" name="questionDetails" aria-required="true" cols="58"
                                                   rows="8"></textarea>
                                     </div>
-                                    <input type="hidden" id="postDetail">
+                                    <input type="hidden" id="postDetail" name="postDetail">
                                 </div>
                             </div>
                             <div class="row">
@@ -212,7 +219,14 @@
                     </div>
                     </c:if>
                     <c:if test="${post!=null}">
-                        <div class="boxedtitle page-title"><h2>Create post</h2></div>
+                        <div class="boxedtitle page-title">
+                            <h2>
+                                Create post
+                            <span style="float: right;font-size: 12px;color: black;margin-top: 12px;">
+                                (<span style="color:red">*</span>) required filed
+                            </span>
+                            </h2>
+                        </div>
 
                         <div class="form-style form-style-3" id="question-submit">
                             <form method="post" action="/post/update" id="formvalidate">
@@ -221,7 +235,6 @@
                                     <input type="hidden" name="tagUpdateId" value="${tag.tagId.id}">
                                     <input type="hidden" name="tagUpdateName" value="${tag.tagId.tagName}">
                                 </c:forEach>
-                                <div>
                                     <div class="row" style="margin-bottom: 20px">
                                         <div class="col-md-2">
                                             <label class="required">Title<span>*</span></label>
@@ -278,7 +291,7 @@
                                             <textarea id="questionDetails" aria-required="true" cols="58"
                                                       name="questionDetails" rows="8">${post.body}</textarea>
                                         </div>
-                                        <input type="hidden" id="postDetail">
+                                        <input type="hidden" id="postDetail" name="postDetail">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -378,17 +391,23 @@
                     required: true,
                     minlength: 20,
                     maxlength: 255
+                },
+                tag: {
+                    required: true
                 }
             },
             messages: {
                 postName: {
-                    required: "Please provide question/article title",
-                    minlength: "The title must be between 20 and 255 characters long",
-                    maxlength: "The title must be between 20 and 255 characters long"
+                    required: "Please provide the title.",
+                    minlength: "The title must be between 20 and 255 characters long.",
+                    maxlength: "The title must be between 20 and 255 characters long."
                 },
                 questionDetails: {
-                    required: "Please provide question/article details",
-                    minlength: "The details must be at lasted 120 characters long"
+                    required: "Please provide the details.",
+                    minlength: "The details must be at least 120 characters long."
+                },
+                tag: {
+                    required: "Please provide at lasted one tag."
                 }
             },
             errorPlacement: function(error, element)
@@ -468,6 +487,50 @@
 <c:if test="${post!=null}">
     <script>
         $(document).ready(function () {
+
+            $('#formvalidate').validate({
+                ignore: [],
+                rules: {
+                    questionDetails: {
+                        required: function (){
+                            CKEDITOR.instances.questionDetails.updateElement();
+                        },
+                        minlength: 120
+                    },
+                    postName: {
+                        required: true,
+                        minlength: 20,
+                        maxlength: 255
+                    },
+                    tag: {
+                        required: true
+                    }
+                },
+                messages: {
+                    postName: {
+                        required: "Please provide the title.",
+                        minlength: "The title must be between 20 and 255 characters long.",
+                        maxlength: "The title must be between 20 and 255 characters long."
+                    },
+                    questionDetails: {
+                        required: "Please provide the details.",
+                        minlength: "The details must be at least 120 characters long."
+                    },
+                    tag: {
+                        required: "Please provide at lasted one tag."
+                    }
+                },
+                errorPlacement: function(error, element)
+                {
+                    if (element.attr("name") == "questionDetails")
+                    {
+                        error.insertAfter("#form-textarea");
+                    } else {
+                        error.insertAfter(element);
+                    }
+                }
+            });
+
             $('#publish-question').click(function (e) {
                 var detail = CKEDITOR.instances['questionDetails'].getData()
                 var postDetail = $('#postDetail')

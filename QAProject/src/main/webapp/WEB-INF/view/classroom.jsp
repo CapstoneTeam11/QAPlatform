@@ -911,6 +911,7 @@
                             'Request sent' +
                             '</a>');
                 }else{
+                    window.location.href="/";
                 }
             }
         });

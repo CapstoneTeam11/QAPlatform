@@ -43,6 +43,7 @@ public class MaterialController {
     public String material(ModelMap model) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
+            session.setAttribute("currentPage","redirect:/material");
             return "redirect:/";
         }
         List<Folder> folders = folderDao.findByUser(user);
@@ -99,6 +100,7 @@ public class MaterialController {
                            ModelMap model) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
+            session.setAttribute("currentPage","redirect:/folder/"+id);
             return "redirect:/";
         }
         Folder folder = folderDao.find(id);
@@ -119,7 +121,8 @@ public class MaterialController {
                             ModelMap model) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
-            return "welcome";
+            session.setAttribute("currentPage","redirect:/material");
+            return "redirect:/";
         }
         Folder folder = new Folder();
         folder.setManagerId(user);
@@ -137,6 +140,7 @@ public class MaterialController {
         Classroom classroom = classroomDao.find(classId);
         User user = (User) session.getAttribute("user");
         if (user == null) {
+            session.setAttribute("currentPage","redirect:/classroom/"+classId);
             return "redirect:/";
         }
         if (classroom.getOwnerUserId().getId() != user.getId()) {
@@ -199,7 +203,14 @@ public class MaterialController {
     @RequestMapping(value = "/download/{materialId}", method = RequestMethod.GET)
     public String downloadMaterialClass(@PathVariable Integer materialId,HttpServletResponse response ) {
         //validate and authorize
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/";
+        }
         Material material = materialDao.find(materialId);
+        if(material==null){
+            return "404";
+        }
         File downloadFile = new File(material.getFileURL());
         FileInputStream inputStream = null;
         OutputStream outStream = null;
@@ -238,8 +249,12 @@ public class MaterialController {
                                         @PathVariable Integer materialId) {
         User user = (User) session.getAttribute("user");
         Material material = materialDao.find(materialId);
+        if(material==null){
+            return "404";
+        }
         int error = 0;
         if (user == null) {
+            session.setAttribute("currentPage","redirect:/classroom/"+material.getOwnerClassId().getId());
             return "redirect:/";
         }
         //validate

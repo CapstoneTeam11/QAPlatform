@@ -29,6 +29,9 @@ public class FollowerController {
     public @ResponseBody
     List<FollowerDto> loadFollowedTeacher(@PathVariable Integer lastId) {
         User user = (User) session.getAttribute("user");
+        if (user==null) {
+            return null;
+        }
         List<FollowerDto> followerDtos = null;
         try {
             followerDtos = dashboardUtilities.loadFollowedTeachers(user.getId(),lastId);

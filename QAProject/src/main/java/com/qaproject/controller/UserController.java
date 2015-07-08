@@ -51,7 +51,8 @@ public class UserController {
     public String editProfile(Model model, HttpServletRequest request) {
         User user = (User) session.getAttribute("user");
         if(user == null){
-            return "welcome";
+            session.setAttribute("currentPage","redirect:/profile/update");
+            return "redirect:/";
         }
         List<Category> categoryList = categoryDao.findAll();
         model.addAttribute("categories",categoryList);
@@ -69,7 +70,8 @@ public class UserController {
                                 HttpServletRequest request) {
         User user = (User) session.getAttribute("user");
         if(user == null){
-            return "welcome";
+            session.setAttribute("currentPage","/profile/update");
+            return "redirect:/";
         }
         user.setDisplayName(displayName);
         user.setCategoryId(categoryDao.find(cate));
@@ -164,6 +166,10 @@ public class UserController {
         List<User> users = userDao.login(username, password);
         if(users.size()>0){
             session.setAttribute("user", users.get(0));
+            String currentPage = (String) session.getAttribute("currentPage");
+            if (currentPage!=null) {
+                return currentPage;
+            }
             return "redirect:/newsfeed";
 
         }else{
@@ -216,6 +222,10 @@ public class UserController {
     @RequestMapping(value = "/getProfile",method = RequestMethod.GET)
     public String getProfile(Model model, HttpServletRequest request) {
         User user = (User)session.getAttribute("user");
+        if(user == null){
+            session.setAttribute("currentPage","redirect:/profile/update");
+            return "redirect:/";
+        }
         model.addAttribute("userProfile", user);
         return "profile";
     }
@@ -224,6 +234,7 @@ public class UserController {
     public String logout(Model model, HttpServletRequest request){
         if (session.getAttribute("user")!=null) {
             session.removeAttribute("user");
+            session.removeAttribute("currentPage");
         }
         return "redirect:/";
     }

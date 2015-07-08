@@ -368,6 +368,9 @@
                 success: function (data) {
                     var joinedClassrooms = new Array();
                     joinedClassrooms = data;
+                    if (joinedClassrooms===null || joinedClassrooms===undefined) {
+                        window.location.href="/";
+                    }
                     var length = joinedClassrooms.length;
                     if (length > 10) {
                         length = joinedClassrooms.length - 1;

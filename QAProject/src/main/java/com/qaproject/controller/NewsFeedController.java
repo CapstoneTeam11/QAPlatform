@@ -86,6 +86,9 @@ public class NewsFeedController {
     public @ResponseBody
     List<PostDto> loadNewsFeedQuestion(@PathVariable Integer page) {
         User user = (User) session.getAttribute("user");
+        if(user==null) {
+            return null;
+        }
         List<PostDto> questionDtos = null;
         try {
             questionDtos = newsFeedUtilities.loadNewsFeedQuestions(user.getId(),page);
@@ -99,6 +102,9 @@ public class NewsFeedController {
     public @ResponseBody
     List<PostDto> loadNewsFeedArticle(@PathVariable Integer nextFrom) {
         User user = (User) session.getAttribute("user");
+        if(user==null) {
+            return null;
+        }
         List<PostDto> articleDtos = null;
         try {
             articleDtos = newsFeedUtilities.loadNewsFeedArticles(user.getCategoryId().getId(), nextFrom);
@@ -112,6 +118,9 @@ public class NewsFeedController {
     public @ResponseBody
     List<MaterialDto> loadNewsFeedMaterial(@PathVariable Integer nextFrom) {
         User user = (User) session.getAttribute("user");
+        if(user==null) {
+            return null;
+        }
         List<MaterialDto> materialDtos = null;
         try {
             materialDtos = newsFeedUtilities.loadNewsFeedMaterials(user.getId(), nextFrom);

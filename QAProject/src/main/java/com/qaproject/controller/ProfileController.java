@@ -40,6 +40,7 @@ public class ProfileController {
         boolean isFollow = false;
         User user = (User)session.getAttribute("user");
         if (user==null) {
+            session.setAttribute("currentPage","redirect:/profile/view/"+id);
             return "redirect:/";
         }
 
