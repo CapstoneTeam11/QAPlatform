@@ -36,8 +36,12 @@ public class StudentController {
     public String studentdashboard(ModelMap model, HttpServletRequest request) {
         HttpSession session = request.getSession();// Phan quyen user
         User user = (User) session.getAttribute("user");
+        if (user==null){
+            session.setAttribute("currentPage","redirect:/dashboard");
+            return "redirect:/";
+        }
         if(user.getRoleId().getId()==2){
-            return "403";
+            return "404";
         }
 
         List<FollowerDto> followedTeachers = dashboardUtilities.loadFollowedTeachers(user.getId(), 0);

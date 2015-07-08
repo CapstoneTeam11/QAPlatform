@@ -4,6 +4,7 @@ import com.qaproject.dto.ClassroomDto;
 import com.qaproject.dto.MaterialDto;
 import com.qaproject.dto.PostDto;
 import com.qaproject.dto.UserDto;
+import com.qaproject.entity.User;
 import com.qaproject.util.SearchUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,11 +25,17 @@ import java.util.List;
 public class SearchController {
     @Autowired
     SearchUtilities searchUtilities;
+    @Autowired
+    HttpSession session;
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
     public String create(@RequestParam Integer filter,
                          @RequestParam String searchKey,
                          ModelMap model) {
+        User user = (User) session.getAttribute("user");
+        if (user==null){
+            return "redirect:/";
+        }
         if (searchKey==null){
             searchKey="";
         }

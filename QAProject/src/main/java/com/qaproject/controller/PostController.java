@@ -234,7 +234,7 @@ public class PostController {
         }
         //Check User have joint to Class
         if (classroom.checkUserExist(user) == false) {
-            return "/classroom/"+id;
+            return "redirect:/classroom/"+id;
         }
         if (classroom==null) {
             return "404";
@@ -378,6 +378,7 @@ public class PostController {
         User user = (User) session.getAttribute("user");
         Post post = postDao.find(id);
         if (user == null) {
+            session.setAttribute("currentPage","redirect:/post/update/"+id);
             return "redirect:/";
         }
         if (post == null) {
@@ -421,6 +422,9 @@ public class PostController {
     String addWantAnswer(@ModelAttribute("wantAnswerDto") WantAnswerDto wantAnswerDto) {
         //authorize
         User user = (User) session.getAttribute("user");
+        if (user==null) {
+            return "NG";
+        }
         WantAnswerPost wantAnswerPost = new WantAnswerPost();
         wantAnswerPost.setPostId(postDao.find(wantAnswerDto.getPostId()));
         wantAnswerPost.setUserId(user);
@@ -439,6 +443,10 @@ public class PostController {
     @ResponseBody
     String removeWantAnswer(@ModelAttribute("wantAnswerDto") WantAnswerDto wantAnswerDto) {
         //authorize
+        User user = (User) session.getAttribute("user");
+        if (user==null) {
+            return "NG";
+        }
         try {
             WantAnswerPost wantAnswerPost = wantAnswerDao.find(wantAnswerDto.getId());
             wantAnswerDao.remove(wantAnswerPost);
@@ -455,6 +463,10 @@ public class PostController {
     @ResponseBody
     String acceptAnswer(@ModelAttribute("acceptAnswerDto") AcceptAnswerDto acceptAnswerDto) {
         //authorize
+        User user = (User) session.getAttribute("user");
+        if (user==null) {
+            return "NG";
+        }
         try {
             Post post;
             Integer idUnaccept = acceptAnswerDto.getIdUnaccept();
@@ -484,6 +496,10 @@ public class PostController {
     @ResponseBody
     String removeAcceptAnswer(@PathVariable Integer id) {
         //authorize
+        User user = (User) session.getAttribute("user");
+        if (user==null) {
+            return "NG";
+        }
         try {
             Post post = postDao.find(id);
             post.setAcceptedAnswerId(0);
@@ -550,6 +566,10 @@ public class PostController {
     @ResponseBody
     String deleteAnswer(@ModelAttribute(value = "postDto") PostDto postDto) {
         //authorize
+        User user = (User) session.getAttribute("user");
+        if (user==null) {
+            return "NG";
+        }
         Post post;
         try {
             post = postDao.find(postDto.getId());
@@ -564,6 +584,11 @@ public class PostController {
     @RequestMapping(value = "/post/deletePost", method = RequestMethod.POST)
     public String deletePost(@RequestParam Integer id) {
         //authorize
+        User user = (User) session.getAttribute("user");
+        if (user==null) {
+            session.setAttribute("currentPage","redirect:/post/view/"+id);
+            return "redirect:/";
+        }
         Post post;
         Integer classId;
         try {
@@ -580,6 +605,11 @@ public class PostController {
     @RequestMapping(value = "/post/closePost", method = RequestMethod.POST)
     public String closePost(@RequestParam Integer id) {
         //authorize
+        User user = (User) session.getAttribute("user");
+        if (user==null) {
+            session.setAttribute("currentPage","redirect:/post/view/"+id);
+            return "redirect:/";
+        }
         Post post = null;
         try {
             post = postDao.find(id);
@@ -594,6 +624,11 @@ public class PostController {
     @RequestMapping(value = "/post/openPost", method = RequestMethod.POST)
     public String openPost(@RequestParam Integer id) {
         //authorize
+        User user = (User) session.getAttribute("user");
+        if (user==null) {
+            session.setAttribute("currentPage","redirect:/post/view/"+id);
+            return "redirect:/";
+        }
         Post post = null;
         try {
             post = postDao.find(id);
@@ -607,6 +642,10 @@ public class PostController {
     @RequestMapping(value = "/post/count/{id}", method = RequestMethod.POST,produces = "application/json")
     public String updateView(@PathVariable Integer id) {
         //authorize
+        User user = (User) session.getAttribute("user");
+        if (user==null) {
+            return "NG";
+        }
         Post post = null;
         try {
             post = postDao.find(id);

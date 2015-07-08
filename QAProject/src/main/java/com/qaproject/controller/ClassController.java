@@ -336,11 +336,19 @@ public class ClassController {
         User user = (User) session.getAttribute("user");
         if(user==null) {
             session.setAttribute("currentPage",
-                    "redirect:/classroom/search?classroomId="+classroomId+"&searchKey="+searchKey);
+                    "redirect:/classroom/"+classroomId);
             return "redirect:/";
         }
+
         Classroom classroom = classroomDao.find(classroomId);
         user = userDao.find(user.getId());
+        if (searchKey==null){
+            searchKey="";
+        }
+        searchKey = searchKey.trim();
+        if (searchKey.length()>255){
+            searchKey = searchKey.substring(0,255);
+        }
 
         //get questions, articles, materials, request to join - MinhKH
         List<PostDto> questions = classroomUtilities.findQuestions(classroomId,searchKey, 0);
@@ -583,6 +591,9 @@ public class ClassController {
     public @ResponseBody
     List<ClassroomDto> loadOwnedClassroom(@PathVariable Integer lastId) {
         User user = (User) session.getAttribute("user");
+        if (user==null) {
+            return null;
+        }
         List<ClassroomDto> classroomDtos = null;
         try {
             classroomDtos = dashboardUtilities.loadOwnedClassrooms(user.getId(), lastId);
@@ -597,6 +608,9 @@ public class ClassController {
     public @ResponseBody
     List<ClassroomInvitationDto> loadClassroomInvitation(@PathVariable Integer lastId) {
         User user = (User) session.getAttribute("user");
+        if (user==null) {
+            return null;
+        }
         List<ClassroomInvitationDto> classroomInvitationDtos = null;
         try {
             classroomInvitationDtos = dashboardUtilities.loadClassroomInvitations(user.getId(), lastId);
@@ -610,6 +624,10 @@ public class ClassController {
     @ResponseBody
     public String ignoreInvitation(@RequestParam Integer invitationId) {
         //authorize
+        User user = (User) session.getAttribute("user");
+        if (user==null) {
+            return "NG";
+        }
         ClassroomUser classroomUser = classroomUserDao.find(invitationId);
         try {
             classroomUser.setApproval(2); // 2 = ignore
@@ -624,6 +642,10 @@ public class ClassController {
     @ResponseBody
     public String confirmInvitation(@RequestParam Integer invitationId) {
         //authorize
+        User user = (User) session.getAttribute("user");
+        if (user==null) {
+            return "NG";
+        }
         ClassroomUser classroomUser = classroomUserDao.find(invitationId);
         String classroomDescription = "";
         try {
@@ -641,6 +663,9 @@ public class ClassController {
     public String leaveClassroom(@RequestParam Integer classroomId) {
         //authorize
         User user = (User) session.getAttribute("user");
+        if (user==null) {
+            return "NG";
+        }
         ClassroomUser classroomUser = classroomUserDao.findClassroomByClassroomAndUser(user.getId(),classroomId);
         try {
             classroomUserDao.delete(classroomUser);

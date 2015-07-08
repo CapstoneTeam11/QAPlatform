@@ -28,6 +28,10 @@ public class TrackingController {
     @RequestMapping(value = "/tracking",method = RequestMethod.GET)
     public String tracking(ModelMap model) {
         User user = (User) session.getAttribute("user");
+        if (user==null){
+            session.setAttribute("currentPage","redirect:/tracking");
+            return "redirect:/";
+        }
         if(user.getRoleId().getId()==1) { //if user is student
             return "404";
         }

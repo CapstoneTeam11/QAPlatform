@@ -54,12 +54,13 @@ public class PostInvitationController {
     @RequestMapping(value = "/teacherInvitation",method = RequestMethod.POST)
     public String teacherInvitation(@RequestParam List<Integer> userId,
                                     @RequestParam("postId") Integer postId) {
+        //authorize
         User user = (User) session.getAttribute("user");
         if (user == null) {
+            session.setAttribute("currentPage","redirect:/post/view/"+postId);
             return "redirect:/";
         }
 
-        //authorize
         Post post = postDao.find(postId);
         for (int i = 0; i < userId.size(); i++) {
             User teacher = userDao.find(userId.get(i));
@@ -83,7 +84,10 @@ public class PostInvitationController {
     @RequestMapping(value = "/removeInvitation",method = RequestMethod.POST)
     @ResponseBody
     public String removeInvitation(@RequestParam Integer invitationId) {
-        //authorize
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return "NG";
+        }
         PostInvitation postInvitation = postInvitationDao.find(invitationId);
         try {
             postInvitationDao.delete(postInvitation);
