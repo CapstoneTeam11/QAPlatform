@@ -72,7 +72,6 @@ public class ClassController {
                            @RequestParam("tag") String tag,
                            @RequestParam(value = "newTag", required = false)  List<String> newTag,
                            @RequestParam(value = "studentList",required = false) String studentList, Model model, HttpServletRequest request) {
-        HttpSession session = request.getSession();
         User user = (User)session.getAttribute("user");
 
 //        ReturnObjectWithStatus objectWithStatus =new ReturnObjectWithStatus();
@@ -171,6 +170,17 @@ public class ClassController {
     }
     @RequestMapping(value= "/updateClass/{classroomId}",method= RequestMethod.GET)
     public String updateClassDispath(@PathVariable Integer classroomId,Model model) {
+        User user = (User)session.getAttribute("user");
+
+//        ReturnObjectWithStatus objectWithStatus =new ReturnObjectWithStatus();
+        if(user == null){
+//            objectWithStatus.setStatus("NG");
+            session.setAttribute("currentPage","redirect:/updateClass/"+classroomId);
+            return "redirect:403";
+        }else if(user.getRoleId().getId()==1){
+//            objectWithStatus.setStatus("403");
+            return "redirect:403";
+        }
         Classroom room = classroomDao.find(classroomId);
         List<Category> categoryList = categoryDao.findAll();
         model.addAttribute("categories",categoryList);
@@ -186,12 +196,12 @@ public class ClassController {
                               @RequestParam("tag") String tag,
                               @RequestParam(value = "newTag", required = false)  List<String> newTag,
                               Model model, HttpServletRequest request) {
-        HttpSession session = request.getSession();
         User user = (User)session.getAttribute("user");
 
 //        ReturnObjectWithStatus objectWithStatus =new ReturnObjectWithStatus();
         if(user == null){
 //            objectWithStatus.setStatus("NG");
+            session.setAttribute("currentPage","redirect:/updateClass/"+classroomId);
             return "redirect:403";
         }else if(user.getRoleId().getId()==1){
 //            objectWithStatus.setStatus("403");
