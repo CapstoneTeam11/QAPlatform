@@ -167,7 +167,77 @@ public class ClassController {
 
         return "redirect:/classroom/"+room.getId();
     }
-    @RequestMapping(value= "/requestJoinClass",method= RequestMethod.POST)
+    @RequestMapping(value= "/updateClass/{classroomId}",method= RequestMethod.GET)
+    public String updateClassDispath(@PathVariable Integer classroomId,Model model) {
+        Classroom room = classroomDao.find(classroomId);
+        List<Category> categoryList = categoryDao.findAll();
+        model.addAttribute("categories",categoryList);
+        model.addAttribute("classroom",room);
+        return "createClass";
+    }
+
+    @RequestMapping(value= "/updateClass",method= RequestMethod.POST)
+    public String updateClass(@RequestParam("classroomName") String classroomName,
+                              @RequestParam("classroomId") Integer classroomId,
+                              @RequestParam("classroomDescription") String classroomDescription,
+                              @RequestParam("categoryId") Integer categoryId,
+                              @RequestParam("tag") String tag,
+                              @RequestParam(value = "newTag", required = false)  List<String> newTag,
+                              Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        User user = (User)session.getAttribute("user");
+
+//        ReturnObjectWithStatus objectWithStatus =new ReturnObjectWithStatus();
+        if(user == null){
+//            objectWithStatus.setStatus("NG");
+            return "redirect:403";
+        }else if(user.getRoleId().getId()==1){
+//            objectWithStatus.setStatus("403");
+            return "redirect:403";
+        }
+        if(classroomName.length() < 10 || classroomName.length() > 127) {
+            return "createClass";
+        }
+        Classroom room = classroomDao.find(classroomId);
+        Category category = categoryDao.find(categoryId);
+        room.setCategoryId(category);
+        room.setClassroomDescription(classroomDescription);
+        room.setClassroomName(classroomName);
+        room.setOwnerUserId(user);
+        List<TagClassroom> tagClassrooms = new ArrayList<TagClassroom>();
+        String[] tagList = tag.split(",");
+        for (int i = 0; i<= tagList.length-1; i++){
+            if(Integer.parseInt(tagList[i].trim())>0){
+                TagClassroom tagClassroom = new TagClassroom();
+                tagClassroom.setClassroomId(room);
+                String tagId = tagList[i].trim();
+                Tag tagFind = tagDao.find(Integer.parseInt(tagId));
+                tagClassroom.setTagId(tagFind);
+                tagClassrooms.add(tagClassroom);
+            }
+        }
+        if (newTag != null) {
+            for (int i = 0; i < newTag.size(); i++) {
+                Tag tagNew = new Tag();
+                tagNew.setTagName(newTag.get(i));
+                tagNew.setTagCount(0);
+                tagDao.persist(tagNew);
+                TagClassroom tagClassroom = new TagClassroom();
+                tagClassroom.setClassroomId(room);
+                tagClassroom.setTagId(tagNew);
+                tagNew.setTagCount(tagNew.getTagCount()+1);
+                tagDao.merge(tagNew);
+                tagClassrooms.add(tagClassroom);
+            }
+        }
+        room.getTagClassroomList().clear();
+        room.getTagClassroomList().addAll(tagClassrooms);
+        classroomDao.merge(room);
+        return "redirect:/classroom/"+classroomId;
+    }
+
+
+        @RequestMapping(value= "/requestJoinClass",method= RequestMethod.POST)
     @ResponseBody
     public String requestJoinClass(@RequestParam Integer classroomId) {
         User user = (User)session.getAttribute("user");
