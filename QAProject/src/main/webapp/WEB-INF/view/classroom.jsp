@@ -129,7 +129,7 @@
     </section><!-- End container -->
 </div><!-- End breadcrumbs -->
 
-<section class="container main-content page-left-sidebar">
+<section class="container main-content page-left-sidebar" style="min-height: 260px">
 <div class="row">
 <div class="col-md-9">
     <div class="clearfix"></div>
@@ -149,7 +149,7 @@
                     <a href="/post/create/${classroom.id}" class="button medium green-button" style="float: right"><i class="icon-pencil"></i> Create post</a>
                 </c:if>
             </div>
-            <div class="" style="margin-top: 20px">
+            <div class="" style="margin-top: 20px; float: right">
                 <div class="btn-group">
                     <a data-toggle="dropdown" href="" aria-expanded="false"><i class="icon-cog" style="color: black;font-weight: bold;font-size: 20px;"></i><span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu" style="left: -127px;" id="activeBtn">
@@ -327,14 +327,15 @@
 </div>
 <div class="tab-inner-warp">
     <div class="tab-inner">
-        <div class="col-md-3 col-sm-6" style="float: right">
-            <c:if test="${classroom.status == 1}">
-            <c:if test="${classroom.ownerUserId.id == user.id}">
-                <a href="#" class="button medium green-button" style="float: right;margin-top: -25px;margin-right:
-                -10px;" id="addMaterial-click"><i class="icon-lo"></i> Upload</a>
-            </c:if>
-            </c:if>
-        </div>
+        <c:if test="${classroom.status == 1}">
+        <c:if test="${classroom.ownerUserId.id == user.id}">
+            <div class="col-md-3 col-sm-6" style="float: right">
+                <a href="#" class="button medium green-button"
+                   style="float: right;margin-top: -25px;margin-right:-15px;"
+                   id="addMaterial-click"><i class="icon-upload"></i> Upload</a>
+            </div>
+        </c:if>
+        </c:if>
         <c:if test="${not empty materials}">
             <table class="table table-hover" id="materials">
                 <tr>
@@ -375,7 +376,7 @@
             </table>
         </c:if>
         <c:if test="${empty materials}">
-            <div class="about-author clearfix">
+            <div class="about-author clearfix col-md-12">
                 No material.
             </div>
         </c:if>
@@ -496,11 +497,15 @@
 </div><!-- End main -->
 <aside class="col-md-3 sidebar">
     <div class="widget">
-        <h3 class="widget_title">About class</h3>
+        <h3 class="widget_title">About classroom</h3>
         <ul class="related-posts">
             <li class="related-item">
-                <p>${classroom.classroomDescription}</p>
-                <div class="clear"></div><span>Feb 22, 2014</span>
+                <c:if test="${classroom.status==1}">
+                    <p>${classroom.classroomDescription}</p>
+                </c:if>
+                <c:if test="${classroom.status==0}">
+                    <p style="color: red; font-style: italic">Classroom is closed.</p>
+                </c:if>
             </li>
         </ul>
         <c:if test="${user.roleId.id==1}">
@@ -533,7 +538,7 @@
             </c:if>
         </c:if>
     </div>
-    <c:if test="${user.roleId.id==2}">
+    <c:if test="${user.id==classroom.ownerUserId.id}">
         <c:if test="${classroom.status == 1}">
             <div class="widget widget_login" style="  min-height: 130px;">
                 <h3 class="widget_title">Invite student</h3>
@@ -543,19 +548,21 @@
             </div>
         </c:if>
     </c:if>
+<c:if test="${classroom.ownerUserId.id!=user.id}">
     <div class="widget widget_highest_points">
         <h3 class="widget_title">Classroom Owner</h3>
         <ul>
             <li>
                 <div class="author-img">
-                    <a href="/profile/view${classroom.ownerUserId.id}"><img width="60" height="60" src="${classroom.ownerUserId.profileImageURL}" alt=""></a>
+                    <a href="/profile/view/${classroom.ownerUserId.id}"><img width="60" height="60"
+                                                             src="${classroom.ownerUserId.profileImageURL}" alt=""></a>
                 </div>
-                <h6><a href="/profile/view${classroom.ownerUserId.id}">${classroom.ownerUserId.displayName}</a></h6>
+                <h6><a href="/profile/view/${classroom.ownerUserId.id}">${classroom.ownerUserId.displayName}</a></h6>
                 <span class="comment">${classroom.ownerUserId.aboutMe}</span>
             </li>
         </ul>
     </div>
-
+</c:if>
 </aside><!-- End sidebar -->
 </div><!-- End row -->
 </section><!-- End container -->
