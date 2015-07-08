@@ -78,7 +78,7 @@
         <section class="container clearfix">
                 <div class="row">
                     <div class="col-md-3">
-                        <div class="logo"><a href="/"><img alt="" src="/resource/assets/images/logo.png"></a></div>
+                        <div class="logo"><a href="/"><img alt="" src="/resource/assets/images/logoL.png"></a></div>
                     </div>
                     <div class="col-md-4"></div>
                 </div>
@@ -93,7 +93,11 @@
                 </div><!-- End col-md-3 -->
                 <div class="col-md-6">
                     <div class="page-content">
-                        <h2>Login</h2>
+                        <h2>
+                            Login
+                            <span style="float: right;font-size: 12px;color: red;margin-top: 12px;">
+                               Invalid email or password</span>
+                        </h2>
                         <form method="POST"  class="form-style form-style-3 form-style-5" id="loginForm" action="/login">
                             <div class="form-inputs clearfix">
                                 <div class="row" style="margin-top: 10px;">
@@ -101,7 +105,7 @@
                                         <label class="col-md-3 control-label">Email</label>
                                         <div class="col-md-9">
                                             <div class="row">
-                                                <input type="text" value="" aria-required="true" id="email" name="username" class="form-control">
+                                                <input type="text" value="" aria-required="true" id="email" style="width: 100%" name="username" class="form-control">
                                             </div>
                                         </div>
                                     </div>
@@ -111,15 +115,23 @@
                                         <label class="col-md-3 control-label">Password</label>
                                         <div class="col-md-9">
                                             <div class="row">
-                                                <input type="password" value="" aria-required="true" id="password" name="password" class="form-control">
+                                                <input type="password" value="" aria-required="true" id="password" style="width: 100%" name="password" class="form-control">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <p class="form-submit">
-                                <input name="submit" type="submit" value="Login" class="submit button medium color" style="width: 96%; float: left">
-                            </p>
+                            <div class="row" style="margin-top: 10px;">
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label"></label>
+                                    <div class="col-md-9">
+                                        <div class="row">
+                                            <input name="submit" type="submit"
+                                                   value="Login" class="submit button medium color" style="width: 100%">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </form>
                     </div><!-- End page-content -->
                 </div><!-- End col-md-6 -->
@@ -128,7 +140,6 @@
     </section><!-- End container -->
 
 </div><!-- End wrap -->
-<div class="go-up"><i class="icon-chevron-up"></i></div>
 
 <!-- js -->
 <script src="/resource/assets/ckeditor/ckeditor.js"></script>

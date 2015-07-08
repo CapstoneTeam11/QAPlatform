@@ -132,7 +132,12 @@
                 </div><!-- End col-md-6 -->
                 <div class="col-md-6">
                     <div class="page-content">
-                        <h2>Register Now</h2>
+                        <h2>
+                            Register Now
+                            <span style="float: right;font-size: 12px;color: black;margin-top: 12px;">
+                                (<span style="color:red">*</span>) required filed
+                            </span>
+                        </h2>
                         <form method="POST"  class="form-style form-style-3 form-style-5" id="registrationForm" action="/register">
                             <div class="form-inputs clearfix">
                                 <%--<div class="row" style="margin-top: 10px;">--%>
@@ -145,40 +150,51 @@
                                 <%--</div>--%>
                                 <div class="row" style="margin-top: 10px;">
                                     <div class="form-group">
-                                        <label class="col-md-3 control-label">Email<span style="color:red">*</span></label>
+                                        <label class="col-md-3 control-label" style="text-align: right">
+                                            Email<span style="color:red">*</span>
+                                        </label>
                                         <div class="col-md-9">
                                             <div class="row">
-                                                <input type="text" value="" aria-required="true" id="email" name="email" class="form-control">
+                                                <input type="text" value="" aria-required="true" id="email"
+                                                       name="email" style="width: 100%" class="form-control">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row" style="margin-top: 10px;">
                                     <div class="form-group">
-                                        <label class="col-md-3 control-label">Password<span style="color:red">*</span></label>
+                                        <label class="col-md-3 control-label" style="padding-top: 10px; text-align: right">
+                                            Password<span style="color:red">*</span>
+                                        </label>
                                         <div class="col-md-9">
-                                            <div class="row">
-                                                <input type="password" value="" aria-required="true" id="password" name="password" class="form-control">
+                                            <div class="row" style="margin-top:10px">
+                                                <input type="password" value="" aria-required="true" id="password"
+                                                       name="password"  style="width: 100%" class="form-control">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row" style="margin-top: 10px;">
                                     <div class="form-group">
-                                        <label class="col-md-3 control-label">Confirm password<span style="color:red">*</span></label>
+                                        <label class="col-md-3 control-label" style="text-align: right">
+                                            Confirm password<span style="color:red">*</span>
+                                        </label>
                                         <div class="col-md-9">
-                                            <div class="row">
-                                                <input type="password" value="" aria-required="true" id="confirm_password" name="confirmpassword" class="form-control">
+                                            <div class="row" style="margin-top: 10px">
+                                                <input type="password" value="" aria-required="true" id="confirm_password"
+                                                       name="confirmpassword"  style="width: 100%" class="form-control">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row" style="margin-top: 10px;">
                                     <div class="form-group">
-                                        <label class="col-md-3 control-label">Know About<span style="color:red">*</span></label>
+                                        <label class="col-md-3 control-label" style="text-align: right">
+                                            Know About<span style="color:red">*</span>
+                                        </label>
                                         <div class="col-md-9">
-                                            <div class="row">
-                                                <span class="styled-select">
+                                            <div class="row" style="margin-top: 10px">
+                                                <span class="styled-select"  style="width: 100%">
                                                     <select id="professional" name="cate" title="Please choose your knowledge" required>
                                                         <option value="">Select a type</option>
                                                         <c:forEach var="parent" items="${categories}">
@@ -199,9 +215,9 @@
                                     </div>
                                 </div>
                                 <div class="row" style="margin-top: 10px;">
-                                    <div class="col-md-3">
-                                        <label class="required" style="width: auto">Your are<span style="color:red">*</span></label>
-                                    </div>
+                                    <label class="col-md-3 control-label" style="margin-top: 18px; text-align: right">
+                                        You are<span style="color:red">*</span>
+                                    </label>
                                     <div class="col-md-9">
                                         <div class="row">
                                             <div class="col-md-6">
@@ -218,10 +234,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <p class="form-submit">
-                                <input name="submit" type="submit" value="Register" class="submit button medium color" style="width: 96%; float: left">
-                                <%--<a href="javascript:register();" class="submit button medium color text-center" style="width: 96%;">Register</a>--%>
-                            </p>
+                            <div class="row" style="margin-top: 10px;">
+                                <label class="col-md-3 control-label"></label>
+                                <div class="col-md-9">
+                                    <div class="row"><input name="submit" type="submit" value="Register" class="submit button medium color" style="width: 100%;">
+                                    </div>
+                                </div>
+                            </div>
                         </form>
                     </div><!-- End page-content -->
                 </div><!-- End col-md-6 -->
@@ -232,7 +251,7 @@
 
 </div><!-- End wrap -->
 <!-- End wrap -->
-<div class="go-up"><i class="icon-chevron-up"></i></div>
+
 
 <!-- js -->
 <script src="/resource/assets/js/jquery.min.js"></script>
