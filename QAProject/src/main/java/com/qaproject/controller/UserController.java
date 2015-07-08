@@ -138,7 +138,7 @@ public class UserController {
         user.setDisplayName(email.split("@")[0]);
         user.setEmail(email);
         user.setPassword(password);
-        user.setProfileImageURL("http://hefty-stone.ospry.io/1tugwxucoaf/avatar.png");
+        user.setProfileImageURL("http://hefty-stone.ospry.io/i5k3utcog5b/avatar.png");
         Category category = new Category();
         category.setId(Integer.parseInt(cate));
         user.setCategoryId(category);
