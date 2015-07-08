@@ -66,15 +66,16 @@ public class StudentController {
             }
         }
 
-        if (followedTeachers.size()==0 && joinedClassrooms.size()==0 && invitations.size()==0){
-            return "studentdashboardWelcome";
-        }
+        
         model.addAttribute("invitations",invitations);
         model.addAttribute("lastClassroomInvitationId",lastClassroomInvitationId);
         model.addAttribute("followedTeachers", followedTeachers);
         model.addAttribute("lastFollowedTeacherId", lastFollowedTeacherId);
         model.addAttribute("joinedClassrooms", joinedClassrooms);
         model.addAttribute("lastJoinedClassroomId",lastJoinedClassroomId);
+		if (followedTeachers.size()==0 && joinedClassrooms.size()==0 && invitations.size()==0){
+            return "studentdashboardWelcome";
+        }
         return "studentdashboard";
     }
 

@@ -374,13 +374,7 @@ public class ClassController {
             }
         }
 
-        if (questions.size()==0 && articles.size()==0 && materials.size()==0 && requests.size()==0
-                && students.size() ==0) {
-            model.addAttribute("classroom", classroom);
-            model.addAttribute("user", user);
-            return "classroomWelcome";
-        }
-
+        
 
         // check if acceptRequest or not
         ClassroomUser checkClassroomUser = classroomUserDao.findClassroomByClassroomAndUser(user.getId(), id);
@@ -457,9 +451,6 @@ public class ClassController {
             }
         }
 
-        if (questions.size()==0 && articles.size()==0 && materials.size()==0 && requests.size()==0
-                && students.size() ==0) {
-        }
 
 
         // check if acceptRequest or not
