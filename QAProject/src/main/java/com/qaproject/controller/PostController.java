@@ -222,7 +222,11 @@ public class PostController {
 
     @RequestMapping(value = "/post/create/{id}", method = RequestMethod.GET)
     public String createDispath(@PathVariable Integer id, ModelMap model) {
-        model.addAttribute("classId", id);
+        Classroom classroom = classroomDao.find(id);
+        if (classroom==null) {
+            return "404";
+        }
+        model.addAttribute("classroom",classroom);
         return "createPost";
     }
 
@@ -232,7 +236,7 @@ public class PostController {
         User user = (User) session.getAttribute("user");
         //validate authorize
         if (post == null) {
-            return "error";
+            return "404";
         }
         if (user == null) {
             return "redirect:/";
@@ -240,6 +244,8 @@ public class PostController {
         if (post.getOwnerUserId().getId() != user.getId()) {
             return "403";
         }
+        Classroom classroom = post.getOwnerClassId();
+        model.addAttribute("classroom",classroom);
         model.addAttribute("post", post);
         return "createPost";
     }

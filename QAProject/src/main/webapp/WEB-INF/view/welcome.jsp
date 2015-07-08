@@ -182,7 +182,7 @@
                                         <div class="col-md-9">
                                             <div class="row" style="margin-top: 10px">
                                                 <input type="password" value="" aria-required="true" id="confirm_password"
-                                                       name="confirmpassword"  style="width: 100%" class="form-control">
+                                                       name="confirm_password"  style="width: 100%" class="form-control">
                                             </div>
                                         </div>
                                     </div>

@@ -134,42 +134,52 @@
 
                     <div class="form-style form-style-3" id="question-submit">
                         <form method="post" action="/post/create" id="formvalidate">
-                            <input type="hidden" name="classId" value="${classId}">
+                            <input type="hidden" name="classId" value="${classroom.id}">
 
                             <div>
-                                <p>
-                                    <label class="required">Title<span>*</span></label>
-                                    <input type="text" id="question-title" name="postName" maxlength="255">
-                                    <span class="form-description">Please choose an appropriate title for the question to answer it even easier .</span>
-                                </p>
+                                <div class="row" style="margin-bottom: 20px">
+                                    <div class="col-md-2">
+                                        <label class="required">Title<span>*</span></label>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <input type="text" id="question-title" name="postName" maxlength="255"
+                                               width="100%">
+                                        <%--<span class="form-description">Please choose an appropriate title for the question to answer it even easier .</span>--%>
+                                    </div>
+                                </div>
 
-                                <div style="display: flex;height: 42px;">
-                                    <p style="width: 18% !important;">
+                                <div class="row" style="margin-bottom: 20px">
+                                    <div class="col-md-2">
                                         <label class="required">Tag<span>*</span></label>
-                                    </p>
+                                    </div>
 
-                                    <div style="width: 82%">
+                                    <div class="col-md-10">
                                         <input type="text" class="input" name="tag" id="tagsuggest"/>
                                     </div>
                                     <div id="hiddenTag"></div>
                                 </div>
                                 <%--<input type="text" class="input" name="question_tags" id="question_tags" data-seperator=",">--%>
-                                <p>
+                                <%--<p>
                                     <span class="form-description">Please choose  suitable Keywords Ex : <span
-                                            class="color">question , poll</span> .</span>
+                                            class="color">java , javascript, Php</span> .</span>
                                 </p>
-
-                                <p>
+--%>
+                                <div class="row" style="margin-bottom: 20px">
+                                    <div class="col-md-2">
                                     <label class="required">Type<span>*</span></label>
-									<span class="styled-select" >
-										<select name="postType">
+                                    </div>
+
+                                    <div class="col-md-10">
+									<span class="styled-select" style="width: 30%">
+										<select name="postType" title="Please choose question or article" required>
                                             <option value="">Select a type</option>
                                             <option value="1">Question</option>
                                             <option value="2">Article</option>
                                         </select>
 									</span>
-                                    <span class="form-description">Please choose the appropriate section so easily search for your question .</span>
-                                </p>
+                                    </div>
+                                    <%--<span class="form-description">Please choose the appropriate section so easily search for your question .</span>--%>
+                                </div>
                                 <%--<label>Attachment</label>--%>
                                 <%--<div class="fileinputs">--%>
                                 <%--<input type="file" class="file">--%>
@@ -179,22 +189,25 @@
                                 <%--</div>--%>
                                 <%--</div>--%>
                             </div>
-                            <div class="row">
+                            <div class="row" style="margin-bottom: 20px">
                                 <div class="col-md-2">
                                     <label class="required">Details<span>*</span></label>
                                 </div>
                                 <div class="col-md-10">
                                     <div id="form-textarea">
-                                        <textarea id="question-details" aria-required="true" cols="58"
+                                        <textarea id="questionDetails" name="questionDetails" aria-required="true" cols="58"
                                                   rows="8"></textarea>
                                     </div>
-                                    <input type="hidden" name="postDetail" id="postDetail">
+                                    <input type="hidden" id="postDetail">
                                 </div>
                             </div>
-                            <p class="form-submit">
-                                <input type="submit" id="publish-question" value="Publish Your Post"
-                                       class="button color small submit">
-                            </p>
+                            <div class="row">
+                                <div class="col-md-2"></div>
+                                <div class="col-md-10">
+                                    <input type="submit" id="publish-question" value="Publish Your Post"
+                                           class="button color small submit">
+                                </div>
+                            </div>
                         </form>
                     </div>
                     </c:if>
@@ -209,62 +222,72 @@
                                     <input type="hidden" name="tagUpdateName" value="${tag.tagId.tagName}">
                                 </c:forEach>
                                 <div>
-                                    <p>
-                                        <label class="required">Title<span>*</span></label>
-                                        <input type="text" id="question-title" name="postName" value="${post.title}" maxlength="255">
-                                        <span class="form-description">Please choose an appropriate title for the question to answer it even easier .</span>
-                                    </p>
+                                    <div class="row" style="margin-bottom: 20px">
+                                        <div class="col-md-2">
+                                            <label class="required">Title<span>*</span></label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input type="text" id="question-title" name="postName"
+                                                   value="${post.title}" maxlength="255" style="width: 100%">
+                                            <%--<span class="form-description">Please choose an appropriate title for the question to answer it even easier .</span>--%>
+                                        </div>
+                                    </div>
 
-                                    <div style="display: flex;height: 42px;">
-                                        <p style="width: 18% !important;">
+                                    <div class="row" style="margin-bottom: 20px">
+                                        <div class="col-md-2">
                                             <label class="required">Tag<span>*</span></label>
-                                        </p>
-
-                                        <div style="width: 82%">
+                                        </div>
+                                        <div class="col-md-10">
                                             <input type="text" class="input" name="tag" id="tagsuggest"/>
                                         </div>
                                         <div id="hiddenTag"></div>
                                     </div>
                                         <%--<input type="text" class="input" name="question_tags" id="question_tags" data-seperator=",">--%>
-                                    <p>
+                                    <%--<p>
                                     <span class="form-description">Please choose  suitable Keywords Ex : <span
-                                            class="color">java , javascript</span> .</span>
-                                    </p>
+                                            class="color">java , javascript, Php</span> .</span>
+                                    </p>--%>
 
-                                    <p>
-                                        <label class="required">Type<span>*</span></label>
-									<span class="styled-select" >
-										<select name="postType">
-                                            <option value="">Select a type</option>
-                                            <c:if test="${post.postType==1}">
-                                            <option value="1" selected>Question</option>
-                                                <option value="2">Article</option>
-                                            </c:if>
-                                            <c:if test="${post.postType==2}">
-                                                <option value="1">Question</option>
-                                                <option value="2" selected>Article</option>
-                                            </c:if>
-                                        </select>
-									</span>
-                                        <span class="form-description">Please choose the appropriate section so easily search for your question .</span>
-                                    </p>
+                                    <div class="row" style="margin-bottom: 20px">
+                                        <div class="col-md-2">
+                                            <label class="required">Type<span>*</span></label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <span class="styled-select" style="width: 30%">
+                                                <select name="postType" title="Please choose question or article" required>
+                                                    <option value="">Select a type</option>
+                                                    <c:if test="${post.postType==1}">
+                                                    <option value="1" selected>Question</option>
+                                                        <option value="2">Article</option>
+                                                    </c:if>
+                                                    <c:if test="${post.postType==2}">
+                                                        <option value="1">Question</option>
+                                                        <option value="2" selected>Article</option>
+                                                    </c:if>
+                                                </select>
+                                            </span>
+                                        <%--<span class="form-description">Please choose the appropriate section so easily search for your question .</span>--%>
+                                        </div>
                                 </div>
-                                <div class="row">
+                                <div class="row" style="margin-bottom: 20px">
                                     <div class="col-md-2">
                                         <label class="required">Details<span>*</span></label>
                                     </div>
                                     <div class="col-md-10">
                                         <div id="form-textarea">
-                                            <textarea id="question-details" aria-required="true" cols="58"
-                                                      rows="8">${post.body}</textarea>
+                                            <textarea id="questionDetails" aria-required="true" cols="58"
+                                                      name="questionDetails" rows="8">${post.body}</textarea>
                                         </div>
-                                        <input type="hidden" name="postDetail" id="postDetail">
+                                        <input type="hidden" id="postDetail">
                                     </div>
                                 </div>
-                                <p class="form-submit">
-                                    <input type="submit" id="publish-question" value="Save"
-                                           class="button color small submit">
-                                </p>
+                                <div class="row">
+                                    <div class="col-md-2"></div>
+                                    <div class="col-md-10">
+                                        <input type="submit" id="publish-question" value="Save"
+                                               class="button color small submit">
+                                    </div>
+                                </div>
                             </form>
                         </div>
                     </c:if>
@@ -277,7 +300,7 @@
                     <h3 class="widget_title">About class</h3>
                     <ul class="related-posts">
                         <li class="related-item">
-                            <p>${post.ownerClassId.classroomDescription}</p>
+                            <p>${classroom.classroomDescription}</p>
 
                             <div class="clear"></div>
                             <span>Feb 22, 2014</span>
@@ -291,15 +314,15 @@
                     </div>
                 </div>
                 <div class="widget widget_highest_points">
-                    <h3 class="widget_title">Class Owner</h3>
+                    <h3 class="widget_title">Classroom Owner</h3>
                     <ul>
                         <li>
                             <div class="author-img">
-                                <a href="#"><img width="60" height="60"
-                                                 src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" alt=""></a>
+                                <a href="/profile/view/${classroom.ownerUserId.id}"><img width="60" height="60"
+                                                 src="${classroom.ownerUserId.profileImageURL}" alt=""></a>
                             </div>
-                            <h6><a href="#">${post.ownerClassId.ownerUserId.displayName}</a></h6>
-                            <span class="comment">${post.ownerClassId.ownerUserId.aboutMe}</span>
+                            <h6><a href="/profile/view/${classroom.ownerUserId.id}">${classroom.ownerUserId.displayName}</a></h6>
+                            <span class="comment">${classroom.ownerUserId.aboutMe}</span>
                         </li>
                     </ul>
                 </div>
@@ -331,7 +354,7 @@
 </div>
 <!-- End wrap -->
 <!-- End wrap -->
-<div class="go-up"><i class="icon-chevron-up"></i></div>
+
 
 <!-- js -->
 <%@include file="js.jsp" %>
@@ -342,14 +365,51 @@
 <script>
     $(document).ready(function () {
 
+        $('#formvalidate').validate({
+            ignore: [],
+            rules: {
+                questionDetails: {
+                    required: function (){
+                        CKEDITOR.instances.questionDetails.updateElement();
+                    },
+                    minlength: 120
+                },
+                postName: {
+                    required: true,
+                    minlength: 20,
+                    maxlength: 255
+                }
+            },
+            messages: {
+                postName: {
+                    required: "Please provide question/article title",
+                    minlength: "The title must be between 20 and 255 characters long",
+                    maxlength: "The title must be between 20 and 255 characters long"
+                },
+                questionDetails: {
+                    required: "Please provide question/article details",
+                    minlength: "The details must be at lasted 120 characters long"
+                }
+            },
+            errorPlacement: function(error, element)
+            {
+                if (element.attr("name") == "questionDetails")
+                {
+                    error.insertAfter("#form-textarea");
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
+
         $('#publish-question').click(function (e) {
-            var detail = CKEDITOR.instances['question-details'].getData()
+            var detail = CKEDITOR.instances['questionDetails'].getData()
             var postDetail = $('#postDetail')
             postDetail.val(detail) ;
             $('#question-submit').submit();
         });
 
-        CKEDITOR.replace('question-details');
+        CKEDITOR.replace('questionDetails');
         var tag = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -409,13 +469,13 @@
     <script>
         $(document).ready(function () {
             $('#publish-question').click(function (e) {
-                var detail = CKEDITOR.instances['question-details'].getData()
+                var detail = CKEDITOR.instances['questionDetails'].getData()
                 var postDetail = $('#postDetail')
                 postDetail.val(detail) ;
                 $('#question-submit').submit();
             });
 
-            CKEDITOR.replace('question-details');
+            CKEDITOR.replace('questionDetails');
             var tag = new Bloodhound({
                 datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
                 queryTokenizer: Bloodhound.tokenizers.whitespace,
