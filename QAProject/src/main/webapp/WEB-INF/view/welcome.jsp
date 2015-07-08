@@ -237,7 +237,8 @@
                             <div class="row" style="margin-top: 10px;">
                                 <label class="col-md-3 control-label"></label>
                                 <div class="col-md-9">
-                                    <div class="row"><input name="submit" type="submit" value="Register" class="submit button medium color" style="width: 100%;">
+                                    <div class="row"><input  name="submit" type="submit" value="Register"
+                                                             class="submit button medium color" style="width: 100%;">
                                     </div>
                                 </div>
                             </div>

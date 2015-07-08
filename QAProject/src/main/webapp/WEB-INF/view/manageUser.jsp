@@ -69,7 +69,25 @@
     <section class="container main-content page-left-sidebar">
         <div class="row">
             <div class="col-md-9" style="float: left">
+                <form action="/manage/parent" method="POST">
+                    <label>Create parent category</label>
+                    <div style="display: flex">
+                        <input type="text" name="name"><input type="submit" class="button color small submit" value="create" style="margin-left: 3px;margin-top: 0%;height: 3%">
+                    </div>
 
+                </form>
+                <form action="/manage/child" method="POST">
+                    <label>Create child category</label>
+                    <div style="display: flex">
+                    <select name="parentId" style="width: 30%;height: 36px">
+                       <c:forEach var="category" items="${categories}">
+                           <option value="${category.id}">${category.categoryName}</option>
+                       </c:forEach>
+                    </select>
+                    <input type="text" name="name"><input type="submit" class="button color small submit" value="create" style="margin-left: 3px;margin-top: 0%;height: 3%">
+                    </div>
+                </form>
+                <label>Manage User</label>
                 <table class="table table-hover">
                     <tr>
                         <th>id</th>

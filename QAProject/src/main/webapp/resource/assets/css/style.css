@@ -2880,11 +2880,11 @@ span.date i,span.comment i {
 }
 select {
 	border: 0;
-	padding: 8px;
+	padding: 10px;
 	outline: none;
 	font-size: 13px;
 	border-radius: 0;
-	-webkit-appearance: button;
+	/*-webkit-appearance: button;*/
 	-webkit-user-select: none;
 	color: #2f3239;
 	border: 1px solid #dedede;
@@ -5147,7 +5147,7 @@ html[xmlns] .slides {
 }
 
 #email-error, #password-error, #confirm_password-error, #professional-error, #question-title-error, #postType-error,
-#questionDetails-error{
+#questionDetails-error {
     width: 100% !important;
     color: red !important;
     font-size: 12px !important;

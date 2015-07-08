@@ -14,6 +14,7 @@ import java.util.List;
 public interface CategoryDao {
     public Category find(Integer id);
     List<Category> findAll();
+    public List<Category> findParent();
     @Transactional(propagation = Propagation.REQUIRED)
     public void persist(Category entity);
     @Transactional(propagation = Propagation.REQUIRED)
