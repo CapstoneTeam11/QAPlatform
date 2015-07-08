@@ -157,6 +157,10 @@ public class UserController {
         if (username == null || username.length() == 0 || password == null || password.length() == 0){
             return "invalidLogin";
         }
+        User user = (User) session.getAttribute("user");
+        if (user != null) {
+            return "redirect:/newsfeed";
+        }
         List<User> users = userDao.login(username, password);
         if(users.size()>0){
             session.setAttribute("user", users.get(0));
