@@ -86,7 +86,7 @@
             <div id="searchbar" class="row">
                 <form method="GET" action="/search">
                     <div class="" style="padding-left: 15px">
-                        <select name="filter" style="width: 15%; float: left; margin-top: 5px; padding-bottom: 4px">
+                        <select name="filter" style="width: 15%; float: left; margin-top: 5px; padding-bottom: 6px">
                             <option value="0">All</option>
                             <option value="1">Question</option>
                             <option value="2">Article</option>
