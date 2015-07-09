@@ -22,6 +22,7 @@ public class PostDto {
     //MinhKH
     private Integer classId;
     private Integer answerCount;
+    private Integer viewer;
 
     public String getClassName() {
         return className;
@@ -126,5 +127,13 @@ public class PostDto {
 
     public void setOwnerProfileImageURL(String ownerProfileImageURL) {
         this.ownerProfileImageURL = ownerProfileImageURL;
+    }
+
+    public Integer getViewer() {
+        return viewer;
+    }
+
+    public void setViewer(Integer viewer) {
+        this.viewer = viewer;
     }
 }
