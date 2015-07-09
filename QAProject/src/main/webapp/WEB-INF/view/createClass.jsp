@@ -80,7 +80,7 @@
                             <div class="form-inputs clearfix">
                                 <p>
                                     <label class="required">Class name<span>*</span></label>
-                                    <input type="text" id="question-title" name="classroomName" value="${classroom.classroomName}">
+                                    <input type="text" id="question-title" name="classroomName" readonly="true" value="${classroom.classroomName}">
                                     <span class="form-description">Please enter name of class you want to create.</span>
                                 </p>
                                 <div style="display: flex;height: 42px;">
@@ -162,7 +162,7 @@
                                     <p><span class="form-description form-inputs">Please choose an tag for class to find easier.</span></p>
                                     <div style="display: flex;height: 42px;">
                                         <p style="width: 18% !important;">
-                                            <label class="required">Student<span>*</span></label>
+                                            <label class="required">Student</label>
                                         </p>
                                         <div style="width: 82%">
                                             <input type="text" class="input" name="studentList" id="tagsuggest1"/>

@@ -140,7 +140,7 @@
                 </c:if>
                 <div class="question-inner" id="prvId">
                     <div class="clearfix"></div>
-                    <div class="question-desc">
+                    <div class="question-desc" style="word-wrap: break-word;">
                         <p>${post.body}</p>
                     </div>
                     <span class="question-date"><i class="icon-time"></i>${post.lastEditedDate}</span>

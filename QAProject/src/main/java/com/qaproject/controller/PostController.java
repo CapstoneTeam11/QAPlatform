@@ -58,7 +58,53 @@ public class PostController {
     @RequestMapping(value = "/post/add", method = RequestMethod.POST,produces = "application/json")
     public @ResponseBody String addStock(@ModelAttribute PostDto postDto) throws Exception {
         //Need to edit subcrible
+        User user = (User) session.getAttribute("user");
+        if (user==null) {
+            return "NG";
+        }
         Post parentId = postDao.find(postDto.getParentId());
+        if(parentId==null) {
+            return "NG";
+        }
+        if (user != null) {
+            if (0 != parentId.getStatus()) {
+                //check user can comment or not .
+                if (user.getId() == parentId.getOwnerUserId().getId()) {
+                    //check user is post owner
+                    parentId.setIsComment(1);
+                }
+                if (0 == parentId.getIsComment()) {
+                    // check user is class's teacher
+                    if (user.getId() == parentId.getOwnerClassId().getOwnerUserId().getId()) {
+                        parentId.setIsComment(1);
+                    }
+                }
+                if (0 == parentId.getIsComment() && user.getRoleId().getId() == Constant.TEACHER) {
+                    // check user was invitated
+                    List<PostInvitation> postInvitations = parentId.getPostInvitationList();
+                    for (int i = 0; i < postInvitations.size(); i++) {
+                        if (parentId.getId() == postInvitations.get(i).getTeacherId().getId()) {
+                            parentId.setIsComment(1);
+                            break;
+                        }
+                    }
+
+                }
+                if (0 == parentId.getIsComment()) {
+                    //check List User in Classrom
+                    List<ClassroomUser> classroomUsers = parentId.getOwnerClassId().getClassroomUserList();
+                    for (int i = 0; i < classroomUsers.size(); i++) {
+                        if (user.getId() == classroomUsers.get(i).getUserId().getId()) {
+                            parentId.setIsComment(1);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        if(parentId.getIsComment()==0) {
+            return "NG";
+        }
         Post post = new Post();
         post.setBody(postDto.getBody());
         post.setLastEditedDate(new Date());
@@ -70,10 +116,7 @@ public class PostController {
         post.setOwnerUserId(userDao.find(postDto.getOwnerId()));
         postDao.persist(post);
 
-        User user = (User) session.getAttribute("user");
-        if (user==null) {
-            return "NG";
-        }
+
         //Notification - MinhKH
         User sender = userDao.find(user.getId());
         Post parent = postDao.find(post.getParentId());
@@ -279,9 +322,32 @@ public class PostController {
             session.setAttribute("currentPage","redirect:/post/create/"+classId);
             return "redirect:/";
         }
+        if(classroom==null) {
+            return "404";
+        }
         //Check User have joint to Class
         if (classroom.checkUserExist(user) == false) {
             return "/classroom/"+classId;
+        }
+        if(postName.length() <= 0 || postName.length() > 255) {
+            return "redirect:/post/create/"+classId;
+        }
+        if(postType != 1 && postType !=2) {
+            return "redirect:/post/create/"+classId;
+        }
+        int tagIdSize = 0;
+        if(tagId!=null) {
+            tagIdSize = tagId.size();
+        }
+        int newTagSize = 0;
+        if(newTag!=null) {
+            newTagSize = newTag.size();
+        }
+        if((tagIdSize + newTagSize) < 1 || (tagIdSize + newTagSize) > 5 ) {
+            return "redirect:/post/create/"+classId;
+        }
+        if(postDetail.length() < 120) {
+            return "redirect:/post/create/"+classId;
         }
         Post post = new Post();
         post.setTitle(postName);
@@ -300,7 +366,11 @@ public class PostController {
         for (int i = 0; i < tagId.size(); i++) {
             TagPost tagPost = new TagPost();
             tagPost.setPostId(post);
-            tagPost.setTagId(tagDao.find(tagId.get(i)));
+            Tag tagfind = tagDao.find(tagId.get(i));
+            if(tagfind==null) {
+                return "404";
+            }
+            tagPost.setTagId(tagfind);
             tagPosts.add(tagPost);
         }
         if (newTag != null) {
@@ -384,6 +454,26 @@ public class PostController {
         if (post == null) {
             return "404";
         }
+        if(postName.length() <= 0 || postName.length() > 255) {
+            return "redirect:/post/update/"+id;
+        }
+        if(postType != 1 && postType !=2) {
+            return "redirect:/post/update/"+id;
+        }
+        int tagIdSize = 0;
+        if(tagId!=null) {
+            tagIdSize = tagId.size();
+        }
+        int newTagSize = 0;
+        if(newTag!=null) {
+            newTagSize = newTag.size();
+        }
+        if((tagIdSize + newTagSize) < 1 || (tagIdSize + newTagSize) > 5 ) {
+            return "redirect:/post/update/"+id;
+        }
+        if(postDetail.length() < 120) {
+            return "redirect:/post/update/"+id;
+        }
         post.setTitle(postName);
         post.setPostType(postType);
         post.setBody(postDetail);
@@ -396,7 +486,11 @@ public class PostController {
         for (int i = 0; i < tagId.size(); i++) {
             TagPost tagPost = new TagPost();
             tagPost.setPostId(post);
-            tagPost.setTagId(tagDao.find(tagId.get(i)));
+            Tag tagfind = tagDao.find(tagId.get(i));
+            if(tagfind==null) {
+                return "404";
+            }
+            tagPost.setTagId(tagfind);
             tagPosts.add(tagPost);
         }
         if (newTag != null) {
@@ -472,7 +566,17 @@ public class PostController {
             Integer idUnaccept = acceptAnswerDto.getIdUnaccept();
             Integer id = acceptAnswerDto.getId();
             post = postDao.find(id);
-            //remove post was accepted before .
+            if(post==null) {
+                return "NG";
+            }
+            Post parentPost ;
+            parentPost = postDao.find(post.getParentId());
+            if(parentPost==null){
+                return "NG";
+            }
+            if(user.getId()!=parentPost.getOwnerUserId().getId()) {
+                return "NG";
+            }
             List<Post> posts = postDao.findRepliesWasAcceptedByParentId(post.getParentId());
             if (posts != null) {
                 for (int i = 0; i < posts.size(); i++) {
@@ -502,6 +606,17 @@ public class PostController {
         }
         try {
             Post post = postDao.find(id);
+            if(post==null) {
+                return "NG";
+            }
+            Post parentPost ;
+            parentPost = postDao.find(post.getParentId());
+            if(parentPost==null){
+                return "NG";
+            }
+            if(user.getId()!=parentPost.getOwnerUserId().getId()) {
+                return "NG";
+            }
             post.setAcceptedAnswerId(0);
             postDao.merge(post);
         } catch (Exception e) {
@@ -573,7 +688,9 @@ public class PostController {
         Post post;
         try {
             post = postDao.find(postDto.getId());
-            postDao.remove(post);
+            if(post.getOwnerUserId().getId()==user.getId()){
+                postDao.remove(post);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return "NG";
@@ -593,8 +710,14 @@ public class PostController {
         Integer classId;
         try {
             post = postDao.find(id);
+            if(post==null) {
+                return "NG";
+            }
             classId = post.getOwnerClassId().getId();
-            postDao.remove(post);
+            if(post.getOwnerUserId().getId()==user.getId()){
+                postDao.remove(post);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             return "NG";
@@ -613,8 +736,16 @@ public class PostController {
         Post post = null;
         try {
             post = postDao.find(id);
-            post.setStatus(Constant.CLOSE_POST);
-            postDao.merge(post);
+            if(post==null) {
+                return "404";
+            }
+            if(post.getOwnerUserId().getId()==user.getId() || post.getOwnerClassId().getOwnerUserId().getId()==user.getId() || user.getRoleId().getId()==3) {
+                post.setStatus(Constant.CLOSE_POST);
+                postDao.merge(post);
+            } else {
+                return "403";
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -632,8 +763,15 @@ public class PostController {
         Post post = null;
         try {
             post = postDao.find(id);
-            post.setStatus(Constant.OPEN_POST);
-            postDao.merge(post);
+            if(post==null) {
+                return "404";
+            }
+            if(post.getOwnerUserId().getId()==user.getId() || post.getOwnerClassId().getOwnerUserId().getId()==user.getId() || user.getRoleId().getId()==3) {
+                post.setStatus(Constant.OPEN_POST);
+                postDao.merge(post);
+            } else {
+                return "403";
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
