@@ -46,6 +46,22 @@ public class ClassroomUserDaoImpl extends BaseDao<ClassroomUser,Integer> impleme
     }
 
     @Override
+    public Integer countRequestsByClassroomLikeStudentName(Integer classroomId, String searchKey) {
+        Query query = entityManager.createQuery("Select count(cu.id) from ClassroomUser cu " +
+                "where cu.classroomId.id=:classroomId " +
+                "and cu.approval=0 and cu.type=1 and cu.userId.displayName like :searchKey");
+        query.setParameter("searchKey",'%' + searchKey + '%');
+        query.setParameter("classroomId",classroomId);
+        Integer count = 0;
+        try {
+            count = ((Long) query.getSingleResult()).intValue();
+        } catch (NoResultException e){
+
+        }
+        return count;
+    }
+
+    @Override
     public List<ClassroomUser> findByClassroom(Classroom classroom) {
         List<ClassroomUser> classroomUsers = null;
         Query query = entityManager.createQuery("Select cu from ClassroomUser cu where cu.classroomId=:classroom ");
@@ -194,6 +210,21 @@ public class ClassroomUserDaoImpl extends BaseDao<ClassroomUser,Integer> impleme
             e.printStackTrace();
         }
         return students;
+    }
+
+    @Override
+    public Integer countStudentsByClassroomLikeStudentName(Integer classroomId, String searchKey) {
+        Query query = entityManager.createQuery("Select count(cu.id) from ClassroomUser cu " +
+                "where cu.classroomId.id=:classroomId and cu.approval=1 and cu.userId.displayName like :searchKey");
+        query.setParameter("searchKey",'%' + searchKey + '%');
+        query.setParameter("classroomId",classroomId);
+        Integer count = 0;
+        try {
+            count = ((Long) query.getSingleResult()).intValue();
+        } catch (NoResultException e){
+
+        }
+        return count;
     }
 
     @Override

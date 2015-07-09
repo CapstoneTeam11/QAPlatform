@@ -92,8 +92,29 @@
         <form method="GET" action="/classroom/search">
             <input type="hidden" value="${classroom.id}" name="classroomId">
             <input type="text" aria-required="true" value="${param.searchKey}"
-                   style="width: 100%" name="searchKey">
+                   style="width: 100%; margin-bottom: 5px" name="searchKey">
         </form>
+        <div style=" margin-bottom: 10px; float: right; font-style: italic; ">
+            Found
+            <c:if test="${countQuestion>0}">
+                ${countQuestion} question(s),
+            </c:if>
+            <c:if test="${countArticle>0}">
+                ${countArticle} article(s),
+            </c:if>
+            <c:if test="${countMaterial>0}">
+                ${countMaterial} material(s),
+            </c:if>
+            <c:if test="${countRequest>0 && user.id==classroom.ownerUserId.id}">
+                ${countRequest} request(s),
+            </c:if>
+            <c:if test="${countStudent>0}">
+                ${countStudent} student(s).
+            </c:if>
+            <c:if test="${countQuestion==0 && countArticle==0 && countMaterial==0 && countRequest ==0 && countStudent==0}">
+                no matched result.
+            </c:if>
+        </div>
     </div>
     <div class="col-md-6 col-sm-6" id="createPost">
         <c:if test="${classroom.ownerUserId.id == user.id}">
@@ -127,13 +148,13 @@
 
 <div class="tabs-warp question-tab">
 <ul class="tabs">
-    <li class="tab"><a href="#" class="current">Question</a></li>
-    <li class="tab"><a href="#">Article</a></li>
-    <li class="tab"><a href="#">Material</a></li>
+    <li class="tab"><a href="#" class="current">Question (${countQuestion})</a></li>
+    <li class="tab"><a href="#">Article (${countArticle})</a></li>
+    <li class="tab"><a href="#">Material (${countMaterial})</a></li>
     <c:if test="${user.id==classroom.ownerUserId.id}">
-        <li class="tab"><a href="#">Join Request</a></li>
+        <li class="tab"><a href="#">Join Request (${countRequest})</a></li>
     </c:if>
-    <li class="tab"><a href="#">Student</a></li>
+    <li class="tab"><a href="#">Student (${countStudent})</a></li>
 </ul>
 
 <div class="tab-inner-warp">

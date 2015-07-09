@@ -24,8 +24,10 @@ public interface ClassroomUserDao {
     List<ClassroomUser> findInvitationClassroomUserForDashboard (Integer studentId, Integer lastId);
     List<ClassroomUser> findRequestsByClassroom (Integer classroomId, Integer lastId);
     List<ClassroomUser> findRequestsByClassroomLikeStudentName (Integer classroomId, String searchKey, Integer lastId);
+    Integer countRequestsByClassroomLikeStudentName (Integer classroomId, String searchKey);
     List<ClassroomUser> findStudentsByClassroom (Integer classroomId, Integer lastId);
     List<ClassroomUser> findStudentsByClassroomLikeStudentName (Integer classroomId, String searchKey, Integer lastId);
+    Integer countStudentsByClassroomLikeStudentName (Integer classroomId, String searchKey);
     List<ClassroomUser> findByUserClassroomWithApprove(int userId, int classId);
     public List<ClassroomUser> findByUserClassroom(int userId, int classId);
     public ClassroomUser findLastRequestByStudent (User student);

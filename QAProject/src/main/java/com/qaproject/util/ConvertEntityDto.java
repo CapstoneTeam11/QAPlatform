@@ -34,6 +34,7 @@ public class ConvertEntityDto {
         postDto.setLastEditedDate(ConvertDateTime(post.getLastEditedDate()));
         postDto.setBody(post.getBody());
         postDto.setAcceptedAnswerId(post.getAcceptedAnswerId());
+        postDto.setViewer(post.getViewer());
         postDto.setClassName(post.getOwnerClassId().getClassroomName());
         postDto.setOwnerName(post.getOwnerUserId().getDisplayName());
         postDto.setOwnerProfileImageURL(post.getOwnerUserId().getProfileImageURL());
@@ -50,6 +51,7 @@ public class ConvertEntityDto {
             postDto.setPostType(post.getPostType());
             postDto.setLastEditedDate(ConvertDateTime(post.getLastEditedDate()));
             postDto.setBody(post.getBody());
+            postDto.setViewer(post.getViewer());
             postDto.setAcceptedAnswerId(post.getAcceptedAnswerId());
             postDto.setClassName(post.getOwnerClassId().getClassroomName());
             postDto.setOwnerName(post.getOwnerUserId().getDisplayName());
