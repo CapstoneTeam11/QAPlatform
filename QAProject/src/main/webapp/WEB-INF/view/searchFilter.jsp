@@ -46,7 +46,7 @@
 <div id="result-count" style="margin-bottom: 5px;float: right;font-style: italic;">
     Found
     <c:if test="${countResult>0}">
-        ${countResult} results.
+        ${countResult} result(s).
     </c:if>
     <c:if test="${countResult==0}">
         no matched result.

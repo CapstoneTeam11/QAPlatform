@@ -26,8 +26,10 @@ public interface PostDao {
     public List<Post> findArticleByOwnerClassroom(Classroom ownerClassroom);
     public List<Post> findQuestionByOwnerClassroom(Integer classroomId, Integer lastId);
     public List<Post> findQuestionByOwnerClassroomLikeTitle(Integer classroomId, String searchKey, Integer lastId);
+    public Integer countQuestionByOwnerClassroomLikeTitle(Integer classroomId, String searchKey);
     public List<Post> findArticleByOwnerClassroom(Integer classroomId, Integer lastId);
     public List<Post> findArticleByOwnerClassroomLikeTitle(Integer classroomId, String searchKey, Integer lastId);
+    public Integer countArticleByOwnerClassroomLikeTitle(Integer classroomId, String searchKey);
     public List<Post> findArticleByCategory(Integer categoryId, Integer nextFrom);
     public List<Post> findQuestionsByOwnerUser(Integer ownerUserId, Integer lastId);
     public List<Post> findArticlesByOwnerUser(Integer ownerUserId, Integer lastId);

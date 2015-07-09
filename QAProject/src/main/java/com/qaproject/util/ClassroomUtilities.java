@@ -188,4 +188,20 @@ public class ClassroomUtilities {
         }
         return studentDtos;
     }
+
+    public Integer countQuestion(Integer classroomId, String searchKey){
+        return postDao.countQuestionByOwnerClassroomLikeTitle(classroomId,searchKey);
+    }
+    public Integer countArticle(Integer classroomId, String searchKey){
+        return postDao.countArticleByOwnerClassroomLikeTitle(classroomId,searchKey);
+    }
+    public Integer countMaterial(Integer classroomId, String searchKey){
+        return materialDao.countMaterialByClassroomLikeName(classroomId,searchKey);
+    }
+    public Integer countRequest(Integer classroomId, String searchKey){
+        return classroomUserDao.countRequestsByClassroomLikeStudentName(classroomId,searchKey);
+    }
+    public Integer countStudent(Integer classroomId, String seachKey){
+        return classroomUserDao.countStudentsByClassroomLikeStudentName(classroomId,seachKey);
+    }
 }

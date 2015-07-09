@@ -424,10 +424,17 @@ public class ClassController {
             searchKey = searchKey.substring(0,255);
         }
 
+        Integer countQuestion = 0;
+        Integer countArticle = 0;
+        Integer countMaterial = 0;
+        Integer countRequest = 0;
+        Integer countStudent = 0;
+
         //get questions, articles, materials, request to join - MinhKH
         List<PostDto> questions = classroomUtilities.findQuestions(classroomId,searchKey, 0);
         Integer lastQuestionId = 0;
         if (questions!=null) {
+            countQuestion = classroomUtilities.countQuestion(classroomId,searchKey);
             if (questions.size()>10){
                 lastQuestionId = questions.get(questions.size()-2).getId();
             }
@@ -435,6 +442,7 @@ public class ClassController {
         List<PostDto> articles = classroomUtilities.findArticles(classroomId,searchKey,0);
         Integer lastArticleId = 0;
         if (articles!=null) {
+            countArticle = classroomUtilities.countArticle(classroomId,searchKey);
             if (articles.size()>10){
                 lastArticleId = articles.get(articles.size()-2).getId();
             }
@@ -442,6 +450,7 @@ public class ClassController {
         List<MaterialDto> materials = classroomUtilities.findMaterials(classroomId,searchKey, 0);
         Integer lastMaterialId = 0;
         if (materials!=null) {
+            countMaterial = classroomUtilities.countMaterial(classroomId,searchKey);
             if (materials.size()>10){
                 lastMaterialId = materials.get(materials.size()-2).getId();
             }
@@ -449,6 +458,7 @@ public class ClassController {
         List<RequestDto> requests = classroomUtilities.findRequests(classroomId,searchKey,0);
         Integer lastRequestId = 0;
         if (requests!=null) {
+            countRequest = classroomUtilities.countRequest(classroomId,searchKey);
             if (requests.size()>10){
                 lastRequestId = requests.get(requests.size()-2).getId();
             }
@@ -456,6 +466,7 @@ public class ClassController {
         List<StudentDto> students = classroomUtilities.findStudents(classroomId,searchKey, 0);
         Integer lastClassroomUserId = 0;
         if (students!=null) {
+            countStudent = classroomUtilities.countStudent(classroomId,searchKey);
             if (students.size()>10){
                 lastClassroomUserId = students.get(students.size()-2).getClassroomUserId();
             }
@@ -466,6 +477,11 @@ public class ClassController {
         // check if acceptRequest or not
         ClassroomUser checkClassroomUser = classroomUserDao.findClassroomByClassroomAndUser(user.getId(), classroomId);
 
+        model.addAttribute("countQuestion",countQuestion);
+        model.addAttribute("countArticle",countArticle);
+        model.addAttribute("countMaterial",countMaterial);
+        model.addAttribute("countRequest",countRequest);
+        model.addAttribute("countStudent",countStudent);
         model.addAttribute("questions",questions);
         model.addAttribute("lastQuestionId",lastQuestionId);
         model.addAttribute("articles",articles);

@@ -46,19 +46,19 @@
 <div id="result-count" style="margin-bottom: 5px;float: right;font-style: italic;">
     Found
     <c:if test="${countQuestion>0}">
-        ${countQuestion} <a href="#question">questions</a>,
+        ${countQuestion} <a href="#question">question(s)</a>,
     </c:if>
     <c:if test="${countArticle>0}">
-        ${countArticle} <a href="#article">articles</a>,
+        ${countArticle} <a href="#article">article(s)</a>,
     </c:if>
     <c:if test="${countMaterial>0}">
-        ${countMaterial} <a href="#material">materials</a>,
+        ${countMaterial} <a href="#material">material(s)</a>,
     </c:if>
     <c:if test="${countClassroom>0}">
-        ${countClassroom} <a href="#classroom">classrooms</a>,
+        ${countClassroom} <a href="#classroom">classroom(s)</a>,
     </c:if>
     <c:if test="${countUser>0}">
-        ${countUser} <a href="#user">users.</a>
+        ${countUser} <a href="#user">user(s).</a>
     </c:if>
     <c:if test="${countQuestion==0 && countArticle==0 && countMaterial==0 && countClassroom ==0 && countUser==0}">
         no matched result.
