@@ -84,7 +84,10 @@ public class ClassController {
             return "redirect:403";
         }
         if(classroomName.length() < 10 || classroomName.length() > 127) {
-            return "createClass";
+            return "redirect:/createClass";
+        }
+        if(tag.length()<=0) {
+            return "redirect:/createClass";
         }
         Classroom room = new Classroom();
         Category category = new Category();
@@ -95,13 +98,22 @@ public class ClassController {
         room.setOwnerUserId(user);
         room.setStatus(1);
         classroomDao.persist(room);
-        String[] tagList = tag.split(",");
+        String[] tagList ;
+        try {
+            tagList = tag.split(",");
+        } catch (Exception e) {
+            return "createClass";
+        }
+
         for (int i = 0; i<= tagList.length-1; i++){
             if(Integer.parseInt(tagList[i].trim())>0){
                 TagClassroom tagClassroom = new TagClassroom();
                 tagClassroom.setClassroomId(room);
                 String tagId = tagList[i].trim();
                 Tag tagFind = tagDao.find(Integer.parseInt(tagId));
+                if(tagFind==null) {
+                    return "createClass";
+                }
                 tagClassroom.setTagId(tagFind);
                 tagClassroomDao.persist(tagClassroom);
                 tagFind.setTagCount(tagFind.getTagCount()+1);
@@ -122,12 +134,14 @@ public class ClassController {
                 tagDao.merge(tagNew);
             }
         }
-        String[] listStudentId = studentList.split(",");
-        boolean flag = false;
-        for (int i =0; i< listStudentId.length; i++){
+
+        if(studentList.length() > 0) {
+            String[] listStudentId = studentList.split(",");
+            boolean flag = false;
+            for (int i =0; i< listStudentId.length; i++){
                 // make unique row invite
-            User receiver = userDao.find(Integer.parseInt(listStudentId[i]));
-            List<ClassroomUser> checkClassromUsers = classroomUserDao.findByUserClassroom(receiver.getId(), room.getId());
+                User receiver = userDao.find(Integer.parseInt(listStudentId[i]));
+                List<ClassroomUser> checkClassromUsers = classroomUserDao.findByUserClassroom(receiver.getId(), room.getId());
                 if(checkClassromUsers == null || checkClassromUsers.size()==0) {
                     ClassroomUser classroomUser = new ClassroomUser();
                     classroomUser.setClassroomId(room);
@@ -145,7 +159,9 @@ public class ClassController {
                     NotificationDto notificationDto  = ConvertEntityDto.convertNotificationEntityToDto(notification,notification.getNotificationType(),room);
                     template.convertAndSend("/topic/notice/" + receiver.getId(), notificationDto);
                 }
+            }
         }
+
 
         //Notification - MinhKH
         List<Follower> followers = followerDao.findByTeacher(user.getId());

@@ -163,15 +163,17 @@
                     <span class="question-view"><i class="icon-eye-open"></i>${post.viewer} view(s)</span>
                     <span class="question-tags">
                         <form action="/post/deletePost" method="post" id="deletePostForm" hidden="true"><input type="hidden" name="id" value="${post.id}"></form>
-                        <c:if test="${sessionScope.user.id==post.ownerUserId.id or sessionScope.user.id==post.ownerClassId.ownerUserId.id}">
+                        <c:if test="${sessionScope.user.id==post.ownerUserId.id or sessionScope.user.id==post.ownerClassId.ownerUserId.id || sessionScope.user.roleId.id==3}">
                             <div class="btn-group">
                                 <a data-toggle="dropdown" href="" aria-expanded="false"><i class="icon-cog" style="color: black;font-weight: bold;font-size: 20px;"></i><span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu" style="left: -127px;">
-                                    <c:if test="${sessionScope.user.id==post.ownerUserId.id}">
+                                    <c:if test="${sessionScope.user.id==post.ownerUserId.id && sessionScope.user.roleId.id!=3}">
                                         <li><a href="/post/update/${post.id}">Edit</a></li>
+                                    </c:if>
+                                    <c:if test="${sessionScope.user.id==post.ownerUserId.id || sessionScope.user.roleId.id==3}">
                                         <li><a href="#" id="deletePost">Delete</a></li>
                                     </c:if>
-                                    <c:if test="${sessionScope.user.id==post.ownerClassId.ownerUserId.id}">
+                                    <c:if test="${sessionScope.user.id==post.ownerClassId.ownerUserId.id || sessionScope.user.roleId.id==3 }">
                                         <c:if test="${post.status!=0}">
                                             <form action="/post/closePost" method="post" id="closeOpenPostForm" hidden="true"><input type="hidden" name="id" value="${post.id}"></form>
                                             <li><a href="#" id="closeOpenPost">Close</a></li>
@@ -188,6 +190,9 @@
                     <div class="clearfix"></div>
                 </div>
             </article>
+            <c:if test="${post.isComment==0 and empty postAnswers}">
+                <div class="clearfix" style="height: 60px;"></div>
+            </c:if>
             <c:if test="${post.isComment==1}">
                 <div id="respond" class="comment-respond page-content clearfix">
                     <div class="boxedtitle page-title"><h2>Leave a reply</h2></div>
@@ -240,6 +245,14 @@
                                                                 </ul>
                                                             </div>
                                                         </c:if>
+                                                        <c:if test="${sessionScope.user.roleId.id==3}" >
+                                                            <div class="btn-group">
+                                                                <a data-toggle="dropdown" href="" aria-expanded="false"><span class="caretBig"></span></a>
+                                                                <ul class="actionAnswer dropdown-menu " role="menu" >
+                                                                    <li><a onclick="deleteAnswer(this);return false;">Delete</a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </c:if>
                                                     </div>
                                                 </div>
                                             </div>
@@ -279,6 +292,14 @@
                                                                 <a data-toggle="dropdown" href="" aria-expanded="false"><span class="caretBig"></span></a>
                                                                 <ul class="actionAnswer dropdown-menu " role="menu" >
                                                                     <li><a href="#" onclick="editAnswer(this);return false;">Edit</a></li>
+                                                                    <li><a onclick="deleteAnswer(this);return false;">Delete</a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </c:if>
+                                                        <c:if test="${sessionScope.user.roleId.id==3}" >
+                                                            <div class="btn-group">
+                                                                <a data-toggle="dropdown" href="" aria-expanded="false"><span class="caretBig"></span></a>
+                                                                <ul class="actionAnswer dropdown-menu " role="menu" >
                                                                     <li><a onclick="deleteAnswer(this);return false;">Delete</a></li>
                                                                 </ul>
                                                             </div>
@@ -550,7 +571,15 @@
                     '</div>';
             return actionPost;
         }
-
+        function postActionAdmin() {
+            var actionPost = '<div class="btn-group">'+
+                    '<a data-toggle="dropdown" href="" aria-expanded="false"><span class="caretBig"></span></a>' +
+                    '<ul class="actionAnswer dropdown-menu" role="menu">' +
+                    '<li><a onclick="deleteAnswer(this);return false;">Delete</a></li>' +
+                    '</ul>' +
+                    '</div>' ;
+            return actionPost;
+        }
         //6 (required)
         function answerBody(body) {
             var answerBody = '</div>' +
@@ -581,7 +610,8 @@
             var postOwnerId = ${post.ownerUserId.id}
             var userId =$('#userIdFlag').val()
             var post = JSON.parse(post.body);
-            if(postOwnerId==userId) {
+            var userRole = '${sessionScope.user.roleId.roleName}';
+            if(postOwnerId==userId && userRole!='Admin' ) {
                 //user is post Owner
                 if(userId==post.ownerId) {
                     var divAppend = getCommentDiv(post.ownerName, post.lastEditedDate,post.ownerProfileImageURL) +
@@ -595,7 +625,7 @@
                     $('#commentListDetail').prepend(divAppend);
                 }
 
-            } else {
+            } else if(postOwnerId!=userId && userRole!='Admin') {
                 //user is post Owner
                 if(userId==post.ownerId) {
                     var divAppend = getCommentDiv(post.ownerName, post.lastEditedDate,post.ownerProfileImageURL) +
@@ -609,8 +639,15 @@
                             acceptAnswerAction() + answerBody(post.body)
                     $('#commentListDetail').prepend(divAppend);
                 }
+            } else if(userRole=='Admin') {
+                var divAppend = getCommentDiv(post[i].ownerName, post[i].lastEditedDate,post[i].ownerProfileImageURL) +
+                        notAcceptAnswerIconDiv(post[i].id) +
+                        acceptAnswerAction() + postActionAdmin()() + answerBody(post[i].body)
+
+                $('#commentListDetail').append(divAppend);
             }
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+
 
         }
 
@@ -662,6 +699,7 @@
                     var postOwnerId = ${post.ownerUserId.id}
                     var userId =$('#userIdFlag').val()
                     var length = post.length;
+                    var userRole = '${sessionScope.user.roleId.roleName}';
                     if(length > 10) {
                         length = post.length-1;
                     } else {
@@ -670,6 +708,22 @@
                     for(var i = 0 ; i < length ; i++ ) {
                         //if user is Question owner .
                         lastestId = post[i].id;
+                        if(userRole == 'Admin') {
+                            if(post[i].acceptedAnswerId==1) {
+                                var divAppend = getCommentDiv(post[i].ownerName,post[i].lastEditedDate,post[i].ownerProfileImageURL) +
+                                        acceptAnswerIconDiv(post[i].id) +
+                                        acceptAnswerAction() + postActionAdmin() + answerBody(post[i].body)
+
+                                $('#commentListDetail').append(divAppend);
+                            } else {
+                                var divAppend = getCommentDiv(post[i].ownerName, post[i].lastEditedDate,post[i].ownerProfileImageURL) +
+                                        notAcceptAnswerIconDiv(post[i].id) +
+                                        acceptAnswerAction() + postActionAdmin() + answerBody(post[i].body)
+
+                                $('#commentListDetail').append(divAppend);
+                            }
+                            continue;
+                        }
                         if(postOwnerId==userId) {
                             // if answer was accepted
                             if(post[i].acceptedAnswerId==1) {

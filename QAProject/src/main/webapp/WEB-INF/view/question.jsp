@@ -178,16 +178,9 @@
                     <div class="clearfix"></div>
                 </div>
             </article>
-
-            <%--<div class="share-tags page-content">--%>
-                <%--<div class="question-tags"><i class="icon-tags"></i>--%>
-                    <%--<c:forEach var="tag" items="${post.tagPostList}">--%>
-                        <%--<a href="#">${tag.tagId.tagName},</a>--%>
-                    <%--</c:forEach>--%>
-                <%--</div>--%>
-                <%--<div class="clearfix"></div>--%>
-            <%--</div>--%>
-            <!-- End share-tags -->
+            <c:if test="${post.isComment==0 and empty postAnswers}">
+            <div class="clearfix" style="height: 60px;"></div>
+            </c:if>
             <c:if test="${post.isComment==1}">
             <div id="respond" class="comment-respond page-content clearfix">
                 <div class="boxedtitle page-title"><h2>Leave a reply</h2></div>
