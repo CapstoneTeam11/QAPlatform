@@ -442,4 +442,25 @@ public class PostDaoImpl extends BaseDao<Post,Integer> implements PostDao{
         }
         return posts;
     }
+    @Override
+    public List<PostDto> listSuggestPost(String title) {
+        List<Post> posts = null;
+        Query query = entityManager.createNativeQuery("SELECT * FROM post WHERE MATCH (Title) AGAINST (? IN NATURAL LANGUAGE MODE) " +
+                "order by MATCH (Title) AGAINST (? IN NATURAL LANGUAGE MODE)  desc limit 30",Post.class);
+        query.setParameter(new Integer(1),title);
+        query.setParameter(new Integer(2),title);
+        try {
+            posts = query.getResultList();
+        } catch (NoResultException e){
+            System.out.println("No post was accepted");
+        }
+        List<PostDto> postDtos = null;
+        if(posts!=null) {
+            postDtos = new ArrayList<PostDto>();
+            for(int i = 0 ; i < posts.size();i++) {
+                postDtos.add(ConvertEntityDto.convertPostEntityToDto(posts.get(i)));
+            }
+        }
+        return postDtos;
+    }
 }

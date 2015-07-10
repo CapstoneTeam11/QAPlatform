@@ -28,6 +28,7 @@ public class ConvertEntityDto {
     public static PostDto convertPostEntityToDto(Post post) {
         PostDto postDto = new PostDto();
         postDto.setId(post.getId());
+        postDto.setTitle(post.getTitle());
         postDto.setOwnerId(post.getOwnerUserId().getId());
         postDto.setParentId(post.getParentId());
         postDto.setPostType(post.getPostType());

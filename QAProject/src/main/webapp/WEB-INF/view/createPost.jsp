@@ -151,6 +151,7 @@
                                     <div class="col-md-10">
                                         <input type="text" id="question-title" name="postName" maxlength="255"
                                                style="width: 100%">
+                                        <div id="suggestPost"></div>
                                         <%--<span class="form-description">Please choose an appropriate title for the question to answer it even easier .</span>--%>
                                     </div>
                                 </div>
@@ -372,12 +373,36 @@
 <!-- js -->
 <%@include file="js.jsp" %>
 <c:if test="${sessionScope.user!=null}">
-    <script src="/resource/assets/js/notification.js"></script>
+<script src="/resource/assets/js/notification.js"></script>
 </c:if>
 <c:if test="${post==null}">
 <script>
     $(document).ready(function () {
+        $('#question-title').change(function(e){
+            var title = $('#question-title').val();
+            if(title.length >= 20 && title.length <= 255) {
+                var url = "/post/suggest"
+                var data = "title="+title;
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    data: data,
+                    success: function (data) {
+                        var post = new Array();
+                        post = data;
+                        if(post.length > 0) {
+                            $('#suggestPost').empty();
+                            $('#suggestPost').append('<label style="width: 100%">These are the same questions may be help you</label>')
+                            $('#suggestPost').append('<div id="listSuggestPost" class="listSuggestPost"></div>')
+                            for(var i = 0 ; i < post.length;i++) {
+                                $('#listSuggestPost').append('<div><a style="display: block" href="/post/view/'+ post[i].id +'">'+ post[i].title +'</a><div>');
+                            }
+                        }
+                    }
+                })
+            }
 
+        })
         $('#formvalidate').validate({
             ignore: [],
             rules: {

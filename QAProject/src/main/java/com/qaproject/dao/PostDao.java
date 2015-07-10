@@ -40,6 +40,7 @@ public interface PostDao {
     public List<PostDto> loadMoreAnswer(Integer id,Integer page);
     public Post findLastCreatedPostByOwner(User ownerUser);
     public Post findLastCreatedReplyByOwner(User ownerUser);
+    public List<PostDto> listSuggestPost(String title);
     @Transactional(propagation = Propagation.REQUIRED)
     public void persist(Post entity);
     @Transactional(propagation = Propagation.REQUIRED)

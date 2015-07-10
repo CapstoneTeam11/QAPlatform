@@ -5166,3 +5166,9 @@ html[xmlns] .slides {
     margin-top: -60px; /*same height as header*/
     visibility: hidden;
 }
+.listSuggestPost {
+    height: 150px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    width: 60%;
+}

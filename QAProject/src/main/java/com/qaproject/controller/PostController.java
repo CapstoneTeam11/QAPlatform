@@ -798,5 +798,15 @@ public class PostController {
         }
         return "redirect:/post/view/" + post.getId();
     }
+    @RequestMapping(value = "/post/suggest", method = RequestMethod.GET,produces = "application/json")
+    public @ResponseBody List<PostDto> suggestPost(@RequestParam String title) {
+        User user = (User) session.getAttribute("user");
+        List<PostDto> postDtos = null;
+        if (user==null) {
+            return postDtos;
+        }
+        postDtos = postDao.listSuggestPost(title);
+        return  postDtos;
+    }
 
 }
