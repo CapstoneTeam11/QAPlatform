@@ -106,7 +106,14 @@
         <div class="user-profile">
             <div class="col-md-12">
                 <div class="page-content">
-                    <div class="boxedtitle page-title"><h2>Edit Profile</h2></div>
+                    <div class="boxedtitle page-title">
+                        <h2>
+                            Edit Profile
+                            <span style="float: right;font-size: 12px;color: black;margin-top: 12px;">
+                                (<span style="color:red">*</span>) required filed
+                            </span>
+                        </h2>
+                    </div>
 
                     <div class="form-style form-style-4">
                         <div class="form-style form-style-2">
@@ -136,12 +143,12 @@
                                 </p>
                                 <p>
                                     <label class="required">Confirm Password<span>*</span></label>
-                                    <input type="password" id="confirmPassword" value="${user.password}">
+                                    <input type="password" name="confirm_password" id="confirmPassword" value="${user.password}">
                                 </p>
                                 <p>
                                     <label class="required">Your area<span>*</span></label>
                                     <span class="styled-select" style="width: 100%;">
-                                    <select id="professional" name="cate" title="Please choose your knowledge" required>
+                                    <select id="professional" name="cate" title="Please choose your area" required>
                                         <option value="">Select a type</option>
                                         <c:forEach var="parent" items="${categories}">
                                             <c:if test="${parent.parentId==0}">
@@ -162,7 +169,7 @@
                             <div class="form-style form-style-2">
 
                                 <p>
-                                    <label class="required">Know about<span>*</span></label>
+                                    <label class="required">Know about</label>
                                     <c:forEach var="tag" items="${user.tagUserList}">
                                     <input type="hidden" name="tagUpdateId" value="${tag.tagId.id}">
                                     <input type="hidden" name="tagUpdateName" value="${tag.tagId.tagName}">
@@ -228,6 +235,41 @@
         }
     };
     $(document).ready(function(){
+        $('#updateForm').validate({
+            ignore: [],
+            rules: {
+                displayName: {
+                    required: true,
+                    minlength: 8,
+                    maxlength: 30
+                },
+                password: {
+                    required: true,
+                    minlength: 8
+                },
+                confirm_password: {
+                    required: true,
+                    minlength: 8,
+                    equalTo: "#password"
+                }
+            },
+            messages: {
+                displayName: {
+                    required: "Please provide the display name.",
+                    minlength: "The display name must be between 8 and 30 characters long.",
+                    maxlength: "The display name must be between 8 and 30 characters long."
+                },
+                password: {
+                    required: "Please provide a password.",
+                    minlength: "Your password must be at least 8 characters long."
+                },
+                confirm_password: {
+                    required: "Please provide a password.",
+                    minlength: "Your password must be at least 8 characters long.",
+                    equalTo: "Please enter the same password as left."
+                }
+            }
+        });
         var ospry = new Ospry('pk-test-dl3a3dy6u9n2dd6rg8as5cyj');
         $('#imageFile').change(function(e) {
           $('#uploadImage').submit();

@@ -5147,7 +5147,7 @@ html[xmlns] .slides {
 }
 
 #email-error, #password-error, #confirm_password-error, #professional-error, #question-title-error, #postType-error,
-#questionDetails-error, #tagsuggest-error, #class-description-error {
+#questionDetails-error, #tagsuggest-error, #class-description-error, #confirmPassword-error, #displayName-error {
     width: 100% !important;
     color: red !important;
     font-size: 12px !important;
