@@ -72,35 +72,48 @@
             <div class="col-md-9">
                 <c:if test="${classroom!=null}">
                 <div class="page-content ask-question">
-                    <div class="boxedtitle page-title"><h2>Update class</h2></div>
+                    <div class="boxedtitle page-title">
+                        <h2>
+                            Update class
+                            <span style="float: right;font-size: 12px;color: black;margin-top: 12px;">
+                                (<span style="color:red">*</span>) required filed
+                            </span>
+                        </h2>
+                    </div>
 
                     <div class="form-style form-style-3" id="question-submit">
                         <form method="post" action="/updateClass" id="classAction">
                             <input type="hidden" name="classroomId" value="${classroom.id}">
-                            <div class="form-inputs clearfix">
-                                <p>
-                                    <label class="required">Class name<span>*</span></label>
-                                    <input type="text" id="question-title" name="classroomName" readonly="true" value="${classroom.classroomName}">
-                                    <span class="form-description">Please enter name of class you want to create.</span>
-                                </p>
-                                <div style="display: flex;height: 42px;">
+                                <div class="row" style="margin-bottom: 20px">
+                                    <div class="col-md-2">
+                                    <label class="required" style="width: 100%">Class name</label>
+                                    </div>
+                                    <div class="col-md-10">
+                                    <input type="text" id="question-title" name="classroomName" style="width: 100%" readonly="true"
+                                           value="${classroom.classroomName}">
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-bottom: 20px">
+                                    <div class="col-md-2">
                                     <c:forEach var="tag" items="${classroom.tagClassroomList}">
                                         <input type="hidden" name="tagUpdateId" value="${tag.tagId.id}">
                                         <input type="hidden" name="tagUpdateName" value="${tag.tagId.tagName}">
                                     </c:forEach>
-                                    <p style="width: 18% !important;">
                                         <label class="required">Tag<span>*</span></label>
-                                    </p>
-                                    <div style="width: 82%">
+                                    </div>
+                                    <div class="col-md-10">
                                         <input type="text" class="input" name="tag" id="tagsuggest"/>
                                     </div>
                                     <div id="hiddenTag"></div>
                                 </div>
-                                <p><span class="form-description form-inputs">Please choose an tag for class to find easier.</span></p>
+                                <div class="row" style="margin-bottom: 20px">
+                                    <div class="col-md-2">
                                     <label class="required">Category<span>*</span></label>
-									<span class="styled-select">
-										<select id="professional" name="categoryId">
-                                            <option value="0">Select a type</option>
+                                    </div>
+                                    <div class="col-md-10">
+									<span class="styled-select" style="width: 40%">
+										<select id="professional" name="categoryId" title="Please select category" required>
+                                            <option value="">Select a type</option>
                                             <c:forEach var="category" items="${categories}">
                                                 <c:if test="${category.parentId==0}">
                                                     <optgroup label="${category.categoryName}">
@@ -119,62 +132,78 @@
                                             </c:forEach>
                                         </select>
 									</span>
-                                    <span class="form-description">Please select category os this class.</span>
-                                </p>
-                                <div id="form-textarea">
-                                    <p>
-                                        <label class="required">Class's Description<span>*</span></label>
-                                        <textarea id="class-description" aria-required="true" cols="58" rows="8" style="width: 82%;" name="classroomDescription">${classroom.classroomDescription}</textarea>
-                                        <span class="form-description">Type the description thoroughly and in detail .</span>
-                                    </p>
+                                    </div>
                                 </div>
-                                <p class="form-submit">
+                                <div class="row" style="margin-bottom: 20px">
+                                    <div class="col-md-2">
+                                        <label class="required">Class's Description<span>*</span></label>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <div id="form-textarea">
+                                        <textarea id="class-description" aria-required="true" cols="58" rows="8"
+                                                  style="width: 100%;"
+                                                  name="classroomDescription">${classroom.classroomDescription}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2"></div>
+                                    <div class="col-md-10">
                                         <input type="submit" id="publish-question" value="Update Class"
                                                class="button color small submit">
-                                </p>
-                            </div>
-
+                                    </div>
+                                </div>
                         </form>
                     </div>
                 </div><!-- End page-content -->
                 </c:if>
                 <c:if test="${classroom==null}">
                     <div class="page-content ask-question">
-                        <div class="boxedtitle page-title"><h2>Create class</h2></div>
+                        <div class="boxedtitle page-title">
+                            <h2>
+                                Create class
+                                <span style="float: right;font-size: 12px;color: black;margin-top: 12px;">
+                                (<span style="color:red">*</span>) required filed
+                            </span>
+                            </h2>
+                        </div>
 
                         <div class="form-style form-style-3" id="question-submit">
                             <form method="post" action="/createClass" id="classAction">
-                                <div class="form-inputs clearfix">
-                                    <p>
-                                        <label class="required">Class name<span>*</span></label>
-                                        <input type="text" id="question-title" name="classroomName">
-                                        <span class="form-description">Please enter name of class you want to create.</span>
-                                    </p>
-                                    <div style="display: flex;height: 42px;">
-                                        <p style="width: 18% !important;">
+                                <div class="row" style="margin-bottom: 20px">
+                                    <div class="col-md-2">
+                                        <label class="required" style="width: 100%">Class name<span>*</span></label>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <input type="text" id="question-title" style="width: 100%" name="classroomName">
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-bottom: 20px">
+                                    <div class="col-md-2">
                                             <label class="required">Tag<span>*</span></label>
-                                        </p>
-                                        <div style="width: 82%">
+                                    </div>
+                                    <div class="col-md-10">
                                             <input type="text" class="input" name="tag" id="tagsuggest"/>
-                                        </div>
+                                    </div>
                                         <div id="hiddenTag"></div>
-                                    </div>
-                                    <p><span class="form-description form-inputs">Please choose an tag for class to find easier.</span></p>
-                                    <div style="display: flex;height: 42px;">
-                                        <p style="width: 18% !important;">
+                                </div>
+                                <div class="row" style="margin-bottom: 20px">
+                                    <div class="col-md-2">
                                             <label class="required">Student</label>
-                                        </p>
-                                        <div style="width: 82%">
-                                            <input type="text" class="input" name="studentList" id="tagsuggest1"/>
-                                        </div>
-                                        <div id="hiddenTag1"></div>
                                     </div>
-                                    <p><span class="form-description form-inputs">Please choose select students to join in class.</span></p>
-                                    <p>
+                                    <div class="col-md-10">
+                                            <input type="text" class="input" name="studentList" id="tagsuggest1"/>
+                                    </div>
+                                        <div id="hiddenTag1"></div>
+                                </div>
+                                <div class="row" style="margin-bottom: 20px">
+                                    <div class="col-md-2">
                                         <label class="required">Category<span>*</span></label>
-									<span class="styled-select">
-										<select id="professional" name="categoryId">
-                                            <option value="9">Select a type</option>
+                                    </div>
+                                    <div class="col-md-10">
+									<span class="styled-select" style="width: 40%">
+										<select id="professional" name="categoryId" title="Please select category" required>
+                                            <option value="">Select a type</option>
                                             <c:forEach var="parent" items="${categories}">
                                                 <c:if test="${parent.parentId==0}">
                                                     <optgroup label="${parent.categoryName}">
@@ -188,22 +217,26 @@
                                             </c:forEach>
                                         </select>
 									</span>
-                                        <span class="form-description">Please select category os this class.</span>
-                                    </p>
-                                    <div id="form-textarea">
-                                        <p>
-                                            <label class="required">Class's Description<span>*</span></label>
-                                            <textarea id="class-description" aria-required="true" cols="58" rows="8" style="width: 82%;" name="classroomDescription"></textarea>
-                                            <span class="form-description">Type the description thoroughly and in detail .</span>
-                                        </p>
                                     </div>
-                                    <p class="form-submit">
-                                            <%--<a href="javascript:createClass();" id="publish-question" class="button color small submit text-center">Create Your Class</a>--%>
+                                </div>
+                                <div class="row" style="margin-bottom: 20px">
+                                    <div class="col-md-2">
+                                        <label class="required">Class's Description<span>*</span></label>
+                                    </div>
+                                    <div class="col-md-10">
+                                    <div id="form-textarea">
+                                            <textarea id="class-description" aria-required="true" cols="58" rows="8"
+                                                      style="width: 100%;" name="classroomDescription"></textarea>
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2"></div>
+                                    <div class="col-md-10">
                                         <input type="submit" id="publish-question" value="Create Class"
                                                class="button color small submit">
-                                    </p>
+                                    </div>
                                 </div>
-
                             </form>
                         </div>
                     </div><!-- End page-content -->
@@ -239,6 +272,7 @@
 <!-- End js -->
 <c:if test="${classroom==null}">
 <script>
+
     var createTag = function(e){
         var flag = 0;
         for( var i = 0 ; i < elt.tagsinput('items').length ; i ++) {
@@ -252,6 +286,40 @@
         }
     };
     $(document).ready(function () {
+        $('#classAction').validate({
+            ignore: [],
+            rules: {
+                classroomName: {
+                    required: true,
+                    minlength: 20,
+                    maxlength: 255
+                },
+                classroomDescription: {
+                    required: true,
+                    minlength: 20,
+                    maxlength: 350
+                },
+                tag: {
+                    required: true
+                }
+            },
+            messages: {
+                classroomName: {
+                    required: "Please provide the title.",
+                    minlength: "The title must be between 20 and 255 characters long.",
+                    maxlength: "The title must be between 20 and 255 characters long."
+                },
+                classroomDescription: {
+                    required: "Please provide the description.",
+                    minlength: "The description must be between 20 and 350 characters long.",
+                    maxlength: "The description must be between 20 and 350 characters long."
+                },
+                tag: {
+                    required: "Please provide at least one tag."
+                }
+            }
+        });
+
         var tag = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -358,6 +426,7 @@
 </c:if>
 <c:if test="${classroom!=null}">
     <script>
+
         var createTag = function(e){
             var flag = 0;
             for( var i = 0 ; i < elt.tagsinput('items').length ; i ++) {
@@ -371,6 +440,29 @@
             }
         };
         $(document).ready(function () {
+            $('#classAction').validate({
+                ignore: [],
+                rules: {
+                    classroomDescription: {
+                        required: true,
+                        minlength: 20,
+                        maxlength: 350
+                    },
+                    tag: {
+                        required: true
+                    }
+                },
+                messages: {
+                    classroomDescription: {
+                        required: "Please provide the description.",
+                        minlength: "The description must be between 20 and 350 characters long.",
+                        maxlength: "The description must be between 20 and 350 characters long."
+                    },
+                    tag: {
+                        required: "Please provide at least one tag."
+                    }
+                }
+            });
             var tag = new Bloodhound({
                 datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
                 queryTokenizer: Bloodhound.tokenizers.whitespace,

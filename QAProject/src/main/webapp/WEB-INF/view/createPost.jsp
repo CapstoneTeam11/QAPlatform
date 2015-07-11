@@ -434,7 +434,7 @@
                     minlength: "The details must be at least 120 characters long."
                 },
                 tag: {
-                    required: "Please provide at lasted one tag."
+                    required: "Please provide at least one tag."
                 }
             },
             errorPlacement: function(error, element)
@@ -544,7 +544,7 @@
                         minlength: "The details must be at least 120 characters long."
                     },
                     tag: {
-                        required: "Please provide at lasted one tag."
+                        required: "Please provide at least one tag."
                     }
                 },
                 errorPlacement: function(error, element)
