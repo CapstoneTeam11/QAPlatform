@@ -5167,7 +5167,7 @@ html[xmlns] .slides {
     visibility: hidden;
 }
 .listSuggestPost {
-    height: 150px;
+    height: 140px;
     overflow-y: scroll;
     overflow-x: hidden;
     width: 60%;
