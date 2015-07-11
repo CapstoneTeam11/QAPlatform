@@ -196,14 +196,17 @@ public class PostController {
         }
 
         //get related questions - MinhKH
-        List<Integer> relatedQuestionIds = tagPostDao.findRelatedQuestionIds(tagIds,10);
+        List<Integer> relatedQuestionIds = tagPostDao.findRelatedQuestionIds(tagIds,30);
+        List<Post> questionByTitles = postDao.findRelatedPost(post.getTitle());
         List<Post> relatedQuestions = new ArrayList<Post>();
         if (relatedQuestionIds != null) {
-            for (int i = 0; i < relatedQuestionIds.size(); i++) {
-                int currentRelatedQuestionId = relatedQuestionIds.get(i);
+            for (Integer currentRelatedQuestionId : relatedQuestionIds) {
                 if (currentRelatedQuestionId != post.getId()) {
-                    Post relatedQuestion = postDao.find(currentRelatedQuestionId);
-                    relatedQuestions.add(relatedQuestion);
+                    for(Post questionByTitle: questionByTitles){
+                        if (currentRelatedQuestionId==questionByTitle.getId()){
+                            relatedQuestions.add(questionByTitle);
+                        }
+                    }
                 }
             }
         }
