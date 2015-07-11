@@ -3,10 +3,7 @@ package com.qaproject.controller;
 import com.qaproject.dao.*;
 import com.qaproject.dto.*;
 import com.qaproject.entity.*;
-import com.qaproject.util.Constant;
-import com.qaproject.util.ConvertEntityDto;
-import com.qaproject.util.DashboardUtilities;
-import com.qaproject.util.NotificationUtilities;
+import com.qaproject.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -52,6 +49,8 @@ public class PostController {
     TagMaterialDao tagMaterialDao;
     @Autowired
     MaterialDao materialDao;
+    @Autowired
+    SendMailUtilities sendMailUtilities;
     @Autowired
     SimpMessagingTemplate template;
 
@@ -387,6 +386,9 @@ public class PostController {
         post.getTagPostList().addAll(tagPosts);
         classroom.setActiveTime(new Date());
         postDao.persist(post);
+        if (post.getPostType()==1){
+            sendMailUtilities.sendEmail(post);
+        }
         classroomDao.merge(classroom);
         
         //Notification - MinhKH
