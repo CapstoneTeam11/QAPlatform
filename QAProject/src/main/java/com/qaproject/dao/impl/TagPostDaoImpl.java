@@ -25,9 +25,10 @@ public class TagPostDaoImpl extends BaseDao<TagPost,Integer> implements TagPostD
                 "group by tp.postId " +
                 "order by count(tp.tagId) DESC");
         query.setParameter("tagIds",tagIds);
-        if (maxResult>0) {
-            query.setMaxResults(10);
+        if (maxResult<0) {
+            maxResult = 10;
         }
+        query.setMaxResults(maxResult);
         try {
             relatedQuestionIds = query.getResultList();
         } catch (Exception e){
@@ -44,9 +45,10 @@ public class TagPostDaoImpl extends BaseDao<TagPost,Integer> implements TagPostD
                 "group by tp.postId " +
                 "order by count(tp.tagId) DESC");
         query.setParameter("tagIds",tagIds);
-        if (maxResult>0) {
-            query.setMaxResults(10);
+        if (maxResult<0) {
+            maxResult = 10;
         }
+        query.setMaxResults(maxResult);
         try {
             relatedArticleIds = query.getResultList();
         } catch (Exception e){

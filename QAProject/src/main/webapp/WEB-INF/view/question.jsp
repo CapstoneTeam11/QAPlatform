@@ -116,7 +116,13 @@
     <section class="container" style="height:70px; display: flex; align-items: center">
         <div class="row">
             <div class="col-md-12">
-                <h3>Question</h3>
+                <h3 style="margin-top:15px">${post.title}</h3>
+                <h5 style="margin-top: 15px">
+                    <a href="/search?filter=4&searchKey=" style="color: white;">Classroom</a> /
+                    <a href="/classroom/${post.ownerClassId.id}" style="color: white;">${post.ownerClassId.classroomName}</a> /
+                    <a href="/classroom/${post.ownerClassId.id}" style="color: white;">Question</a> /
+                    <span style="color: #2f3239;">${post.title}</span>
+                </h5>
             </div>
         </div>
         <!-- End row -->

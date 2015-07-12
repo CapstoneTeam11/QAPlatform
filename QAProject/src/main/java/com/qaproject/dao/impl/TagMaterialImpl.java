@@ -20,9 +20,10 @@ public class TagMaterialImpl extends BaseDao<TagMaterial,Integer> implements Tag
                 "group by tp.materialId " +
                 "order by count(tp.tagId) DESC");
         query.setParameter("tagIds",tagIds);
-        if (maxResult>0){
-            query.setMaxResults(10);
+        if (maxResult<0) {
+            maxResult = 10;
         }
+        query.setMaxResults(maxResult);
         try {
             relatedMaterialIds = query.getResultList();
         } catch (Exception e){

@@ -77,7 +77,13 @@
     <section class="container" style="height:70px; display: flex; align-items: center">
         <div class="row">
             <div class="col-md-12">
-                <h3>${classroom.classroomName}: Search result for <span style="font-size: 20px; font-style: italic">${param.searchKey}</span></h3>
+                <h3 style="margin-top:15px">Search results</h3>
+                <h5 style="margin-top: 15px">
+                    <a href="/search?filter=4&searchKey=" style="color: white;">Classroom</a> /
+                    <a href="/classroom/${classroom.id}" style="color: white;">${classroom.classroomName}</a> /
+                    <span style="color: #2f3239;">Search result for
+                        <span style="font-style: italic">${param.searchKey}</span></span>
+                </h5>
             </div>
         </div><!-- End row -->
     </section><!-- End container -->
