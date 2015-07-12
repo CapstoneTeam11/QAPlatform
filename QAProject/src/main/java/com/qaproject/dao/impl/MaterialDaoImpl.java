@@ -130,6 +130,20 @@ public class MaterialDaoImpl extends BaseDao<Material,Integer> implements Materi
     }
 
     @Override
+    public List<Material> findRelatedMaterial(String name) {
+        List<Material> materials = null;
+        Query query = entityManager.createNativeQuery("SELECT * FROM material " +
+                "WHERE MATCH (`Name`) AGAINST (? IN NATURAL LANGUAGE MODE) limit 30",Material.class);
+        query.setParameter(new Integer(1),name);
+        try {
+            materials = query.getResultList();
+        } catch (NoResultException e){
+            e.printStackTrace();
+        }
+        return materials;
+    }
+
+    @Override
     public Integer countMaterialLikeName(String searchKey) {
         Query query = entityManager.createQuery("Select COUNT(m.id) from Material m where m.name like :searchKey");
         query.setParameter("searchKey",'%' + searchKey + '%');

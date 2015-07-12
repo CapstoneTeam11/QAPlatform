@@ -54,15 +54,17 @@ public class PostController {
     @Autowired
     SimpMessagingTemplate template;
 
-    @RequestMapping(value = "/post/add", method = RequestMethod.POST,produces = "application/json")
-    public @ResponseBody String addStock(@ModelAttribute PostDto postDto) throws Exception {
+    @RequestMapping(value = "/post/add", method = RequestMethod.POST, produces = "application/json")
+    public
+    @ResponseBody
+    String addStock(@ModelAttribute PostDto postDto) throws Exception {
         //Need to edit subcrible
         User user = (User) session.getAttribute("user");
-        if (user==null) {
+        if (user == null) {
             return "NG";
         }
         Post parentId = postDao.find(postDto.getParentId());
-        if(parentId==null) {
+        if (parentId == null) {
             return "NG";
         }
         if (user != null) {
@@ -101,7 +103,7 @@ public class PostController {
                 }
             }
         }
-        if(parentId.getIsComment()==0) {
+        if (parentId.getIsComment() == 0) {
             return "NG";
         }
         Post post = new Post();
@@ -114,32 +116,32 @@ public class PostController {
         post.setOwnerClassId(parentId.getOwnerClassId());
         post.setOwnerUserId(userDao.find(postDto.getOwnerId()));
         postDao.persist(post);
-        sendNotificationReplies(user,post);
+        sendNotificationReplies(user, post);
         return "OK";
     }
 
     @RequestMapping(value = "/post/add/all", method = RequestMethod.POST)
-    public String addAnswerAll(@RequestParam List<Integer> ids,@RequestParam String detail,@RequestParam Integer classroomId) {
+    public String addAnswerAll(@RequestParam List<Integer> ids, @RequestParam String detail, @RequestParam Integer classroomId) {
         User user = (User) session.getAttribute("user");
-        if (user==null) {
+        if (user == null) {
             return "403";
         }
-        for(int i = 0 ; i < ids.size(); i++) {
+        for (int i = 0; i < ids.size(); i++) {
             Post parent = postDao.find(ids.get(i));
             //authorize
-            if(user.getId()!=parent.getOwnerClassId().getOwnerUserId().getId()) {
+            if (user.getId() != parent.getOwnerClassId().getOwnerUserId().getId()) {
                 return "403";
             }
-            if(classroomId!=parent.getOwnerClassId().getId()) {
+            if (classroomId != parent.getOwnerClassId().getId()) {
                 return "403";
             }
-            if(parent.getStatus()==Constant.CLOSE_POST) {
+            if (parent.getStatus() == Constant.CLOSE_POST) {
                 return "403";
             }
-            if(parent.getAcceptedAnswerId()==1) {
+            if (parent.getAcceptedAnswerId() == 1) {
                 return "403";
             }
-            if(parent.getParentId()!=0) {
+            if (parent.getParentId() != 0) {
                 return "403";
             }
             Post post = new Post();
@@ -152,22 +154,23 @@ public class PostController {
             post.setOwnerClassId(parent.getOwnerClassId());
             post.setOwnerUserId(user);
             postDao.persist(post);
-            sendNotificationReplies(user,post);
+            sendNotificationReplies(user, post);
         }
-        return "redirect:/post/merge/"+classroomId +"/40";
+        return "redirect:/post/merge/" + classroomId + "/40";
     }
+
     /*
     * user : who was created answer
     * post : is answer of question .
     */
-    public void sendNotificationReplies(User user,Post post) {
+    public void sendNotificationReplies(User user, Post post) {
         User sender = userDao.find(user.getId());
         Post parent = postDao.find(post.getParentId());
         //Edit realtime KhangTN
         PostDto postDto = ConvertEntityDto.convertPostEntityToDto(post);
         List<User> receivers = userDao.findUserNotificationByPost(parent.getId());
-        for (User receiver : receivers){
-            if(receiver.getId()!=user.getId()) {
+        for (User receiver : receivers) {
+            if (receiver.getId() != user.getId()) {
                 Notification notification = new Notification();
                 notification.setReceiverId(receiver);
                 notification.setSenderId(sender);
@@ -175,7 +178,7 @@ public class PostController {
                 notification.setNotificationType(Constant.NT_USER_REPLY);
                 notification.setIsViewed(Constant.IV_FALSE);
                 notificationDao.persist(notification);
-                NotificationDto notificationDto  = ConvertEntityDto.convertNotificationEntityToDto(notification,notification.getNotificationType(),parent);
+                NotificationDto notificationDto = ConvertEntityDto.convertNotificationEntityToDto(notification, notification.getNotificationType(), parent);
                 template.convertAndSend("/topic/notice/" + receiver.getId(), notificationDto);
             }
         }
@@ -192,7 +195,7 @@ public class PostController {
 
         User user = (User) session.getAttribute("user");
         if (user == null) {
-            session.setAttribute("currentPage","redirect:/post/view/"+id);
+            session.setAttribute("currentPage", "redirect:/post/view/" + id);
             return "redirect:/";
         }
         if (user != null) {
@@ -239,46 +242,117 @@ public class PostController {
         }
 
         //get related questions - MinhKH
-        List<Integer> relatedQuestionIds = tagPostDao.findRelatedQuestionIds(tagIds,30);
-        List<Post> questionByTitles = postDao.findRelatedPost(post.getTitle());
+        List<Integer> relatedQuestionIds = tagPostDao.findRelatedQuestionIds(tagIds, 30);
+        List<Post> questionByTitles = postDao.findRelatedQuestion(post.getTitle());
         List<Post> relatedQuestions = new ArrayList<Post>();
-        if (relatedQuestionIds != null) {
-            for (Integer currentRelatedQuestionId : relatedQuestionIds) {
-                if (currentRelatedQuestionId != post.getId()) {
-                    for(Post questionByTitle: questionByTitles){
-                        if (currentRelatedQuestionId==questionByTitle.getId()){
+        relatedQuestionIds.remove(post.getId());
+        if (questionByTitles!=null){
+            if (relatedQuestionIds==null) {
+                if (questionByTitles.size()>10){
+                    relatedQuestions.addAll(questionByTitles.subList(0,10));
+                } else {
+                    relatedQuestions.addAll(questionByTitles);
+                }
+            } else {
+                for (Post questionByTitle : questionByTitles) {
+                    for (Integer currentRelatedQuestionId : relatedQuestionIds) {
+                        if (currentRelatedQuestionId == questionByTitle.getId()) {
                             relatedQuestions.add(questionByTitle);
                         }
                     }
+                    if (relatedQuestions.size() == 10) {
+                        break;
+                    }
+                }
+            }
+        } if (questionByTitles == null || questionByTitles.size()==0){
+            if (relatedQuestionIds!=null){
+                Integer maxSize = 10;
+                if (relatedQuestionIds.size()<=10)  {
+                    maxSize = relatedQuestionIds.size();
+                }
+                for (int i=0; i<maxSize; i ++){
+                    Post currentQuestion = postDao.find(relatedQuestionIds.get(i));
+                    relatedQuestions.add(currentQuestion);
                 }
             }
         }
 
         //get related articles
         List<Post> relatedArticles = new ArrayList<Post>();
-        List<Integer> relatedArticlesIds = tagPostDao.findRelatedArticlesIds(tagIds,10);
-        if (relatedArticlesIds != null) {
-            for (int i = 0; i < relatedArticlesIds.size(); i++) {
-                int currentRelatedArticlesId = relatedArticlesIds.get(i);
-                if (currentRelatedArticlesId != post.getId()) {
-                    Post relatedArticle = postDao.find(currentRelatedArticlesId);
-                    relatedArticles.add(relatedArticle);
+        List<Integer> relatedArticlesIds = tagPostDao.findRelatedArticlesIds(tagIds, 30);
+        relatedArticlesIds.remove(post.getId());
+        List<Post> articleByTitles = postDao.findRelatedArticle(post.getTitle());
+        if (articleByTitles!=null) {
+            if (relatedArticlesIds==null){
+                if (articleByTitles.size()>10) {
+                    relatedArticles.addAll(articleByTitles.subList(0,10));
+                } else {
+                    relatedArticles.addAll(articleByTitles);
                 }
-
+            } else {
+                for (Post articleByTitle : articleByTitles) {
+                    if (articleByTitle.getId() != post.getId()) {
+                        for (Integer currentRelatedArticlesId: relatedArticlesIds) {
+                            if (articleByTitle.getId()==currentRelatedArticlesId) {
+                                relatedArticles.add(articleByTitle);
+                            }
+                        }
+                    }
+                    if (relatedArticles.size()==10){
+                        break;
+                    }
+                }
+            }
+        } if (articleByTitles==null || articleByTitles.size()==0){
+            if (relatedArticlesIds!=null){
+                Integer maxSize = 10;
+                if (relatedArticlesIds.size()<=10)  {
+                    maxSize = relatedArticlesIds.size();
+                }
+                for (int i=0; i<maxSize; i ++){
+                    Post currentArticle = postDao.find(relatedArticlesIds.get(i));
+                    relatedArticles.add(currentArticle);
+                }
             }
         }
 
         //get related materials
         List<Material> relatedMaterials = new ArrayList<Material>();
-        List<Integer> relatedMaterialIds = tagMaterialDao.findRelatedMaterialIds(tagIds,10);
-        if (relatedMaterialIds != null) {
-            for (int i = 0; i < relatedMaterialIds.size(); i++) {
-                int currentRelatedMaterialId = relatedMaterialIds.get(i);
-                    Material relatedMaterial = materialDao.find(currentRelatedMaterialId);
-                relatedMaterials.add(relatedMaterial);
+        List<Integer> relatedMaterialIds = tagMaterialDao.findRelatedMaterialIds(tagIds, 30);
+        List<Material> materialByNames = materialDao.findRelatedMaterial(post.getTitle());
+        if (materialByNames!=null) {
+            if (relatedArticlesIds==null) {
+                if (materialByNames.size()>10){
+                    relatedMaterials.addAll(materialByNames.subList(0,10));
+                } else {
+                    relatedMaterials.addAll(materialByNames);
+                }
+
+            } else {
+                for (Material materialByName : materialByNames) {
+                    for (Integer currentRelatedMaterialId: relatedMaterialIds) {
+                        if (materialByName.getId()==currentRelatedMaterialId){
+                            relatedMaterials.add(materialByName);
+                        }
+                    }
+                    if (relatedMaterials.size()==10) {
+                        break;
+                    }
+                }
+            }
+        } if (materialByNames==null || materialByNames.size()==0){
+            if (relatedMaterialIds!=null){
+                Integer maxSize = 10;
+                if (relatedMaterialIds.size()<=10)  {
+                    maxSize = relatedMaterialIds.size();
+                }
+                for (int i=0; i<maxSize; i ++){
+                   Material currentMaterial = materialDao.find(relatedMaterialIds.get(i));
+                   relatedMaterials.add(currentMaterial);
+                }
             }
         }
-
 
         //get List Post answer
         List<Post> postAnswers = postDao.findPostChilds(id, 0);
@@ -317,17 +391,17 @@ public class PostController {
         Classroom classroom = classroomDao.find(id);
         User user = (User) session.getAttribute("user");
         if (user == null) {
-            session.setAttribute("currentPage","redirect:/post/create/"+id);
+            session.setAttribute("currentPage", "redirect:/post/create/" + id);
             return "redirect:/";
         }
         //Check User have joint to Class
         if (classroom.checkUserExist(user) == false) {
-            return "redirect:/classroom/"+id;
+            return "redirect:/classroom/" + id;
         }
-        if (classroom==null) {
+        if (classroom == null) {
             return "404";
         }
-        model.addAttribute("classroom",classroom);
+        model.addAttribute("classroom", classroom);
         return "createPost";
     }
 
@@ -340,14 +414,14 @@ public class PostController {
             return "404";
         }
         if (user == null) {
-            session.setAttribute("currentPage","redirect:/post/update/"+id);
+            session.setAttribute("currentPage", "redirect:/post/update/" + id);
             return "redirect:/";
         }
         if (post.getOwnerUserId().getId() != user.getId()) {
             return "403";
         }
         Classroom classroom = post.getOwnerClassId();
-        model.addAttribute("classroom",classroom);
+        model.addAttribute("classroom", classroom);
         model.addAttribute("post", post);
         return "createPost";
     }
@@ -364,35 +438,35 @@ public class PostController {
         User user = (User) session.getAttribute("user");
         Classroom classroom = classroomDao.find(classId);
         if (user == null) {
-            session.setAttribute("currentPage","redirect:/post/create/"+classId);
+            session.setAttribute("currentPage", "redirect:/post/create/" + classId);
             return "redirect:/";
         }
-        if(classroom==null) {
+        if (classroom == null) {
             return "404";
         }
         //Check User have joint to Class
         if (classroom.checkUserExist(user) == false) {
-            return "/classroom/"+classId;
+            return "/classroom/" + classId;
         }
-        if(postName.length() <= 0 || postName.length() > 255) {
-            return "redirect:/post/create/"+classId;
+        if (postName.length() <= 0 || postName.length() > 255) {
+            return "redirect:/post/create/" + classId;
         }
-        if(postType != 1 && postType !=2) {
-            return "redirect:/post/create/"+classId;
+        if (postType != 1 && postType != 2) {
+            return "redirect:/post/create/" + classId;
         }
         int tagIdSize = 0;
-        if(tagId!=null) {
+        if (tagId != null) {
             tagIdSize = tagId.size();
         }
         int newTagSize = 0;
-        if(newTag!=null) {
+        if (newTag != null) {
             newTagSize = newTag.size();
         }
-        if((tagIdSize + newTagSize) < 1 || (tagIdSize + newTagSize) > 5 ) {
-            return "redirect:/post/create/"+classId;
+        if ((tagIdSize + newTagSize) < 1 || (tagIdSize + newTagSize) > 5) {
+            return "redirect:/post/create/" + classId;
         }
-        if(postDetail.length() < 120) {
-            return "redirect:/post/create/"+classId;
+        if (postDetail.length() < 120) {
+            return "redirect:/post/create/" + classId;
         }
         Post post = new Post();
         post.setTitle(postName);
@@ -412,7 +486,7 @@ public class PostController {
             TagPost tagPost = new TagPost();
             tagPost.setPostId(post);
             Tag tagfind = tagDao.find(tagId.get(i));
-            if(tagfind==null) {
+            if (tagfind == null) {
                 return "404";
             }
             tagPost.setTagId(tagfind);
@@ -432,21 +506,22 @@ public class PostController {
         post.getTagPostList().addAll(tagPosts);
         classroom.setActiveTime(new Date());
         postDao.persist(post);
-        if (post.getPostType()==1){
+        if (post.getPostType() == 1) {
             sendMailUtilities.sendEmail(post);
         }
         classroomDao.merge(classroom);
-        
+
         //Notification - MinhKH
         List<ClassroomUser> inClassStudents = classroomUserDao.findByClassroom(classroom);
         ClassroomUser classroomTeacher = new ClassroomUser();
-        classroomTeacher.setUserId(classroom.getOwnerUserId());;
+        classroomTeacher.setUserId(classroom.getOwnerUserId());
+        ;
         inClassStudents.add(classroomTeacher);
-        if (inClassStudents!=null){
-            if(user.getRoleId().getId()==Constant.STUDENT) {
+        if (inClassStudents != null) {
+            if (user.getRoleId().getId() == Constant.STUDENT) {
                 //if student create post.
-                for (ClassroomUser classroomUser : inClassStudents){
-                    if(user.getId()!=classroomUser.getUserId().getId()){
+                for (ClassroomUser classroomUser : inClassStudents) {
+                    if (user.getId() != classroomUser.getUserId().getId()) {
                         Notification notification = new Notification();
                         notification.setReceiverId(classroomUser.getUserId());
                         notification.setSenderId(user);
@@ -454,16 +529,16 @@ public class PostController {
                         notification.setNotificationType(Constant.NT_STUDENT_CREATE_POST);
                         notification.setIsViewed(Constant.IV_FALSE);
                         notificationDao.persist(notification);
-                        NotificationDto notificationDto  = ConvertEntityDto.convertNotificationEntityToDto(notification,notification.getNotificationType(),post);
+                        NotificationDto notificationDto = ConvertEntityDto.convertNotificationEntityToDto(notification, notification.getNotificationType(), post);
                         template.convertAndSend("/topic/notice/" + classroomUser.getUserId().getId(), notificationDto);
                     }
 
                 }
 
             } else {
-                List<User> users = userDao.findUserNotificationByCreatePostTeacher(classroom.getOwnerUserId().getId(),classroom.getId());
-                for (User userInvi : users){
-                    if(user.getId()!=userInvi.getId()){
+                List<User> users = userDao.findUserNotificationByCreatePostTeacher(classroom.getOwnerUserId().getId(), classroom.getId());
+                for (User userInvi : users) {
+                    if (user.getId() != userInvi.getId()) {
                         Notification notification = new Notification();
                         notification.setReceiverId(userInvi);
                         notification.setSenderId(user);
@@ -471,7 +546,7 @@ public class PostController {
                         notification.setNotificationType(Constant.NT_TEACHER_CREATE_POST);
                         notification.setIsViewed(Constant.IV_FALSE);
                         notificationDao.persist(notification);
-                        NotificationDto notificationDto  = ConvertEntityDto.convertNotificationEntityToDto(notification,notification.getNotificationType(),post);
+                        NotificationDto notificationDto = ConvertEntityDto.convertNotificationEntityToDto(notification, notification.getNotificationType(), post);
                         template.convertAndSend("/topic/notice/" + userInvi.getId(), notificationDto);
                     }
 
@@ -497,31 +572,31 @@ public class PostController {
         User user = (User) session.getAttribute("user");
         Post post = postDao.find(id);
         if (user == null) {
-            session.setAttribute("currentPage","redirect:/post/update/"+id);
+            session.setAttribute("currentPage", "redirect:/post/update/" + id);
             return "redirect:/";
         }
         if (post == null) {
             return "404";
         }
-        if(postName.length() <= 0 || postName.length() > 255) {
-            return "redirect:/post/update/"+id;
+        if (postName.length() <= 0 || postName.length() > 255) {
+            return "redirect:/post/update/" + id;
         }
-        if(postType != 1 && postType !=2) {
-            return "redirect:/post/update/"+id;
+        if (postType != 1 && postType != 2) {
+            return "redirect:/post/update/" + id;
         }
         int tagIdSize = 0;
-        if(tagId!=null) {
+        if (tagId != null) {
             tagIdSize = tagId.size();
         }
         int newTagSize = 0;
-        if(newTag!=null) {
+        if (newTag != null) {
             newTagSize = newTag.size();
         }
-        if((tagIdSize + newTagSize) < 1 || (tagIdSize + newTagSize) > 5 ) {
-            return "redirect:/post/update/"+id;
+        if ((tagIdSize + newTagSize) < 1 || (tagIdSize + newTagSize) > 5) {
+            return "redirect:/post/update/" + id;
         }
-        if(postDetail.length() < 120) {
-            return "redirect:/post/update/"+id;
+        if (postDetail.length() < 120) {
+            return "redirect:/post/update/" + id;
         }
         post.setTitle(postName);
         post.setPostType(postType);
@@ -536,7 +611,7 @@ public class PostController {
             TagPost tagPost = new TagPost();
             tagPost.setPostId(post);
             Tag tagfind = tagDao.find(tagId.get(i));
-            if(tagfind==null) {
+            if (tagfind == null) {
                 return "404";
             }
             tagPost.setTagId(tagfind);
@@ -565,7 +640,7 @@ public class PostController {
     String addWantAnswer(@ModelAttribute("wantAnswerDto") WantAnswerDto wantAnswerDto) {
         //authorize
         User user = (User) session.getAttribute("user");
-        if (user==null) {
+        if (user == null) {
             return "NG";
         }
         WantAnswerPost wantAnswerPost = new WantAnswerPost();
@@ -587,7 +662,7 @@ public class PostController {
     String removeWantAnswer(@ModelAttribute("wantAnswerDto") WantAnswerDto wantAnswerDto) {
         //authorize
         User user = (User) session.getAttribute("user");
-        if (user==null) {
+        if (user == null) {
             return "NG";
         }
         try {
@@ -607,7 +682,7 @@ public class PostController {
     String acceptAnswer(@ModelAttribute("acceptAnswerDto") AcceptAnswerDto acceptAnswerDto) {
         //authorize
         User user = (User) session.getAttribute("user");
-        if (user==null) {
+        if (user == null) {
             return "NG";
         }
         try {
@@ -615,15 +690,15 @@ public class PostController {
             Integer idUnaccept = acceptAnswerDto.getIdUnaccept();
             Integer id = acceptAnswerDto.getId();
             post = postDao.find(id);
-            if(post==null) {
+            if (post == null) {
                 return "NG";
             }
-            Post parentPost ;
+            Post parentPost;
             parentPost = postDao.find(post.getParentId());
-            if(parentPost==null){
+            if (parentPost == null) {
                 return "NG";
             }
-            if(user.getId()!=parentPost.getOwnerUserId().getId()) {
+            if (user.getId() != parentPost.getOwnerUserId().getId()) {
                 return "NG";
             }
             List<Post> posts = postDao.findRepliesWasAcceptedByParentId(post.getParentId());
@@ -650,20 +725,20 @@ public class PostController {
     String removeAcceptAnswer(@PathVariable Integer id) {
         //authorize
         User user = (User) session.getAttribute("user");
-        if (user==null) {
+        if (user == null) {
             return "NG";
         }
         try {
             Post post = postDao.find(id);
-            if(post==null) {
+            if (post == null) {
                 return "NG";
             }
-            Post parentPost ;
+            Post parentPost;
             parentPost = postDao.find(post.getParentId());
-            if(parentPost==null){
+            if (parentPost == null) {
                 return "NG";
             }
-            if(user.getId()!=parentPost.getOwnerUserId().getId()) {
+            if (user.getId() != parentPost.getOwnerUserId().getId()) {
                 return "NG";
             }
             post.setAcceptedAnswerId(0);
@@ -731,13 +806,13 @@ public class PostController {
     String deleteAnswer(@ModelAttribute(value = "postDto") PostDto postDto) {
         //authorize
         User user = (User) session.getAttribute("user");
-        if (user==null) {
+        if (user == null) {
             return "NG";
         }
         Post post;
         try {
             post = postDao.find(postDto.getId());
-            if(post.getOwnerUserId().getId()==user.getId()){
+            if (post.getOwnerUserId().getId() == user.getId()) {
                 postDao.remove(post);
             }
         } catch (Exception e) {
@@ -751,19 +826,19 @@ public class PostController {
     public String deletePost(@RequestParam Integer id) {
         //authorize
         User user = (User) session.getAttribute("user");
-        if (user==null) {
-            session.setAttribute("currentPage","redirect:/post/view/"+id);
+        if (user == null) {
+            session.setAttribute("currentPage", "redirect:/post/view/" + id);
             return "redirect:/";
         }
         Post post;
         Integer classId;
         try {
             post = postDao.find(id);
-            if(post==null) {
+            if (post == null) {
                 return "NG";
             }
             classId = post.getOwnerClassId().getId();
-            if(post.getOwnerUserId().getId()==user.getId()){
+            if (post.getOwnerUserId().getId() == user.getId()) {
                 postDao.remove(post);
             }
 
@@ -778,17 +853,17 @@ public class PostController {
     public String closePost(@RequestParam Integer id) {
         //authorize
         User user = (User) session.getAttribute("user");
-        if (user==null) {
-            session.setAttribute("currentPage","redirect:/post/view/"+id);
+        if (user == null) {
+            session.setAttribute("currentPage", "redirect:/post/view/" + id);
             return "redirect:/";
         }
         Post post = null;
         try {
             post = postDao.find(id);
-            if(post==null) {
+            if (post == null) {
                 return "404";
             }
-            if(post.getOwnerUserId().getId()==user.getId() || post.getOwnerClassId().getOwnerUserId().getId()==user.getId() || user.getRoleId().getId()==3) {
+            if (post.getOwnerUserId().getId() == user.getId() || post.getOwnerClassId().getOwnerUserId().getId() == user.getId() || user.getRoleId().getId() == 3) {
                 post.setStatus(Constant.CLOSE_POST);
                 postDao.merge(post);
             } else {
@@ -805,17 +880,17 @@ public class PostController {
     public String openPost(@RequestParam Integer id) {
         //authorize
         User user = (User) session.getAttribute("user");
-        if (user==null) {
-            session.setAttribute("currentPage","redirect:/post/view/"+id);
+        if (user == null) {
+            session.setAttribute("currentPage", "redirect:/post/view/" + id);
             return "redirect:/";
         }
         Post post = null;
         try {
             post = postDao.find(id);
-            if(post==null) {
+            if (post == null) {
                 return "404";
             }
-            if(post.getOwnerUserId().getId()==user.getId() || post.getOwnerClassId().getOwnerUserId().getId()==user.getId() || user.getRoleId().getId()==3) {
+            if (post.getOwnerUserId().getId() == user.getId() || post.getOwnerClassId().getOwnerUserId().getId() == user.getId() || user.getRoleId().getId() == 3) {
                 post.setStatus(Constant.OPEN_POST);
                 postDao.merge(post);
             } else {
@@ -826,20 +901,21 @@ public class PostController {
         }
         return "redirect:/post/view/" + post.getId();
     }
-    @RequestMapping(value = "/post/count/{id}", method = RequestMethod.POST,produces = "application/json")
+
+    @RequestMapping(value = "/post/count/{id}", method = RequestMethod.POST, produces = "application/json")
     public String updateView(@PathVariable Integer id) {
         //authorize
         User user = (User) session.getAttribute("user");
-        if (user==null) {
+        if (user == null) {
             return "NG";
         }
         Post post = null;
         try {
             post = postDao.find(id);
-            if(post.getViewer()==null) {
+            if (post.getViewer() == null) {
                 post.setViewer(0);
             } else {
-                post.setViewer(post.getViewer()+1);
+                post.setViewer(post.getViewer() + 1);
             }
             postDao.merge(post);
         } catch (Exception e) {
@@ -847,30 +923,34 @@ public class PostController {
         }
         return "redirect:/post/view/" + post.getId();
     }
-    @RequestMapping(value = "/post/suggest", method = RequestMethod.GET,produces = "application/json")
-    public @ResponseBody List<PostDto> suggestPost(@RequestParam String title) {
+
+    @RequestMapping(value = "/post/suggest", method = RequestMethod.GET, produces = "application/json")
+    public
+    @ResponseBody
+    List<PostDto> suggestPost(@RequestParam String title) {
         User user = (User) session.getAttribute("user");
         List<PostDto> postDtos = null;
-        if (user==null) {
+        if (user == null) {
             return postDtos;
         }
         postDtos = postDao.listSuggestPost(title);
-        return  postDtos;
+        return postDtos;
     }
+
     @RequestMapping(value = "/post/merge/{id}/{range}", method = RequestMethod.GET)
-    public String mergeDispath(@PathVariable Integer id,@PathVariable Integer range,ModelMap model) {
+    public String mergeDispath(@PathVariable Integer id, @PathVariable Integer range, ModelMap model) {
         //authorize
         User user = (User) session.getAttribute("user");
-        if (user==null) {
+        if (user == null) {
             return "403";
         }
         Classroom classroom = classroomDao.find(id);
-        if(classroom.getOwnerUserId().getId()!=user.getId()){
+        if (classroom.getOwnerUserId().getId() != user.getId()) {
             return "403";
         }
         List<Post> posts = postDao.listQuestionMerge(id);
-        model.addAttribute("classroom",classroom);
-        model.addAttribute("posts",posts);
+        model.addAttribute("classroom", classroom);
+        model.addAttribute("posts", posts);
         return "mergeQuestion";
     }
 
