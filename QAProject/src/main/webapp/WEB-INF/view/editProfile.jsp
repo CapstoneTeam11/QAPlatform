@@ -93,7 +93,7 @@
     <section class="container" style="height:70px; display: flex; align-items: center">
         <div class="row">
             <div class="col-md-12">
-                <h3>Profile</h3>
+                <h3>Edit Profile</h3>
             </div>
         </div><!-- End row -->
     </section><!-- End container -->

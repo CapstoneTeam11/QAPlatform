@@ -123,7 +123,11 @@
     <section class="container" style="height:70px; display: flex; align-items: center">
         <div class="row">
             <div class="col-md-12">
-                <h3>${classroom.classroomName}</h3>
+                <h3 style="margin-top: 10px">${classroom.classroomName}</h3>
+                <h5 style="margin-top: 15px">
+                    <a href="/search?filter=4&searchKey=" style="color: white;">Classroom</a> /
+                    <span style="color: #2f3239;">${classroom.classroomName}</span>
+                </h5>
             </div>
         </div><!-- End row -->
     </section><!-- End container -->

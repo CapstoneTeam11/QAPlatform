@@ -14,7 +14,29 @@
     <section class="container" style="height:70px; display: flex; align-items: center">
         <div class="row">
             <div class="col-md-12">
+                <c:if test="${not empty param.searchKey}">
                 <h3>Search results for <span style="font-size: 20px; font-style: italic">${param.searchKey}</span></h3>
+                </c:if>
+            <c:if test="${empty param.searchKey}">
+                <h3>
+                    Search all
+                    <c:if test="${param.filter==1}">
+                        question.
+                    </c:if>
+                    <c:if test="${param.filter==2}">
+                        article.
+                    </c:if>
+                    <c:if test="${param.filter==3}">
+                        material.
+                    </c:if>
+                    <c:if test="${param.filter==4}">
+                        classroom.
+                    </c:if>
+                    <c:if test="${param.filter==5}">
+                        user.
+                    </c:if>
+                </h3>
+            </c:if>
             </div>
         </div><!-- End row -->
     </section><!-- End container -->
