@@ -463,4 +463,16 @@ public class PostDaoImpl extends BaseDao<Post,Integer> implements PostDao{
         }
         return postDtos;
     }
+    @Override
+    public List<Post> listQuestionMerge(Integer id) {
+        List<Post> posts = null;
+        Query query = entityManager.createQuery("select p from Post p where p.status=1 and p.acceptedAnswerId=0 and p.parentId=0 and p.postType=1 and p.ownerClassId.id=:id",Post.class);
+        query.setParameter("id",id);
+        try {
+            posts = query.getResultList();
+        } catch (NoResultException e){
+            System.out.println("No post was accepted");
+        }
+        return posts;
+    }
 }

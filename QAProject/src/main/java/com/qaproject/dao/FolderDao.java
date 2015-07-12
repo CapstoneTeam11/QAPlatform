@@ -1,7 +1,6 @@
 package com.qaproject.dao;
 
 import com.qaproject.entity.Folder;
-import com.qaproject.entity.Library;
 import com.qaproject.entity.User;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;

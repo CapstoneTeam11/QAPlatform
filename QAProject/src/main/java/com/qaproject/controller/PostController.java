@@ -115,29 +115,72 @@ public class PostController {
         post.setOwnerClassId(parentId.getOwnerClassId());
         post.setOwnerUserId(userDao.find(postDto.getOwnerId()));
         postDao.persist(post);
+        sendNotificationReplies(user,post);
+        return "OK";
+    }
 
-
-        //Notification - MinhKH
+    @RequestMapping(value = "/post/add/all", method = RequestMethod.POST)
+    public String addAnswerAll(@RequestParam List<Integer> ids,@RequestParam String detail,@RequestParam Integer classroomId) {
+        User user = (User) session.getAttribute("user");
+        if (user==null) {
+            return "403";
+        }
+        for(int i = 0 ; i < ids.size(); i++) {
+            Post parent = postDao.find(ids.get(i));
+            //authorize
+            if(user.getId()!=parent.getOwnerClassId().getOwnerUserId().getId()) {
+                return "403";
+            }
+            if(classroomId!=parent.getOwnerClassId().getId()) {
+                return "403";
+            }
+            if(parent.getStatus()==Constant.CLOSE_POST) {
+                return "403";
+            }
+            if(parent.getAcceptedAnswerId()==1) {
+                return "403";
+            }
+            if(parent.getParentId()!=0) {
+                return "403";
+            }
+            Post post = new Post();
+            post.setBody(detail);
+            post.setLastEditedDate(new Date());
+            post.setCreationDate(new Date());
+            post.setPostType(3);
+            post.setAcceptedAnswerId(0);
+            post.setParentId(parent.getId());
+            post.setOwnerClassId(parent.getOwnerClassId());
+            post.setOwnerUserId(user);
+            postDao.persist(post);
+            sendNotificationReplies(user,post);
+        }
+        return "redirect:/post/merge/"+classroomId +"/40";
+    }
+    /*
+    * user : who was created answer
+    * post : is answer of question .
+    */
+    public void sendNotificationReplies(User user,Post post) {
         User sender = userDao.find(user.getId());
         Post parent = postDao.find(post.getParentId());
         //Edit realtime KhangTN
-        postDto = ConvertEntityDto.convertPostEntityToDto(post);
+        PostDto postDto = ConvertEntityDto.convertPostEntityToDto(post);
         List<User> receivers = userDao.findUserNotificationByPost(parent.getId());
-            for (User receiver : receivers){
-                if(receiver.getId()!=user.getId()) {
+        for (User receiver : receivers){
+            if(receiver.getId()!=user.getId()) {
                 Notification notification = new Notification();
                 notification.setReceiverId(receiver);
                 notification.setSenderId(sender);
-                notification.setObjectId(parentId.getId());
+                notification.setObjectId(post.getParentId());
                 notification.setNotificationType(Constant.NT_USER_REPLY);
                 notification.setIsViewed(Constant.IV_FALSE);
                 notificationDao.persist(notification);
-                NotificationDto notificationDto  = ConvertEntityDto.convertNotificationEntityToDto(notification,notification.getNotificationType(),parentId);
+                NotificationDto notificationDto  = ConvertEntityDto.convertNotificationEntityToDto(notification,notification.getNotificationType(),parent);
                 template.convertAndSend("/topic/notice/" + receiver.getId(), notificationDto);
-                }
             }
-            template.convertAndSend("/topic/discussion/" + parentId.getId(), postDto);
-        return "OK";
+        }
+        template.convertAndSend("/topic/discussion/" + post.getParentId(), postDto);
     }
 
     @RequestMapping(value = "/post/view/{id}", method = RequestMethod.GET)
@@ -396,6 +439,7 @@ public class PostController {
         inClassStudents.add(classroomTeacher);
         if (inClassStudents!=null){
             if(user.getRoleId().getId()==Constant.STUDENT) {
+                //if student create post.
                 for (ClassroomUser classroomUser : inClassStudents){
                     if(user.getId()!=classroomUser.getUserId().getId()){
                         Notification notification = new Notification();
@@ -807,6 +851,22 @@ public class PostController {
         }
         postDtos = postDao.listSuggestPost(title);
         return  postDtos;
+    }
+    @RequestMapping(value = "/post/merge/{id}/{range}", method = RequestMethod.GET)
+    public String mergeDispath(@PathVariable Integer id,@PathVariable Integer range,ModelMap model) {
+        //authorize
+        User user = (User) session.getAttribute("user");
+        if (user==null) {
+            return "403";
+        }
+        Classroom classroom = classroomDao.find(id);
+        if(classroom.getOwnerUserId().getId()!=user.getId()){
+            return "403";
+        }
+        List<Post> posts = postDao.listQuestionMerge(id);
+        model.addAttribute("classroom",classroom);
+        model.addAttribute("posts",posts);
+        return "mergeQuestion";
     }
 
 }
