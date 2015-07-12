@@ -72,7 +72,8 @@
                 <a class="button color small submit" href="/post/merge/${classroom.id}/70" id="suggestMergehref" style="margin-left: 5px">Suggest merge</a>
                 </div>
                 <span style="font-weight: bold">Find posts have similar title over</span><span id="range" class="button color small submit" style="color: white;padding: 3px 5px;margin-left: 5px;">50 %</span>
-                <form>
+                <form action="/post/merge" method="GET">
+                <input type="hidden" name="id" value="${classroom.id}">
                 <table class="table table-hover">
                     <tr>
                         <th>Post name</th>
@@ -80,12 +81,12 @@
                     </tr>
                     <c:forEach var="post" items="${posts}">
                         <tr>
-                            <td>${post.title}</td>
-                            <td><input type="checkbox" class="checkbox" value="${post.id}"></td>
+                            <td><a href="/post/view/${post.id}">${post.title}</a></td>
+                            <td><input type="checkbox" class="checkbox" name="postMerges" value="${post.id}"></td>
                         </tr>
                     </c:forEach>
                 </table>
-                <input type="submit" class="button color small submit" value="merge questions">
+                <input type="submit" class="button color small submit" value="merge checked questions">
                 </form>
                 <div id="respond" class="comment-respond page-content clearfix">
                     <div class="boxedtitle page-title"><h2>Leave a reply</h2></div>

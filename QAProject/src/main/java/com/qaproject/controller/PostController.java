@@ -126,6 +126,9 @@ public class PostController {
         }
         for(int i = 0 ; i < ids.size(); i++) {
             Post parent = postDao.find(ids.get(i));
+            if(parent==null){
+                return "404";
+            }
             //authorize
             if(user.getId()!=parent.getOwnerClassId().getOwnerUserId().getId()) {
                 return "403";
@@ -355,6 +358,7 @@ public class PostController {
     @RequestMapping(value = "/post/create", method = RequestMethod.POST)
     public String create(@RequestParam Integer classId,
                          @RequestParam List<Integer> tagId,
+                         @RequestParam(required = false) List<Integer> postMerges,
                          @RequestParam(required = false) List<String> newTag,
                          @RequestParam String postName,
                          @RequestParam Integer postType,
@@ -363,6 +367,7 @@ public class PostController {
         //Check is User
         User user = (User) session.getAttribute("user");
         Classroom classroom = classroomDao.find(classId);
+        List<Post> postMergeList = null;
         if (user == null) {
             session.setAttribute("currentPage","redirect:/post/create/"+classId);
             return "redirect:/";
@@ -393,6 +398,17 @@ public class PostController {
         }
         if(postDetail.length() < 120) {
             return "redirect:/post/create/"+classId;
+        }
+        if(postMerges!=null) {
+            postMergeList = new ArrayList<Post>();
+            for(int i = 0 ; i < postMerges.size();i++) {
+                Post postMerge = postDao.find(postMerges.get(i));
+                if(postMerges==null) {
+                    return "404";
+                } else {
+                    postMergeList.add(postMerge);
+                }
+            }
         }
         Post post = new Post();
         post.setTitle(postName);
@@ -476,11 +492,31 @@ public class PostController {
                     }
 
                 }
+                if(postMergeList!=null) {
+                    for(int i = 0 ; i < postMergeList.size();i++) {
+                        Post postClose = postMergeList.get(i);
+                        //create comment to notice user , his post was merged
+                        Post postmergeAnswer = new Post();
+                        postmergeAnswer.setBody("This question was merged and answered by " + postClose.getOwnerClassId().getOwnerUserId().getDisplayName() + ",You can read it in this <a href='/post/view/"+ post.getId() +"'>Question</a>");
+                        postmergeAnswer.setLastEditedDate(new Date());
+                        postmergeAnswer.setCreationDate(new Date());
+                        postmergeAnswer.setPostType(3);
+                        postmergeAnswer.setAcceptedAnswerId(0);
+                        postmergeAnswer.setParentId(postClose.getId());
+                        postmergeAnswer.setOwnerClassId(postClose.getOwnerClassId());
+                        postmergeAnswer.setOwnerUserId(user);
+                        postDao.persist(postmergeAnswer);
+                        // close post merge
+                        postClose.setStatus(Constant.CLOSE_POST);
+                        postDao.merge(postClose);
+                        // send notification
+                        sendNotificationReplies(user,postmergeAnswer);
+                    }
+                }
+
             }
 
         }
-
-
         return "redirect:/post/view/" + post.getId();
     }
 
@@ -872,6 +908,33 @@ public class PostController {
         model.addAttribute("classroom",classroom);
         model.addAttribute("posts",posts);
         return "mergeQuestion";
+    }
+    @RequestMapping(value = "/post/merge", method = RequestMethod.GET)
+    public String mergeDispath(@RequestParam List<Integer> postMerges,@RequestParam Integer id,ModelMap model) {
+        //authorize
+        User user = (User) session.getAttribute("user");
+        if (user==null) {
+            return "403";
+        }
+        Classroom classroom = classroomDao.find(id);
+        if(classroom==null) {
+            return "404";
+        }
+        if(classroom.getOwnerUserId().getId()!=user.getId()){
+            return "403";
+        }
+        for(int i = 0 ; i < postMerges.size() ; i++) {
+            Post post = postDao.find(postMerges.get(i));
+            if(post==null) {
+                return "404";
+            }
+            if(post.getOwnerClassId().getId()!=id){
+                return "404";
+            }
+        }
+        model.addAttribute("postMerges",postMerges);
+        model.addAttribute("classroom",classroom);
+        return "createPost";
     }
 
 }

@@ -131,18 +131,32 @@
                 <div class="page-content ask-question">
                     <c:if test="${post==null}">
                     <div class="boxedtitle page-title">
-                        <h2>
-                            Create post
+                        <c:if test="${postMerges!=null}">
+                            <h2>
+                                Merge posts
                             <span style="float: right;font-size: 12px;color: black;margin-top: 12px;">
                                 (<span style="color:red">*</span>) required filed
                             </span>
-                        </h2>
+                            </h2>
+                        </c:if>
+                        <c:if test="${postMerges==null}">
+                             <h2>
+                                Create post
+                                <span style="float: right;font-size: 12px;color: black;margin-top: 12px;">
+                                    (<span style="color:red">*</span>) required filed
+                                </span>
+                            </h2>
+                        </c:if>
                     </div>
 
                     <div class="form-style form-style-3" id="question-submit">
                         <form method="post" action="/post/create" id="formvalidate">
                             <input type="hidden" name="classId" value="${classroom.id}">
-
+                            <c:if test="${postMerges!=null}">
+                                <c:forEach var="postMerge" items="${postMerges}">
+                                    <input type="hidden" name="postMerges" value="${postMerge}">
+                                </c:forEach>
+                            </c:if>
                             <div>
                                 <div class="row" style="margin-bottom: 20px">
                                     <div class="col-md-2">
