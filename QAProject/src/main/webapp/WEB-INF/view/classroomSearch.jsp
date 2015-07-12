@@ -77,7 +77,7 @@
     <section class="container" style="height:70px; display: flex; align-items: center">
         <div class="row">
             <div class="col-md-12">
-                <h3 style="margin-top:10px">Search results</h3>
+                <h3 style="margin-top:15px">Search results</h3>
                 <h5 style="margin-top: 15px">
                     <a href="/search?filter=4&searchKey=" style="color: white;">Classroom</a> /
                     <a href="/classroom/${classroom.id}" style="color: white;">${classroom.classroomName}</a> /
