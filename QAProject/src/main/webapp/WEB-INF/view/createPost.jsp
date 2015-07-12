@@ -395,7 +395,9 @@
                             $('#suggestPost').append('<label style="width: 100%">These are the same questions may be help you</label>')
                             $('#suggestPost').append('<div id="listSuggestPost" class="listSuggestPost"></div>')
                             for(var i = 0 ; i < post.length;i++) {
-                                $('#listSuggestPost').append('<div><a style="display: block" href="/post/view/'+ post[i].id +'">'+ post[i].title +'</a><div>');
+                                $('#listSuggestPost').append('<div><a target="_blank" style="display: block" href="/post/view/'+
+                                        post[i].id
+                                        +'">'+ post[i].title +'</a><div>');
                             }
                         }
                     }
@@ -432,7 +434,7 @@
                     minlength: "The details must be at least 120 characters long."
                 },
                 tag: {
-                    required: "Please provide at lasted one tag."
+                    required: "Please provide at least one tag."
                 }
             },
             errorPlacement: function(error, element)
@@ -542,7 +544,7 @@
                         minlength: "The details must be at least 120 characters long."
                     },
                     tag: {
-                        required: "Please provide at lasted one tag."
+                        required: "Please provide at least one tag."
                     }
                 },
                 errorPlacement: function(error, element)

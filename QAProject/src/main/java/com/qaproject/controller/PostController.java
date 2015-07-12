@@ -3,10 +3,7 @@ package com.qaproject.controller;
 import com.qaproject.dao.*;
 import com.qaproject.dto.*;
 import com.qaproject.entity.*;
-import com.qaproject.util.Constant;
-import com.qaproject.util.ConvertEntityDto;
-import com.qaproject.util.DashboardUtilities;
-import com.qaproject.util.NotificationUtilities;
+import com.qaproject.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -52,6 +49,8 @@ public class PostController {
     TagMaterialDao tagMaterialDao;
     @Autowired
     MaterialDao materialDao;
+    @Autowired
+    SendMailUtilities sendMailUtilities;
     @Autowired
     SimpMessagingTemplate template;
 
@@ -240,14 +239,17 @@ public class PostController {
         }
 
         //get related questions - MinhKH
-        List<Integer> relatedQuestionIds = tagPostDao.findRelatedQuestionIds(tagIds,10);
+        List<Integer> relatedQuestionIds = tagPostDao.findRelatedQuestionIds(tagIds,30);
+        List<Post> questionByTitles = postDao.findRelatedPost(post.getTitle());
         List<Post> relatedQuestions = new ArrayList<Post>();
         if (relatedQuestionIds != null) {
-            for (int i = 0; i < relatedQuestionIds.size(); i++) {
-                int currentRelatedQuestionId = relatedQuestionIds.get(i);
+            for (Integer currentRelatedQuestionId : relatedQuestionIds) {
                 if (currentRelatedQuestionId != post.getId()) {
-                    Post relatedQuestion = postDao.find(currentRelatedQuestionId);
-                    relatedQuestions.add(relatedQuestion);
+                    for(Post questionByTitle: questionByTitles){
+                        if (currentRelatedQuestionId==questionByTitle.getId()){
+                            relatedQuestions.add(questionByTitle);
+                        }
+                    }
                 }
             }
         }
@@ -430,6 +432,9 @@ public class PostController {
         post.getTagPostList().addAll(tagPosts);
         classroom.setActiveTime(new Date());
         postDao.persist(post);
+        if (post.getPostType()==1){
+            sendMailUtilities.sendEmail(post);
+        }
         classroomDao.merge(classroom);
         
         //Notification - MinhKH

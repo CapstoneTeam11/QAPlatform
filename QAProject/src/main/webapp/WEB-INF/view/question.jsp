@@ -351,6 +351,13 @@
                 </c:forEach>
             </div>
 
+            <c:if test="${sessionScope.user.id==post.ownerClassId.ownerUserId.id}">
+                <div class="widget">
+                    <h3 class="widget_title">Ask Teacher</h3>
+                    <a href="" id="InviteTagClick" class="button small color" style="color: white"> Ask Someone</a>
+                </div>
+            </c:if>
+            
             <c:if test="${not empty relatedQuestions}">
                 <div class="widget">
                     <h3 class="widget_title">Related Questions</h3>
@@ -390,12 +397,7 @@
                 </div>
             </c:if>
 
-            <c:if test="${sessionScope.user.id==post.ownerClassId.ownerUserId.id}">
-                <div class="widget">
-                    <h3 class="widget_title">Ask Teacher</h3>
-                    <a href="" id="InviteTagClick" class="button small color" style="color: white"> Ask Someone</a>
-                </div>
-            </c:if>
+
 
 
 

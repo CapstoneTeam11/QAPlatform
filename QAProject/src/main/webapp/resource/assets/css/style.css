@@ -5147,7 +5147,7 @@ html[xmlns] .slides {
 }
 
 #email-error, #password-error, #confirm_password-error, #professional-error, #question-title-error, #postType-error,
-#questionDetails-error, #tagsuggest-error {
+#questionDetails-error, #tagsuggest-error, #class-description-error, #confirmPassword-error, #displayName-error {
     width: 100% !important;
     color: red !important;
     font-size: 12px !important;
@@ -5167,7 +5167,7 @@ html[xmlns] .slides {
     visibility: hidden;
 }
 .listSuggestPost {
-    height: 150px;
+    height: 140px;
     overflow-y: scroll;
     overflow-x: hidden;
     width: 60%;
