@@ -109,7 +109,7 @@
                                     <div class="about-author clearfix" id="classroom${joinedClassroom.id}">
                                         <div class="" style="float: left;padding-right: 20px;">
                                             <a href="#" original-title="admin" class=""><img alt=""
-                                                                                             src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>
+                                                                                             src="/resource/assets/images/classroom.png"></a>
                                         </div>
                                         <a class="leaveClassroom" onclick="leaveClassroom(this); return false;"
                                            style="float: right; cursor:pointer" id="${joinedClassroom.id}">Leave</a>
@@ -119,7 +119,12 @@
                                                     ${joinedClassroom.classroomName}
                                             </a>
                                             </h4>
-                                            ${joinedClassroom.classroomDescription}
+                                            <c:if test="${joinedClassroom.status==0}">
+                                                <div class="closedStatus">This classroom is closed.</div>
+                                            </c:if>
+                                            <c:if test="${joinedClassroom.status==1}">
+                                                ${joinedClassroom.classroomDescription}
+                                            </c:if>
                                         </div>
                                     </div>
                                 </c:forEach>
@@ -129,7 +134,7 @@
                                     <div class="about-author clearfix" id="classroom${joinedClassroom.id}">
                                         <div class="" style="float: left;padding-right: 20px;">
                                             <a href="#" original-title="admin" class=""><img alt=""
-                                                                                             src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>
+                                                                                             src="/resource/assets/images/classroom.png"></a>
                                         </div>
                                         <a class="leaveClassroom" onclick="leaveClassroom(this); return false;"
                                            style="float: right; cursor:pointer" id="${joinedClassroom.id}">Leave</a>
@@ -139,7 +144,12 @@
                                                     ${joinedClassroom.classroomName}
                                                 </a>
                                             </h4>
+                                            <c:if test="${joinedClassroom.status==0}">
+                                                <div class="closedStatus">This classroom is closed.</div>
+                                            </c:if>
+                                            <c:if test="${joinedClassroom.status==1}">
                                                 ${joinedClassroom.classroomDescription}
+                                            </c:if>
                                         </div>
                                     </div>
                                 </c:forEach>
@@ -221,7 +231,7 @@
                                     <div class="about-author clearfix" id="invitation${invitation.id}">
                                         <div class="" style="float: left;padding-right: 20px;">
                                             <a href="#" original-title="admin" class=""><img alt=""
-                                                                                             src="http://consultoriaparacolegios.com/wp-content/uploads/2014/08/Classroom-Learning-Icon-150x150-e1427087330238.png"></a>
+                                                                                             src="/resource/assets/images/invitationToClass.png"></a>
                                         </div>
                                         <a class="ignoreInvitation" style="float: right; cursor:pointer"
                                            onclick="ignoreInvitation(this); return false;"
@@ -245,7 +255,7 @@
                                     <div class="about-author clearfix" id="invitation${invitation.id}">
                                         <div class="" style="float: left;padding-right: 20px;">
                                             <a href="#" original-title="admin" class=""><img alt=""
-                                                                                             src="http://consultoriaparacolegios.com/wp-content/uploads/2014/08/Classroom-Learning-Icon-150x150-e1427087330238.png"></a>
+                                                                                             src="/resource/assets/images/invitationToClass.png"></a>
                                         </div>
                                         <a class="ignoreInvitation" style="float: right; cursor:pointer"
                                            onclick="ignoreInvitation(this); return false;"
@@ -379,11 +389,11 @@
                     }
                     lastJoinedClassroomId = joinedClassrooms[length-1].joinedId;
                     for (var i = 0; i < length; i++) {
-                        $('#joinedClassrooms').append('<div class="about-author clearfix" id="classroom'+
+                        var component = '<div class="about-author clearfix" id="classroom'+
                                 joinedClassrooms[i].id +'">' +
                                 '<div class="" style="float: left;padding-right: 20px;">' +
                                 '<a href="#" original-title="admin" class=""><img alt="" ' +
-                                'src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>' +
+                                'src="/resource/assets/images/classroom.png"></a>' +
                                 '</div>' +
                                 '<a class="leaveClassroom" onclick="leaveClassroom(this); return false;" ' +
                                 'style="float: right; cursor:pointer" id="'+ joinedClassrooms[i].id +'">Leave</a>' +
@@ -391,10 +401,21 @@
                                 '<h4><a href="/classroom/'+ joinedClassrooms[i].id +'">' +
                                 joinedClassrooms[i].classroomName +
                                 '</a>' +
-                                '</h4>' +
-                                joinedClassrooms[i].classroomDescription +
-                                '</div>' +
-                                '</div>');
+                                '</h4>';
+                                if (joinedClassrooms[i].status == 1) {
+                                    component = component +
+                                            joinedClassrooms[i].classroomDescription +
+                                            '</div>' +
+                                            '</div>';
+                                } else {
+                                    component = component +
+                                            '<div class="closedStatus">'+
+                                            'This classroom is closed.' +
+                                            '</div>'+
+                                            '</div>' +
+                                            '</div>';
+                                }
+                        $('#joinedClassrooms').append(component);
                     }
                 }
             })
@@ -419,7 +440,7 @@
                                 invitations[i].id + '>' +
                                 '<div class="" style="float: left;padding-right: 20px;">' +
                                 '<a href="#" original-title="admin" class=""><img alt="" ' +
-                                'src="http://consultoriaparacolegios.com/wp-content/uploads/2014/08/Classroom-Learning-Icon-150x150-e1427087330238.png"></a>' +
+                                'src="/resource/assets/images/invitationToClass.png"></a>' +
                                 '</div>' +
                                 '<a class="ignoreInvitation" style="float: right; cursor:pointer" '+
                                 'onclick="ignoreInvitation(this); return false;" id="'+ invitations[i].id +'">Ignore</a>'+
@@ -498,7 +519,7 @@
                                 classroomId +'">' +
                                 '<div class="" style="float: left;padding-right: 20px;">' +
                                 '<a href="#" original-title="admin" class=""><img alt="" ' +
-                                'src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>' +
+                                'src="/resource/assets/images/classroom.png"></a>' +
                                 '</div>' +
                                 '<a class="leaveClassroom" onclick="leaveClassroom(this); return false;" ' +
                                 'style="float: right; cursor:pointer" id="'+ classroomId +'">Leave</a>' +

@@ -221,6 +221,8 @@
                                                         class="icon-group"></i>Class: ${question.className}</a></span>
                                                 <span class="question-comment"><a href="#"><i
                                                         class="icon-comment"></i>${question.answerCount} Answer(s)</a></span>
+                                                <span class="question-view"><i
+                                                        class="icon-eye-open"></i>${question.viewer} view(s)</span>
                             <div class="clearfix"></div>
                         </div>
                     </article>
@@ -255,6 +257,8 @@
                                                         class="icon-group"></i>Class: ${question.className}</a></span>
                                                 <span class="question-comment"><a href="#"><i
                                                         class="icon-comment"></i>${question.answerCount} Answer(s)</a></span>
+                                                <span class="question-view"><i
+                                                        class="icon-eye-open"></i>${question.viewer} view(s)</span>
                             <div class="clearfix"></div>
                         </div>
                     </article>
@@ -1042,6 +1046,8 @@
                             '<span class="question-comment"><a href="#"><i ' +
                             'class="icon-comment"></i>' + questions[i].answerCount +
                             ' Answer(s)</a></span>' +
+                            '<span class="question-view"><i class="icon-eye-open"></i>' + questions[i].viewer +
+                            ' view(s)</span>' +
                             '<div class="clearfix"></div>' +
                             '</div>' +
                             '</article>';

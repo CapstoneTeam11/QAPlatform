@@ -144,7 +144,7 @@
                     <c:forEach var="ownedClassroom" items="${ownedClassrooms}" end="9">
                         <div class="about-author clearfix" id="classroom${ownedClassroom.id}">
                             <div class="" style="float: left;padding-right: 20px;">
-                                <a href="#" original-title="admin" class=""><img alt="" src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>
+                                <a href="#" original-title="admin" class=""><img alt="" src="/resource/assets/images/classroom.png"></a>
                             </div>
                             <c:if test="${ownedClassroom.status == 1}">
                             <a id="${ownedClassroom.id}" class="closeClass" style="float: right; cursor: pointer"
@@ -175,7 +175,7 @@
                     <c:forEach var="ownedClassroom" items="${ownedClassrooms}">
                         <div class="about-author clearfix" id="classroom${ownedClassroom.id}">
                             <div class="" style="float: left;padding-right: 20px;">
-                                <a href="#" original-title="admin" class=""><img alt="" src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>
+                                <a href="#" original-title="admin" class=""><img alt="" src="/resource/assets/images/classroom.png"></a>
                             </div>
                             <c:if test="${ownedClassroom.status == 1}">
                                 <a id="${ownedClassroom.id}" class="closeClass" style="float: right; cursor: pointer"
@@ -278,7 +278,8 @@
                     <c:forEach var="invitation" items="${invitations}" end="9">
                         <div class="about-author clearfix" id="invitation${invitation.id}">
                             <div class="" style="float: left;padding-right: 20px;">
-                                <a href="#" original-title="admin" class=""><img alt="" src="https://askwarks.files.wordpress.com/2012/06/icon-conversation.png"></a>
+                                <a href="#" original-title="admin"
+                                   class=""><img alt="" src="/resource/assets/images/invitationToPost.png"></a>
                             </div>
                             <a id="${invitation.id}" class="removeInvitation" style="float: right; cursor:pointer"
                                    onclick="removeInvitation(this);return false" >Remove</a>
@@ -295,7 +296,7 @@
                     <c:forEach var="invitation" items="${invitations}">
                         <div class="about-author clearfix" id="invitation${invitation.id}">
                             <div class="" style="float: left;padding-right: 20px;">
-                                <a href="#" original-title="admin" class=""><img alt="" src="https://askwarks.files.wordpress.com/2012/06/icon-conversation.png"></a>
+                                <a href="#" original-title="admin" class=""><img alt="" src="/resource/assets/images/invitationToPost.png"></a>
                             </div>
                             <a id="${invitation.id}" class="removeInvitation" style="float: right; cursor:pointer"
                                onclick="removeInvitation(this);return false" >Remove</a>
@@ -430,7 +431,7 @@
                         var component = '<div class="about-author clearfix" id="classroom'+ ownedClassrooms[i].id +'">'+
                                 '<div class="" style="float: left;padding-right: 20px;">'+
                                 '<a href="#" original-title="admin" class=""><img alt=""' +
-                                ' src="http://steinhardt.nyu.edu/scmsAdmin/media/users/il30/icons_facultyresources/classroom-01.png"></a>'+
+                                ' src="/resource/assets/images/classroom.png"></a>'+
                                 '</div>';
                         if (ownedClassrooms[i].status === 1) {
                             component = component +
@@ -488,7 +489,7 @@
                         $('#invitations').append('<div class="about-author clearfix" id="invitation'+ invitations[i].id +'">' +
                                 '<div class="" style="float: left;padding-right: 20px;">' +
                                 '<a href="#" original-title="admin" class=""><img alt="" ' +
-                                ' src="https://askwarks.files.wordpress.com/2012/06/icon-conversation.png"></a>' +
+                                ' src="/resource/assets/images/invitationToPost.png"></a>' +
                                 '</div>' +
                                 '<a id="'+ invitations[i].id +'" ' +
                                 'class="removeInvitation" style="float: right; cursor:pointer" ' +
