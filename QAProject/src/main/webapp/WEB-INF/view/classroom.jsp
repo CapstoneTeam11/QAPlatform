@@ -158,6 +158,7 @@
                     <a data-toggle="dropdown" href="" aria-expanded="false"><i class="icon-cog" style="color: black;font-weight: bold;font-size: 20px;"></i><span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu" style="left: -127px;" id="activeBtn">
                         <c:if test="${classroom.status == 1}">
+                            <li><a href="/updateClass/${classroom.id}">Update class</a></li>
                             <li><a href="javascript:closeClass(${classroom.id}, 0);">Close class</a></li>
                         </c:if>
                         <c:if test="${classroom.status == 0}">

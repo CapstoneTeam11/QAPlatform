@@ -81,7 +81,7 @@
                 <h5 style="margin-top: 15px">
                     <a href="/search?filter=4&searchKey=" style="color: white;">Classroom</a> /
                     <a href="/classroom/${classroom.id}" style="color: white;">${classroom.classroomName}</a> /
-                    <span style="color: #2f3239;">Search result for
+                    <span style="color: #2f3239;">Search results for
                         <span style="font-style: italic">${param.searchKey}</span></span>
                 </h5>
             </div>

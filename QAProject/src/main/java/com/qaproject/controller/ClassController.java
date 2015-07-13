@@ -197,7 +197,11 @@ public class ClassController {
 //            objectWithStatus.setStatus("403");
             return "redirect:403";
         }
+
         Classroom room = classroomDao.find(classroomId);
+        if(user.getId()!=room.getOwnerUserId().getId()){
+            return "redirect:403";
+        }
         List<Category> categoryList = categoryDao.findAll();
         model.addAttribute("categories",categoryList);
         model.addAttribute("classroom",room);
