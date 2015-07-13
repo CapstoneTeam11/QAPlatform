@@ -984,9 +984,11 @@ public class PostController {
         if (classroom.getOwnerUserId().getId() != user.getId()) {
             return "403";
         }
-        List<Post> posts = postDao.listQuestionMerge(id);
+        Double rangeDou = range * 0.01;
+        List<Post> posts = postDao.listQuestionMerge(id,rangeDou);
         model.addAttribute("classroom", classroom);
         model.addAttribute("posts", posts);
+        model.addAttribute("range",range);
         return "mergeQuestion";
     }
     @RequestMapping(value = "/post/merge", method = RequestMethod.GET)

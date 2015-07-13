@@ -41,7 +41,7 @@ public interface PostDao {
     public Post findLastCreatedPostByOwner(User ownerUser);
     public Post findLastCreatedReplyByOwner(User ownerUser);
     public List<PostDto> listSuggestPost(String title);
-    public List<Post> listQuestionMerge(Integer id);
+    public List<Post> listQuestionMerge(Integer id,Double range);
     public List<Post> findRelatedQuestion(String title);
     public List<Post> findRelatedArticle(String title);
     @Transactional(propagation = Propagation.REQUIRED)

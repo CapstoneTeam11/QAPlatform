@@ -55,6 +55,8 @@ public class Post {
     private Integer isComment = 0;
     @Transient
     private List<Integer> listUserNotification ;
+    @Transient
+    private Double score = 0.0 ;
     public Post() {
     }
 
@@ -249,5 +251,13 @@ public class Post {
             }
         }
         return null ;
+    }
+
+    public Double getScore() {
+        return score;
+    }
+
+    public void setScore(Double score) {
+        this.score = score;
     }
 }

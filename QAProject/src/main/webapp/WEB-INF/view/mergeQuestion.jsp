@@ -68,10 +68,10 @@
         <div class="row">
             <div class="col-md-9">
                 <div style="display: flex;">
-                <input type="range" min="0" max="100" step="10"style="width: 40%" id="rangeMerge">
-                <a class="button color small submit" href="/post/merge/${classroom.id}/70" id="suggestMergehref" style="margin-left: 5px">Suggest merge</a>
+                <input type="range" min="0" max="100" step="10" value="${range}" style="width: 40%" id="rangeMerge">
+                <a class="button color small submit" href="/post/merge/${classroom.id}/${range}" id="suggestMergehref" style="margin-left: 5px">Group</a>
                 </div>
-                <span style="font-weight: bold">Find posts have similar title over</span><span id="range" class="button color small submit" style="color: white;padding: 3px 5px;margin-left: 5px;">50 %</span>
+                <span style="font-weight: bold">Group posts have similar title over</span><span id="range" class="button color small submit" style="color: white;padding: 3px 5px;margin-left: 5px;">${range} %</span>
                 <form action="/post/merge" method="GET">
                 <input type="hidden" name="id" value="${classroom.id}">
                 <table class="table table-hover">

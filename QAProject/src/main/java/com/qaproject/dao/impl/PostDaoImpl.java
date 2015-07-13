@@ -8,6 +8,7 @@ import com.qaproject.entity.Post;
 import com.qaproject.entity.User;
 import com.qaproject.util.Constant;
 import com.qaproject.util.ConvertEntityDto;
+import info.debatty.java.stringsimilarity.NGram;
 import org.springframework.stereotype.Repository;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
@@ -16,6 +17,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -464,7 +467,7 @@ public class PostDaoImpl extends BaseDao<Post,Integer> implements PostDao{
         return postDtos;
     }
     @Override
-    public List<Post> listQuestionMerge(Integer id) {
+    public List<Post> listQuestionMerge(Integer id,Double range) {
         List<Post> posts = null;
         Query query = entityManager.createQuery("select p from Post p where p.status=1 and p.acceptedAnswerId=0 and p.parentId=0 and p.postType=1 and p.ownerClassId.id=:id",Post.class);
         query.setParameter("id",id);
@@ -473,6 +476,37 @@ public class PostDaoImpl extends BaseDao<Post,Integer> implements PostDao{
         } catch (NoResultException e){
             System.out.println("No post was accepted");
         }
+        if(posts!=null) {
+            for(int i = 0 ; i < posts.size();i++) {
+                Integer flag = 0 ;
+                Post post = posts.get(i);
+                NGram nGram = new NGram(3);
+                for(int j = 0 ; j < posts.size() ; j++) {
+                    Double score = nGram.distance(post.getTitle(),posts.get(j).getTitle());
+                    if(score >= range) {
+                        flag++;
+                    }
+                    score = score + post.getScore();
+                    post.setScore(score);
+                }
+                if(flag == 1) {
+                    post.setScore(0.0);
+                }
+            }
+            Collections.sort(posts, new Comparator<Post>() {
+                @Override
+                public int compare(Post post, Post post2) {
+                    if(post.getScore()==post2.getScore()) {
+                        return 0;
+                    } else if(post.getScore() < post2.getScore()) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                }
+            });
+        }
+
         return posts;
     }
 
