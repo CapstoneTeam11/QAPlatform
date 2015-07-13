@@ -162,6 +162,8 @@
                         </c:if>
                     </div>
                     <c:if test="${fn:length(joinedClassrooms) > 10}">
+                        <div id="loadingC"
+                             style="text-align: center; display: none"><img src="/resource/assets/images/loader.GIF"></div>
                         <div><a class="post-read-more button color small" style="margin-bottom: 20px;"
                                 id="loadMoreClassroom">Load more</a></div>
                     </c:if>
@@ -219,6 +221,8 @@
                         </c:if>
                     </div>
                     <c:if test="${fn:length(followedTeachers) > 10}">
+                        <div id="loadingT"
+                             style="text-align: center; display: none"><img src="/resource/assets/images/loader.GIF"></div>
                         <div><a class="post-read-more button color small" style="margin-bottom: 20px;"
                                 id="loadMoreTeacher">Load more</a></div>
                     </c:if>
@@ -282,6 +286,8 @@
                         </c:if>
                     </div>
                     <c:if test="${fn:length(invitations) > 10}">
+                        <div id="loadingI"
+                             style="text-align: center; display: none"><img src="/resource/assets/images/loader.GIF"></div>
                         <div><a class="post-read-more button color small" style="margin-bottom: 20px;"
                                 id="loadMoreInvitation">Load more</a></div>
                     </c:if>
@@ -348,12 +354,21 @@
             $.ajax({
                 type: "GET",
                 url: url,
+                beforeSend: function(){
+                    $('#loadMoreTeacher').hide();
+                    $('#loadingT').show();
+
+                },
+                complete: function() {
+                    $('#loadingT').hide();
+                },
                 success: function (data) {
                     var followedTeachers = new Array();
                     followedTeachers = data;
                     var length = followedTeachers.length;
                     if (length > 10) {
                         length = followedTeachers.length - 1;
+                        $('#loadMoreTeacher').show();
                     } else {
                         $('#loadMoreTeacher').hide();
                     }
@@ -390,6 +405,14 @@
             $.ajax({
                 type: "GET",
                 url: url,
+                beforeSend: function(){
+                    $('#loadMoreClassroom').hide();
+                    $('#loadingC').show();
+
+                },
+                complete: function() {
+                    $('#loadingC').hide();
+                },
                 success: function (data) {
                     var joinedClassrooms = new Array();
                     joinedClassrooms = data;
@@ -399,6 +422,7 @@
                     var length = joinedClassrooms.length;
                     if (length > 10) {
                         length = joinedClassrooms.length - 1;
+                        $('#loadMoreClassroom').show();
                     } else {
                         $('#loadMoreClassroom').hide();
                     }
@@ -440,12 +464,21 @@
             $.ajax({
                 type: "GET",
                 url: url,
+                beforeSend: function(){
+                    $('#loadMoreInvitation').hide();
+                    $('#loadingI').show();
+
+                },
+                complete: function() {
+                    $('#loadingI').hide();
+                },
                 success: function (data) {
                     var invitations = new Array();
                     invitations = data;
                     var length = invitations.length;
                     if (length > 10) {
                         length = invitations.length - 1;
+                        $('#loadMoreInvitation').show();
                     } else {
                         $('#loadMoreInvitation').hide();
                     }

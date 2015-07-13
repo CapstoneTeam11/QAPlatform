@@ -206,6 +206,8 @@
                 </c:if>
             </div>
             <c:if test="${fn:length(questions)>10}">
+                <div id="loadingQ"
+                     style="text-align: center; display: none"><img src="/resource/assets/images/loader.GIF"></div>
                 <a class="post-read-more button color small"
                    style="margin-bottom: 5px;" id="loadMoreQuestion">Load more</a>
             </c:if>
@@ -263,6 +265,8 @@
                 </c:if>
             </div>
             <c:if test="${fn:length(articles)>10}">
+                <div id="loadingA"
+                     style="text-align: center; display: none"><img src="/resource/assets/images/loader.GIF"></div>
                 <a class="post-read-more button color small"
                    style="margin-bottom: 5px;" id="loadMoreArticle">Load more</a>
             </c:if>
@@ -322,6 +326,8 @@
                 </c:if>
             </div>
             <c:if test="${fn:length(classrooms) > 10}">
+                <div id="loadingC"
+                     style="text-align: center; display: none"><img src="/resource/assets/images/loader.GIF"></div>
                 <c:if test="${userProfile.roleId.id==1}">
                 <div><a class="post-read-more button color small" style="margin-bottom: 20px;"
                         id="loadMoreJoinedClassroom">Load more</a></div>
@@ -419,12 +425,21 @@
             type: "POST",
             url: url,
             data: {userProfileId: userProfileId, lastId: lastQuestionId},
+            beforeSend: function(){
+                $('#loadMoreQuestion').hide();
+                $('#loadingQ').show();
+
+            },
+            complete: function() {
+                $('#loadingQ').hide();
+            },
             success: function (data) {
                 var questions = new Array();
                 questions = data;
                 var length = questions.length;
                 if (length > 10) {
                     length = questions.length - 1;
+                    $('#loadMoreQuestion').show();
                 } else {
                     $('#loadMoreQuestion').hide();
                 }
@@ -477,12 +492,21 @@
             type: "POST",
             url: url,
             data: {userProfileId: userProfileId, lastId: lastArticleId},
+            beforeSend: function(){
+                $('#loadMoreArticle').hide();
+                $('#loadingA').show();
+
+            },
+            complete: function() {
+                $('#loadingA').hide();
+            },
             success: function (data) {
                 var articles = new Array();
                 articles = data;
                 var length = articles.length;
                 if (length > 10) {
                     length = articles.length - 1;
+                    $('#loadMoreArticle').show();
                 } else {
                     $('#loadMoreArticle').hide();
                 }
@@ -520,12 +544,21 @@
             type: "POST",
             url: url,
             data: {userProfileId: userProfileId, lastId: lastOwnedClassroomId},
+            beforeSend: function(){
+                $('#loadMoreOwnedClassroom').hide();
+                $('#loadingC').show();
+
+            },
+            complete: function() {
+                $('#loadingC').hide();
+            },
             success: function (data) {
                 var ownedClassrooms = new Array();
                 ownedClassrooms = data;
                 var length = ownedClassrooms.length;
                 if (length > 10) {
                     length = ownedClassrooms.length - 1;
+                    $('#loadMoreOwnedClassroom').show();
                 } else {
                     $('#loadMoreOwnedClassroom').hide();
                 }
@@ -571,12 +604,21 @@
             type: "POST",
             url: url,
             data: {userProfileId: userProfileId, lastId: lastJoinedClassroomId},
+            beforeSend: function(){
+                $('#loadMoreJoinedClassroom').hide();
+                $('#loadingC').show();
+
+            },
+            complete: function() {
+                $('#loadingC').hide();
+            },
             success: function (data) {
                 var joinedClassrooms = new Array();
                 joinedClassrooms = data;
                 var length = joinedClassrooms.length;
                 if (length > 10) {
                     length = joinedClassrooms.length - 1;
+                    $('#loadMoreJoinedClassroom').show();
                 } else {
                     $('#loadMoreJoinedClassroom').hide();
                 }
