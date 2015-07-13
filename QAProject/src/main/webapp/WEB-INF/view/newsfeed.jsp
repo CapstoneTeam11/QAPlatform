@@ -188,6 +188,8 @@
                             </c:if>
                         </div>
                         <c:if test="${fn:length(questions)>10}">
+                            <div id="loadingQ"
+                                 style="text-align: center; display: none"><img src="/resource/assets/images/loader.GIF"></div>
                             <a class="post-read-more button color small"
                                style="margin-bottom: 5px;" id="loadMoreQuestion">Load more</a>
                         </c:if>
@@ -250,6 +252,8 @@
                             </c:if>
                         </div>
                         <c:if test="${fn:length(articles)>10}">
+                            <div id="loadingA"
+                                 style="text-align: center; display: none"><img src="/resource/assets/images/loader.GIF"></div>
                             <a class="post-read-more button color small"
                                style="margin-bottom: 5px;" id="loadMoreArticle">Load more</a>
                         </c:if>
@@ -299,6 +303,8 @@
                             </c:if>
                         </div>
                         <c:if test="${fn:length(materials)>10}">
+                            <div id="loadingM"
+                                 style="text-align: center; display: none"><img src="/resource/assets/images/loader.GIF"></div>
                             <a class="post-read-more button color small"
                                style="margin-bottom: 5px;" id="loadMoreMaterial">Load more</a>
                         </c:if>
@@ -370,12 +376,21 @@
         $.ajax({
             type: "GET",
             url: url,
+            beforeSend: function(){
+                $('#loadMoreQuestion').hide();
+                $('#loadingQ').show();
+
+            },
+            complete: function() {
+                $('#loadingQ').hide();
+            },
             success: function (data) {
                 var newsFeedQuestion = new Array();
                 newsFeedQuestion = data;
                 var length = newsFeedQuestion.length;
                 if (length > 10) {
                     length = newsFeedQuestion.length - 1;
+                    $('#loadMoreQuestion').show();
                 } else {
                     $('#loadMoreQuestion').hide();
                 }
@@ -426,12 +441,21 @@
         $.ajax({
             type: "GET",
             url: url,
+            beforeSend: function(){
+                $('#loadMoreArticle').hide();
+                $('#loadingA').show();
+
+            },
+            complete: function() {
+                $('#loadingA').hide();
+            },
             success: function (data) {
                 var articles = new Array();
                 articles = data;
                 var length = articles.length;
                 if (length > 10) {
                     length = articles.length - 1;
+                    $('#loadMoreArticle').show();
                 } else {
                     $('#loadMoreArticle').hide();
                 }
@@ -466,12 +490,21 @@
         $.ajax({
             type: "GET",
             url: url,
+            beforeSend: function(){
+                $('#loadMoreMaterial').hide();
+                $('#loadingM').show();
+
+            },
+            complete: function() {
+                $('#loadingM').hide();
+            },
             success: function (data) {
                 var materials = new Array();
                 materials = data;
                 var length = materials.length;
                 if (length > 10) {
                     length = materials.length - 1;
+                    $('#loadMoreMaterial').show();
                 } else {
                     $('#loadMoreMaterial').hide();
                 }
