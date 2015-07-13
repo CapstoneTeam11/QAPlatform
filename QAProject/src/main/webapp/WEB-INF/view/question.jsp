@@ -329,7 +329,9 @@
                 </div>
             </c:if>
             <c:if test="${fn:length(postAnswers) > 10}">
-            <div><a class="post-read-more button color small" style="margin-bottom: 20px;" id="loadMore">Continue reading</a></div>
+            <div id="loading"
+                 style="text-align: center; display: none"><img src="/resource/assets/images/loader.GIF"></div>
+            <div><a class="post-read-more button color small" style="margin-bottom: 20px;" id="loadMore">Load more</a></div>
             </c:if>
             <!-- End page-content -->
 
@@ -840,6 +842,14 @@
             $.ajax({
                 type : "GET",
                 url : url,
+                beforeSend: function(){
+                    $('#loadMore').hide();
+                    $('#loading').show();
+
+                },
+                complete: function() {
+                    $('#loading').hide();
+                },
                 success : function(data) {
                     var post = new Array();
                     post = data;
@@ -849,6 +859,7 @@
                     var length = post.length;
                     if(length > 10) {
                         length = post.length-1;
+                        $('#loadMore').show();
                     } else {
                         $('#loadMore').hide();
                     }
