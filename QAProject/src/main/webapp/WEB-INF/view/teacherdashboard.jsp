@@ -342,7 +342,9 @@
     <div class="widget widget_tag_cloud">
         <h3 class="widget_title">
             Tags
-            <a href="/profile/update#yourtag" style="float: right;">Edit tag</a>
+            <c:if test="${empty sessionScope.user.tagUserList}">
+                <a href="/profile/update#yourtag" style="float: right;">Edit tag</a>
+            </c:if>
         </h3>
         <c:if test="${not empty sessionScope.user.tagUserList}">
             <c:forEach var="tag" items="${sessionScope.user.tagUserList}">

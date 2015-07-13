@@ -272,7 +272,8 @@
         </c:if>
     </div>
     <c:if test="${fn:length(questions)>10}">
-        <div id="loading" style="text-align: center; display: none"><img src="/resource/assets/images/loader.GIF"></div>
+        <div id="loadingQ"
+             style="text-align: center; display: none"><img src="/resource/assets/images/loader.GIF"></div>
         <a class="post-read-more button color small"
            style="margin-bottom: 5px;" id="loadMoreQuestion">Load more</a>
     </c:if>
@@ -330,6 +331,8 @@
         </c:if>
     </div>
     <c:if test="${fn:length(articles)>10}">
+        <div id="loadingA"
+             style="text-align: center; display: none"><img src="/resource/assets/images/loader.GIF"></div>
         <a class="post-read-more button color small"
            style="margin-bottom: 5px;" id="loadMoreArticle">Load more</a>
     </c:if>
@@ -390,6 +393,8 @@
             </div>
         </c:if>
         <c:if test="${fn:length(materials)>10}">
+            <div id="loadingM"
+                 style="text-align: center; display: none"><img src="/resource/assets/images/loader.GIF"></div>
             <a class="post-read-more button color small"
                style="margin-bottom: 5px;" id="loadMoreMaterial">Load more</a>
         </c:if>
@@ -443,6 +448,8 @@
             </c:if>
         </div>
         <c:if test="${fn:length(requests)>10}">
+            <div id="loadingR"
+                 style="text-align: center; display: none"><img src="/resource/assets/images/loader.GIF"></div>
             <a class="post-read-more button color small"
                style="margin-bottom: 5px;" id="loadMoreRequest">Load more</a>
         </c:if>
@@ -498,6 +505,8 @@
             </c:if>
         </div>
         <c:if test="${fn:length(students)>10}">
+            <div id="loadingS"
+                 style="text-align: center; display: none"><img src="/resource/assets/images/loader.GIF"></div>
             <a class="post-read-more button color small"
                style="margin-bottom: 5px;" id="loadMoreStudent">Load more</a>
         </c:if>
@@ -999,11 +1008,11 @@
             data: {classroomId: classroomId, lastId: lastQuestionId},
             beforeSend: function(){
                 $('#loadMoreQuestion').hide();
-                $('#loading').show();
+                $('#loadingQ').show();
 
             },
             complete: function() {
-                $('#loading').hide();
+                $('#loadingQ').hide();
             },
             success: function (data) {
                 var questions = new Array();
@@ -1064,12 +1073,21 @@
             type: "POST",
             url: url,
             data: {classroomId: classroomId, lastId: lastArticleId},
+            beforeSend: function(){
+                $('#loadMoreArticle').hide();
+                $('#loadingA').show();
+
+            },
+            complete: function() {
+                $('#loadingA').hide();
+            },
             success: function (data) {
                 var articles = new Array();
                 articles = data;
                 var length = articles.length;
                 if (length > 10) {
                     length = articles.length - 1;
+                    $('#loadMoreArticle').show();
                 } else {
                     $('#loadMoreArticle').hide();
                 }
@@ -1109,12 +1127,21 @@
             type: "POST",
             url: url,
             data: {classroomId: classroomId, lastId: lastMaterialId},
+            beforeSend: function(){
+                $('#loadMoreMaterial').hide();
+                $('#loadingM').show();
+
+            },
+            complete: function() {
+                $('#loadingM').hide();
+            },
             success: function (data) {
                 var materials = new Array();
                 materials = data;
                 var length = materials.length;
                 if (length > 10) {
                     length = materials.length - 1;
+                    $('#loadMoreMaterial').show();
                 } else {
                     $('#loadMoreMaterial').hide();
                 }
@@ -1148,12 +1175,21 @@
             type: "POST",
             url: url,
             data: {classroomId: classroomId, lastId: lastRequestId},
+            beforeSend: function(){
+                $('#loadMoreRequest').hide();
+                $('#loadingR').show();
+
+            },
+            complete: function() {
+                $('#loadingR').hide();
+            },
             success: function (data) {
                 var requests = new Array();
                 requests = data;
                 var length = requests.length;
                 if (length > 10) {
                     length = requests.length - 1;
+                    $('#loadMoreRequest').show();
                 } else {
                     $('#loadMoreRequest').hide();
                 }
@@ -1192,8 +1228,12 @@
             url: url,
             data: {classroomId: classroomId, lastId: lastClassroomUserId},
             beforeSend: function(){
+                $('#loadMoreStudent').hide();
+                $('#loadingS').show();
 
-                $('#loadMoreStudent').text('Loading...');
+            },
+            complete: function() {
+                $('#loadingS').hide();
             },
             success: function (data) {
                 var students = new Array();
@@ -1201,6 +1241,7 @@
                 var length = students.length;
                 if (length > 10) {
                     length = students.length - 1;
+                    $('#loadMoreStudent').show();
                 } else {
                     $('#loadMoreStudent').hide();
                 }
