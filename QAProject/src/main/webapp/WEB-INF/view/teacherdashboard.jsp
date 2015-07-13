@@ -340,15 +340,18 @@
 
 
     <div class="widget widget_tag_cloud">
-        <h3 class="widget_title">Tags</h3>
-        <a href="#">projects</a>
-        <a href="#">Portfolio</a>
-        <a href="#">Wordpress</a>
-        <a href="#">Html</a>
-        <a href="#">Css</a>
-        <a href="#">jQuery</a>
-        <a href="#">2code</a>
-        <a href="#">vbegy</a>
+        <h3 class="widget_title">
+            Tags
+            <a href="/profile/update#yourtag" style="float: right;">Edit tag</a>
+        </h3>
+        <c:if test="${not empty sessionScope.user.tagUserList}">
+            <c:forEach var="tag" items="${sessionScope.user.tagUserList}">
+                <a href="#">${tag.tagId.tagName}</a>
+            </c:forEach>
+        </c:if>
+        <c:if test="${empty sessionScope.user.tagUserList}">
+            Provide your favourite tags now to get more interest news.
+        </c:if>
     </div>
 
 </aside><!-- End sidebar -->

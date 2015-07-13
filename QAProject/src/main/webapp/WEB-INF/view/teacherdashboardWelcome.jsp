@@ -144,25 +144,26 @@
                     <ul>
                         <li>
                             <div class="author-img">
-                                <a href="#"><img width="60" height="60" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" alt=""></a>
+                                <a href="/profile/view/${sessionScope.user.id}"><img width="60" height="60"
+                                                                                     src="${sessionScope.user.profileImageURL}" alt=""></a>
                             </div>
-                            <h6><a href="#">Edit profile</a></h6>
+                            <h6><a href="/profile/update">Edit profile</a></h6>
                         </li>
                     </ul>
                 </div>
-
-
-
                 <div class="widget widget_tag_cloud">
-                    <h3 class="widget_title">Tags</h3>
-                    <a href="#">projects</a>
-                    <a href="#">Portfolio</a>
-                    <a href="#">Wordpress</a>
-                    <a href="#">Html</a>
-                    <a href="#">Css</a>
-                    <a href="#">jQuery</a>
-                    <a href="#">2code</a>
-                    <a href="#">vbegy</a>
+                    <h3 class="widget_title">
+                        Tags
+                        <a href="/profile/update#yourtag" style="float: right;">Edit tag</a>
+                    </h3>
+                    <c:if test="${not empty sessionScope.user.tagUserList}">
+                        <c:forEach var="tag" items="${sessionScope.user.tagUserList}">
+                            <a href="#">${tag.tagId.tagName}</a>
+                        </c:forEach>
+                    </c:if>
+                    <c:if test="${empty sessionScope.user.tagUserList}">
+                        Provide your favourite tags now to get more interest news.
+                    </c:if>
                 </div>
 
             </aside><!-- End sidebar -->

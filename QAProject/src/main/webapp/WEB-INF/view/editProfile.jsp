@@ -146,7 +146,7 @@
                                     <input type="password" name="confirm_password" id="confirmPassword" value="${user.password}">
                                 </p>
                                 <p>
-                                    <label class="required">Your area<span>*</span></label>
+                                    <label class="required">Knowledge about<span>*</span></label>
                                     <span class="styled-select" style="width: 100%;">
                                     <select id="professional" name="cate" title="Please choose your area" required>
                                         <option value="">Select a type</option>
@@ -167,9 +167,9 @@
                             </div>
 
                             <div class="form-style form-style-2">
-
+                                <span class="anchor-result-page" id="yourtag"></span>
                                 <p>
-                                    <label class="required">Know about</label>
+                                    <label class="required">Your tags</label>
                                     <c:forEach var="tag" items="${user.tagUserList}">
                                     <input type="hidden" name="tagUpdateId" value="${tag.tagId.id}">
                                     <input type="hidden" name="tagUpdateName" value="${tag.tagId.tagName}">
