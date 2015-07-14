@@ -153,7 +153,7 @@
                 </div>
                 <div class="widget widget_tag_cloud">
                     <h3 class="widget_title">
-                        Tags
+                        Your Tags
                         <c:if test="${empty sessionScope.user.tagUserList}">
                             <a href="/profile/update#yourtag" style="float: right;">Edit tag</a>
                         </c:if>

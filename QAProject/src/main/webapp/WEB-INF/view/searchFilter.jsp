@@ -120,6 +120,8 @@
                 </div>
             </div>
             <c:if test="${fn:length(questions)>10}">
+                    <div id="loadingQ"
+                        style="text-align: center; display: none"><img src="/resource/assets/images/loader.GIF"></div>
                     <a class="post-read-more button color small"
                        style="margin: 5px 0px;" id="loadMoreQuestion">Load more results</a>
             </c:if>
@@ -173,6 +175,8 @@
                 </div>
             </div>
             <c:if test="${fn:length(articles)>10}">
+                <div id="loadingA"
+                     style="text-align: center; display: none"><img src="/resource/assets/images/loader.GIF"></div>
                 <a class="post-read-more button color small"
                    style="margin: 5px 0px;" id="loadMoreArticle">Load more results</a>
             </c:if>
@@ -225,6 +229,8 @@
                     </table>
                 </div>
                 <c:if test="${fn:length(materials)>10}">
+                    <div id="loadingM"
+                         style="text-align: center; display: none"><img src="/resource/assets/images/loader.GIF"></div>
                     <a class="post-read-more button color small"
                        style="margin: 5px 0px;" id="loadMoreMaterial">Load more results</a>
                 </c:if>
@@ -279,6 +285,8 @@
                 </div>
             </div>
             <c:if test="${fn:length(classrooms)>10}">
+                <div id="loadingC"
+                     style="text-align: center; display: none"><img src="/resource/assets/images/loader.GIF"></div>
                 <a class="post-read-more button color small"
                    style="margin: 5px 0px;" id="loadMoreClassroom">Load more results</a>
             </c:if>
@@ -340,6 +348,8 @@
                 </ol>
             </div>
             <c:if test="${fn:length(users)>10}">
+                <div id="loadingU"
+                     style="text-align: center; display: none"><img src="/resource/assets/images/loader.GIF"></div>
                 <a class="post-read-more button color small"
                    style="margin: 5px 0px;" id="loadMoreUser">Load more results</a>
             </c:if>
@@ -386,12 +396,21 @@
             type: "POST",
             url: url,
             data: {searchKey: searchKey, lastId: lastQuestionId},
+            beforeSend: function(){
+                $('#loadMoreQuestion').hide();
+                $('#loadingQ').show();
+
+            },
+            complete: function() {
+                $('#loadingQ').hide();
+            },
             success: function (data) {
                 var questions = new Array();
                 questions = data;
                 var length = questions.length;
                 if (length > 10) {
                     length = questions.length - 1;
+                    $('#loadMoreQuestion').show();
                 } else {
                     $('#loadMoreQuestion').hide();
                 }
@@ -420,12 +439,21 @@
             type: "POST",
             url: url,
             data: {searchKey: searchKey, lastId: lastArticleId},
+            beforeSend: function(){
+                $('#loadMoreArticle').hide();
+                $('#loadingA').show();
+
+            },
+            complete: function() {
+                $('#loadingA').hide();
+            },
             success: function (data) {
                 var articles = new Array();
                 articles = data;
                 var length = articles.length;
                 if (length > 10) {
                     length = articles.length - 1;
+                    $('#loadMoreArticle').show();
                 } else {
                     $('#loadMoreArticle').hide();
                 }
@@ -454,12 +482,21 @@
             type: "POST",
             url: url,
             data: {searchKey: searchKey, lastId: lastMaterialId},
+            beforeSend: function(){
+                $('#loadMoreMaterial').hide();
+                $('#loadingM').show();
+
+            },
+            complete: function() {
+                $('#loadingM').hide();
+            },
             success: function (data) {
                 var materials = new Array();
                 materials = data;
                 var length = materials.length;
                 if (length > 10) {
                     length = materials.length - 1;
+                    $('#loadMoreMaterial').show();
                 } else {
                     $('#loadMoreMaterial').hide();
                 }
@@ -485,12 +522,21 @@
             type: "POST",
             url: url,
             data: {searchKey: searchKey, lastId: lastUserId},
+            beforeSend: function(){
+                $('#loadMoreUser').hide();
+                $('#loadingU').show();
+
+            },
+            complete: function() {
+                $('#loadingU').hide();
+            },
             success: function (data) {
                 var users = new Array();
                 users = data;
                 var length = users.length;
                 if (length > 10) {
                     length = users.length - 1;
+                    $('#loadMoreUser').show();
                 } else {
                     $('#loadMoreUser').hide();
                 }
@@ -523,12 +569,21 @@
             type: "POST",
             url: url,
             data: {searchKey: searchKey, lastId: lastClassroomId},
+            beforeSend: function(){
+                $('#loadMoreClassroom').hide();
+                $('#loadingC').show();
+
+            },
+            complete: function() {
+                $('#loadingC').hide();
+            },
             success: function (data) {
                 var classrooms = new Array();
                 classrooms = data;
                 var length = classrooms.length;
                 if (length > 10) {
                     length = classrooms.length - 1;
+                    $('#loadMoreClassroom').show();
                 } else {
                     $('#loadMoreClassroom').hide();
                 }

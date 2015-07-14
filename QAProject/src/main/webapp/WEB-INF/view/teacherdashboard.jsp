@@ -111,7 +111,7 @@
     <section class="container" style="height:70px; display: flex; align-items: center">
         <div class="row">
             <div class="col-md-12">
-                <h3>Teacher dashboard</h3>
+                <h3>Dashboard</h3>
             </div>
         </div><!-- End row -->
     </section><!-- End container -->
@@ -124,7 +124,7 @@
 <div class="row">
     <div class="col-md-6 col-sm-6">
         <input type="text" aria-required="true" value="Search in your dashboard" onfocus="if(this.value=='Search in your dashboard')this.value='';"
-               onblur="if(this.value=='')this.value='Search in your dashboard';" style="width: 100%">
+               onblur="if(this.value=='')this.value='Search in your dashboard';" style="width: 100%; display: none">
     </div>
     <div class="col-md-6 col-sm-6">
             <a href="/createClass" class="button medium green-button" style="float: right"><i class="icon-group"></i> Create class</a>
@@ -347,7 +347,7 @@
 
     <div class="widget widget_tag_cloud">
         <h3 class="widget_title">
-            Tags
+            Your Tags
             <c:if test="${empty sessionScope.user.tagUserList}">
                 <a href="/profile/update#yourtag" style="float: right;">Edit tag</a>
             </c:if>

@@ -58,7 +58,12 @@
         <section class="container" style="height:70px; display: flex; align-items: center">
             <div class="row">
                 <div class="col-md-12">
-                    <h3>Merge question </h3>
+                    <h3 style="margin-top:15px">Merge questions</h3>
+                    <h5 style="margin-top: 15px">
+                        <a href="/search?filter=4&searchKey=" style="color: white;">Classroom</a> /
+                        <a href="/classroom/${classroom.id}" style="color: white;">${classroom.classroomName}</a> /
+                        <span style="color: #2f3239;">Merge questions</span>
+                    </h5>
                 </div>
             </div><!-- End row -->
         </section><!-- End container -->
@@ -67,29 +72,55 @@
     <section class="container main-content page-left-sidebar">
         <div class="row">
             <div class="col-md-9">
-                <div style="display: flex;">
+                <%--<div style="display: flex;">
+                <span style="font-weight: bold">Group questions have similar title over</span><span id="range"
+                    class="button color small submit" style="color: white;padding: 3px 5px;margin-left: 5px;">${range} %</span>
                 <input type="range" min="0" max="100" step="10" value="${range}" style="width: 40%" id="rangeMerge">
                 <a class="button color small submit" href="/post/merge/${classroom.id}/${range}" id="suggestMergehref" style="margin-left: 5px">Group</a>
+                </div>--%>
+                <div class="col-md-12">
+                    <span style="font-weight: bold; font-size: 18px">
+                        Group questions have similar titles over
+                    </span>
+                    <span id="range"
+                      style="font-size: 20px; font-style:italic; font-weight: bold">
+                          ${range}%
+                    </span>
                 </div>
-                <span style="font-weight: bold">Group posts have similar title over</span><span id="range" class="button color small submit" style="color: white;padding: 3px 5px;margin-left: 5px;">${range} %</span>
+                <div class="col-md-12">
+                    <div class="col-md-6" style="padding-left: 0px;">
+                        <input type="range" min="0" max="100" step="10" value="${range}" style="margin-top: 10px;"
+                               id="rangeMerge"></div>
+                    <div class="col-md-6">
+                        <a class="button color small submit" href="/post/merge/${classroom.id}/${range}" id="suggestMergehref">Group</a></div>
+                </div>
+
                 <form action="/post/merge" method="GET">
                 <input type="hidden" name="id" value="${classroom.id}">
-                <table class="table table-hover">
-                    <tr>
-                        <th>Post name</th>
-                        <th></th>
-                    </tr>
-                    <c:forEach var="post" items="${posts}">
+                <table class="table table-hover" style="margin-left: 10px">
+                    <thead>
                         <tr>
-                            <td><a href="/post/view/${post.id}">${post.title}</a></td>
-                            <td><input type="checkbox" class="checkbox" name="postMerges" value="${post.id}"></td>
+                            <th style="border-bottom: none; font-weight: bold">Question's Title</th>
+                            <th style="border-bottom: none"></th>
                         </tr>
-                    </c:forEach>
+                    </thead>
+                    <tbody style="display: block; max-height: 300px; overflow-y: auto">
+                        <c:forEach var="post" items="${posts}">
+                            <tr>
+                                <td class="col-md-12"><a href="/post/view/${post.id}">${post.title}</a></td>
+                                <td ><input type="checkbox" class="checkbox" name="postMerges"
+                                                            value="${post.id}"></td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
                 </table>
-                <input type="submit" class="button color small submit" value="merge checked questions">
+                <div class="row">
+                    <input type="submit" class="button color small submit" value="Merge checked questions"
+                           style="float: right;margin-right: 16px;">
+                </div>
                 </form>
                 <div id="respond" class="comment-respond page-content clearfix">
-                    <div class="boxedtitle page-title"><h2>Leave a reply</h2></div>
+                    <div class="boxedtitle page-title"><h2>Answer checked questions</h2></div>
                     <form action="/post/add/all" id="commentform" method="POST" class="comment-form">
                         <div id="hiddenId"></div>
                         <input type="hidden" name="classroomId" value="${classroom.id}">
@@ -105,33 +136,25 @@
                 </div>
             </div><!-- End main -->
             <aside class="col-md-3 sidebar">
-                <div class="widget widget_highest_points">
-                    <h3 class="widget_title">Hi, ${sessionScope.user.displayName}</h3>
-                    <ul>
-                        <li>
-                            <div class="author-img">
-                                <a href="/profile/view/${sessionScope.user.id}"><img width="60" height="60"
-                                                                                     src="${sessionScope.user.profileImageURL}" alt=""></a>
-                            </div>
-                            <h6><a href="/profile/update">Edit profile</a></h6>
+                <div class="widget">
+                    <h3 class="widget_title">About classroom</h3>
+                    <ul class="related-posts">
+                        <li class="related-item">
+                            <c:if test="${classroom.status==1}">
+                                <p>${classroom.classroomDescription}</p>
+                            </c:if>
+                            <c:if test="${classroom.status==0}">
+                                <p style="color: red; font-style: italic">Classroom is closed.</p>
+                            </c:if>
                         </li>
                     </ul>
                 </div>
-
-
-
                 <div class="widget widget_tag_cloud">
-                    <h3 class="widget_title">Tags</h3>
-                    <a href="#">projects</a>
-                    <a href="#">Portfolio</a>
-                    <a href="#">Wordpress</a>
-                    <a href="#">Html</a>
-                    <a href="#">Css</a>
-                    <a href="#">jQuery</a>
-                    <a href="#">2code</a>
-                    <a href="#">vbegy</a>
+                    <h3 class="widget_title">Classroom's Tags</h3>
+                    <c:forEach var="tag" items="${classroom.tagClassroomList}">
+                        <a href="#">${tag.tagId.tagName}</a>
+                    </c:forEach>
                 </div>
-
             </aside><!-- End sidebar -->
         </div><!-- End row -->
     </section><!-- End container -->
