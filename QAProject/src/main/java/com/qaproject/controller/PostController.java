@@ -259,7 +259,7 @@ public class PostController {
             } else {
                 for (Post questionByTitle : questionByTitles) {
                     for (Integer currentRelatedQuestionId : relatedQuestionIds) {
-                        if (currentRelatedQuestionId == questionByTitle.getId()) {
+                        if (currentRelatedQuestionId.compareTo(questionByTitle.getId())==0) {
                             relatedQuestions.add(questionByTitle);
                         }
                     }
@@ -297,7 +297,7 @@ public class PostController {
                 for (Post articleByTitle : articleByTitles) {
                     if (articleByTitle.getId() != post.getId()) {
                         for (Integer currentRelatedArticlesId: relatedArticlesIds) {
-                            if (articleByTitle.getId()==currentRelatedArticlesId) {
+                            if (articleByTitle.getId().compareTo(currentRelatedArticlesId)==0) {
                                 relatedArticles.add(articleByTitle);
                             }
                         }
@@ -335,7 +335,7 @@ public class PostController {
             } else {
                 for (Material materialByName : materialByNames) {
                     for (Integer currentRelatedMaterialId: relatedMaterialIds) {
-                        if (materialByName.getId()==currentRelatedMaterialId){
+                        if (materialByName.getId().compareTo(currentRelatedMaterialId)==0){
                             relatedMaterials.add(materialByName);
                         }
                     }
