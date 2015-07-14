@@ -514,6 +514,21 @@
 </div><!-- End page-content -->
 </div><!-- End main -->
 <aside class="col-md-3 sidebar">
+    <c:if test="${classroom.ownerUserId.id!=user.id}">
+        <div class="widget widget_highest_points">
+            <h3 class="widget_title">Classroom Owner</h3>
+            <ul>
+                <li>
+                    <div class="author-img">
+                        <a href="/profile/view/${classroom.ownerUserId.id}"><img width="60" height="60"
+                                                                                 src="${classroom.ownerUserId.profileImageURL}" alt=""></a>
+                    </div>
+                    <h6><a href="/profile/view/${classroom.ownerUserId.id}">${classroom.ownerUserId.displayName}</a></h6>
+                    <span class="comment">${classroom.ownerUserId.aboutMe}</span>
+                </li>
+            </ul>
+        </div>
+    </c:if>
     <div class="widget">
         <h3 class="widget_title">About classroom</h3>
         <ul class="related-posts">
@@ -566,21 +581,12 @@
             </div>
         </c:if>
     </c:if>
-<c:if test="${classroom.ownerUserId.id!=user.id}">
-    <div class="widget widget_highest_points">
-        <h3 class="widget_title">Classroom Owner</h3>
-        <ul>
-            <li>
-                <div class="author-img">
-                    <a href="/profile/view/${classroom.ownerUserId.id}"><img width="60" height="60"
-                                                             src="${classroom.ownerUserId.profileImageURL}" alt=""></a>
-                </div>
-                <h6><a href="/profile/view/${classroom.ownerUserId.id}">${classroom.ownerUserId.displayName}</a></h6>
-                <span class="comment">${classroom.ownerUserId.aboutMe}</span>
-            </li>
-        </ul>
+    <div class="widget widget_tag_cloud">
+        <h3 class="widget_title">Classroom's Tags</h3>
+        <c:forEach var="tag" items="${classroom.tagClassroomList}">
+            <a href="#">${tag.tagId.tagName}</a>
+        </c:forEach>
     </div>
-</c:if>
 </aside><!-- End sidebar -->
 </div><!-- End row -->
 </section><!-- End container -->

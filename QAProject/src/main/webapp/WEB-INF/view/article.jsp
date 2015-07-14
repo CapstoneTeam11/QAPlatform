@@ -343,7 +343,7 @@
                 </ul>
             </div>
             <div class="widget widget_tag_cloud">
-                <h3 class="widget_title">Tags</h3>
+                <h3 class="widget_title">Article's Tags</h3>
                 <c:forEach var="tag" items="${post.tagPostList}">
                     <a href="#">${tag.tagId.tagName}</a>
                 </c:forEach>
