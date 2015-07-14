@@ -21,7 +21,7 @@ jQuery(document).ready(function($) {
 
 	/* Header and footer fix mobile */
 	
-	jQuery(window).bind("resize", function () {
+	/*jQuery(window).bind("resize", function () {
 		if (jQuery(this).width() > 990) {
 			jQuery(".navigation_mobile_main").addClass("navigation");
 			jQuery(".navigation").removeClass("navigation_mobile");
@@ -110,7 +110,7 @@ jQuery(document).ready(function($) {
 				jQuery(this).addClass("navigation_mobile_click_close");
 			}
 		});
-	}
+	}*/
 	
 	/* Go up */
 	

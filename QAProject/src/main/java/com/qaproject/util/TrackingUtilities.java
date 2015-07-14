@@ -36,7 +36,9 @@ public class TrackingUtilities {
                 }
                 questions.addAll(currentQuestions);
             }
-            tagDtos = tagPostDao.findTagInQuestions(questions);
+            if (questions.size()>0){
+                tagDtos = tagPostDao.findTagInQuestions(questions);
+            }
         }
         return tagDtos;
     }

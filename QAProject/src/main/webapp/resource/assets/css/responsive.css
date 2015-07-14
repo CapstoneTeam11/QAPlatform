@@ -105,10 +105,10 @@ url: www.2code.info
 	}
 	/* Navigation */
 	.navigation_mobile > ul,.navigation,.navigation_mobile > ul {
-		display:none;
+		/*display:none;*/
 	}
 	.navigation_mobile > ul li ul {
-		display: block;
+		/*display: block;*/
 	}
 	.breadcrumbs h1 {
 		float: none;
@@ -173,6 +173,7 @@ url: www.2code.info
 /*------------------------------------------------------------------------------*/
 @media (min-width: 991px) and (max-width: 1200px) {
 	.widget_menu_jquery {
+        position: fixed !important;
 		top: inherit !important;
 	}
 }
@@ -203,10 +204,10 @@ url: www.2code.info
 		margin-top: 25.5px;
 	}
 	.navigation_mobile > ul,.navigation,.navigation_mobile > ul {
-		display:none;
+		/*display:none;*/
 	}
 	.navigation_mobile > ul li ul {
-		display: block;
+		/*display: block;*/
 	}
 	.ask-question {
 		margin-bottom: 30px;
@@ -414,7 +415,7 @@ url: www.2code.info
 		margin-top:0;
 	}
 	.navigation_mobile > ul,.navigation,.navigation_mobile > ul {
-		display:none;
+		/*display:none;*/
 	}
 	.navigation_mobile {
 		width:100% !important;
@@ -793,7 +794,7 @@ url: www.2code.info
 		margin-top:0;
 	}
 	.navigation_mobile > ul,.navigation,.navigation_mobile > ul {
-		display:none;
+		/*display:none;*/
 	}
 	.navigation_mobile {
 		width:100% !important;

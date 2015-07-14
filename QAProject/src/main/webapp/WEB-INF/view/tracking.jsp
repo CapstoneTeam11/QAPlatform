@@ -64,12 +64,15 @@
         </section><!-- End container -->
     </div><!-- End breadcrumbs -->
 
-    <section class="container main-content page-left-sidebar">
+    <section class="container main-content page-left-sidebar" style="min-height: 260px">
         <div class="row">
             <div class="col-md-9">
                 <div class="clearfix"></div>
                 <div class="page-content page-shortcode">
                     <div class="row" style="margin-top: 65px; margin-bottom: 65px">
+                        <div id="noResult" style="text-align: center;font-size: 20px; display: none">
+                            There is no question in your classrooms.
+                        </div>
                         <div id="chartContainer" style="height: 300px; width: 100%;">
                         </div>
                     </div>
@@ -87,20 +90,6 @@
                             <h6><a href="/profile/update">Edit profile</a></h6>
                         </li>
                     </ul>
-                </div>
-
-
-
-                <div class="widget widget_tag_cloud">
-                    <h3 class="widget_title">Tags</h3>
-                    <a href="#">projects</a>
-                    <a href="#">Portfolio</a>
-                    <a href="#">Wordpress</a>
-                    <a href="#">Html</a>
-                    <a href="#">Css</a>
-                    <a href="#">jQuery</a>
-                    <a href="#">2code</a>
-                    <a href="#">vbegy</a>
                 </div>
 
             </aside><!-- End sidebar -->
@@ -128,29 +117,34 @@
             url: "/tracking/load",
             success: function(data){
                 var tags = data;
-                for (var i=0; i<tags.length;i++){
-                    var dp = {y: tags[i].count, label: tags[i].name};
-                    dps.push(dp);
+                if (tags.length <= 0) {
+                    $("#chartContainer").hide();
+                    $("#noResult").show();
+                } else {
+                    for (var i=0; i<tags.length;i++){
+                        var dp = {y: tags[i].count, label: tags[i].name};
+                        dps.push(dp);
+                    }
+                    var chart = new CanvasJS.Chart("chartContainer",
+                            {
+                                animationEnabled: true,
+                                animationDuration: 2000,
+                                axisY:{
+                                    title: "Number of topic"
+                                },
+                                title:{
+                                    text: "Top students' question topics"
+                                },
+                                data: [
+                                    {
+                                        type: "bar",
+                                        dataPoints: dps
+                                    }
+                                ]
+                            });
+                    chart.render();
+                    $(".canvasjs-chart-credit").hide();
                 }
-                var chart = new CanvasJS.Chart("chartContainer",
-                        {
-                            animationEnabled: true,
-                            animationDuration: 2000,
-                            axisY:{
-                                title: "Number of topic"
-                            },
-                            title:{
-                                text: "Top students' question topics"
-                            },
-                            data: [
-                                {
-                                    type: "bar",
-                                    dataPoints: dps
-                                }
-                            ]
-                        });
-                chart.render();
-                $(".canvasjs-chart-credit").hide();
             }
         });
 
