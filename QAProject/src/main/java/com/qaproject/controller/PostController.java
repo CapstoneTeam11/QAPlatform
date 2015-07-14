@@ -526,7 +526,7 @@ public class PostController {
         post.getTagPostList().addAll(tagPosts);
         classroom.setActiveTime(new Date());
         postDao.persist(post);
-        if (post.getPostType() == 1) {
+        if (post.getPostType() == 1 && post.getOwnerClassId().getOwnerUserId().getId().compareTo(user.getId())!=0) {
             sendMailUtilities.sendEmail(post);
         }
         classroomDao.merge(classroom);
@@ -739,7 +739,7 @@ public class PostController {
             if (parentPost == null) {
                 return "NG";
             }
-            if (user.getId() != parentPost.getOwnerUserId().getId()) {
+            if (user.getId().compareTo(parentPost.getOwnerUserId().getId())==0) {
                 return "NG";
             }
             List<Post> posts = postDao.findRepliesWasAcceptedByParentId(post.getParentId());
@@ -779,7 +779,7 @@ public class PostController {
             if (parentPost == null) {
                 return "NG";
             }
-            if (user.getId() != parentPost.getOwnerUserId().getId()) {
+            if (user.getId().compareTo(parentPost.getOwnerUserId().getId())!=0) {
                 return "NG";
             }
             post.setAcceptedAnswerId(0);
@@ -853,7 +853,7 @@ public class PostController {
         Post post;
         try {
             post = postDao.find(postDto.getId());
-            if (post.getOwnerUserId().getId() == user.getId()) {
+            if (post.getOwnerUserId().getId().compareTo(user.getId())!=0) {
                 postDao.remove(post);
             }
         } catch (Exception e) {
