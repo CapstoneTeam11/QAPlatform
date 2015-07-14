@@ -537,4 +537,18 @@ public class PostDaoImpl extends BaseDao<Post,Integer> implements PostDao{
         }
         return posts;
     }
+
+    @Override
+    public Integer countAnswers(Integer postId) {
+        Query query = entityManager.createQuery("Select COUNT(p.id) from Post p where p.postType=3 and" +
+                " p.parentId =:postId");
+        query.setParameter("postId",postId);
+        Integer count = 0;
+        try {
+            count = ((Long) query.getSingleResult()).intValue();
+        } catch (NoResultException e){
+
+        }
+        return count;
+    }
 }

@@ -29,6 +29,17 @@
         <div class="clearfix"></div>
     </div>
 </div>
+<div class="panel-Confirm delete-Material">
+    <h2>Delete material</h2>
+    <div>
+        <p class="panelMessage">Do you want to Delete this material?</p>
+        <p>
+            <input type="submit" value="Cancel"  class="button color small cancel deleteMaterial" >
+            <input type="submit" value="OK"  class="button color small OK deleteMaterial" style="margin-left: 3%;">
+        </p>
+        <div class="clearfix"></div>
+    </div>
+</div>
 <div class="panel-pop" id="addMaterial">
     <h2>Upload Material<i class="icon-remove"></i></h2>
     <div class="form-style form-style-3">
@@ -588,11 +599,39 @@
 <!-- End js -->
 <script>
 
+var idDeleteMaterial ;
+var divDeleteMaterial;
 var removeMaterial = function(e) {
-    var formDelete = $(e).parents('td').find('form');
-    $(formDelete).submit();
+    idDeleteMaterial = $(e).parents('td').find('input').val();
+    divDeleteMaterial = $(e).parents('tr');
+    $(".delete-Material").animate({"top":"-100%"},10).hide();
+    $(".delete-Material").show().animate({"top":"34%"},500);
+    $("body").prepend("<div class='wrap-pop'></div>");
+    wrap_pop();
     return false;
 }
+$('.deleteMaterial').click(function(e) {
+    if ($(e.currentTarget).hasClass('OK')) {
+        $.ajax({
+            type: "POST",
+            url: "/material/delete",
+            data: 'materialId=' + idDeleteMaterial,
+            success: function (data) {
+                if(data != "NG" ){
+                    divDeleteMaterial.remove();
+                    idDeleteMaterial = null ;
+                } else {
+                    console.log("Error");
+                }
+            }
+        });
+        $(".delete-Material").animate({"top":"-100%"},500);
+        $(".wrap-pop").remove();
+    } else {
+        $(".delete-Material").animate({"top":"-100%"},500);
+        $(".wrap-pop").remove();
+    }
+});
 var createTag = function(e){
     var flag = 0;
     for( var i = 0 ; i < elt.tagsinput('items').length ; i ++) {

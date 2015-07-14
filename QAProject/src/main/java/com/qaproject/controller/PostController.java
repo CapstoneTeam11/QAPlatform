@@ -359,6 +359,9 @@ public class PostController {
 
         //get List Post answer
         List<Post> postAnswers = postDao.findPostChilds(id, 0);
+        //get number answers
+        Integer count = postDao.countAnswers(post.getId());
+        model.addAttribute("numberAnswer",count);
         model.addAttribute("post", post);
         model.addAttribute("relatedArticles", relatedArticles);
         model.addAttribute("relatedMaterials", relatedMaterials);
@@ -514,6 +517,7 @@ public class PostController {
                 tagPost.setPostId(post);
                 Tag tag = new Tag();
                 tag.setTagName(newTag.get(i));
+                tag.setTagCount(0);
                 tagDao.persist(tag);
                 tagPost.setTagId(tag);
                 tagPosts.add(tagPost);
@@ -659,6 +663,7 @@ public class PostController {
                 tagPost.setPostId(post);
                 Tag tag = new Tag();
                 tag.setTagName(newTag.get(i));
+                tag.setTagCount(0);
                 tagDao.persist(tag);
                 tagPost.setTagId(tag);
                 tagPosts.add(tagPost);

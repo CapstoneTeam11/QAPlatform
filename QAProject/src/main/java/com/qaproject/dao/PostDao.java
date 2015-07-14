@@ -40,6 +40,7 @@ public interface PostDao {
     public List<PostDto> loadMoreAnswer(Integer id,Integer page);
     public Post findLastCreatedPostByOwner(User ownerUser);
     public Post findLastCreatedReplyByOwner(User ownerUser);
+    public Integer countAnswers(Integer postId);
     public List<PostDto> listSuggestPost(String title);
     public List<Post> listQuestionMerge(Integer id,Double range);
     public List<Post> findRelatedQuestion(String title);

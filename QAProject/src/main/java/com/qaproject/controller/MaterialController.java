@@ -8,10 +8,7 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -50,31 +47,31 @@ public class MaterialController {
         model.addAttribute("folders", folders);
         return "material";
     }
-    @RequestMapping(value = "/material/delete", method = RequestMethod.POST)
-    public String deleteMaterial(ModelMap model,@RequestParam Integer materialId) {
+    @RequestMapping(value = "/material/delete", method = RequestMethod.POST,produces = "application/json")
+    public @ResponseBody  String deleteMaterial(ModelMap model,@RequestParam Integer materialId) {
         User user = (User) session.getAttribute("user");
         int flag = 0;
         int classId = 0;
         if (user == null) {
-            return "redirect:/";
+            return "NG";
         }
         Material material = materialDao.find(materialId);
         if(material==null) {
-            return "404";
+            return "NG";
         }
         //if material is class's material
         if(material.getOwnerClassId()!=null) {
             classId = material.getOwnerClassId().getId();
             //authorize user is classroom's teacher
             if(user.getId()!=material.getOwnerClassId().getOwnerUserId().getId()) {
-                return "403";
+                return "NG";
             }
         }
         //if material is user's material
         if(material.getFolderId()!=null) {
             flag =1;
             if(material.getFolderId().checkUser(user)==false) {
-                return "403";
+                return "NG";
             }
         }
         try{
@@ -89,9 +86,9 @@ public class MaterialController {
         }
         materialDao.remove(material);
         if(flag==1) {
-            return "redirect:/material";
+            return "OK";
         }
-        return "redirect:/classroom/"+classId;
+        return "OK";
     }
 
 
@@ -139,12 +136,39 @@ public class MaterialController {
                          ModelMap model) {
         Classroom classroom = classroomDao.find(classId);
         User user = (User) session.getAttribute("user");
+        Material material = new Material();
         if (user == null) {
             session.setAttribute("currentPage","redirect:/classroom/"+classId);
             return "redirect:/";
         }
         if (classroom.getOwnerUserId().getId() != user.getId()) {
             return "redirect:/";
+        }
+        List<TagMaterial> tagMaterials = new ArrayList<TagMaterial>();
+        if(tagId!=null) {
+            for (int i = 0; i < tagId.size(); i++) {
+                TagMaterial tagMaterial = new TagMaterial();
+                tagMaterial.setMaterialId(material);
+                Tag tagfind = tagDao.find(tagId.get(i));
+                if(tagfind==null) {
+                    return "redirect:/";
+                }
+                tagMaterial.setTagId(tagfind);
+                tagMaterials.add(tagMaterial);
+            }
+        }
+
+        if (newTag != null) {
+            for (int i = 0; i < newTag.size(); i++) {
+                TagMaterial tagMaterial = new TagMaterial();
+                tagMaterial.setMaterialId(material);
+                Tag tag = new Tag();
+                tag.setTagName(newTag.get(i));
+                tag.setTagCount(0);
+                tagDao.persist(tag);
+                tagMaterial.setTagId(tag);
+                tagMaterials.add(tagMaterial);
+            }
         }
         if (fileUpload != null && fileUpload.length > 0) {
             int error = 0;
@@ -167,30 +191,11 @@ public class MaterialController {
                 }
                 System.out.println("Saving file: " + aFile.getOriginalFilename());
                 if (error == 0) {
-                    Material material = new Material();
                     material.setName(aFile.getOriginalFilename());
                     material.setFileURL(dir.getAbsolutePath() + File.separator + aFile.getOriginalFilename());
                     material.setOwnerClassId(classroom);
                     material.setSize(((Long) aFile.getSize()).doubleValue());
                     material.setCreationDate(new Date());
-                    List<TagMaterial> tagMaterials = new ArrayList<TagMaterial>();
-                    for (int i = 0; i < tagId.size(); i++) {
-                        TagMaterial tagMaterial = new TagMaterial();
-                        tagMaterial.setMaterialId(material);
-                        tagMaterial.setTagId(tagDao.find(tagId.get(i)));
-                        tagMaterials.add(tagMaterial);
-                    }
-                    if (newTag != null) {
-                        for (int i = 0; i < newTag.size(); i++) {
-                            TagMaterial tagMaterial = new TagMaterial();
-                            tagMaterial.setMaterialId(material);
-                            Tag tag = new Tag();
-                            tag.setTagName(newTag.get(i));
-                            tagDao.persist(tag);
-                            tagMaterial.setTagId(tag);
-                            tagMaterials.add(tagMaterial);
-                        }
-                    }
                     material.getTagMaterials().addAll(tagMaterials);
                     materialDao.persist(material);
                 }

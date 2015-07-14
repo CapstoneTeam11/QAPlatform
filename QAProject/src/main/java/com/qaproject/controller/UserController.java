@@ -64,7 +64,7 @@ public class UserController {
                                 @RequestParam("cate") Integer cate,
                                 @RequestParam("aboutMe") String aboutMe,
                                 @RequestParam String profileUrl,
-                                @RequestParam List<Integer> tagId,
+                                @RequestParam(required = false) List<Integer> tagId,
                                 @RequestParam String password,
                                 @RequestParam(required = false) List<String> newTag,
                                 HttpServletRequest request) {
@@ -78,12 +78,17 @@ public class UserController {
         user.setAboutMe(aboutMe);
         user.setProfileImageURL(profileUrl);
         user.setPassword(password);
-        List<TagUser> tagUsers = new ArrayList<TagUser>();
-        for (int i = 0; i < tagId.size(); i++) {
-            TagUser tagUser = new TagUser();
-            tagUser.setUserId(user);
-            tagUser.setTagId(tagDao.find(tagId.get(i)));
-            tagUsers.add(tagUser);
+        List<TagUser> tagUsers = null;
+        if(tagId!=null || newTag!=null) {
+        tagUsers = new ArrayList<TagUser>();
+        }
+        if(tagId!=null) {
+            for (int i = 0; i < tagId.size(); i++) {
+                TagUser tagUser = new TagUser();
+                tagUser.setUserId(user);
+                tagUser.setTagId(tagDao.find(tagId.get(i)));
+                tagUsers.add(tagUser);
+            }
         }
         if (newTag != null) {
             for (int i = 0; i < newTag.size(); i++) {
@@ -91,13 +96,16 @@ public class UserController {
                 tagUser.setUserId(user);
                 Tag tag = new Tag();
                 tag.setTagName(newTag.get(i));
+                tag.setTagCount(0);
                 tagDao.persist(tag);
                 tagUser.setTagId(tag);
                 tagUsers.add(tagUser);
             }
         }
-        user.getTagUserList().clear();
-        user.getTagUserList().addAll(tagUsers);
+        if(tagUsers!=null) {
+            user.getTagUserList().clear();
+            user.getTagUserList().addAll(tagUsers);
+        }
         userDao.merge(user);
         session.setAttribute("user",userDao.find(user.getId()));
         return "redirect:/profile/update";

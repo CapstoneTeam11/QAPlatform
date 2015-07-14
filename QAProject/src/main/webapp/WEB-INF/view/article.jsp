@@ -145,7 +145,7 @@
 
 <section class="container main-content page-left-sidebar">
     <div class="row">
-        <div class="col-md-9">
+        <div class="col-md-9" id="questionMain">
             <article class="question single-question question-type-normal">
                 <h2 class="post-title">${post.title}</h2>
                 <span class="wantAnswer"><a id="wantNumber">${fn:length(post.wantAnswerPosts)}</a> people likes this</span>
@@ -215,7 +215,7 @@
             </c:if>
             <c:if test="${not empty postAnswers}">
                 <div id="commentlist" class="page-content">
-                    <div class="boxedtitle page-title"><h2>Answers ( <span class="color">${fn:length(postAnswers)}</span> )
+                    <div class="boxedtitle page-title"><h2>Answers ( <span class="color">${numberAnswer}</span> )
                     </h2></div>
                     <ol class="commentlist clearfix" id="commentListDetail">
                         <c:if test="${fn:length(postAnswers) > 10}">
@@ -512,7 +512,13 @@
         var listAnswer = new Array()
         listAnswer = $("input[name='postAnswerId']")
         var lastestId = listAnswer.last().val();
-
+        function getListCommentDiv() {
+            var listComment = '<div id="commentlist" class="page-content">'+
+                              '<div class="boxedtitle page-title"><h2>Answers ( <span class="color">1</span> )'+
+                              '</h2></div>'+
+                              '<ol class="commentlist clearfix" id="commentListDetail">'+'</ol>'
+            return listComment
+        }
         function getCommentDiv(ownerName, lastEditDate,imageUrl) {
             var commentDiv = '<li class="comment">'+
                     '<div class="comment-body comment-body-answered clearfix">'+
@@ -617,6 +623,9 @@
             var userId =$('#userIdFlag').val()
             var post = JSON.parse(post.body);
             var userRole = '${sessionScope.user.roleId.roleName}';
+            if($('#commentlist').length==0) {
+                $('#questionMain').append(getListCommentDiv());
+            }
             if(postOwnerId==userId && userRole!='Admin' ) {
                 //user is post Owner
                 if(userId==post.ownerId) {
@@ -653,7 +662,7 @@
                 $('#commentListDetail').append(divAppend);
             }
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-
+            $('.numberAnswer').html($('.numberAnswer').html()*1+1);
 
         }
 
