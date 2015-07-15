@@ -189,7 +189,7 @@
                                 </div>
                                 <div class="row" style="margin-bottom: 20px">
                                     <div class="col-md-2">
-                                            <label class="required">Student</label>
+                                            <label class="required">Invite student</label>
                                     </div>
                                     <div class="col-md-10">
                                             <input type="text" class="input" name="studentList" id="tagsuggest1"/>
