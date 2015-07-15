@@ -305,9 +305,9 @@
             },
             messages: {
                 classroomName: {
-                    required: "Please provide the title.",
-                    minlength: "The title must be between 20 and 255 characters long.",
-                    maxlength: "The title must be between 20 and 255 characters long."
+                    required: "Please provide the class name.",
+                    minlength: "The class name must be between 20 and 255 characters long.",
+                    maxlength: "The class name must be between 20 and 255 characters long."
                 },
                 classroomDescription: {
                     required: "Please provide the description.",
