@@ -189,7 +189,7 @@
                                 </div>
                                 <div class="row" style="margin-bottom: 20px">
                                     <div class="col-md-2">
-                                            <label class="required">Student</label>
+                                            <label class="required">Invite student</label>
                                     </div>
                                     <div class="col-md-10">
                                             <input type="text" class="input" name="studentList" id="tagsuggest1"/>
@@ -305,9 +305,9 @@
             },
             messages: {
                 classroomName: {
-                    required: "Please provide the title.",
-                    minlength: "The title must be between 20 and 255 characters long.",
-                    maxlength: "The title must be between 20 and 255 characters long."
+                    required: "Please provide the class name.",
+                    minlength: "The class name must be between 20 and 255 characters long.",
+                    maxlength: "The class name must be between 20 and 255 characters long."
                 },
                 classroomDescription: {
                     required: "Please provide the description.",

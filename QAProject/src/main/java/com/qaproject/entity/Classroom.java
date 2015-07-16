@@ -31,7 +31,7 @@ public class Classroom {
     private Date activeTime;
     @OneToMany(mappedBy = "ownerClassId",fetch = FetchType.LAZY)
     private List<Post> postList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "classroomId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "classroomId",orphanRemoval = true)
     private List<TagClassroom> tagClassroomList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "classroomId",fetch = FetchType.LAZY,orphanRemoval = true)
     private List<ClassroomUser> classroomUserList;

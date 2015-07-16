@@ -64,7 +64,7 @@
     -webkit-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
     -moz-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
     box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
-    width: 295px;
+    width: 300px;
     position: fixed;
     padding: 20px;
     top: -100%;
@@ -80,7 +80,7 @@
     font-weight: bold;
     font-size: 14px;
 }
-.panelButton, .panelLeaveButton {
+.panelButton, .panelLeaveButton, .deleteMaterial {
     float: left;
     width: 44%;
 }

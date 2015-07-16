@@ -21,6 +21,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletContext;
 import java.io.StringWriter;
+import java.net.ConnectException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -110,10 +111,17 @@ public class SendMailUtilities{
     }
 
     public void sendEmail(Post question) {
-        sendNotificationEmail(question);
+        try {
+            sendNotificationEmail(question);
+        } catch (ConnectException e){
+            e.printStackTrace();
+        } finally {
+            return;
+        }
+
     }
 
-    private void sendNotificationEmail(final Post question) {
+    private void sendNotificationEmail(final Post question) throws ConnectException{
         final User user = question.getOwnerUserId();
         final String teacherEmail = question.getOwnerClassId().getOwnerUserId().getEmail();
         MimeMessagePreparator preparator = new MimeMessagePreparator() {

@@ -227,9 +227,9 @@ public class ClassController {
 //            objectWithStatus.setStatus("403");
             return "redirect:403";
         }
-        if(classroomName.length() < 10 || classroomName.length() > 127) {
+        /*if(classroomName.length() < 10 || classroomName.length() > 127) {
             return "createClass";
-        }
+        }*/
         Classroom room = classroomDao.find(classroomId);
         Category category = categoryDao.find(categoryId);
         room.setCategoryId(category);

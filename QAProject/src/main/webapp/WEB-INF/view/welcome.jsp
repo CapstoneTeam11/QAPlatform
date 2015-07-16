@@ -195,7 +195,8 @@
                                         <div class="col-md-9">
                                             <div class="row" style="margin-top: 10px">
                                                 <span class="styled-select"  style="width: 100%">
-                                                    <select id="professional" name="cate" title="Please choose your knowledge" required>
+                                                    <select id="professional" name="cate"
+                                                            title="Please choose your knowledge." required>
                                                         <option value="">Select a type</option>
                                                         <c:forEach var="parent" items="${categories}">
                                                             <c:if test="${parent.parentId==0}">
@@ -286,11 +287,13 @@
                 },
                 password: {
                     required: true,
-                    minlength: 8
+                    minlength: 8,
+                    maxlength: 50
                 },
                 confirm_password: {
                     required: true,
                     minlength: 8,
+                    maxlength: 50,
                     equalTo: "#password"
                 }
             },
@@ -298,11 +301,13 @@
                 email: "Please enter a valid email address.",
                 password: {
                     required: "Please provide a password.",
-                    minlength: "Your password must be at least 8 characters long."
+                    minlength: "Your password must be between 8 and 50 characters long.",
+                    maxlength: "Your password must be between 8 and 50 characters long."
                 },
                 confirm_password: {
                     required: "Please provide a password.",
-                    minlength: "Your password must be at least 8 characters long.",
+                    minlength: "Your password must be between 8 and 50 characters long.",
+                    maxlength: "Your password must be between 8 and 50 characters long.",
                     equalTo: "Please enter the same password as above."
                 }
             }
