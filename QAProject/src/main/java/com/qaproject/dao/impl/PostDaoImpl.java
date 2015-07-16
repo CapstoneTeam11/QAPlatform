@@ -16,6 +16,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -550,5 +551,35 @@ public class PostDaoImpl extends BaseDao<Post,Integer> implements PostDao{
 
         }
         return count;
+    }
+
+    @Override
+    public Integer countSimilar(String title,Integer classroomId) {
+        Query query = entityManager.createNativeQuery("Select COUNT(p.id) from Post p where p.OwnerClassId = ? and p.postType=1 and p.status=1 and p.AcceptedAnswerId=0 and " +
+                "MATCH (Title) AGAINST (? IN NATURAL LANGUAGE MODE) > 2");
+        query.setParameter(new Integer(1),classroomId);
+        query.setParameter(new Integer(2),title);
+        Integer count = 0;
+        try {
+            count = ((BigInteger) query.getSingleResult()).intValue();
+        } catch (NoResultException e){
+
+        }
+        return count;
+    }
+
+    @Override
+    public List<Post> listQuestionMerge(String title,Integer classroomId) {
+        List<Post> posts = null;
+        Query query = entityManager.createNativeQuery("Select * from Post p where p.OwnerClassId = ? and p.postType=1 and p.status=1 and p.AcceptedAnswerId=0 and " +
+                "MATCH (Title) AGAINST (? IN NATURAL LANGUAGE MODE) > 2",Post.class);
+        query.setParameter(new Integer(1),classroomId);
+        query.setParameter(new Integer(2),title);
+        try {
+            posts = query.getResultList();
+        } catch (NoResultException e) {
+            System.out.println("Result null");
+        }
+        return posts;
     }
 }

@@ -18,11 +18,12 @@ public class PostDto {
     private String className;
     private String ownerName;
     private String ownerProfileImageURL;
-
+    private Integer similar;
     //MinhKH
     private Integer classId;
     private Integer answerCount;
     private Integer viewer;
+
 
     public String getClassName() {
         return className;
@@ -135,5 +136,13 @@ public class PostDto {
 
     public void setViewer(Integer viewer) {
         this.viewer = viewer;
+    }
+
+    public Integer getSimilar() {
+        return similar;
+    }
+
+    public void setSimilar(Integer similar) {
+        this.similar = similar;
     }
 }

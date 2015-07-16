@@ -59,6 +59,7 @@ public class ConvertEntityDto {
             postDto.setOwnerProfileImageURL(post.getOwnerUserId().getProfileImageURL());
             postDto.setClassId(post.getOwnerClassId().getId());
             postDto.setAnswerCount(answerCount);
+            postDto.setSimilar(post.getSimilar());
         }
         return postDto;
     }

@@ -29,13 +29,19 @@ public class ClassroomUtilities {
     @Autowired
     ClassroomUserDao classroomUserDao;
 
-    public List<PostDto> loadQuestions(Integer classroomId, Integer lastId){
+    public List<PostDto> loadQuestions(Integer classroomId, Integer lastId,Integer role){
         List<Post> questions = postDao.findQuestionByOwnerClassroom(classroomId,lastId);
         List<PostDto> questionDtos = new ArrayList<PostDto>();
         if (questions!=null) {
             for(Post question: questions){
                 if (question !=null) {
                     List<Post> answers = postDao.findRepliesByParentId(question.getId());
+                    if(role==Constant.TEACHER) {
+                        if(question.getStatus()==1 && question.getAcceptedAnswerId()==0  ) {
+                        Integer numSimilar = postDao.countSimilar(question.getTitle(),question.getOwnerClassId().getId());
+                        question.setSimilar(numSimilar);
+                        }
+                    }
                     if (answers!=null) {
                         Integer answerCount = answers.size();
                         PostDto questionDto = ConvertEntityDto.convertPostEntityToDto(question,answerCount);

@@ -78,6 +78,7 @@
                 <input type="range" min="0" max="100" step="10" value="${range}" style="width: 40%" id="rangeMerge">
                 <a class="button color small submit" href="/post/merge/${classroom.id}/${range}" id="suggestMergehref" style="margin-left: 5px">Group</a>
                 </div>--%>
+                <c:if test="${fulltext==null}">
                 <div class="col-md-12">
                     <span style="font-weight: bold; font-size: 18px">
                         Group questions have similar titles over
@@ -87,6 +88,7 @@
                           ${range}%
                     </span>
                 </div>
+
                 <div class="col-md-12">
                     <div class="col-md-6" style="padding-left: 0px;">
                         <input type="range" min="0" max="100" step="10" value="${range}" style="margin-top: 10px;"
@@ -94,7 +96,7 @@
                     <div class="col-md-6">
                         <a class="button color small submit" href="/post/merge/${classroom.id}/${range}" id="suggestMergehref">Group</a></div>
                 </div>
-
+                </c:if>
                 <form action="/post/merge" method="GET">
                 <input type="hidden" name="id" value="${classroom.id}">
                 <table class="table table-hover" style="margin-left: 10px">
@@ -125,6 +127,9 @@
                         <div id="hiddenId"></div>
                         <input type="hidden" name="classroomId" value="${classroom.id}">
                         <input type="hidden" name="detail" id="detail">
+                        <c:if test="${fulltext==null}">
+                            <input type="hidden" name="detail" id="rangeComment">
+                        </c:if>
                         <div id="form-textarea">
                             <textarea id="question-details" aria-required="true" cols="58" rows="8"></textarea>
                         </div>
@@ -179,6 +184,7 @@
             $('#range').html($(e.currentTarget).val() +'%')
             var href = '/post/merge/'+classroomId+'/'+$(e.currentTarget).val();
             $('#suggestMergehref').attr('href',href);
+            $('#rangeComment').val($(e.currentTarget).val())
         })
         $('.checkbox').change(function(e){
             if($(e.currentTarget).is(':checked')) {

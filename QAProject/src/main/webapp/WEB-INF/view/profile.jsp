@@ -82,10 +82,10 @@
                             <i class="icon-pencil"></i>Edit profile
                         </a>
                     </c:if>
-                    <c:if test="${userProfile.roleId.id==2 and sessionScope.user.id!=userProfile.id and !isFollow}">
+                    <c:if test="${userProfile.roleId.id==2 and sessionScope.user.id!=userProfile.id and !isFollow and userProfile.status==1}">
                         <div id="follow"><a class="question-report" href="javascript:followTeacher(${userProfile.id});" style="margin-right: 20px;">Follow</a></div>
                     </c:if>
-                    <c:if test="${isFollow}">
+                    <c:if test="${isFollow and userProfile.status==1}">
                         <div id="follow"><a class="question-report" href="javascript:unfollowTeacher(${userProfile.id});" style="margin-right: 20px;">Unfollow</a></div>
                     </c:if>
                     <div class="user-profile-img"><img src="${userProfile.profileImageURL}"

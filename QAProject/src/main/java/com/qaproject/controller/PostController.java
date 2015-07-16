@@ -121,7 +121,7 @@ public class PostController {
     }
 
     @RequestMapping(value = "/post/add/all", method = RequestMethod.POST)
-    public String addAnswerAll(@RequestParam List<Integer> ids, @RequestParam String detail, @RequestParam Integer classroomId) {
+    public String addAnswerAll(@RequestParam List<Integer> ids, @RequestParam String detail, @RequestParam Integer classroomId,@RequestParam(required = false) Integer range) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
             return "403";
@@ -159,7 +159,10 @@ public class PostController {
             postDao.persist(post);
             sendNotificationReplies(user, post);
         }
-        return "redirect:/post/merge/" + classroomId + "/40";
+        if(range==null) {
+            return "redirect:/post/merge/"+ids.get(0);
+        }
+        return "redirect:/post/merge/" + classroomId + "/" + range;
     }
 
     /*
@@ -996,6 +999,26 @@ public class PostController {
         model.addAttribute("range",range);
         return "mergeQuestion";
     }
+    @RequestMapping(value = "/post/merge/{id}", method = RequestMethod.GET)
+    public String mergeDispath(@PathVariable Integer id, ModelMap model) {
+        //authorize
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return "403";
+        }
+        Post post = postDao.find(id);
+        if(post==null) {
+            return "404";
+        }
+        if (post.getOwnerClassId().getOwnerUserId().getId() != user.getId()) {
+            return "403";
+        }
+        List<Post> posts = postDao.listQuestionMerge(post.getTitle(),post.getOwnerClassId().getId());
+        model.addAttribute("classroom", post.getOwnerClassId());
+        model.addAttribute("posts", posts);
+        model.addAttribute("fulltext","fulltext");
+        return "mergeQuestion";
+    }
     @RequestMapping(value = "/post/merge", method = RequestMethod.GET)
     public String mergeDispath(@RequestParam List<Integer> postMerges,@RequestParam Integer id,ModelMap model) {
         //authorize
@@ -1023,5 +1046,6 @@ public class PostController {
         model.addAttribute("classroom",classroom);
         return "createPost";
     }
+
 
 }

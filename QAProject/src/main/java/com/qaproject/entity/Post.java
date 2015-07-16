@@ -57,6 +57,8 @@ public class Post {
     private List<Integer> listUserNotification ;
     @Transient
     private Double score = 0.0 ;
+    @Transient
+    private Integer similar ;
     public Post() {
     }
 
@@ -259,5 +261,15 @@ public class Post {
 
     public void setScore(Double score) {
         this.score = score;
+    }
+
+    public Integer getSimilar() {
+        return similar;
+    }
+
+    public void setSimilar(Integer similar) {
+        if(null == similar || similar!=0) {
+        this.similar = similar;
+        }
     }
 }

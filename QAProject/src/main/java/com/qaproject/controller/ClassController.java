@@ -368,7 +368,7 @@ public class ClassController {
         user = userDao.find(user.getId());
 
         //get questions, articles, materials, request to join - MinhKH
-        List<PostDto> questions = classroomUtilities.loadQuestions(id, 0);
+        List<PostDto> questions = classroomUtilities.loadQuestions(id, 0,user.getRoleId().getId());
         Integer lastQuestionId = 0;
         if (questions!=null) {
             if (questions.size()>10){
@@ -521,11 +521,12 @@ public class ClassController {
     @RequestMapping(value = "/classroom/question",method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public List<PostDto> loadMoreQuestion(@RequestParam Integer classroomId, @RequestParam Integer lastId) {
+        User user = (User) session.getAttribute("user");
         List<PostDto> questionDtos = new ArrayList<PostDto>();
         try {
-            questionDtos = classroomUtilities.loadQuestions(classroomId,lastId);
+            questionDtos = classroomUtilities.loadQuestions(classroomId,lastId,user.getRoleId().getId());
         } catch (Exception e){
-
+            e.printStackTrace();
         }
         return questionDtos;
     }

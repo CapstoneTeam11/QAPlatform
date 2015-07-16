@@ -158,9 +158,9 @@
         </form>
     </div>
     <div class="col-md-6 col-sm-6" id="createPost">
-        <c:if test="${classroom.ownerUserId.id == user.id}">
+        <c:if test="${classroom.ownerUserId.id == user.id || sessionScope.user.roleId.id==3}">
             <div class="col-md-11 col-sm-9">
-                <c:if test="${classroom.status == 1}">
+                <c:if test="${classroom.status == 1 && classroom.ownerUserId.id == user.id}">
                     <a href="/post/create/${classroom.id}" class="button medium green-button" style="float: right"><i class="icon-pencil"></i> Create post</a>
                 </c:if>
             </div>
@@ -170,10 +170,14 @@
                     <ul class="dropdown-menu" role="menu" style="left: -127px;" id="activeBtn">
                         <c:if test="${classroom.status == 1}">
                             <li><a href="/updateClass/${classroom.id}">Update class</a></li>
+                            <c:if test="${classroom.ownerUserId.id == user.id || sessionScope.user.roleId.id==3}">
                             <li><a href="javascript:closeClass(${classroom.id}, 0);">Close class</a></li>
+                            </c:if>
                         </c:if>
                         <c:if test="${classroom.status == 0}">
+                            <c:if test="${classroom.ownerUserId.id == user.id || sessionScope.user.roleId.id==3}">
                             <li><a href="javascript:closeClass(${classroom.id}, 1);">Reopen class</a></li>
+                            </c:if>
                         </c:if>
                     </ul>
                 </div>
@@ -215,12 +219,19 @@
                                class="tooltip-n"><span></span><img alt=""
                                                                    src="${question.ownerProfileImageURL}"></a>
                         </div>
+                        <c:if test="${question.similar != null and question.similar > 1}">
+                            <div class="similarQuestion">
+                                <span class="question-category"><a
+                                        href="/post/merge/${question.id}"><i
+                                        class="icon-sitemap" style="margin-right: 5px"></i>${question.similar} similar question(s)</a></span>
+                            </div>
+                        </c:if>
                         <div class="question-inner">
                             <div class="clearfix"></div>
                             <div class="question-desc short-text">${question.body}</div>
                             <div class="question-details">
                                                     <span class="question-answered question-answered-done">
-                                                        <c:if test="${question.acceptedAnswerId} != null">
+                                                        <c:if test="${question.acceptedAnswerId==1}">
                                                             <i class="icon-ok"></i>Resolved
                                                         </c:if>
                                                     </span>
@@ -234,6 +245,7 @@
                                                         class="icon-comment"></i>${question.answerCount} Answer(s)</a></span>
                                                 <span class="question-view"><i
                                                         class="icon-eye-open"></i>${question.viewer} view(s)</span>
+
                             <div class="clearfix"></div>
                         </div>
                     </article>
@@ -251,12 +263,19 @@
                                class="tooltip-n"><span></span><img alt=""
                                                                    src="${question.ownerProfileImageURL}"></a>
                         </div>
+                        <c:if test="${question.similar != null and question.similar > 1}">
+                            <div class="similarQuestion">
+                                <span class="question-category"><a
+                                        href="/post/merge/${question.id}"><i
+                                        class="icon-sitemap" style="margin-right: 5px"></i>${question.similar} similar question(s)</a></span>
+                            </div>
+                        </c:if>
                         <div class="question-inner">
                             <div class="clearfix"></div>
                             <div class="question-desc short-text">${question.body}</div>
                             <div class="question-details">
                                                     <span class="question-answered question-answered-done">
-                                                        <c:if test="${question.acceptedAnswerId} != null">
+                                                        <c:if test="${question.acceptedAnswerId==1}">
                                                             <i class="icon-ok"></i>Resolved
                                                         </c:if>
                                                     </span>
@@ -270,6 +289,11 @@
                                                         class="icon-comment"></i>${question.answerCount} Answer(s)</a></span>
                                                 <span class="question-view"><i
                                                         class="icon-eye-open"></i>${question.viewer} view(s)</span>
+                                                <c:if test="${question.similar != null and question.similar > 1 }">
+                                                    <span class="question-category"><a
+                                                            href="/post/merge/${question.id}"><i
+                                                            class="icon-sitemap"></i>${question.similar} similar question(s)</a></span>
+                                                </c:if>
                             <div class="clearfix"></div>
                         </div>
                     </article>
@@ -1081,13 +1105,21 @@
                             'original-title="'+ questions[i].ownerName +
                             '" class="tooltip-n">' +
                             '<span></span><img alt="" src="' + questions[i].ownerProfileImageURL + '"></a>' +
-                            '</div>' +
-                            '<div class="question-inner">' +
+                            '</div>'
+
+                    if (questions[i].similar!=undefined && questions[i].similar > 1) {
+                        component = component + '<div class="similarQuestion">'+
+                                                 '<span class="question-category">' +
+                                '<a href="/post/merge/'+ questions[i].id + '">' +
+                                '<i class="icon-sitemap" style="margin-right: 5px">'+ '</i>' + questions[i].similar  + ' similar question(s)</a></span>' +
+                                '</div>'
+                    }
+                    component = component + '<div class="question-inner">' +
                             '<div class="clearfix"></div>' +
                             '<div class="question-desc short-text">'+ questions[i].body + '</div>' +
                             '<div class="question-details">' +
                             '<span class="question-answered question-answered-done">';
-                    if (questions[i].acceptedAnswerId===undefined) {
+                    if (questions[i].acceptedAnswerId==1) {
                         component = component + '<i class="icon-ok"></i>Resolved';
                     }
                     component = component + '</span>' +
@@ -1101,10 +1133,10 @@
                             'class="icon-comment"></i>' + questions[i].answerCount +
                             ' Answer(s)</a></span>' +
                             '<span class="question-view"><i class="icon-eye-open"></i>' + questions[i].viewer +
-                            ' view(s)</span>' +
-                            '<div class="clearfix"></div>' +
-                            '</div>' +
-                            '</article>';
+                            ' view(s)</span>';
+                    component = component + '<div class="clearfix"></div>' +
+                                            '</div>' +
+                                            '</article>';
                     $('#questions').append(component);
                     $(".tooltip-n").tipsy({fade:true,gravity:"s"});
                 }
