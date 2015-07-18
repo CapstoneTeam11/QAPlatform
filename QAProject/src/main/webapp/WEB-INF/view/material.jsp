@@ -84,21 +84,29 @@
 <div class="panel-pop" id="create-folder">
     <h2>Create folder<i class="icon-remove"></i></h2>
     <div class="form-style form-style-3">
-        <form method="post" action="/folder/create">
             <div class="form-inputs clearfix">
-                <p>
+                <p id="folderCreateP">
                     <label class="required">Folder name<span></span></label>
-                    <input type="text" name="name">
+                    <input type="text" name="name" id="folderName">
                 </p>
             </div>
             <p class="form-submit">
-                <input type="submit" value="Create new folder" class="button color small submit">
+                <input type="submit" id="submitFolder" value="Create new folder" class="button color small submit">
             </p>
-        </form>
         <div class="clearfix"></div>
     </div>
 </div><!-- End create folder -->
-
+    <div class="panel-Confirm" id="delete-folder">
+        <h2>Delete folder</h2>
+        <div>
+            <p class="panelMessage">Do you want delete this folder ?</p>
+            <p>
+                <input type="submit" value="Cancel"  class="button color small cancel panelButton" >
+                <input type="submit" value="OK"  class="button color small OK panelButton" style="margin-left: 3%;">
+            </p>
+            <div class="clearfix"></div>
+        </div>
+    </div>
 
 <%@include file="header.jsp" %>
 
@@ -130,10 +138,11 @@
                 </ul>
                 <div class="tab-inner-warp">
                     <div class="tab-inner">
-                        <div class="row">
+                        <div class="row" id="appendFolder">
                             <c:forEach var="folder" items="${folders}">
-                            <div class="col-md-3">
+                            <div class="col-md-3 deleteDiv">
                                 <div class="page-content page-shortcode">
+                                    <span class="deleteFolder"><input type="hidden" name="folderId" value="${folder.id}"><a id="removeFolder" onclick="removeFolder(this);return false;"><i class="icon-remove"></i></a></span>
                                     <div class="box_icon">
                                         <span class="t_center icon_i"><span icon_size="120"><i i_color="#1abc9c" i_hover="#34495e" class="icon-folder-open-alt color_default" style="font-size: 60px; color: rgb(52, 73, 94);"></i></span></span>
                                         <div class="t_center">
@@ -155,29 +164,33 @@
         </div><!-- End main -->
         <aside class="col-md-3 sidebar">
             <div class="widget widget_highest_points">
-                <h3 class="widget_title">Hi, Student</h3>
+                <h3 class="widget_title">Hi, ${sessionScope.user.displayName}</h3>
                 <ul>
                     <li>
                         <div class="author-img">
-                            <a href="#"><img width="60" height="60" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" alt=""></a>
+                            <a href="/profile/view/${sessionScope.user.id}"><img width="60" height="60"
+                                                                                 src="${sessionScope.user.profileImageURL}" alt=""></a>
                         </div>
-                        <h6><a href="#">Edit profile</a></h6>
+                        <h6><a href="/profile/update">Edit profile</a></h6>
                     </li>
                 </ul>
             </div>
 
-
-
             <div class="widget widget_tag_cloud">
-                <h3 class="widget_title">Tags</h3>
-                <a href="#">projects</a>
-                <a href="#">Portfolio</a>
-                <a href="#">Wordpress</a>
-                <a href="#">Html</a>
-                <a href="#">Css</a>
-                <a href="#">jQuery</a>
-                <a href="#">2code</a>
-                <a href="#">vbegy</a>
+                <h3 class="widget_title">
+                    Your Tags
+                    <c:if test="${empty sessionScope.user.tagUserList}">
+                        <a href="/profile/update#yourtag" style="float: right;">Edit tag</a>
+                    </c:if>
+                </h3>
+                <c:if test="${not empty sessionScope.user.tagUserList}">
+                    <c:forEach var="tag" items="${sessionScope.user.tagUserList}">
+                        <a href="#">${tag.tagId.tagName}</a>
+                    </c:forEach>
+                </c:if>
+                <c:if test="${empty sessionScope.user.tagUserList}">
+                    Provide your favourite tags now to get more interest news.
+                </c:if>
             </div>
 
         </aside><!-- End sidebar -->
@@ -188,27 +201,80 @@
 </div><!-- End wrap -->
 
 <div class="go-up"><i class="icon-chevron-up"></i></div>
+<%@include file="js.jsp" %>
+<c:if test="${user!=null}">
+<script src="/resource/assets/js/notification.js"></script>
+</c:if>
+<script>
+    var deleteId
+    var deleteDiv
+    var removeFolder = function(e) {
+        deleteId = $(e).parents('.deleteFolder').find("[name='folderId']").val();
+        deleteDiv = $(e).parents('.deleteDiv')
+        $(".panel-Confirm").animate({"top":"-100%"},10).hide();
+        $("#delete-folder").show().animate({"top":"34%"},500);
+        $("body").prepend("<div class='wrap-pop'></div>");
+        wrap_pop()
+    }
+    $('.panelButton').click(function(e) {
+        var url = '/folder/remove';
+        if ($(e.currentTarget).hasClass('OK')) {
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: "id="+deleteId,
+                success: function (data) {
+                    if(data != "NG" ){
+                        deleteDiv.remove();
+                    } else {
+                        console.log("Error");
+                    }
+                }
+            });
+            $(".panel-Confirm").animate({"top":"-100%"},500);
+            $(".wrap-pop").remove();
+        } else {
+            $(".panel-Confirm").animate({"top":"-100%"},500);
+            $(".wrap-pop").remove();
+        }
+    })
+    $(document).ready(function () {
+        var folderDiv = function(folderId,folderName) {
+            var div = '<div class="col-md-3"><div class="page-content page-shortcode">'+
+                       '<span class="deleteFolder"><input type="hidden" name="folderId" value="'+folderId+'"><a id="removeFolder"><i class="icon-remove"></i></a></span>'+
+                        '<div class="box_icon"><span class="t_center icon_i"><span icon_size="120"><i i_color="#1abc9c" i_hover="#34495e" class="icon-folder-open-alt color_default" style="font-size: 60px; color: rgb(52, 73, 94);"></i></span></span>'+
+                        '<div class="t_center"><h3><a href="/folder/'+folderId+'">'+folderName+'</a></h3>'+
+                        '<p></p></div></div></div><div class="clearfix gap"></div> </div>'
+            return div;
 
-<!-- js -->
-<script src="/resource/assets/js/jquery.min.js"></script>
-<script src="/resource/assets/js/bootstrap.min.js"></script>
-<script src="/resource/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
-<script src="/resource/assets/js/jquery.easing.1.3.min.js"></script>
-<script src="/resource/assets/js/html5.js"></script>
-<script src="/resource/assets/js/twitter/jquery.tweet.js"></script>
-<script src="/resource/assets/js/jflickrfeed.min.js"></script>
-<script src="/resource/assets/js/jquery.inview.min.js"></script>
-<script src="/resource/assets/js/jquery.tipsy.js"></script>
-<script src="/resource/assets/js/tabs.js"></script>
-<script src="/resource/assets/js/jquery.flexslider.js"></script>
-<script src="/resource/assets/js/jquery.prettyPhoto.js"></script>
-<script src="/resource/assets/js/jquery.carouFredSel-6.2.1-packed.js"></script>
-<script src="/resource/assets/js/jquery.scrollTo.js"></script>
-<script src="/resource/assets/js/jquery.nav.js"></script>
-<script src="/resource/assets/js/tags.js"></script>
-<script src="/resource/assets/js/jquery.bxslider.min.js"></script>
-<script src="/resource/assets/js/custom.js"></script>
-
+        }
+        $('#submitFolder').click(function(e){
+            e.preventDefault;
+            if($('#create-folder-error').length > 0) {
+                $('#create-folder-error').remove();
+            }
+            var url = "/folder/create"
+            var data = "name="+$('#folderName').val();
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: data,
+                success: function(data){
+                   if(data!="NG" && data!="exist") {
+                       $(".panel-pop h2 i").click();
+                       var div = folderDiv(data,$('#folderName').val())
+                        $('#appendFolder').append(div);
+                   } else if (data=="exist") {
+                        $('#folderCreateP').append('<label id="create-folder-error" style="color: red;"  class="error" for="question-title">Folder is exist</label>')
+                   } else {
+                       $('#folderCreateP').append('<label id="create-folder-error" style="color: red;" class="error" for="question-title">Has a error , please try again</label>')
+                       $(".panel-pop h2 i").click();
+                   }
+                }
+            });
+        })
+    })
+</script>
 <!-- End js -->
 
 </body>

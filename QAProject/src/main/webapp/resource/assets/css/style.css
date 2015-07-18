@@ -5180,3 +5180,9 @@ html[xmlns] .slides {
     font-weight: bold;
     text-align: center;
 }
+.deleteFolder {
+    right: 26px;
+    position: absolute;
+    top: 0px;
+    font-size: 20px;
+}

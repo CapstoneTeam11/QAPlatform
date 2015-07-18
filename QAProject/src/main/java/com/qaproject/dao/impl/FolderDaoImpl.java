@@ -32,4 +32,22 @@ public class FolderDaoImpl extends BaseDao<Folder,Integer> implements FolderDao 
         }
         return folders;
     }
+
+    @Override
+    public boolean checkFolderExists(String name,User user) {
+        Query query = null;
+        query = entityManager.createQuery("select l from Folder l where l.name=:name and l.managerId=:user");
+        query.setParameter("name",name);
+        query.setParameter("user",user);
+        List<Folder> folders = null;
+        try {
+            folders = query.getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(folders.size()>0) {
+            return true;
+        }
+        return false;
+    }
 }

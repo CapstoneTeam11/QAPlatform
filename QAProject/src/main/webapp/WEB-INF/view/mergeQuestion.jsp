@@ -127,8 +127,9 @@
                         <div id="hiddenId"></div>
                         <input type="hidden" name="classroomId" value="${classroom.id}">
                         <input type="hidden" name="detail" id="detail">
+
                         <c:if test="${fulltext==null}">
-                            <input type="hidden" name="detail" id="rangeComment">
+                            <input type="hidden" name="range" value="${range}" id="rangeComment">
                         </c:if>
                         <div id="form-textarea">
                             <textarea id="question-details" aria-required="true" cols="58" rows="8"></textarea>

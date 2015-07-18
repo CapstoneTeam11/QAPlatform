@@ -18,7 +18,7 @@ public class Folder {
     private User managerId;
     @Column(name = "Name")
     private String name;
-    @OneToMany(mappedBy = "folderId",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "folderId",cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
     private List<Material> materialList = new ArrayList<Material>();
 
     public Integer getId() {

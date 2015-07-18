@@ -113,19 +113,41 @@ public class MaterialController {
         return "materialList";
     }
 
-    @RequestMapping(value = "/folder/create", method = RequestMethod.POST)
-    public String addFolder(@RequestParam String name,
+    @RequestMapping(value = "/folder/create", method = RequestMethod.POST,produces = "application/json")
+    public @ResponseBody String addFolder(@RequestParam String name,
                             ModelMap model) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
             session.setAttribute("currentPage","redirect:/material");
-            return "redirect:/";
+            return "NG";
         }
-        Folder folder = new Folder();
-        folder.setManagerId(user);
-        folder.setName(name);
-        folderDao.persist(folder);
-        return "redirect:/material";
+        if(folderDao.checkFolderExists(name,user)==true) {
+            return "exist";
+        }
+        Folder folder = null;
+        try {
+            folder = new Folder();
+            folder.setManagerId(user);
+            folder.setName(name);
+            folderDao.persist(folder);
+        } catch(Exception e) {
+            return "NG";
+        }
+        return String.valueOf(folder.getId());
+    }
+    @RequestMapping(value = "/folder/remove", method = RequestMethod.POST,produces = "application/json")
+    public @ResponseBody String addFolder(@RequestParam Integer id,
+                            ModelMap model) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return "NG";
+        }
+        Folder folder = folderDao.find(id);
+        if(folder==null) {
+            return "NG";
+        }
+        folderDao.remove(folder);
+        return "OK";
     }
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
@@ -249,18 +271,18 @@ public class MaterialController {
         }
         return "classroom";
     }
-    @RequestMapping(value = "/library/add/{folderId}/{materialId}", method = RequestMethod.GET)
-    public String copyMaterial(@PathVariable Integer folderId,
+    @RequestMapping(value = "/library/add/{folderId}/{materialId}", method = RequestMethod.POST,produces = "application/json")
+    public @ResponseBody String copyMaterial(@PathVariable Integer folderId,
                                         @PathVariable Integer materialId) {
         User user = (User) session.getAttribute("user");
         Material material = materialDao.find(materialId);
         if(material==null){
-            return "404";
+            return "NG";
         }
         int error = 0;
         if (user == null) {
             session.setAttribute("currentPage","redirect:/classroom/"+material.getOwnerClassId().getId());
-            return "redirect:/";
+            return "NG";
         }
         //validate
         String destPath = "C:\\User"+"\\"+user.getId()+"\\"+folderId;
@@ -275,12 +297,12 @@ public class MaterialController {
             Utilities.copyFileUsingJava7Files(fileSource, fileDest);
         } catch (FileAlreadyExistsException f) {
             f.printStackTrace();
-            System.out.println("Already Exists");
             error = 1;
+            return "Exist";
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Fall");
             error = 1;
+            return "NG";
         }
         //Send error to User
         Material materialCopy = new Material();
@@ -290,6 +312,6 @@ public class MaterialController {
         materialCopy.setFileURL(dest);
         materialCopy.setSize(material.getSize());
         materialDao.persist(materialCopy);
-        return "redirect:/classroom/"+material.getOwnerClassId().getId();
+        return "OK";
     }
 }

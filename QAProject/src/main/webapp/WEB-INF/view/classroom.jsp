@@ -1,56 +1,4 @@
-<%--&lt;%&ndash;--%>
-  <%--Created by IntelliJ IDEA.--%>
-  <%--User: Minh--%>
-  <%--Date: 5/21/2015--%>
-  <%--Time: 8:31 AM--%>
-  <%--To change this template use File | Settings | File Templates.--%>
-<%--&ndash;%&gt;--%>
-<%--<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>--%>
-<%--<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>--%>
-<%--<%@ page contentType="text/html;charset=UTF-8" language="java" %>--%>
-<%--<!DOCTYPE html>--%>
-<%--<html lang="en">--%>
-<%--<head>--%>
 
-    <%--<!-- Basic Page Needs -->--%>
-    <%--<meta charset="utf-8">--%>
-    <%--<title>Ask me – Responsive Questions and Answers Template</title>--%>
-    <%--<meta name="description" content="Ask me Responsive Questions and Answers Template">--%>
-    <%--<meta name="author" content="2code.info">--%>
-
-
-
-    <%--<!-- Mobile Specific Metas -->--%>
-    <%--<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">--%>
-
-    <%--<!-- Main Style -->--%>
-    <%--<link rel="stylesheet" href="/resource/assets/css/style.css">--%>
-
-    <%--<!-- Skins -->--%>
-    <%--<link rel="stylesheet" href="/resource/assets/css/skins/skins.css">--%>
-
-    <%--<!-- Responsive Style -->--%>
-    <%--<link rel="stylesheet" href="/resource/assets/css/responsive.css">--%>
-
-    <%--<!-- Boostrap Style -->--%>
-    <%--<link rel="stylesheet" href="/resource/assets/css/bootstrap.min.css">--%>
-
-    <%--<!-- Notification Style -->--%>
-    <%--<link rel="stylesheet" href="/resource/assets/css/notification.css">--%>
-
-    <%--<!-- Left Notification style -->--%>
-    <%--<link rel="stylesheet" href="/resource/assets/css/jquery.growl.css"/>--%>
-
-    <%--<!-- Favicons -->--%>
-    <%--<link rel="shortcut icon" href="http://2code.info/demo/html/ask-me/images/favicon.ico">--%>
-    <%--<!--TagInput-->--%>
-    <%--<link rel="stylesheet" href="/resource/assets/js/bootstrap-tagsinput.css">--%>
-    <%--<link rel="stylesheet" href="/resource/assets/css/tag.css">--%>
-<%--</head>--%>
-
-<%--<body>--%>
-
-<%--<div class="loader"><div class="loader_html"></div></div>--%>
 <%@include file="css.jsp" %>
 <div id="wrap">
 <div class="panel-Confirm remove-Student">
@@ -119,7 +67,8 @@
     <h2>Add to folder<i class="icon-remove"></i></h2>
     <div style="height: auto; max-height: 300px; overflow-x: hidden;" id="folderList">
         <c:forEach var="folder" items="${user.folderList}">
-            <a href="/library/add/${folder.id}/" class="list-group-item">
+            <input type="hidden" value="${folder.id}">
+            <a class="list-group-item listFolder">
                 <h4 class="list-group-item-heading">${folder.name} </h4>
             </a>
         </c:forEach>
@@ -206,6 +155,12 @@
 
 <div class="tab-inner-warp">
     <div class="tab-inner" id="questions">
+        <c:if test="${sessionScope.user.id == classroom.ownerUserId.id}">
+        <div class="col-md-3 col-sm-6" style="float: right;width: 40%;top:-31px">
+            <a href="/post/merge/${classroom.id}/70" class="button medium green-button" style="float: right;"><i class="icon-reorder"></i> Suggest group questions</a>
+        </div>
+        <div style="height: 15px"></div>
+        </c:if>
         <c:if test="${not empty questions}">
             <c:if test="${fn:length(questions)>10}">
                 <c:forEach var="question" items="${questions}" end="9">
@@ -400,7 +355,7 @@
                             <td>${material.name}</td>
                             <td>${material.creationDate}</td>
                             <td>${material.size}</td>
-                            <td><input type="hidden" value="${material.id}" name="materialId"><a id="add-to-folder-click" href="#">Folder</a> / <a href="/download/${material.id}"> Computer</a></td>
+                            <td><input type="hidden" value="${material.id}" name="materialId"><a class="add-to-folder-click" href="#">Folder</a> / <a href="/download/${material.id}"> Computer</a></td>
                             <c:if test="${user.id==classroom.ownerUserId.id}">
                                 <td><form action="/material/delete" method="post" style="display: none"><input type="hidden" name="materialId" value="${material.id}"></form><a href="#" onclick="removeMaterial(this)"><i class="icon-remove"></i> Delete</a></td>
                             </c:if>
@@ -413,7 +368,7 @@
                             <td>${material.name}</td>
                             <td>${material.creationDate}</td>
                             <td>${material.size}</td>
-                            <td><input type="hidden" value="${material.id}" name="materialId"><a id="add-to-folder-click" href="#">Folder</a> / <a href="/download/${material.id}"> Computer</a></td>
+                            <td><input type="hidden" value="${material.id}" name="materialId"><a class="add-to-folder-click" href="#">Folder</a> / <a href="/download/${material.id}"> Computer</a></td>
                             <c:if test="${user.id==classroom.ownerUserId.id}">
                                 <td><form action="/material/delete" method="post" style="display: none"><input type="hidden" name="materialId" value="${material.id}"></form><a href="#" onclick="removeMaterial(this)"><i class="icon-remove"></i> Delete</a></td>
                             </c:if>
@@ -655,12 +610,13 @@
 <!-- js -->
 <%@include file="js.jsp" %>
 <c:if test="${user!=null}">
-    <script src="/resource/assets/js/notification.js"></script>
+<script src="/resource/assets/js/notification.js"></script>
 </c:if>
 <!-- End js -->
 <script>
     var idDeleteMaterial ;
     var divDeleteMaterial;
+    var idAddMaterial;
     var removeMaterial = function(e) {
         idDeleteMaterial = $(e).parents('td').find('input').val();
         divDeleteMaterial = $(e).parents('tr');
@@ -670,6 +626,27 @@
         wrap_pop();
         return false;
     }
+    $('.listFolder').click(function(e){
+        e.preventDefault;
+
+        var idFolder = $(e.currentTarget).prev('input').val();
+        var url = "/library/add/"+idFolder+"/"+idAddMaterial;
+        $.ajax({
+            type: "POST",
+            url: url,
+            success: function (data) {
+                if(data != "NG" && data!="Exist"){
+                    $(".panel-pop h2 i").click();
+                } else if(data=="Exist") {
+                    $('#folderList').prepend('<label style="color: red;" class="errorFolder">This file is exist in this folder , choose another folder</label>')
+                    console.log("Error");
+                } else {
+                    $('#folderList').prepend('<label style="color: red;" class="errorFolder">Has a error , please try again</label>')
+                }
+            }
+        })
+        return false;
+    })
     $('.deleteMaterial').click(function(e) {
         if ($(e.currentTarget).hasClass('OK')) {
             $.ajax({
@@ -714,20 +691,15 @@
                 $(this).remove();
             });
         }
-        $("#add-to-folder-click").click(function (e) {
+        $(".add-to-folder-click").click(function (e) {
+            if($('.errorFolder').length > 0) {
+                $('.errorFolder').remove();
+            }
             $(".panel-pop").animate({"top":"-100%"},10).hide();
             $("#add-to-folder").show().animate({"top":"50%"},500);
             $("body").prepend("<div class='wrap-pop'></div>");
             wrap_pop();
-            var materialId = $(e.currentTarget).parents('td').find("[name='materialId']").val();
-            var listHref = $('#folderList').children();
-            for( var i = 0 ; i < listHref.length ; i++) {
-                if(listHref[i].hasAttribute('href')) {
-                    oldHref = listHref[i].href;
-                    newHref = oldHref + materialId;
-                    listHref[i].href = newHref;
-                }
-            }
+            idAddMaterial = $(e.currentTarget).parents('td').find("[name='materialId']").val();
             return false;
         });
         var tag = new Bloodhound({
@@ -1229,7 +1201,7 @@
                     '<td>'+ materials[i].name + '</td>' +
                     '<td>'+ materials[i].creationDate + '</td>' +
                     '<td>' + materials[i].size + '</td>' +
-                    '<td><a id="add-to-folder-click" href="#">Folder</a> / <a href="/download/'+ materials[i].id +
+                    '<td><a class="add-to-folder-click" href="#">Folder</a> / <a href="/download/'+ materials[i].id +
                     '">Computer</a></td>';
                     if (currentUser==ownedUser){
                         component = component +

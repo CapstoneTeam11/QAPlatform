@@ -16,6 +16,7 @@ public interface FolderDao {
     public Folder find(Integer id);
     List<Folder> findAll();
     List<Folder> findByUser(User user);
+    public boolean checkFolderExists(String name,User user);
     @Transactional(propagation = Propagation.REQUIRED)
     public void persist(Folder entity);
     @Transactional(propagation = Propagation.REQUIRED)

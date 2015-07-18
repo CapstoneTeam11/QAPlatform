@@ -336,6 +336,7 @@
             typeaheadjs: {
                 name: 'tag',
                 displayKey: 'name',
+                maxTags: 5,
                 source: tag.ttAdapter(),
                 templates: {
                     empty: [
@@ -476,6 +477,7 @@
             elt.tagsinput({
                 itemValue: 'id',
                 itemText: 'name',
+                maxTags: 5,
                 typeaheadjs: {
                     name: 'tag',
                     displayKey: 'name',
@@ -485,6 +487,17 @@
                             '<div style="display: flex"><span class="unableFind"> unable to find tag</span> <span><a class="button color small" id="createTag" onclick="createTag()" style="margin-left: 5px">Create Now</a></span></div>'
                         ].join('\n'),
                         suggestion: Handlebars.compile('<div><span style="white-space: nowrap">{{name}}</span></div>')
+                    }
+                }
+            });
+            elt.on('beforeItemAdd', function (event) {
+                var idTag = event.item.id;
+                var tagName = event.item.name;
+                var listItems = new Array();
+                listItems = elt.tagsinput('items')
+                for(var i = 0 ; i < listItems.length;i++) {
+                    if(idTag==listItems[i].id){
+                        elt.tagsinput('remove', { id: idTag, text: tagName });
                     }
                 }
             });

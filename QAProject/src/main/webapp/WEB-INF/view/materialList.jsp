@@ -80,24 +80,17 @@
             </form>
         </div>
     </div><!-- End signup -->
-
-    <div class="panel-pop" id="create-folder">
-        <h2>Create folder<i class="icon-remove"></i></h2>
-        <div class="form-style form-style-3">
-            <form method="post" action="/library/create">
-                <div class="form-inputs clearfix">
-                    <p>
-                        <label class="required">Folder name<span></span></label>
-                        <input type="text" name="name">
-                    </p>
-                </div>
-                <p class="form-submit">
-                    <input type="submit" value="Create new folder" class="button color small submit">
-                </p>
-            </form>
+    <div class="panel-Confirm delete-Material">
+        <h2>Delete material</h2>
+        <div>
+            <p class="panelMessage">Do you want to Delete this material?</p>
+            <p>
+                <input type="submit" value="Cancel"  class="button color small cancel deleteMaterial" >
+                <input type="submit" value="OK"  class="button color small OK deleteMaterial" style="margin-left: 3%;">
+            </p>
             <div class="clearfix"></div>
         </div>
-    </div><!-- End create folder -->
+    </div>
 
 
     <%@include file="header.jsp" %>
@@ -140,7 +133,7 @@
                                     <tr>
                                         <td><a href="/download/${material.id}"><i class="icon-download"></i> ${material.name}</a></td>
                                         <td>${material.size}</td>
-                                        <td><form action="/material/delete" method="post" style="display: none"><input type="hidden" name="materialId" value="${material.id}"></form><a href="#" onclick="removeMaterial(this)"><i class="icon-remove"></i> Delete</a></td>
+                                        <td><input type="hidden" name="materialId" value="${material.id}"><a href="#" onclick="removeMaterial(this);return false"><i class="icon-remove"></i> Delete</a></td>
                                     </tr>
                                     </c:forEach>
                                 </table>
@@ -153,29 +146,33 @@
             </div><!-- End main -->
             <aside class="col-md-3 sidebar">
                 <div class="widget widget_highest_points">
-                    <h3 class="widget_title">Hi, Student</h3>
+                    <h3 class="widget_title">Hi, ${sessionScope.user.displayName}</h3>
                     <ul>
                         <li>
                             <div class="author-img">
-                                <a href="#"><img width="60" height="60" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" alt=""></a>
+                                <a href="/profile/view/${sessionScope.user.id}"><img width="60" height="60"
+                                                                                     src="${sessionScope.user.profileImageURL}" alt=""></a>
                             </div>
-                            <h6><a href="#">Edit profile</a></h6>
+                            <h6><a href="/profile/update">Edit profile</a></h6>
                         </li>
                     </ul>
                 </div>
 
-
-
                 <div class="widget widget_tag_cloud">
-                    <h3 class="widget_title">Tags</h3>
-                    <a href="#">projects</a>
-                    <a href="#">Portfolio</a>
-                    <a href="#">Wordpress</a>
-                    <a href="#">Html</a>
-                    <a href="#">Css</a>
-                    <a href="#">jQuery</a>
-                    <a href="#">2code</a>
-                    <a href="#">vbegy</a>
+                    <h3 class="widget_title">
+                        Your Tags
+                        <c:if test="${empty sessionScope.user.tagUserList}">
+                            <a href="/profile/update#yourtag" style="float: right;">Edit tag</a>
+                        </c:if>
+                    </h3>
+                    <c:if test="${not empty sessionScope.user.tagUserList}">
+                        <c:forEach var="tag" items="${sessionScope.user.tagUserList}">
+                            <a href="#">${tag.tagId.tagName}</a>
+                        </c:forEach>
+                    </c:if>
+                    <c:if test="${empty sessionScope.user.tagUserList}">
+                        Provide your favourite tags now to get more interest news.
+                    </c:if>
                 </div>
 
             </aside><!-- End sidebar -->
@@ -195,11 +192,39 @@
 
 <!-- End js -->
 <script>
+    var idDeleteMaterial
+    var divDeleteMaterial
     var removeMaterial = function(e) {
-       var formDelete = $(e).parents('td').find('form');
-       $(formDelete).submit();
+        idDeleteMaterial = $(e).parents('td').find('input').val();
+        divDeleteMaterial = $(e).parents('tr');
+        $(".delete-Material").animate({"top":"-100%"},10).hide();
+        $(".delete-Material").show().animate({"top":"34%"},500);
+        $("body").prepend("<div class='wrap-pop'></div>");
+        wrap_pop();
         return false;
     }
+    $('.deleteMaterial').click(function(e) {
+        if ($(e.currentTarget).hasClass('OK')) {
+            $.ajax({
+                type: "POST",
+                url: "/material/delete",
+                data: 'materialId=' + idDeleteMaterial,
+                success: function (data) {
+                    if(data != "NG" ){
+                        divDeleteMaterial.remove();
+                        idDeleteMaterial = null ;
+                    } else {
+                        console.log("Error");
+                    }
+                }
+            });
+            $(".delete-Material").animate({"top":"-100%"},500);
+            $(".wrap-pop").remove();
+        } else {
+            $(".delete-Material").animate({"top":"-100%"},500);
+            $(".wrap-pop").remove();
+        }
+    });
 </script>
 </body>
 </html>
