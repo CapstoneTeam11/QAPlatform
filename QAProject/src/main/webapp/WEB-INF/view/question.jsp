@@ -231,10 +231,10 @@
                                                 <div style="width: 75%;display: flex">
                                                     <div style="width: 100%;float: right;">
                                                         <input type="hidden" name="postAnswerId" value="${postAnswer.id}">
-                                                        <c:if test="${postAnswer.acceptedAnswerId !=1 && sessionScope.user.id==post.ownerUserId.id}">
+                                                        <c:if test="${postAnswer.acceptedAnswerId !=1 && sessionScope.user.id==post.ownerUserId.id && post.ownerUserId.id!=postAnswer.ownerUserId.id}">
                                                             <a class="button small color acceptAnswer answerFlag" style="float: right" onclick="answerFlag(this)">Accept</a>
                                                         </c:if>
-                                                        <c:if test="${postAnswer.acceptedAnswerId==1 && sessionScope.user.id==post.ownerUserId.id}">
+                                                        <c:if test="${postAnswer.acceptedAnswerId==1 && sessionScope.user.id==post.ownerUserId.id && post.ownerUserId.id!=postAnswer.ownerUserId.id}">
                                                             <a class="button small color unacceptAnswer answerFlag" style="float: right" onclick="answerFlag(this)">Unaccept</a>
                                                         </c:if>
                                                     </div>
@@ -290,10 +290,10 @@
                                                 <div style="width: 75%;display: flex">
                                                     <div style="width: 100%;float: right;">
                                                         <input type="hidden" name="postAnswerId" value="${postAnswer.id}">
-                                                        <c:if test="${postAnswer.acceptedAnswerId !=1 && sessionScope.user.id==post.ownerUserId.id}">
+                                                        <c:if test="${postAnswer.acceptedAnswerId !=1 && sessionScope.user.id==post.ownerUserId.id && post.ownerUserId.id!=postAnswer.ownerUserId.id}">
                                                             <a class="button small color acceptAnswer answerFlag" style="float: right" onclick="answerFlag(this)">Accept</a>
                                                         </c:if>
-                                                        <c:if test="${postAnswer.acceptedAnswerId==1 && sessionScope.user.id==post.ownerUserId.id}">
+                                                        <c:if test="${postAnswer.acceptedAnswerId==1 && sessionScope.user.id==post.ownerUserId.id && post.ownerUserId.id!=postAnswer.ownerUserId.id}">
                                                             <a class="button small color unacceptAnswer answerFlag" style="float: right" onclick="answerFlag(this)">Unaccept</a>
                                                         </c:if>
                                                     </div>
@@ -899,7 +899,7 @@
                                 //user is post Owner
                                 if(userId==post[i].ownerId) {
                                     var divAppend = getCommentDiv(post[i].ownerName,post[i].lastEditedDate,post[i].ownerProfileImageURL) +
-                                                    acceptAnswerIconDiv(post[i].id) + unacceptAnswerDiv() +
+                                                    acceptAnswerIconDiv(post[i].id) +
                                                     acceptAnswerAction() + postActionUser() + answerBody(post[i].body)
 
                                     $('#commentListDetail').append(divAppend);
@@ -914,7 +914,7 @@
                                 //user is post Owner
                                 if(userId==post[i].ownerId) {
                                     var divAppend = getCommentDiv(post[i].ownerName, post[i].lastEditedDate,post[i].ownerProfileImageURL) +
-                                            notAcceptAnswerIconDiv(post[i].id) + acceptAnswerDiv() +
+                                            notAcceptAnswerIconDiv(post[i].id) +
                                             acceptAnswerAction() + postActionUser() + answerBody(post[i].body)
 
                                     $('#commentListDetail').append(divAppend);

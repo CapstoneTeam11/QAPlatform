@@ -101,19 +101,19 @@
                 <input type="hidden" name="id" value="${classroom.id}">
                 <table class="table table-hover" style="margin-left: 10px">
                     <thead>
-                        <tr>
-                            <th style="border-bottom: none; font-weight: bold">Question's Title</th>
-                            <th style="border-bottom: none"></th>
-                        </tr>
+                    <tr>
+                        <th style="border-bottom: none; font-weight: bold">Question's Title</th>
+                        <th style="border-bottom: none"></th>
+                    </tr>
                     </thead>
                     <tbody style="display: block; max-height: 300px; overflow-y: auto">
-                        <c:forEach var="post" items="${posts}">
-                            <tr>
-                                <td class="col-md-12"><a href="/post/view/${post.id}">${post.title}</a></td>
-                                <td ><input type="checkbox" class="checkbox" name="postMerges"
-                                                            value="${post.id}"></td>
-                            </tr>
-                        </c:forEach>
+                    <c:forEach var="post" items="${posts}">
+                        <tr>
+                            <td class="col-md-12"><a href="/post/view/${post.id}">${post.title}</a></td>
+                            <td ><input type="checkbox" class="checkbox" name="postMerges"
+                                        value="${post.id}"></td>
+                        </tr>
+                    </c:forEach>
                     </tbody>
                 </table>
                 <div class="row">

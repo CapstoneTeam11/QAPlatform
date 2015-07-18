@@ -438,7 +438,6 @@ public class PostController {
     @RequestMapping(value = "/post/create", method = RequestMethod.POST)
     public String create(@RequestParam Integer classId,
                          @RequestParam List<Integer> tagId,
-                         @RequestParam(required = false) List<Integer> postMerges,
                          @RequestParam(required = false) List<String> newTag,
                          @RequestParam String postName,
                          @RequestParam Integer postType,
@@ -447,7 +446,6 @@ public class PostController {
         //Check is User
         User user = (User) session.getAttribute("user");
         Classroom classroom = classroomDao.find(classId);
-        List<Post> postMergeList = null;
         if (user == null) {
             session.setAttribute("currentPage", "redirect:/post/create/" + classId);
             return "redirect:/";
@@ -479,17 +477,7 @@ public class PostController {
         if (postDetail.length() < 120) {
             return "redirect:/post/create/" + classId;
         }
-        if(postMerges!=null) {
-            postMergeList = new ArrayList<Post>();
-            for(int i = 0 ; i < postMerges.size();i++) {
-                Post postMerge = postDao.find(postMerges.get(i));
-                if(postMerges==null) {
-                    return "404";
-                } else {
-                    postMergeList.add(postMerge);
-                }
-            }
-        }
+
         Post post = new Post();
         post.setTitle(postName);
         post.setPostType(postType);
@@ -574,28 +562,6 @@ public class PostController {
                     }
 
                 }
-                if(postMergeList!=null) {
-                    for(int i = 0 ; i < postMergeList.size();i++) {
-                        Post postClose = postMergeList.get(i);
-                        //create comment to notice user , his post was merged
-                        Post postmergeAnswer = new Post();
-                        postmergeAnswer.setBody("This question was merged and answered by " + postClose.getOwnerClassId().getOwnerUserId().getDisplayName() + ",You can read it in this <a href='/post/view/"+ post.getId() +"'>Question</a>");
-                        postmergeAnswer.setLastEditedDate(new Date());
-                        postmergeAnswer.setCreationDate(new Date());
-                        postmergeAnswer.setPostType(3);
-                        postmergeAnswer.setAcceptedAnswerId(0);
-                        postmergeAnswer.setParentId(postClose.getId());
-                        postmergeAnswer.setOwnerClassId(postClose.getOwnerClassId());
-                        postmergeAnswer.setOwnerUserId(user);
-                        postDao.persist(postmergeAnswer);
-                        // close post merge
-                        postClose.setStatus(Constant.CLOSE_POST);
-                        postDao.merge(postClose);
-                        // send notification
-                        sendNotificationReplies(user,postmergeAnswer);
-                    }
-                }
-
             }
 
         }
@@ -644,8 +610,6 @@ public class PostController {
         post.setTitle(postName);
         post.setPostType(postType);
         post.setBody(postDetail);
-        post.setViewer(0);
-        post.setAcceptedAnswerId(0);
         post.setParentId(0);
         post.setLastEditedDate(new Date());
         //Create List TagPost
@@ -742,7 +706,10 @@ public class PostController {
             if (parentPost == null) {
                 return "NG";
             }
-            if (user.getId().compareTo(parentPost.getOwnerUserId().getId())==0) {
+            if (user.getId()!=parentPost.getOwnerUserId().getId()) {
+                return "NG";
+            }
+            if(post.getOwnerUserId().getId()==parentPost.getOwnerUserId().getId()){
                 return "NG";
             }
             List<Post> posts = postDao.findRepliesWasAcceptedByParentId(post.getParentId());
@@ -755,6 +722,8 @@ public class PostController {
             }
             post.setAcceptedAnswerId(Constant.ACCEPT_ANSWER);
             postDao.merge(post);
+            parentPost.setAcceptedAnswerId(Constant.ACCEPT_ANSWER);
+            postDao.merge(parentPost);
         } catch (Exception e) {
             e.printStackTrace();
             return "NG";
@@ -787,6 +756,8 @@ public class PostController {
             }
             post.setAcceptedAnswerId(0);
             postDao.merge(post);
+            parentPost.setAcceptedAnswerId(Constant.UNACCEPT_ANSWER);
+            postDao.merge(parentPost);
         } catch (Exception e) {
             e.printStackTrace();
             return "NG";
@@ -1033,6 +1004,7 @@ public class PostController {
         if(classroom.getOwnerUserId().getId()!=user.getId()){
             return "403";
         }
+        List<Post> posts = new ArrayList<Post>();
         for(int i = 0 ; i < postMerges.size() ; i++) {
             Post post = postDao.find(postMerges.get(i));
             if(post==null) {
@@ -1041,11 +1013,112 @@ public class PostController {
             if(post.getOwnerClassId().getId()!=id){
                 return "404";
             }
+            posts.add(post);
         }
-        model.addAttribute("postMerges",postMerges);
+        model.addAttribute("posts",posts);
         model.addAttribute("classroom",classroom);
         return "createPost";
     }
-
+    @RequestMapping(value = "/post/merge", method = RequestMethod.POST)
+    public String merge(@RequestParam List<Integer> postMerges,
+                        @RequestParam Integer primaryid,
+                        @RequestParam List<Integer> tagId,
+                        @RequestParam(required = false) List<String> newTag,
+                        @RequestParam String postName,
+                        @RequestParam String postDetail) {
+        User user = (User) session.getAttribute("user");
+        Post post = postDao.find(primaryid);
+        List<Post> postMergeList = null;
+        if (user == null) {
+            session.setAttribute("currentPage", "redirect:/post/update/" + primaryid);
+            return "redirect:/";
+        }
+        if (post == null) {
+            return "404";
+        }
+        if (postName.length() <= 0 || postName.length() > 255) {
+            return "redirect:/post/merge/" + primaryid;
+        }
+        int tagIdSize = 0;
+        if (tagId != null) {
+            tagIdSize = tagId.size();
+        }
+        int newTagSize = 0;
+        if (newTag != null) {
+            newTagSize = newTag.size();
+        }
+        if ((tagIdSize + newTagSize) < 1 || (tagIdSize + newTagSize) > 5) {
+            return "redirect:/post/merge/" + primaryid;
+        }
+        if (postDetail.length() < 120) {
+            return "redirect:/post/merge/" + primaryid;
+        }
+        if(postMerges!=null) {
+            postMergeList = new ArrayList<Post>();
+            for(int i = 0 ; i < postMerges.size();i++) {
+                if(postMerges.get(i) > primaryid || postMerges.get(i) < primaryid ) {
+                    Post postMerge = postDao.find(postMerges.get(i));
+                    if(postMerges==null) {
+                        return "404";
+                    } else {
+                        postMergeList.add(postMerge);
+                    }
+                }
+            }
+        }
+        post.setTitle(postName);
+        post.setBody(postDetail);
+        post.setParentId(0);
+        post.setLastEditedDate(new Date());
+        //Create List TagPost
+        List<TagPost> tagPosts = new ArrayList<TagPost>();
+        for (int i = 0; i < tagId.size(); i++) {
+            TagPost tagPost = new TagPost();
+            tagPost.setPostId(post);
+            Tag tagfind = tagDao.find(tagId.get(i));
+            if (tagfind == null) {
+                return "404";
+            }
+            tagPost.setTagId(tagfind);
+            tagPosts.add(tagPost);
+        }
+        if (newTag != null) {
+            for (int i = 0; i < newTag.size(); i++) {
+                TagPost tagPost = new TagPost();
+                tagPost.setPostId(post);
+                Tag tag = new Tag();
+                tag.setTagName(newTag.get(i));
+                tag.setTagCount(0);
+                tagDao.persist(tag);
+                tagPost.setTagId(tag);
+                tagPosts.add(tagPost);
+            }
+        }
+        post.getTagPostList().clear();
+        post.getTagPostList().addAll(tagPosts);
+        postDao.merge(post);
+        if(postMergeList!=null) {
+            for(int i = 0 ; i < postMergeList.size();i++) {
+                Post postClose = postMergeList.get(i);
+                //create comment to notice user , his post was merged
+                Post postmergeAnswer = new Post();
+                postmergeAnswer.setBody("This question was merged and answered by " + postClose.getOwnerClassId().getOwnerUserId().getDisplayName() + ",You can read it in this <a href='/post/view/"+ primaryid +"'>Question</a>");
+                postmergeAnswer.setLastEditedDate(new Date());
+                postmergeAnswer.setCreationDate(new Date());
+                postmergeAnswer.setPostType(3);
+                postmergeAnswer.setAcceptedAnswerId(0);
+                postmergeAnswer.setParentId(postClose.getId());
+                postmergeAnswer.setOwnerClassId(postClose.getOwnerClassId());
+                postmergeAnswer.setOwnerUserId(user);
+                postDao.persist(postmergeAnswer);
+                // close post merge
+                postClose.setStatus(Constant.CLOSE_POST);
+                postDao.merge(postClose);
+                // send notification
+                sendNotificationReplies(user,postmergeAnswer);
+            }
+        }
+        return "redirect:/post/view/"+primaryid;
+    }
 
 }

@@ -134,7 +134,7 @@
             <div class="col-md-9">
 
                 <div class="page-content ask-question">
-                    <c:if test="${post==null}">
+                    <c:if test="${post==null && posts==null}">
                     <div class="boxedtitle page-title">
                         <c:if test="${postMerges!=null}">
                             <h2>
@@ -157,11 +157,6 @@
                     <div class="form-style form-style-3" id="question-submit">
                         <form method="post" action="/post/create" id="formvalidate">
                             <input type="hidden" name="classId" value="${classroom.id}">
-                            <c:if test="${postMerges!=null}">
-                                <c:forEach var="postMerge" items="${postMerges}">
-                                    <input type="hidden" name="postMerges" value="${postMerge}">
-                                </c:forEach>
-                            </c:if>
                             <div>
                                 <div class="row" style="margin-bottom: 20px">
                                     <div class="col-md-2">
@@ -185,12 +180,6 @@
                                     </div>
                                     <div id="hiddenTag"></div>
                                 </div>
-                                <%--<input type="text" class="input" name="question_tags" id="question_tags" data-seperator=",">--%>
-                                <%--<p>
-                                    <span class="form-description">Please choose  suitable Keywords Ex : <span
-                                            class="color">java , javascript, Php</span> .</span>
-                                </p>
---%>
                                 <div class="row" style="margin-bottom: 20px">
                                     <div class="col-md-2">
                                     <label class="required">Type<span>*</span></label>
@@ -207,14 +196,6 @@
                                     </div>
                                     <%--<span class="form-description">Please choose the appropriate section so easily search for your question .</span>--%>
                                 </div>
-                                <%--<label>Attachment</label>--%>
-                                <%--<div class="fileinputs">--%>
-                                <%--<input type="file" class="file">--%>
-                                <%--<div class="fakefile">--%>
-                                <%--<button type="button" class="button small margin_0">Select file</button>--%>
-                                <%--<span><i class="icon-arrow-up"></i>Browse</span>--%>
-                                <%--</div>--%>
-                                <%--</div>--%>
                             </div>
                             <div class="row" style="margin-bottom: 20px">
                                 <div class="col-md-2">
@@ -275,12 +256,6 @@
                                         </div>
                                         <div id="hiddenTag"></div>
                                     </div>
-                                        <%--<input type="text" class="input" name="question_tags" id="question_tags" data-seperator=",">--%>
-                                    <%--<p>
-                                    <span class="form-description">Please choose  suitable Keywords Ex : <span
-                                            class="color">java , javascript, Php</span> .</span>
-                                    </p>--%>
-
                                     <div class="row" style="margin-bottom: 20px">
                                         <div class="col-md-2">
                                             <label class="required">Type<span>*</span></label>
@@ -299,7 +274,6 @@
                                                     </c:if>
                                                 </select>
                                             </span>
-                                        <%--<span class="form-description">Please choose the appropriate section so easily search for your question .</span>--%>
                                         </div>
                                 </div>
                                 <div class="row" style="margin-bottom: 20px">
@@ -310,6 +284,99 @@
                                         <div id="form-textarea">
                                             <textarea id="questionDetails" aria-required="true" cols="58"
                                                       name="questionDetails" rows="8">${post.body}</textarea>
+                                        </div>
+                                        <input type="hidden" id="postDetail" name="postDetail">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2"></div>
+                                    <div class="col-md-10">
+                                        <input type="submit" id="publish-question" value="Save"
+                                               class="button color small submit">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </c:if>
+                    <c:if test="${posts!=null}">
+                        <div class="boxedtitle page-title">
+                            <h2>
+                                Merge post
+                            <span style="float: right;font-size: 12px;color: black;margin-top: 12px;">
+                                (<span style="color:red">*</span>) required filed
+                            </span>
+                            </h2>
+                        </div>
+                        <c:forEach var="post" items="${posts}">
+                            <input type="hidden" id="title${post.id}" name="id" value="${post.title}">
+                            <c:forEach var="tag" items="${post.tagPostList}">
+                                <input type="hidden" name="tagUpdateId${post.id}"  class="tagUpdateId${post.id}" value="${tag.tagId.id}">
+                                <input type="hidden" name="tagUpdateName${post.id}" class="tagUpdateName${post.id}" value="${tag.tagId.tagName}">
+                            </c:forEach>
+                            <textarea hidden="true" id="detail${post.id}">${post.body}></textarea>
+                        </c:forEach>
+                        <div class="form-style form-style-3" id="question-submit">
+                            <form method="post" action="/post/merge" id="formvalidate">
+                                <c:forEach var="post" items="${posts}">
+                                <input type="hidden" id="title${post.id}" name="postMerges" value="${post.id}">
+                                </c:forEach>
+                                <input type="hidden" id="primaryid" name="primaryid" value="${posts[0].id}">
+                                <div id="taghiddenlist">
+                                <c:forEach var="tag" items="${posts[0].tagPostList}">
+                                    <input type="hidden" name="tagUpdateId" value="${tag.tagId.id}">
+                                    <input type="hidden" name="tagUpdateName" value="${tag.tagId.tagName}">
+                                </c:forEach>
+                                </div>
+                                <div class="row" style="margin-bottom: 20px">
+                                    <div class="col-md-2">
+                                    </div>
+                                    <div class="col-md-10">
+                                        <table class="table table-hover" style="margin-left: 10px">
+                                            <thead>
+                                            <tr>
+                                                <th style="border-bottom: none; font-weight: bold">Question's Title</th>
+                                                <th style="border-bottom: none"></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody style="display: block; max-height: 300px; overflow-y: auto">
+                                            <c:forEach var="post" items="${posts}">
+                                                <tr>
+                                                    <td class="col-md-12"><a href="/post/view/${post.id}">${post.title}</a></td>
+                                                    <td ><input type="radio" class="radio" name="postMerges" style="width: 30px;"
+                                                                value="${post.id}"></td>
+                                                </tr>
+                                            </c:forEach>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-bottom: 20px">
+                                    <div class="col-md-2">
+                                        <label class="required">Title<span>*</span></label>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <input type="text" id="question-title" name="postName"
+                                               value="${posts[0].title}" maxlength="255" style="width: 100%">
+                                    </div>
+                                </div>
+
+                                <div class="row" style="margin-bottom: 20px">
+                                    <div class="col-md-2">
+                                        <label class="required">Tag<span>*</span></label>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <input type="text" class="input" name="tag" id="tagsuggest"/>
+                                    </div>
+                                    <div id="hiddenTag"></div>
+                                </div>
+                                <div class="row" style="margin-bottom: 20px">
+                                    <div class="col-md-2">
+                                        <label class="required">Details<span>*</span></label>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <div id="form-textarea">
+                                            <textarea id="questionDetails" aria-required="true" cols="58"
+                                                      name="questionDetails" rows="8">${posts[0].body}</textarea>
                                         </div>
                                         <input type="hidden" id="postDetail" name="postDetail">
                                     </div>
@@ -394,7 +461,7 @@
 <c:if test="${sessionScope.user!=null}">
 <script src="/resource/assets/js/notification.js"></script>
 </c:if>
-<c:if test="${post==null}">
+<c:if test="${post==null && posts==null}">
 <script>
     $(document).ready(function () {
         $('#question-title').change(function(e){
@@ -648,6 +715,164 @@
             $('.tt-input').val("");
             }
         };
+    </script>
+
+</c:if>
+<c:if test="${posts!=null}">
+    <script>
+        $(document).ready(function () {
+
+            $('#formvalidate').validate({
+                ignore: [],
+                rules: {
+                    questionDetails: {
+                        required: function (){
+                            CKEDITOR.instances.questionDetails.updateElement();
+                        },
+                        minlength: 120
+                    },
+                    postName: {
+                        required: true,
+                        minlength: 20,
+                        maxlength: 255
+                    },
+                    tag: {
+                        required: true
+                    }
+                },
+                messages: {
+                    postName: {
+                        required: "Please provide the title.",
+                        minlength: "The title must be between 20 and 255 characters long.",
+                        maxlength: "The title must be between 20 and 255 characters long."
+                    },
+                    questionDetails: {
+                        required: "Please provide the details.",
+                        minlength: "The details must be at least 120 characters long."
+                    },
+                    tag: {
+                        required: "Please provide at least one tag."
+                    }
+                },
+                errorPlacement: function(error, element)
+                {
+                    if (element.attr("name") == "questionDetails")
+                    {
+                        error.insertAfter("#form-textarea");
+                    } else {
+                        error.insertAfter(element);
+                    }
+                }
+            });
+            $('.radio').click(function(e){
+                var id = $(e.currentTarget).val();
+                var title = '#title'+id;
+                var detail = '#detail'+id;
+                $('#question-title').val($(title).val())
+                $('#primaryid').val(id)
+                CKEDITOR.instances['questionDetails'].setData($(detail).val())
+                elt.tagsinput('removeAll');
+                $('#hiddenTag').empty();
+                var tagIdUpdate = new Array();
+                var nameTagUpdateId = '.tagUpdateId'+id;
+                var nameTagUpdateName = '.tagUpdateName'+id;
+                $(nameTagUpdateId).each(function() {
+                    tagIdUpdate.push($(this).val());
+                });
+                var tagNameUpdate = new Array();
+                $(nameTagUpdateName).each(function() {
+                    tagNameUpdate.push($(this).val());
+                });
+                for(var i = 0 ; i < tagIdUpdate.length ; i++) {
+                    elt.tagsinput('add', { id: tagIdUpdate[i], name: tagNameUpdate[i] });
+                }
+
+            })
+            $('#publish-question').click(function (e) {
+                var detail = CKEDITOR.instances['questionDetails'].getData()
+                var postDetail = $('#postDetail')
+                postDetail.val(detail) ;
+                $('#question-submit').submit();
+            });
+
+            CKEDITOR.replace('questionDetails');
+            var tag = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: 'http://localhost:8080/tag/%QUERY'
+                }
+            });
+            tag.initialize();
+            elt = $('#tagsuggest');
+            var hiddenTag = $('#hiddenTag');
+            elt.tagsinput({
+                itemValue: 'id',
+                itemText: 'name',
+                maxTags: 5,
+                typeaheadjs: {
+                    name: 'tag',
+                    displayKey: 'name',
+                    source: tag.ttAdapter(),
+                    templates: {
+                        empty: [
+                            '<div style="display: flex"><span class="unableFind"> unable to find tag</span> <span><a class="button color small" id="createTag" onclick="createTag()" style="margin-left: 5px">Create Now</a></span></div>'
+                        ].join('\n'),
+                        suggestion: Handlebars.compile('<div><span style="white-space: nowrap">{{name}}</span></div>')
+                    }
+                }
+            });
+            elt.on('itemAdded', function (event) {
+                var idTag = event.item.id;
+                    if(idTag < 0) {
+                        var name = event.item.name;
+                        hiddenTag.append("<input type='hidden' name='newTag' value=" + name + " id=tag" + idTag + ">");
+                    } else {
+                        hiddenTag.append("<input type='hidden' name='tagId' value=" + idTag + " id=tag" + idTag + ">");
+                    }
+
+            });
+            elt.on('beforeItemAdd', function (event) {
+                var idTag = event.item.id;
+                var tagName = event.item.name;
+                var listItems = new Array();
+                listItems = elt.tagsinput('items')
+                for(var i = 0 ; i < listItems.length;i++) {
+                    if(idTag==listItems[i].id){
+                        elt.tagsinput('remove', { id: idTag, text: tagName });
+                    }
+                }
+            });
+            elt.on('itemRemoved', function (event) {
+                var tagId = "#tag" + event.item.id;
+                $(tagId).remove();
+            });
+            var tagIdUpdate = new Array();
+            $("input[name=tagUpdateId]").each(function() {
+                tagIdUpdate.push($(this).val());
+            });
+            var tagNameUpdate = new Array();
+            $("input[name=tagUpdateName]").each(function() {
+                tagNameUpdate.push($(this).val());
+            });
+            for(var i = 0 ; i < tagIdUpdate.length ; i++) {
+                elt.tagsinput('add', { id: tagIdUpdate[i], name: tagNameUpdate[i] });
+            }
+
+        });
+        var createTag = function(e){
+            var flag = 0;
+            for( var i = 0 ; i < elt.tagsinput('items').length ; i ++) {
+                if($('.tt-input').val()==elt.tagsinput('items')[i].name) {
+                    flag = 1;
+                }
+            }
+            if(flag==0) {
+                $('#tagsuggest').tagsinput('add', { id: Math.round((Math.random()*10000))*-1, name: $('.tt-input').val() });
+                $('.tt-input').val("");
+            }
+        };
+
     </script>
 
 </c:if>
