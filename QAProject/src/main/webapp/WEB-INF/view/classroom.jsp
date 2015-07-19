@@ -37,24 +37,26 @@
 <div class="panel-pop" id="addMaterial">
     <h2>Upload Material<i class="icon-remove"></i></h2>
     <div class="form-style form-style-3">
-        <form method="post" action="/upload" enctype="multipart/form-data">
+        <form method="post" action="/upload" enctype="multipart/form-data" id="formUpload">
             <div style="display: flex;height: 42px;">
                 <p style="width: 18% !important;">
                     <label class="required">Tag<span>*</span></label>
                 </p>
-                <div style="width: 82%">
+                <div style="width: 82%" id="divTagSuggest">
                     <input type="text" class="input" name="tag" id="tagsuggest"/>
                 </div>
                 <div id="hiddenTag"></div>
             </div>
             <div class="form-inputs clearfix">
                 <p>
-                    <input type="file" name="fileUpload" size="50">
+                    <input type="file" name="fileUpload" size="50" required="true" id="fileUpload">
                 </p>
+            </div>
+            <div class="form-inputs clearfix" id="errorUpload">
             </div>
             <p class="form-submit">
                 <c:if test="${classroom.status == 1}">
-                    <input type="submit" value="Upload" class="button color small submit">
+                    <input type="submit" value="Upload" id="materialSubmit" class="button color small submit">
                 </c:if>
                 <input type="hidden" name="classId" value="${classroom.id}">
             </p>
@@ -600,8 +602,10 @@
                     <div id="hiddenTag1"></div>
                 </div>
             </div>
+            <div class="form-inputs clearfix" id="errorInvite">
+            </div>
             <p class="form-submit">
-                <a href="javascript:inviteStudent(${classroom.id})" class="button color small submit">Invite</a>
+                <a href="javascript:inviteStudent(${classroom.id})" class="button color small submit" style="width: 100%;text-align: center;">Invite</a>
             </p>
         </form>
         <div class="clearfix"></div>
@@ -683,6 +687,20 @@
     };
     var studentNameList = [];
     $(document).ready(function () {
+        $('#materialSubmit').click(function(e){
+            var tagId = new Array();
+            $("input[name=tagId]").each(function() {
+                tagId.push($(this).val());
+            });
+            if(tagId.length ==0  && tagId.length > 5) {
+                $('#errorUpload').append('<label id="create-folder-error" style="color: red;" class="error" for="question-title">you must add at least one tag and max is 5 tag</label>')
+            } else if($('#fileUpload').val()==''){
+                $('#errorUpload').append('<label id="create-folder-error" style="color: red;" class="error" for="question-title">you must upload at least one file</label>')
+            } else {
+                $('#formUpload').submit();
+            }
+            return false;
+        })
         function wrap_pop() {
             $(".wrap-pop").click(function () {
                 $(".panel-pop").animate({"top":"-100%"},500).hide(function () {
@@ -791,21 +809,26 @@
     function inviteStudent(id){
         var url = "/inviteJoinClass/"+id;
         var name = $("#tagsuggest1").val();
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: "studentName="+name,
-            success: function(data){
-                if(data == "OK"){
-                    $('.panel-pop h2 i').click();
-                    $('#tagsuggest1').tagsinput('removeAll');
-                }else{
-                    $('.panel-pop h2 i').click();
-                    $('#tagsuggest1').tagsinput('removeAll');
-                }
+        if(name=='') {
+            $('#errorInvite').append('<label id="create-folder-error" style="color: red;" class="error" for="question-title">you must add at least one student</label>')
+        } else {
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: "studentName="+name,
+                success: function(data){
+                    if(data == "OK"){
+                        $('.panel-pop h2 i').click();
+                        $('#tagsuggest1').tagsinput('removeAll');
+                    }else{
+                        $('.panel-pop h2 i').click();
+                        $('#tagsuggest1').tagsinput('removeAll');
+                    }
 
+                }
+            });
         }
-        });
+
     }
     function getStudentList(id){
         var url = "/findAllStudentNotInClass/"+id;

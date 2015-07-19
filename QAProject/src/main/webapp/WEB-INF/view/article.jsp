@@ -173,7 +173,7 @@
                             <div class="btn-group">
                                 <a data-toggle="dropdown" href="" aria-expanded="false"><i class="icon-cog" style="color: black;font-weight: bold;font-size: 20px;"></i><span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu" style="left: -127px;">
-                                    <c:if test="${sessionScope.user.id==post.ownerUserId.id && sessionScope.user.roleId.id!=3}">
+                                    <c:if test="${sessionScope.user.id==post.ownerUserId.id && sessionScope.user.roleId.id!=3 && post.status!=0}">
                                         <li><a href="/post/update/${post.id}">Edit</a></li>
                                     </c:if>
                                     <c:if test="${sessionScope.user.id==post.ownerUserId.id || sessionScope.user.roleId.id==3}">
@@ -872,6 +872,7 @@
                 success: function (data) {
                     if(data != "OK" ){
                         console.log("Error");
+                        CKEDITOR.instances['question-details'].setData("")
                     }
                 }
             })

@@ -222,7 +222,7 @@
                     <c:if test="${post!=null}">
                         <div class="boxedtitle page-title">
                             <h2>
-                                Create post
+                                Edit post
                             <span style="float: right;font-size: 12px;color: black;margin-top: 12px;">
                                 (<span style="color:red">*</span>) required filed
                             </span>
@@ -403,7 +403,7 @@
                             <p>${classroom.classroomDescription}</p>
 
                             <div class="clear"></div>
-                            <span>Feb 22, 2014</span>
+
                         </li>
                     </ul>
                     <div class="row">

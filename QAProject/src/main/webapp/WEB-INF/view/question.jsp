@@ -37,7 +37,7 @@
 <div class="panel-pop" id="invite-teacher">
     <h2>Invite Teacher<i class="icon-remove"></i></h2>
     <div class="form-style form-style-3">
-        <form method="post" action="/teacherInvitation">
+        <form method="post" action="/teacherInvitation" id="formInviteTeacher">
             <div id="hiddenTeacher"></div>
             <input type="hidden" name="postId" value="${post.id}">
             <div style="display: flex;">
@@ -47,6 +47,8 @@
                 <div style="width: 82%">
                     <input type="text" name="name" id="teacherSuggest">
                 </div>
+            </div>
+            <div class="form-inputs clearfix" id="errorInvite">
             </div>
             <p class="form-submit">
                 <input type="submit" value="Invite" id="inviteTeacher-click" class="button color small submit">
@@ -161,7 +163,7 @@
                         <div class="btn-group">
                             <a data-toggle="dropdown" href="" aria-expanded="false"><i class="icon-cog" style="color: black;font-weight: bold;font-size: 20px;"></i><span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu" style="left: -127px;">
-                                <c:if test="${sessionScope.user.id==post.ownerUserId.id && sessionScope.user.roleId.id!=3}">
+                                <c:if test="${sessionScope.user.id==post.ownerUserId.id && sessionScope.user.roleId.id!=3 && post.status!=0}">
                                     <li><a href="/post/update/${post.id}">Edit</a></li>
                                 </c:if>
                                 <c:if test="${sessionScope.user.id==post.ownerUserId.id || sessionScope.user.roleId.id==3}">
@@ -796,7 +798,19 @@
                 Cookies.set('post', postIds);
             }
 
-
+        $('#inviteTeacher-click').click(function(e){
+            e.preventDefault
+            var tagId = new Array();
+            $("input[name=userId]").each(function() {
+                tagId.push($(this).val());
+            });
+            if(tagId.length==0){
+                $('#errorInvite').append('<label id="create-folder-error" style="color: red;" class="error" for="question-title">you must add at least one teacher</label>')
+            } else {
+                $('#formInviteTeacher').submit();
+            }
+            return false;
+        })
         $('#wantAnswer').click(function (e) {
             if($('#wantAnswer').hasClass('wantAnswerId')) {
             var postId = ${post.id}
@@ -978,6 +992,7 @@
                 success: function (data) {
                     if(data != "OK" ){
                         console.log("Error");
+                        CKEDITOR.instances['question-details'].setData("");
                     }
                 }
             })

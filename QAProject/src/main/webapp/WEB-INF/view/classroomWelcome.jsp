@@ -156,7 +156,7 @@
         <ul class="related-posts">
             <li class="related-item">
                 <p>${classroom.classroomDescription}</p>
-                <div class="clear"></div><span>Feb 22, 2014</span>
+                <div class="clear"></div>
             </li>
         </ul>
         <c:if test="${user.roleId.id==1}">
@@ -236,7 +236,7 @@
                 </div>
             </div>
             <p class="form-submit">
-                <a href="javascript:inviteStudent(${classroom.id})" class="button color small submit">Invite</a>
+                <a href="javascript:inviteStudent(${classroom.id})" class="button color small submit" style="width: 100%;text-align: center;">Invite</a>
             </p>
         </form>
         <div class="clearfix"></div>

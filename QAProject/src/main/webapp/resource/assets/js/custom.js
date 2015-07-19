@@ -783,6 +783,7 @@ jQuery(document).ready(function($) {
     jQuery("#create-folder-click").click(function () {
         jQuery(".panel-pop").animate({"top":"-100%"},10).hide();
         jQuery("#create-folder").show().animate({"top":"50%"},500);
+        jQuery("#errorInvite").empty()
         jQuery("body").prepend("<div class='wrap-pop'></div>");
         wrap_pop();
         return false;
@@ -791,8 +792,10 @@ jQuery(document).ready(function($) {
      * Upload material
      */
     jQuery("#addMaterial-click").click(function () {
+
         jQuery(".panel-pop").animate({"top":"-100%"},10).hide();
         jQuery("#addMaterial").show().animate({"top":"50%"},500);
+        jQuery("#errorUpload").empty()
         jQuery("body").prepend("<div class='wrap-pop'></div>");
         wrap_pop();
         return false;
@@ -803,6 +806,7 @@ jQuery(document).ready(function($) {
     jQuery("#InviteTagClick").click(function () {
         jQuery(".panel-pop").animate({"top":"-100%"},10).hide();
         jQuery("#invite-teacher").show().animate({"top":"50%"},500);
+        jQuery("#errorInvite").empty()
         jQuery("body").prepend("<div class='wrap-pop'></div>");
         wrap_pop();
         return false;
