@@ -148,14 +148,14 @@
         <div class="col-md-9" id="questionMain">
             <article class="question single-question question-type-normal">
                 <h2 class="post-title">${post.title}</h2>
-                <span class="wantAnswer"><a id="wantNumber">${fn:length(post.wantAnswerPosts)}</a> people likes this</span>
-                <c:if test="${wantAnswer!=null && sessionScope.user!=null}">
-                    <a class="wantAnswer dontWantanswerId" href="#" style="  right: 163px;font-size: 27px;top: 14px;" id="wantAnswer" ><i class="icon-thumbs-down"></i></a>
-                </c:if>
-                <input type="hidden" id="wantAnswerId" value="${wantAnswer.id}">
-                <c:if test="${wantAnswer==null && sessionScope.user!=null}">
-                    <a class="wantAnswer wantAnswerId" href="#" style="  right: 163px;font-size: 27px;top: 14px;" id="wantAnswer" ><i class="icon-thumbs-up"></i></a>
-                </c:if>
+                <%--<span class="wantAnswer"><a id="wantNumber">${fn:length(post.wantAnswerPosts)}</a> people likes this</span>--%>
+                <%--<c:if test="${wantAnswer!=null && sessionScope.user!=null}">--%>
+                    <%--<a class="wantAnswer dontWantanswerId" href="#" style="  right: 163px;font-size: 27px;top: 14px;" id="wantAnswer" ><i class="icon-thumbs-down"></i></a>--%>
+                <%--</c:if>--%>
+                <%--<input type="hidden" id="wantAnswerId" value="${wantAnswer.id}">--%>
+                <%--<c:if test="${wantAnswer==null && sessionScope.user!=null}">--%>
+                    <%--<a class="wantAnswer wantAnswerId" href="#" style="  right: 163px;font-size: 27px;top: 14px;" id="wantAnswer" ><i class="icon-thumbs-up"></i></a>--%>
+                <%--</c:if>--%>
                 <div class="question-inner" id="prvId">
                     <div class="clearfix"></div>
                     <div class="question-desc">

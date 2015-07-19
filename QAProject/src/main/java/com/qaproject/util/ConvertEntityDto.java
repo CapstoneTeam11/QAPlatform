@@ -160,6 +160,7 @@ public class ConvertEntityDto {
             notificationDto.setSenderAvatar(notification.getSenderId().getProfileImageURL());
             notificationDto.setNotificationType(notificationType);
             notificationDto.setObjectId(notification.getObjectId());
+            notificationDto.setIsView(notification.getIsViewed());
             if(notificationType==Constant.NT_TEACHER_CREATE_CLASS) {
                 notificationDto.setContent(" created new classroom");
             } else if (notificationType==Constant.NT_INVITE_TO_JOIN_CLASS) {

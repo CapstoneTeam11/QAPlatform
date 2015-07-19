@@ -3,10 +3,15 @@
  */
 $(document).ready(function () {
 
-function getNotificationDiv(senderName,content,href,avatar) {
+function getNotificationDiv(senderName,content,href,avatar,isView) {
     var notificationDiv = '<li class="notification-li">' +
-        '<a href="'+ href +'">' +
-        '<div class="notification-all">' +
+        '<a href="'+ href +'">' ;
+        if(isView==0) {
+            notificationDiv = notificationDiv + '<div class="notification-all" style="background-color: rgb(85, 166, 188)">'
+        } else {
+            notificationDiv = notificationDiv + '<div class="notification-all">'
+        }
+        notificationDiv = notificationDiv +
         '<div style="min-width: 40px;">' +
         '<img src="'+avatar+'" class="mail-avatar">' +
         '<span class="notification-user">' + senderName +
@@ -46,7 +51,7 @@ $('#notifiDropdown').click(function(e) {
                 notification = data;
                 if(notification.length > 0) {
                     for(var i = 0 ; i < notification.length ; i++) {
-                        var divAppend = getNotificationDiv(notification[i].senderDisplayName,notification[i].content,notification[i].href,notification[i].senderAvatar)
+                        var divAppend = getNotificationDiv(notification[i].senderDisplayName,notification[i].content,notification[i].href,notification[i].senderAvatar,notification[i].isView)
                         $('#notificationAppend').append(divAppend);
                     }
                 } else {

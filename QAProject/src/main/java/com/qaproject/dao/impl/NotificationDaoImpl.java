@@ -61,5 +61,38 @@ public class NotificationDaoImpl extends BaseDao<Notification,Integer> implement
         return ((Long)query.getSingleResult()).intValue();
     }
 
+    @Override
+    public List<Notification> findByUserUnview(Integer userId) {
+        Query query = null;
+        List<Notification> notifications = null;
+        query = entityManager.createQuery("SELECT n from Notification n where n.receiverId.id =:userId and n.isViewed=0 order by id desc ");
+        query.setParameter("userId", userId);
+        try {
+            notifications = query.getResultList();
+        } catch(Exception e) {
+            e.printStackTrace();
+            System.out.println("User null");
+        }
+        return notifications;
+    }
 
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void markAllRead(Integer userId) {
+        List<Notification> notifications = null;
+        Query query = null;
+        query = entityManager.createQuery("SELECT n from Notification n where n.receiverId.id =:userId and n.isViewed=0 order by id desc ");
+        query.setParameter("userId",userId);
+        query.setMaxResults(Constant.NUMBER_PAGE);
+        try {
+            notifications = query.getResultList();
+            for(Notification notification : notifications) {
+                notification.setIsViewed(1);
+                entityManager.merge(notification);
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+            System.out.println("notification null");
+        }
+    }
 }

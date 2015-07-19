@@ -21,7 +21,7 @@
                             <li class="notification-li"><div class="notification-all"><div style="margin-left: 10px;"><a class="notification-user">Notification</a></div></div></li>
                             <ul class="scrollable-menu" id="notificationAppend" style="min-width : 414px;">
                             </ul>
-                                <div class="notification-all"><div style="margin-left: 10px;"><a href="#" class="notification-user">See All</a></div></div>
+                                <div class="notification-all"><div style="margin-left: 10px;"><a href="/notification/all" class="notification-user">See all unread</a></div></div>
                         </ul>
                     </li>
                 </ul>

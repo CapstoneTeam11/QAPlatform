@@ -15,8 +15,11 @@ public interface NotificationDao {
     public Notification find(Integer id);
     List<Notification> findAll();
     List<Notification> findByUserId(Integer userId);
+    List<Notification> findByUserUnview(Integer userId);
     @Transactional(propagation = Propagation.REQUIRED)
     public void setAllView(Integer userId);
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void markAllRead(Integer userId);
     Integer getNumberUnview(Integer userId);
     @Transactional(propagation = Propagation.REQUIRED)
     public void persist(Notification entity);

@@ -5186,3 +5186,8 @@ html[xmlns] .slides {
     top: 0px;
     font-size: 20px;
 }
+.markAllRead {
+    position: absolute;
+    top: 0%;
+    right: 12%;
+}
