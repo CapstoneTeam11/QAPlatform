@@ -251,7 +251,9 @@ public class PostController {
         List<Integer> relatedQuestionIds = tagPostDao.findRelatedQuestionIds(tagIds, 30);
         List<Post> questionByTitles = postDao.findRelatedQuestion(post.getTitle());
         List<Post> relatedQuestions = new ArrayList<Post>();
-        relatedQuestionIds.remove(post.getId());
+        if (relatedQuestionIds!=null) {
+            relatedQuestionIds.remove(post.getId());
+        }
         if (questionByTitles!=null){
             if (relatedQuestionIds==null) {
                 if (questionByTitles.size()>10){
@@ -287,7 +289,9 @@ public class PostController {
         //get related articles
         List<Post> relatedArticles = new ArrayList<Post>();
         List<Integer> relatedArticlesIds = tagPostDao.findRelatedArticlesIds(tagIds, 30);
-        relatedArticlesIds.remove(post.getId());
+        if (relatedArticlesIds!=null) {
+            relatedArticlesIds.remove(post.getId());
+        }
         List<Post> articleByTitles = postDao.findRelatedArticle(post.getTitle());
         if (articleByTitles!=null) {
             if (relatedArticlesIds==null){
@@ -328,7 +332,7 @@ public class PostController {
         List<Integer> relatedMaterialIds = tagMaterialDao.findRelatedMaterialIds(tagIds, 30);
         List<Material> materialByNames = materialDao.findRelatedMaterial(post.getTitle());
         if (materialByNames!=null) {
-            if (relatedArticlesIds==null) {
+            if (relatedMaterialIds==null) {
                 if (materialByNames.size()>10){
                     relatedMaterials.addAll(materialByNames.subList(0,10));
                 } else {
