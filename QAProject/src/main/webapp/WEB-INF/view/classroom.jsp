@@ -694,9 +694,9 @@
                 tagId.push($(this).val());
             });
             if(tagId.length ==0  && tagId.length > 5) {
-                $('#errorUpload').append('<label id="create-folder-error" style="color: red;" class="error" for="question-title">you must add at least one tag and max is 5 tag</label>')
+                $('#errorUpload').append('<label id="create-folder-error" style="color: red;" class="error" for="question-title">Please provide at least one tag and max 5 tags</label>')
             } else if($('#fileUpload').val()==''){
-                $('#errorUpload').append('<label id="create-folder-error" style="color: red;" class="error" for="question-title">you must upload at least one file</label>')
+                $('#errorUpload').append('<label id="create-folder-error" style="color: red;" class="error" for="question-title">Please choose uploaded file.</label>')
             } else {
                 $('#formUpload').submit();
             }
@@ -811,7 +811,7 @@
         var url = "/inviteJoinClass/"+id;
         var name = $("#tagsuggest1").val();
         if(name=='') {
-            $('#errorInvite').append('<label id="create-folder-error" style="color: red;" class="error" for="question-title">you must add at least one student</label>')
+            $('#errorInvite').append('<label id="create-folder-error" style="color: red;" class="error" for="question-title">Please provide student's name</label>')
         } else {
             $.ajax({
                 type: "POST",
