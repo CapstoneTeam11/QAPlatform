@@ -157,13 +157,14 @@
 
 <div class="tab-inner-warp">
     <div class="tab-inner" id="questions">
-        <c:if test="${sessionScope.user.id == classroom.ownerUserId.id}">
-        <div class="col-md-3 col-sm-6" style="float: right;width: 40%;top:-31px">
-            <a href="/post/merge/${classroom.id}/70" class="button medium green-button" style="float: right;"><i class="icon-reorder"></i> Suggest group questions</a>
-        </div>
-        <div style="height: 15px"></div>
-        </c:if>
         <c:if test="${not empty questions}">
+            <c:if test="${sessionScope.user.id == classroom.ownerUserId.id && fn:length(questions)>1 &&
+            classroom.status==1 }">
+                <div class="col-md-4 col-sm-6" style="float: right;">
+                    <a href="/post/merge/${classroom.id}/70" class="button medium green-button" style="float: right;margin-right: -15px;margin-top: -25px;"><i class="icon-reorder"></i>Merge questions</a>
+                </div>
+                <div style="height: 15px"></div>
+            </c:if>
             <c:if test="${fn:length(questions)>10}">
                 <c:forEach var="question" items="${questions}" end="9">
                     <article class="question question-type-normal">
