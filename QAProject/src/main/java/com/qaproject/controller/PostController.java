@@ -124,7 +124,8 @@ public class PostController {
     public String addAnswerAll(@RequestParam List<Integer> ids, @RequestParam String detail, @RequestParam Integer classroomId,@RequestParam(required = false) Integer range) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
-            return "403";
+            session.setAttribute("currentPage", "redirect:/post/merge/" + classroomId + "/" + range);
+            return "redirect:/";
         }
         for (int i = 0; i < ids.size(); i++) {
             Post parent = postDao.find(ids.get(i));
@@ -961,7 +962,8 @@ public class PostController {
         //authorize
         User user = (User) session.getAttribute("user");
         if (user == null) {
-            return "403";
+            session.setAttribute("currentPage", "redirect:/post/merge/" +id + "/" + range);
+            return "redirect:/";
         }
         Classroom classroom = classroomDao.find(id);
         if (classroom.getOwnerUserId().getId() != user.getId()) {
