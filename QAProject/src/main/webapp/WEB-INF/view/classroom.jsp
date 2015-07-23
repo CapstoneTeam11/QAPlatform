@@ -693,7 +693,7 @@
             $("input[name=tagId]").each(function() {
                 tagId.push($(this).val());
             });
-            if(tagId.length ==0  && tagId.length > 5) {
+            if(tagId.length ==0  || tagId.length > 5) {
                 $('#errorUpload').append('<label id="create-folder-error" style="color: red;" class="error" for="question-title">Please provide at least one tag and max 5 tags</label>')
             } else if($('#fileUpload').val()==''){
                 $('#errorUpload').append('<label id="create-folder-error" style="color: red;" class="error" for="question-title">Please choose uploaded file.</label>')
@@ -811,7 +811,7 @@
         var url = "/inviteJoinClass/"+id;
         var name = $("#tagsuggest1").val();
         if(name=='') {
-            $('#errorInvite').append('<label id="create-folder-error" style="color: red;" class="error" for="question-title">Please provide student's name</label>')
+            $('#errorInvite').append('<label id="create-folder-error" style="color: red;" class="error" for="question-title">Please provide student name</label>')
         } else {
             $.ajax({
                 type: "POST",
