@@ -168,7 +168,7 @@ body {
 	font-size: 13px;
 }
 .panel-pop h2,.login h2,.contact-us h2,#related-posts h2,.user-profile h2 {
-	border-bottom: 1px solid #000000;
+	border-bottom: 1px solid #55A6BC;
 	margin-bottom: 20px;
 	padding-bottom: 10px;
 	font-size: 20px;
@@ -625,7 +625,7 @@ div[class*="slider_shadow"]:before, div[class^="header_shadow"] {
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 	padding: 20px;
-	border: 1px solid #000000;
+	border: 1px solid #55A6BC;
 	background: #FFF;
 	-moz-box-shadow: 0 0 5px #dedede;
 	-webkit-box-shadow: 0 0 5px #dedede;
@@ -665,7 +665,7 @@ div[class*="slider_shadow"]:before, div[class^="header_shadow"] {
 .main-content .page-content .boxedtitle.page-title h2 {
 	padding: 20px 0 10px;
 	margin: 0 20px 20px 0;
-	border-bottom: 1px solid #000000;
+	border-bottom: 1px solid #55A6BC;
 	font-size: 20px;
 	font-weight: bold;
 }
@@ -698,7 +698,7 @@ div[class*="slider_shadow"]:before, div[class^="header_shadow"] {
 	box-sizing: border-box;
 	margin-bottom: 30px;
 	padding: 20px;
-	border: 1px solid #000000;
+	border: 1px solid #55A6BC;
 	background: #FFF;
 	-moz-box-shadow: 0 0 5px #dedede;
 	-webkit-box-shadow: 0 0 5px #dedede;
@@ -761,7 +761,7 @@ div[class*="slider_shadow"]:before, div[class^="header_shadow"] {
 	height: 71px;
 	overflow: hidden;
 	padding: 2px;
-	border: 1px solid #dedede;
+	border: 1px solid #55A6BC;
 	-moz-border-radius: 50%;
 	-webkit-border-radius: 50%;
 	border-radius: 50%;
@@ -1086,7 +1086,7 @@ div[class*="slider_shadow"]:before, div[class^="header_shadow"] {
 	padding-bottom: 30px;
 	line-height: 22px;
 	font-size: 13px;
-	border-bottom: 1px solid #000000;
+	border-bottom: 1px solid #55A6BC;
 	color: #000000;
 }
 .question-bottom-2 {
@@ -1599,7 +1599,7 @@ div[class*="slider_shadow"]:before, div[class^="header_shadow"] {
 }
 .comment {
 	margin: 0 -20px;
-	border-bottom: 1px solid #000000;
+	border-bottom: 1px solid #55A6BC;
 }
 .children .comment {
 	margin: 0;
@@ -1776,7 +1776,7 @@ div[class*="slider_shadow"]:before, div[class^="header_shadow"] {
 	margin-bottom: 30px;
 	color: #2f3239;
 	padding: 20px;
-	border: 1px solid #000000;
+	border: 1px solid #55A6BC;
 	background: #FFF;
 	-moz-box-shadow: 0 0 5px #dedede;
 	-webkit-box-shadow: 0 0 5px #dedede;
@@ -1790,7 +1790,7 @@ div[class*="slider_shadow"]:before, div[class^="header_shadow"] {
 	font-size: 16px;
 	font-weight: bold;
 	padding: 20px 0 10px;
-	border-bottom: 1px solid #000000;
+	border-bottom: 1px solid #55A6BC;
 	position: relative;
 }
 .widget a {
@@ -4189,7 +4189,7 @@ h2 [class^="icons-"], h2 [class*=" icons-"] {
 /* Divider */
 .divider {
 	margin-bottom: 30px;
-	border-bottom: 1px solid #dedede;
+	border-bottom: 1px solid #55A6BC;
 	clear: both;
 }
 .divider span {
@@ -4671,7 +4671,7 @@ a.carousel-next {
 	color: #2f3239;
 	font-size: 13px;
 	padding: 20px;
-	border: 1px solid #000000;
+	border: 1px solid #55A6BC;
 	background: #FFF;
 	-moz-box-shadow: 0 0 5px #dedede;
 	-webkit-box-shadow: 0 0 5px #dedede;
@@ -4709,7 +4709,7 @@ a.carousel-next {
 	margin-right: 10px;
 }
 .post-title {
-	border-bottom: 1px solid #000000;
+	border-bottom: 1px solid #55A6BC;
 	margin-bottom: 20px;
 	padding-bottom: 10px;
 	font-size: 20px;
@@ -5147,7 +5147,8 @@ html[xmlns] .slides {
 }
 
 #email-error, #password-error, #confirm_password-error, #professional-error, #question-title-error, #postType-error,
-#questionDetails-error, #tagsuggest-error, #class-description-error, #confirmPassword-error, #displayName-error {
+#questionDetails-error, #tagsuggest-error, #class-description-error, #confirmPassword-error, #displayName-error,
+#mergeQuestion-error,#validateId-error, #question-details-error {
     width: 100% !important;
     color: red !important;
     font-size: 12px !important;

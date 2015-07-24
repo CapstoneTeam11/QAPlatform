@@ -329,12 +329,13 @@
                                 </div>
                                 <div class="row" style="margin-bottom: 20px">
                                     <div class="col-md-2">
+                                        <label class="required">Reused question<span>*</span></label>
                                     </div>
                                     <div class="col-md-10">
                                         <table class="table table-hover" style="margin-left: 10px">
                                             <thead>
                                             <tr>
-                                                <th style="border-bottom: none; font-weight: bold">Question's Title</th>
+                                                <th style="border-bottom: none; font-weight: bold"></th>
                                                 <th style="border-bottom: none"></th>
                                             </tr>
                                             </thead>

@@ -97,7 +97,7 @@
                         <a class="button color small submit" href="/post/merge/${classroom.id}/${range}" id="suggestMergehref">Group</a></div>
                 </div>
                 </c:if>
-                <form action="/post/merge" method="GET">
+                <form action="/post/merge" method="GET" id="mergeForm">
                 <input type="hidden" name="id" value="${classroom.id}">
                 <table class="table table-hover" style="margin-left: 10px">
                     <thead>
@@ -107,7 +107,13 @@
                     </tr>
                     </thead>
                     <tbody style="display: block; max-height: 300px; overflow-y: auto">
-                    <c:forEach var="post" items="${posts}">
+                    <tr>
+                        <td class="col-md-12"><a href="/post/view/${posts[0].id}">${posts[0].title}</a></td>
+                        <td ><input type="checkbox" class="checkbox" name="postMerges"
+                                    value="${posts[0].id}" required minlength="2"
+                                    title="Please select at least two questions."></td>
+                    </tr>
+                    <c:forEach var="post" items="${posts}" begin="1">
                         <tr>
                             <td class="col-md-12"><a href="/post/view/${post.id}">${post.title}</a></td>
                             <td ><input type="checkbox" class="checkbox" name="postMerges"
@@ -116,6 +122,7 @@
                     </c:forEach>
                     </tbody>
                 </table>
+                <label for="postMerges" class="error" id="mergeQuestion-error" style="text-align: right"></label>
                 <div class="row">
                     <input type="submit" class="button color small submit" value="Merge checked questions"
                            style="float: right;margin-right: 16px;">
@@ -124,7 +131,9 @@
                 <div id="respond" class="comment-respond page-content clearfix">
                     <div class="boxedtitle page-title"><h2>Answer checked questions</h2></div>
                     <form action="/post/add/all" id="commentform" method="POST" class="comment-form">
-                        <div id="hiddenId"></div>
+                        <div id="hiddenId" name="hiddenId">
+                            <input type="hidden" name="validateId" id="validateId"/>
+                        </div>
                         <input type="hidden" name="classroomId" value="${classroom.id}">
                         <input type="hidden" name="detail" id="detail">
 
@@ -132,7 +141,7 @@
                             <input type="hidden" name="range" value="${range}" id="rangeComment">
                         </c:if>
                         <div id="form-textarea">
-                            <textarea id="question-details" aria-required="true" cols="58" rows="8"></textarea>
+                            <textarea id="question-details" name="questionDetails" aria-required="true" cols="58" rows="8"></textarea>
                         </div>
                         <p class="form-submit" style="width: 100%">
                             <input name="submit" type="submit" id="submit" value="Submit your answer"
@@ -179,7 +188,45 @@
 <!-- End js -->
 <script type="text/javascript">
     $(document).ready(function () {
-    CKEDITOR.replace('question-details');
+        $('#mergeForm').validate();
+        $('#commentform').validate({
+            ignore: [],
+            rules:{
+                questionDetails: {
+                    required: function (){
+                        CKEDITOR.instances['question-details'].updateElement();
+                    },
+                    minlength: 30
+                },
+                validateId: {
+                    required: function () {
+                      if ($('.ids').length==0){
+                          return true;
+                      }
+                      return false;
+                    }
+                }
+            },
+            messages: {
+                validateId: {
+                    required: "Please select at least one question."
+                },
+                questionDetails: {
+                    required: "Please provide the answer.",
+                    minlength: "The answer must be at least 30 characters long."
+                }
+            },
+            errorPlacement: function(error, element)
+            {
+                if (element.attr("name") == "questionDetails")
+                {
+                    error.insertBefore("#form-textarea");
+                } else {
+                    error.insertBefore(element);
+                }
+            }
+        });
+        CKEDITOR.replace('questionDetails');
         $('#rangeMerge').change(function(e){
             var classroomId = ${classroom.id};
             $('#range').html($(e.currentTarget).val() +'%')
@@ -189,7 +236,8 @@
         })
         $('.checkbox').change(function(e){
             if($(e.currentTarget).is(':checked')) {
-                $('#hiddenId').append('<input type="hidden" name="ids" value="'+$(e.currentTarget).val() +'"id="hiddenCheck'+ $(e.currentTarget).val() +'">');
+                $('#hiddenId').append('<input type="hidden" class="ids" name="ids" value="'+$(e.currentTarget).val()
+                        +'"id="hiddenCheck'+ $(e.currentTarget).val() +'">');
             } else {
                 var remove = '#hiddenCheck'+$(e.currentTarget).val();
                 $(remove).remove();

@@ -157,13 +157,14 @@
 
 <div class="tab-inner-warp">
     <div class="tab-inner" id="questions">
-        <c:if test="${sessionScope.user.id == classroom.ownerUserId.id}">
-        <div class="col-md-3 col-sm-6" style="float: right;width: 40%;top:-31px">
-            <a href="/post/merge/${classroom.id}/70" class="button medium green-button" style="float: right;"><i class="icon-reorder"></i> Suggest group questions</a>
-        </div>
-        <div style="height: 15px"></div>
-        </c:if>
         <c:if test="${not empty questions}">
+            <c:if test="${sessionScope.user.id == classroom.ownerUserId.id && fn:length(questions)>1 &&
+            classroom.status==1 }">
+                <div class="col-md-4 col-sm-6" style="float: right;">
+                    <a href="/post/merge/${classroom.id}/70" class="button medium green-button" style="float: right;margin-right: -15px;margin-top: -25px;"><i class="icon-reorder"></i>Merge questions</a>
+                </div>
+                <div style="height: 15px"></div>
+            </c:if>
             <c:if test="${fn:length(questions)>10}">
                 <c:forEach var="question" items="${questions}" end="9">
                     <article class="question question-type-normal">
@@ -692,10 +693,10 @@
             $("input[name=tagId]").each(function() {
                 tagId.push($(this).val());
             });
-            if(tagId.length ==0  && tagId.length > 5) {
-                $('#errorUpload').append('<label id="create-folder-error" style="color: red;" class="error" for="question-title">you must add at least one tag and max is 5 tag</label>')
+            if(tagId.length ==0  || tagId.length > 5) {
+                $('#errorUpload').append('<label id="create-folder-error" style="color: red;" class="error" for="question-title">Please provide at least one tag and max 5 tags</label>')
             } else if($('#fileUpload').val()==''){
-                $('#errorUpload').append('<label id="create-folder-error" style="color: red;" class="error" for="question-title">you must upload at least one file</label>')
+                $('#errorUpload').append('<label id="create-folder-error" style="color: red;" class="error" for="question-title">Please choose uploaded file.</label>')
             } else {
                 $('#formUpload').submit();
             }
@@ -810,7 +811,7 @@
         var url = "/inviteJoinClass/"+id;
         var name = $("#tagsuggest1").val();
         if(name=='') {
-            $('#errorInvite').append('<label id="create-folder-error" style="color: red;" class="error" for="question-title">you must add at least one student</label>')
+            $('#errorInvite').append('<label id="create-folder-error" style="color: red;" class="error" for="question-title">Please provide student name</label>')
         } else {
             $.ajax({
                 type: "POST",
