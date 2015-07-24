@@ -28,7 +28,9 @@
             </list>
         </property>
     </bean>
-
+    <mvc:interceptors>
+        <bean class="com.qaproject.security.SecurityInterceptor" />
+    </mvc:interceptors>
     <!-- Configure bean to convert JSON to POJO and vice versa -->
     <bean id="jsonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
     </bean>

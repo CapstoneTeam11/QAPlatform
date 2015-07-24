@@ -436,7 +436,7 @@ public class PostController {
     }
 
     @RequestMapping(value = "/post/create", method = RequestMethod.POST)
-    public String create(@RequestParam Integer classId,
+    public String createPost(@RequestParam Integer classId,
                          @RequestParam List<Integer> tagId,
                          @RequestParam(required = false) List<String> newTag,
                          @RequestParam String postName,

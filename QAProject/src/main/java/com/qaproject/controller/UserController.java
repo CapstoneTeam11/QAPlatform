@@ -172,7 +172,10 @@ public class UserController {
             return "redirect:/newsfeed";
         }
         List<User> users = userDao.login(username, password);
-        if(users.size()>0){
+        if(users.size() > 0 && users.get(0).getStatus()==1){
+            model.addAttribute("banned","banned");
+            return "invalidLogin";
+        }else if(users.size() > 0){
             session.setAttribute("user", users.get(0));
             String currentPage = (String) session.getAttribute("currentPage");
             if (currentPage!=null) {
@@ -180,7 +183,7 @@ public class UserController {
             }
             return "redirect:/newsfeed";
 
-        }else{
+        } else {
             return "invalidLogin";
         }
     }
@@ -244,6 +247,7 @@ public class UserController {
             session.removeAttribute("user");
             session.removeAttribute("currentPage");
         }
+
         return "redirect:/";
     }
     @RequestMapping(value = "/getUserById",method = RequestMethod.POST)
@@ -297,6 +301,7 @@ public class UserController {
     public @ResponseBody  String lockUser(@RequestParam Integer id) {
         //authorize
         User user = (User) session.getAttribute("user");
+
         if(user==null) {
             return "NG";
         }

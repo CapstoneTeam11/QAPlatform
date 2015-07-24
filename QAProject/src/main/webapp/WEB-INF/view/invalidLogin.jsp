@@ -93,6 +93,7 @@
                 </div><!-- End col-md-3 -->
                 <div class="col-md-6">
                     <div class="page-content">
+                        <c:if test="${banned==null}">
                         <h2>
                             Login
                             <span style="float: right;font-size: 12px;color: red;margin-top: 12px;">
@@ -133,6 +134,14 @@
                                 </div>
                             </div>
                         </form>
+                        </c:if>
+                        <c:if test="${banned!=null}">
+                            <h2>
+                                Login
+                            <span style="float: right;font-size: 12px;color: red;margin-top: 12px;">
+                               Your account have been banned</span>
+                            </h2>
+                        </c:if>
                     </div><!-- End page-content -->
                 </div><!-- End col-md-6 -->
             </div><!-- End row -->
