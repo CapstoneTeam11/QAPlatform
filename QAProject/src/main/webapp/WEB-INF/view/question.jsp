@@ -62,8 +62,8 @@
         <div>
             <p class="panelMessage">Do you want delete this post ?</p>
             <p>
-                <input type="submit" value="Cancel"  class="button color small cancel panelButton" >
-                <input type="submit" value="OK"  class="button color small OK panelButton" style="margin-left: 3%;">
+                <input type="submit" value="Cancel"  class="button color small cancel panelButtonDeletePost" >
+                <input type="submit" value="OK"  class="button color small OK panelButtonDeletePost" style="margin-left: 3%;">
             </p>
         <div class="clearfix"></div>
     </div>
@@ -347,7 +347,7 @@
                     <li>
                         <div class="author-img">
                             <a href="#"><img width="60" height="60"
-                                             src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" alt=""></a>
+                                             src="${post.ownerUserId.profileImageURL}" alt=""></a>
                         </div>
                         <h6><a href="#">${post.ownerUserId.displayName}</a></h6>
                     </li>
@@ -361,7 +361,7 @@
                 </c:forEach>
             </div>
 
-            <c:if test="${sessionScope.user.id==post.ownerClassId.ownerUserId.id}">
+            <c:if test="${sessionScope.user.id==post.ownerClassId.ownerUserId.id && post.status!=0}">
                 <div class="widget">
                     <h3 class="widget_title">Ask Teacher</h3>
                     <a href="" id="InviteTagClick" class="button small color" style="color: white"> Ask Someone</a>
@@ -468,7 +468,7 @@
                         $(iconDiv).prepend('<i class="icon-ok"></i>')
                         $(acceptAnswer).text('Unaccept')
                     } else {
-                        console.log("Error");
+                        $.growl.error({ message: "Please try again later or refesh website" });
                     }
                 }
             });
@@ -487,7 +487,7 @@
                         $(iconDiv).empty();
                         $(acceptAnswer).text('Accept')
                     } else {
-                        console.log("Error");
+                        $.growl.error({ message: "Please try again later or refesh website" });
                     }
                 }
             });
@@ -519,7 +519,7 @@
                         CKEDITOR.replace('editComment');
                         textBody = data;
                     } else {
-                        console.log("Error");
+                        $.growl.error({ message: "Please try again later or refesh website" });
                     }
                 }
             });
@@ -545,7 +545,7 @@
                         CKEDITOR.replace('editComment');
                         textBody = data;
                     } else {
-                        console.log("Error");
+                        $.growl.error({ message: "Please try again later or refesh website" });
                     }
                 }
             });
@@ -571,7 +571,7 @@
                     MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
                     textBody = "";
                 } else {
-                    console.log("Error");
+                    $.growl.error({ message: "Please try again later or refesh website" });
                 }
             }
         });
@@ -600,7 +600,7 @@
                     if(data != "NG" ){
                         deleteDiv.remove();
                     } else {
-                        console.log("Error");
+                        $.growl.error({ message: "Please try again later or refesh website" });
                     }
                 }
             });
@@ -790,7 +790,7 @@
                         success: function (data) {
                             if(data != "NG" ){
                             } else {
-                                console.log("Error");
+                                $.growl.error({ message: "Please try again later or refesh website" });
                             }
                         }
                     });
@@ -831,7 +831,7 @@
                         var icon = $('.icon-check-empty');
                         icon.attr('class', 'icon-check')
                     } else {
-                        console.log("Error");
+                        $.growl.error({ message: "Please try again later or refesh website" });
                     }
                 }
             });
@@ -853,7 +853,7 @@
                             var icon = $('.icon-check');
                             icon.attr('class', 'icon-check-empty')
                         } else {
-                            console.log("Error");
+                            $.growl.error({ message: "Please try again later or refesh website" });
                         }
                     }
                 });
@@ -979,11 +979,54 @@
                 }
             });
         });
+        $('#commentform').validate({
+            ignore: [],
+            rules:{
+                questionDetails: {
+                    required: function (){
+                        CKEDITOR.instances['question-details'].updateElement();
+                    },
+                    minlength: 30
+                },
+                validateId: {
+                    required: function () {
+                        if ($('.ids').length==0){
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+            },
+            messages: {
+                validateId: {
+                    required: "Please select at least one question."
+                },
+                questionDetails: {
+                    required: "Please provide the answer.",
+                    minlength: "The answer must be at least 30 characters long."
+                }
+            },
+            errorPlacement: function(error, element)
+            {
+                if (element.attr("name") == "questionDetails")
+                {
+                    error.insertBefore("#form-textarea");
+                } else {
+                    error.insertBefore(element);
+                }
+            }
+        });
         MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         $('#submit').click(function (e) {
+            if($('#question-details-error').length > 0) {
+                $('#question-details-error').remove();
+            }
             e.preventDefault();
             var url = "/post/add"
             var detail = CKEDITOR.instances['question-details'].getData()
+            if(detail.length < 30) {
+            $('#commentform').prepend('<label id="question-details-error" class="error" for="question-details">The answer must be at least 30 characters long.</label>')
+            } else {
             var postDto  = {'ownerId': '${sessionScope.user.id}', 'body': detail, 'parentId': ${post.id}};
             $.ajax({
                 type : "POST",
@@ -991,11 +1034,12 @@
                 data : postDto,
                 success: function (data) {
                     if(data != "OK" ){
-                        console.log("Error");
+                        $.growl.error({ message: "Please try again later or refesh website" });
                         CKEDITOR.instances['question-details'].setData("");
                     }
                 }
             })
+            }
             return false;
         });
 
@@ -1006,7 +1050,7 @@
             $("#delete-post").show().animate({"top":"34%"},500);
             $("body").prepend("<div class='wrap-pop'></div>");
             wrap_pop()
-            var flagPanel =  $('.panelButton').click(function(e) {
+            var flagPanel =  $('.panelButtonDeletePost').click(function(e) {
                 if ($(e.currentTarget).hasClass('OK')) {
                     var form = $('#deletePostForm').submit();
                 } else {
@@ -1044,7 +1088,7 @@
                         'unable to find any teacher',
                         '</div>'
                     ].join('\n'),
-                    suggestion: Handlebars.compile('<div><span><img src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" class="author-imgTag"></span> <span style="white-space: nowrap">{{name}}</span></div>')
+                    suggestion: Handlebars.compile('<div><span><img src="{{profilePicture}}" class="author-imgTag"></span> <span style="white-space: nowrap">{{name}}</span></div>')
                 }
             }
         });

@@ -178,6 +178,9 @@ public class UserController {
         }else if(users.size() > 0){
             session.setAttribute("user", users.get(0));
             String currentPage = (String) session.getAttribute("currentPage");
+            if(users.get(0).getRoleId().getId()==3) {
+                return "redirect:/manage/1";
+            }
             if (currentPage!=null) {
                 return currentPage;
             }
@@ -212,7 +215,7 @@ public class UserController {
         List<User> userList = userDao.findAllStudent(username);
         List<StudentDto> userNameList = new ArrayList<StudentDto>();
         for (int i = 0; i < userList.size(); i++) {
-            userNameList.add(new StudentDto(userList.get(i).getDisplayName(), userList.get(i).getId()));
+            userNameList.add(new StudentDto(userList.get(i).getDisplayName(), userList.get(i).getId(),userList.get(i).getProfileImageURL()));
         }
         response.addHeader("Access-Control-Allow-Origin", "*");
         return userNameList;
@@ -225,7 +228,7 @@ public class UserController {
         List<User> userList = userDao.findTeacherPostInvitation(username,postId);
         List<TeacherDto> userNameList = new ArrayList<TeacherDto>();
         for (int i = 0; i < userList.size(); i++) {
-            userNameList.add(new TeacherDto(userList.get(i).getId(), userList.get(i).getDisplayName()));
+            userNameList.add(new TeacherDto(userList.get(i).getId(), userList.get(i).getDisplayName(),userList.get(i).getProfileImageURL()));
         }
         response.addHeader("Access-Control-Allow-Origin", "*");
         return userNameList;
@@ -280,7 +283,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/manage/parent",method = RequestMethod.POST)
-    public String createParent(@RequestParam String name) {
+    public String createParentCategory(@RequestParam String name) {
         Category category = new Category();
         category.setCategoryName(name);
         category.setParentId(0);
@@ -288,7 +291,7 @@ public class UserController {
         return "redirect:/manage/1";
     }
     @RequestMapping(value = "/manage/child",method = RequestMethod.POST)
-    public String createParent(@RequestParam String name,@RequestParam Integer parentId) {
+    public String createChildCategory(@RequestParam String name,@RequestParam Integer parentId) {
         Category category = new Category();
         category.setCategoryName(name);
         category.setParentId(parentId);

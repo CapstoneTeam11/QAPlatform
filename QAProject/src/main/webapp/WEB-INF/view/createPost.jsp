@@ -313,7 +313,7 @@
                                 <input type="hidden" name="tagUpdateId${post.id}"  class="tagUpdateId${post.id}" value="${tag.tagId.id}">
                                 <input type="hidden" name="tagUpdateName${post.id}" class="tagUpdateName${post.id}" value="${tag.tagId.tagName}">
                             </c:forEach>
-                            <textarea hidden="true" id="detail${post.id}">${post.body}></textarea>
+                            <textarea hidden="true" id="detail${post.id}">${post.body}</textarea>
                         </c:forEach>
                         <div class="form-style form-style-3" id="question-submit">
                             <form method="post" action="/post/merge" id="formvalidate">
@@ -736,7 +736,7 @@
 <c:if test="${posts!=null}">
     <script>
         $(document).ready(function () {
-
+            $($('input:radio')[0]).attr('checked',true);
             $('#formvalidate').validate({
                 ignore: [],
                 rules: {

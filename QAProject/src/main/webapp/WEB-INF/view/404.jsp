@@ -76,7 +76,9 @@
                         <h3>Page not Found</h3>
                     </div>
                     <div class="clearfix"></div><br>
+                    <c:if test="${not empty sessionScope.user && sessionScope.user.roleId.id!=3}">
                     <a href="/newsfeed" class="button large color margin_0">Return to News Feed</a>
+                    </c:if>
                 </div>
             </div><!-- End main -->
         </div><!-- End row -->

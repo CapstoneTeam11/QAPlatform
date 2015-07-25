@@ -830,9 +830,15 @@ public class PostController {
             return "NG";
         }
         Post post;
+
         try {
             post = postDao.find(postDto.getId());
-            if (post.getOwnerUserId().getId().compareTo(user.getId())!=0) {
+            if (post.getOwnerUserId().getId().compareTo(user.getId())==0 || user.getRoleId().getId()==3) {
+                if(post.getAcceptedAnswerId()==Constant.ACCEPT_ANSWER) {
+                    Post parent = postDao.find(post.getParentId());
+                    parent.setAcceptedAnswerId(Constant.UNACCEPT_ANSWER);
+                    postDao.merge(parent);
+                }
                 postDao.remove(post);
             }
         } catch (Exception e) {
@@ -855,16 +861,16 @@ public class PostController {
         try {
             post = postDao.find(id);
             if (post == null) {
-                return "NG";
+                return "404";
             }
             classId = post.getOwnerClassId().getId();
-            if (post.getOwnerUserId().getId() == user.getId()) {
+            if (post.getOwnerUserId().getId() == user.getId() || user.getRoleId().getId()==3) {
                 postDao.remove(post);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            return "NG";
+            return "403";
         }
         return "redirect:/classroom/" + classId;
     }

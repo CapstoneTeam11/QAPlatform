@@ -21,12 +21,13 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
     @Autowired
     UserDao userDao;
 
-
+    // TODO : admin cant request newfeed , dashboard , v..v
+    // TODO : Setup error page.
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (handler instanceof HandlerMethod) {
             HandlerMethod method = (HandlerMethod) handler;
-            if (method.getMethod().getName().equals("login") == false && method.getMethod().getName().equals("printWelcome")== false) {
+            if (method.getMethod().getName().equals("login") == false && method.getMethod().getName().equals("printWelcome")== false && method.getMethod().getName().equals("logout")==false) {
                 User userSession = (User) request.getSession().getAttribute("user");
                 if (userSession != null) {
                     User user = userDao.find(userSession.getId());
@@ -35,6 +36,16 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
                         request.getRequestDispatcher("/WEB-INF/view/invalidLogin.jsp").forward(request, response);
                         request.getSession().invalidate();
                         return false;
+                    }
+                    if(user.getRoleId().getId()==3) {
+                        if(request.getRequestURI().contains("manage") == false && request.getRequestURI().contains("post/view")==false
+                           && request.getRequestURI().contains("post/deleteAnswer")==false && request.getRequestURI().contains("/post/deletePost")==false &&
+                        request.getRequestURI().contains("classroom")==false && request.getRequestURI().contains("openCloseClass")==false
+                                && request.getRequestURI().contains("search")==false && request.getRequestURI().contains("/post/openPost")==false
+                                && request.getRequestURI().contains("/post/closePost")==false) {
+                        request.getRequestDispatcher("/WEB-INF/view/404.jsp").forward(request, response);
+                        return false;
+                        }
                     }
                 }
                 return true;

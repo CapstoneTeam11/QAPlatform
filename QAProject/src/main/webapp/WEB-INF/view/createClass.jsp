@@ -384,7 +384,7 @@
                         'unable to find any student or this student was invited or request to your class',
                         '</div>'
                     ].join('\n'),
-                    suggestion: Handlebars.compile('<div><span><img src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" class="author-imgTag"></span> <span style="white-space: nowrap">{{studentName}}</span></div>')
+                    suggestion: Handlebars.compile('<div><span><img src="{{studentProfileImageURL}}" class="author-imgTag"></span> <span style="white-space: nowrap">{{studentName}}</span></div>')
                 }
             }
         });

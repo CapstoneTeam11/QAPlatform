@@ -664,8 +664,8 @@ public class ClassController {
         }
         Classroom classroom = classroomDao.find(Integer.parseInt(id));
 
-        if(classroom.getOwnerUserId().getId() !=  user.getId()){
-            return new ReturnObjectWithStatus("NG", classroom.getId()); //not owner
+        if(classroom.getOwnerUserId().getId() !=  user.getId() && user.getRoleId().getId()!=3){
+            return new ReturnObjectWithStatus("NG", classroom.getId()); //not owner and not admin
         }
         if(Integer.parseInt(type) == 1){
             classroom.setStatus(1);

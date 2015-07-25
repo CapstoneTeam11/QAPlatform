@@ -11,6 +11,7 @@
             <div class="logo"
                  style="line-height: 50px"><a href="/newsfeed"><img alt="" src="/resource/assets/images/logo.png"></a></div>
             <c:if test="${sessionScope.user!=null}">
+            <c:if test="${sessionScope.user.roleId.id!=3}">
             <nav class="">
                 <ul class="nav nav-pills notification" >
                     <li class="dropdown pull-right">
@@ -26,19 +27,30 @@
                     </li>
                 </ul>
             </nav>
+            </c:if>
             <nav class="navigation" style="margin-top: -18px">
                 <ul>
+                    <c:if test="${sessionScope.user.roleId.id!=3}">
                     <li><a href="/newsfeed">News feed</a></li>
+                    </c:if>
                     <li class="parent-list" style="margin-right: 5px"><a>Hi, ${sessionScope.user.displayName} <span class="menu-nav-arrow"></span></a>
                         <ul style="overflow: hidden; height: auto; padding-top: 0px; margin-top: 0px; padding-bottom: 0px; margin-bottom: 0px; display: none;">
+                            <c:if test="${sessionScope.user.roleId.id!=3}">
                             <li><a href="/dashboard">Dashboard</a></li>
+                            </c:if>
                             <c:if test="${sessionScope.user.roleId.id==1}">
                             <li><a href="/material">Material</a></li>
                             </c:if>
                             <c:if test="${sessionScope.user.roleId.id==2}">
                                 <li><a href="/tracking">Tracking</a></li>
                             </c:if>
+                            <c:if test="${sessionScope.user.roleId.id!=3}">
                             <li><a href="/profile/view/${sessionScope.user.id}">Profile</a></li>
+                            </c:if>
+                            <c:if test="${sessionScope.user.roleId.id==3}">
+                                <li><a href="/search?filter=0&searchKey=''">Search</a></li>
+                                <li><a href="/manage/1">Manage</a></li>
+                            </c:if>
                             <li><a href="/logout">Logout</a></li>
                         </ul>
                     </li>

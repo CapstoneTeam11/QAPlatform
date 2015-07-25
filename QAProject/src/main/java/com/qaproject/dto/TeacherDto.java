@@ -6,10 +6,12 @@ package com.qaproject.dto;
 public class TeacherDto {
     private int id;
     private String name;
+    private String profilePicture;
 
-    public TeacherDto(int id, String name) {
+    public TeacherDto(int id, String name,String profilePicture) {
         this.id = id;
         this.name = name;
+        this.profilePicture=profilePicture;
     }
 
     public TeacherDto() {
@@ -29,5 +31,13 @@ public class TeacherDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
 }
