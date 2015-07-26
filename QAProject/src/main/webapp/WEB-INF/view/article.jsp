@@ -228,7 +228,7 @@
                                         <div class="comment-text">
                                             <div class="author clearfix"  style="display: flex">
                                                 <div style="width: 30%">
-                                                    <div class="comment-author"><a href="#">${postAnswer.ownerUserId.displayName}</a>
+                                                    <div class="comment-author"><a href="/profile/view/${postAnswer.ownerUserId.id}">${postAnswer.ownerUserId.displayName}</a>
                                                     </div>
                                                     <div class="comment-meta">
                                                         <div class="date"><i class="icon-time"></i>${postAnswer.creationDate}</div>
@@ -278,7 +278,7 @@
                                         <div class="comment-text">
                                             <div class="author clearfix"  style="display: flex">
                                                 <div style="width: 30%">
-                                                    <div class="comment-author"><a href="#">${postAnswer.ownerUserId.displayName}</a>
+                                                    <div class="comment-author"><a href="/profile/view/${postAnswer.ownerUserId.id}">${postAnswer.ownerUserId.displayName}</a>
                                                     </div>
                                                     <div class="comment-meta">
                                                         <div class="date"><i class="icon-time"></i>${postAnswer.creationDate}</div>
@@ -336,9 +336,9 @@
                 <ul>
                     <li>
                         <div class="author-img">
-                            <a href="#"><img width="60" height="60" src="http://2code.info/demo/html/ask-me/images/demo/admin.jpeg" alt=""></a>
+                            <a href="#"><img width="60" height="60" src="${post.ownerUserId.profileImageURL}" alt=""></a>
                         </div>
-                        <h6><a href="#">${post.ownerUserId.displayName}</a></h6>
+                        <h6><a href="/profile/view/${post.ownerUserId.id}">${post.ownerUserId.displayName}</a></h6>
                     </li>
                 </ul>
             </div>
