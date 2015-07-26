@@ -347,7 +347,7 @@
                             <td>${material.name}</td>
                             <td>${material.creationDate}</td>
                             <td>${material.size}</td>
-                            <td><input type="hidden" value="${material.id}" name="materialId"><a id="add-to-folder-click" href="#">Folder</a> / <a href="/download/${material.id}"> Computer</a></td>
+                            <td><c:if test="${sessionScope.user.roleId.id==1}"><input type="hidden" value="${material.id}" name="materialId"><a class="add-to-folder-click" href="#">Folder</a> / </c:if><a href="/download/${material.id}"> Computer</a></td>
                             <c:if test="${user.id==classroom.ownerUserId.id}">
                                 <td><form action="/material/delete" method="post" style="display: none"><input type="hidden" name="materialId" value="${material.id}"></form><a href="#" onclick="removeMaterial(this)"><i class="icon-remove"></i> Delete</a></td>
                             </c:if>
@@ -360,7 +360,7 @@
                             <td>${material.name}</td>
                             <td>${material.creationDate}</td>
                             <td>${material.size}</td>
-                            <td><input type="hidden" value="${material.id}" name="materialId"><a id="add-to-folder-click" href="#">Folder</a> / <a href="/download/${material.id}"> Computer</a></td>
+                            <td><c:if test="${sessionScope.user.roleId.id==1}"><input type="hidden" value="${material.id}" name="materialId"><a class="add-to-folder-click" href="#">Folder</a> / </c:if><a href="/download/${material.id}"> Computer</a></td>
                             <c:if test="${user.id==classroom.ownerUserId.id}">
                                 <td><form action="/material/delete" method="post" style="display: none"><input type="hidden" name="materialId" value="${material.id}"></form><a href="#" onclick="removeMaterial(this)"><i class="icon-remove"></i> Delete</a></td>
                             </c:if>

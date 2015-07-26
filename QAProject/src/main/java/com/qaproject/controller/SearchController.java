@@ -58,9 +58,9 @@ public class SearchController {
             filter=0;
         }
         if (filter==0) {
-            if (searchKey==""){
-                return "redirect:/newsfeed";
-            }
+//            if (searchKey==""){
+//                return "redirect:/newsfeed";
+//            }
             questions = searchUtilities.getTopThreeQuestions(searchKey);
             articles = searchUtilities.getTopThreeArticles(searchKey);
             materials = searchUtilities.getTopThreeMaterials(searchKey);

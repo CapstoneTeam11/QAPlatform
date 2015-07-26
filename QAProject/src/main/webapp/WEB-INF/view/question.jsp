@@ -727,7 +727,7 @@
                     //user is post Owner
                     if(userId==post.ownerId) {
                         var divAppend = getCommentDiv(post.ownerName, post.lastEditedDate,post.ownerProfileImageURL) +
-                                notAcceptAnswerIconDiv(post.id) + acceptAnswerDiv() +
+                                notAcceptAnswerIconDiv(post.id)  +
                                 acceptAnswerAction() + postActionUser() + answerBody(post.body)
                         $('#commentListDetail').prepend(divAppend);
                     } else {

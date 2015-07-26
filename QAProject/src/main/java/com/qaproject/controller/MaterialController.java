@@ -2,6 +2,7 @@ package com.qaproject.controller;
 
 import com.qaproject.dao.*;
 import com.qaproject.entity.*;
+import com.qaproject.util.Constant;
 import com.qaproject.util.Utilities;
 import com.sun.deploy.net.HttpResponse;
 import org.apache.commons.io.IOUtils;
@@ -42,6 +43,9 @@ public class MaterialController {
         if (user == null) {
             session.setAttribute("currentPage","redirect:/material");
             return "redirect:/";
+        }
+        if(user.getRoleId().getId()==2) {
+            return "403";
         }
         List<Folder> folders = folderDao.findByUser(user);
         model.addAttribute("folders", folders);
@@ -100,6 +104,9 @@ public class MaterialController {
             session.setAttribute("currentPage","redirect:/folder/"+id);
             return "redirect:/";
         }
+        if(user.getRoleId().getId()== Constant.TEACHER) {
+            return "403";
+        }
         Folder folder = folderDao.find(id);
         if (folder == null) {
             return "redirect:/";
@@ -121,6 +128,9 @@ public class MaterialController {
             session.setAttribute("currentPage","redirect:/material");
             return "NG";
         }
+        if(user.getRoleId().getId()== Constant.TEACHER) {
+            return "403";
+        }
         if(folderDao.checkFolderExists(name,user)==true) {
             return "exist";
         }
@@ -141,6 +151,9 @@ public class MaterialController {
         User user = (User) session.getAttribute("user");
         if (user == null) {
             return "NG";
+        }
+        if(user.getRoleId().getId()== Constant.TEACHER) {
+            return "403";
         }
         Folder folder = folderDao.find(id);
         if(folder==null) {
@@ -278,6 +291,9 @@ public class MaterialController {
         Material material = materialDao.find(materialId);
         if(material==null){
             return "NG";
+        }
+        if(user.getRoleId().getId()== Constant.TEACHER) {
+            return "403";
         }
         int error = 0;
         if (user == null) {

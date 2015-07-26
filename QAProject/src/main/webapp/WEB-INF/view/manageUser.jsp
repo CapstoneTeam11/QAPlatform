@@ -130,7 +130,6 @@
 
 <!-- js -->
 <%@include file="js.jsp" %>
-<script src="/resource/assets/js/notification.js"></script>
 <script src="/resource/assets/js/jquery.jqpagination.js"></script>
 <script>
     $(document).ready(function () {

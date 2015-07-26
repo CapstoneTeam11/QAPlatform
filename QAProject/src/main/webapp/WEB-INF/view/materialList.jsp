@@ -110,11 +110,7 @@
             <div class="col-md-9">
                 <div class="clearfix"></div>
                 <div class="row">
-                    <div class="col-md-6 col-sm-6">
-                    </div>
-                    <div class="col-md-6 col-sm-6">
-                        <a href="#" id="create-folder-click" class="button medium green-button" style="float: right"><i class="icon-plus-sign"></i> Create folder</a>
-                    </div>
+
                 </div>
 
                 <div class="tabs-warp question-tab">
