@@ -84,7 +84,7 @@ public class PostController {
                     // check user was invitated
                     List<PostInvitation> postInvitations = parentId.getPostInvitationList();
                     for (int i = 0; i < postInvitations.size(); i++) {
-                        if (parentId.getId() == postInvitations.get(i).getTeacherId().getId()) {
+                        if (user.getId() == postInvitations.get(i).getTeacherId().getId()) {
                             parentId.setIsComment(1);
                             break;
                         }
