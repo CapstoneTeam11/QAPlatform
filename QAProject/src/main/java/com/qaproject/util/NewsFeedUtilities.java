@@ -49,13 +49,14 @@ public class NewsFeedUtilities {
     private final Integer STUDENT = 1;
     private final Integer TEACHER = 2;
     private final Integer ACCEPTED = 1;
+    private final String SERVER = "23.227.163.94";
 
     public void setNewsFeed() {
         List<User> users = userDao.findAll();
         if (users == null) {
             return;
         }
-        Jedis jedis = new Jedis("localhost");
+        Jedis jedis = new Jedis(SERVER);
         for (User user : users) {
             setQuestionsInClass(user, jedis);
             setQuestionsInFollower(user, jedis);
@@ -68,7 +69,7 @@ public class NewsFeedUtilities {
     }
 
     public void setNewsFeedQuestionAfterRegister(User user) {
-        Jedis jedis = new Jedis("localhost");
+        Jedis jedis = new Jedis(SERVER);
         setQuestionsInKnow(user,jedis);
         setArticlesInKnow(user,jedis);
         setMaterialInKnow(user,jedis);
@@ -79,7 +80,7 @@ public class NewsFeedUtilities {
         if (users==null) {
             return;
         }
-        Jedis jedis = new Jedis("localhost");
+        Jedis jedis = new Jedis(SERVER);
         for (User user: users){
             //setQuestionInClass(user,jedis,question);
             //setQuestionsInFollower(user,jedis,question);
@@ -500,7 +501,7 @@ public class NewsFeedUtilities {
         Integer stop = 1000;
         List<Post> questions = new ArrayList<Post>();
         try {
-            Jedis jedis = new Jedis("localhost");
+            Jedis jedis = new Jedis(SERVER);
             Set<String> questionInClassIdsSet = jedis.zrevrange(QUESTION_IN_CLASS + Integer.toString(userId), start, stop);
             Set<String> questionInFollowIdsSet = jedis.zrevrange(QUESTION_IN_FOLLOW + Integer.toString(userId), start,
                     stop);
@@ -538,7 +539,7 @@ public class NewsFeedUtilities {
         Integer stop = 1000;
         List<Post> articles = new ArrayList<Post>();
         try {
-            Jedis jedis = new Jedis("localhost");
+            Jedis jedis = new Jedis(SERVER);
             Set<String> articleIdsSet = jedis.zrevrange(ARTICLE + Integer.toString(userId),start,stop);
             for (String sId : articleIdsSet) {
                 Integer iId = Integer.parseInt(sId);
@@ -559,7 +560,7 @@ public class NewsFeedUtilities {
         Integer stop = 1000;
         List<Material> materials = new ArrayList<Material>();
         try {
-            Jedis jedis = new Jedis("localhost");
+            Jedis jedis = new Jedis(SERVER);
             Set<String> materialIdsSet = jedis.zrevrange(MATERIAL + Integer.toString(userId),start,stop);
             for (String sId : materialIdsSet) {
                 Integer iId = Integer.parseInt(sId);

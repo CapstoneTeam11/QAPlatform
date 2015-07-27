@@ -10,6 +10,7 @@ import java.util.List;
  * Created by khangtnse60992 on 5/30/2015.
  */
 @Entity
+@Table(name = "classroom")
 public class Classroom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

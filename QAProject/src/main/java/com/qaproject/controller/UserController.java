@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -132,7 +133,7 @@ public class UserController {
 //    @ResponseBody
     public String register(@RequestParam(value = "email") String email,
                                            @RequestParam(value = "password")String password,
-                                           @RequestParam(value = "confirmpassword")String confirmpassword,
+                                           @RequestParam(value = "confirm_password")String confirmpassword,
                                            @RequestParam(value = "cate")String cate,
                                            @RequestParam(value = "role")String role,
                                            HttpServletRequest request) {
@@ -151,6 +152,7 @@ public class UserController {
         category.setId(Integer.parseInt(cate));
         user.setCategoryId(category);
         user.setStatus(0);
+        user.setCreationDate(new Date());
         if(role.equalsIgnoreCase("student")){
            user.setRoleId(roleDao.find(1));
         }else{

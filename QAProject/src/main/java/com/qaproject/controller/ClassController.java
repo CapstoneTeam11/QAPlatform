@@ -69,7 +69,7 @@ public class ClassController {
     public String createClass(@RequestParam("classroomName") String classroomName,
                            @RequestParam("classroomDescription") String classroomDescription,
                            @RequestParam("categoryId") String categoryId,
-                           @RequestParam("tag") String tag,
+                           @RequestParam(value = "tag",required = false) String tag,
                            @RequestParam(value = "newTag", required = false)  List<String> newTag,
                            @RequestParam(value = "studentList",required = false) String studentList, Model model, HttpServletRequest request) {
         User user = (User)session.getAttribute("user");
@@ -86,9 +86,6 @@ public class ClassController {
         if(classroomName.length() < 10 || classroomName.length() > 127) {
             return "redirect:/createClass";
         }
-        if(tag.length()<=0) {
-            return "redirect:/createClass";
-        }
         Classroom room = new Classroom();
         Category category = new Category();
         category.setId(Integer.parseInt(categoryId));
@@ -99,25 +96,27 @@ public class ClassController {
         room.setStatus(1);
         classroomDao.persist(room);
         String[] tagList ;
-        try {
-            tagList = tag.split(",");
-        } catch (Exception e) {
-            return "createClass";
-        }
+        if(tag!=null) {
+            try {
+                tagList = tag.split(",");
+            } catch (Exception e) {
+                return "createClass";
+            }
 
-        for (int i = 0; i<= tagList.length-1; i++){
-            if(Integer.parseInt(tagList[i].trim())>0){
-                TagClassroom tagClassroom = new TagClassroom();
-                tagClassroom.setClassroomId(room);
-                String tagId = tagList[i].trim();
-                Tag tagFind = tagDao.find(Integer.parseInt(tagId));
-                if(tagFind==null) {
-                    return "createClass";
+            for (int i = 0; i <= tagList.length - 1; i++) {
+                if (Integer.parseInt(tagList[i].trim()) > 0) {
+                    TagClassroom tagClassroom = new TagClassroom();
+                    tagClassroom.setClassroomId(room);
+                    String tagId = tagList[i].trim();
+                    Tag tagFind = tagDao.find(Integer.parseInt(tagId));
+                    if (tagFind == null) {
+                        return "createClass";
+                    }
+                    tagClassroom.setTagId(tagFind);
+                    tagClassroomDao.persist(tagClassroom);
+                    tagFind.setTagCount(tagFind.getTagCount() + 1);
+                    tagDao.merge(tagFind);
                 }
-                tagClassroom.setTagId(tagFind);
-                tagClassroomDao.persist(tagClassroom);
-                tagFind.setTagCount(tagFind.getTagCount()+1);
-                tagDao.merge(tagFind);
             }
         }
         if (newTag != null) {
@@ -213,7 +212,7 @@ public class ClassController {
                               @RequestParam("classroomId") Integer classroomId,
                               @RequestParam("classroomDescription") String classroomDescription,
                               @RequestParam("categoryId") Integer categoryId,
-                              @RequestParam("tag") String tag,
+                              @RequestParam(value = "tag",required = false) String tag,
                               @RequestParam(value = "newTag", required = false)  List<String> newTag,
                               Model model, HttpServletRequest request) {
         User user = (User)session.getAttribute("user");
@@ -237,6 +236,7 @@ public class ClassController {
         room.setClassroomName(classroomName);
         room.setOwnerUserId(user);
         List<TagClassroom> tagClassrooms = new ArrayList<TagClassroom>();
+        if(tag!=null) {
         String[] tagList = tag.split(",");
         for (int i = 0; i<= tagList.length-1; i++){
             if(Integer.parseInt(tagList[i].trim())>0){
@@ -247,6 +247,7 @@ public class ClassController {
                 tagClassroom.setTagId(tagFind);
                 tagClassrooms.add(tagClassroom);
             }
+        }
         }
         if (newTag != null) {
             for (int i = 0; i < newTag.size(); i++) {

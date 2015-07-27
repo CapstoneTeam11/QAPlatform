@@ -27,7 +27,9 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (handler instanceof HandlerMethod) {
             HandlerMethod method = (HandlerMethod) handler;
-            if (method.getMethod().getName().equals("login") == false && method.getMethod().getName().equals("printWelcome")== false && method.getMethod().getName().equals("logout")==false) {
+            if (method.getMethod().getName().equals("login") == false && method.getMethod().getName().equals("printWelcome")== false
+                    && method.getMethod().getName().equals("logout")==false
+                    && method.getMethod().getName().equals("register")==false) {
                 User userSession = (User) request.getSession().getAttribute("user");
                 if (userSession != null) {
                     User user = userDao.find(userSession.getId());

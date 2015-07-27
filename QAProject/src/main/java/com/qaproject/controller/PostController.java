@@ -442,7 +442,7 @@ public class PostController {
 
     @RequestMapping(value = "/post/create", method = RequestMethod.POST)
     public String createPost(@RequestParam Integer classId,
-                         @RequestParam List<Integer> tagId,
+                         @RequestParam(required = false) List<Integer> tagId,
                          @RequestParam(required = false) List<String> newTag,
                          @RequestParam String postName,
                          @RequestParam Integer postType,
@@ -497,6 +497,7 @@ public class PostController {
         post.setLastEditedDate(new Date());
         //Create List TagPost
         List<TagPost> tagPosts = new ArrayList<TagPost>();
+        if(tagId!=null) {
         for (int i = 0; i < tagId.size(); i++) {
             TagPost tagPost = new TagPost();
             tagPost.setPostId(post);
@@ -506,6 +507,7 @@ public class PostController {
             }
             tagPost.setTagId(tagfind);
             tagPosts.add(tagPost);
+        }
         }
         if (newTag != null) {
             for (int i = 0; i < newTag.size(); i++) {
@@ -576,7 +578,7 @@ public class PostController {
 
     @RequestMapping(value = "/post/update", method = RequestMethod.POST)
     public String update(@RequestParam Integer id,
-                         @RequestParam List<Integer> tagId,
+                         @RequestParam(required = false) List<Integer> tagId,
                          @RequestParam(required = false) List<String> newTag,
                          @RequestParam String postName,
                          @RequestParam Integer postType,
@@ -619,15 +621,17 @@ public class PostController {
         post.setLastEditedDate(new Date());
         //Create List TagPost
         List<TagPost> tagPosts = new ArrayList<TagPost>();
-        for (int i = 0; i < tagId.size(); i++) {
-            TagPost tagPost = new TagPost();
-            tagPost.setPostId(post);
-            Tag tagfind = tagDao.find(tagId.get(i));
-            if (tagfind == null) {
-                return "404";
+        if(tagId!=null) {
+            for (int i = 0; i < tagId.size(); i++) {
+                TagPost tagPost = new TagPost();
+                tagPost.setPostId(post);
+                Tag tagfind = tagDao.find(tagId.get(i));
+                if (tagfind == null) {
+                    return "404";
+                }
+                tagPost.setTagId(tagfind);
+                tagPosts.add(tagPost);
             }
-            tagPost.setTagId(tagfind);
-            tagPosts.add(tagPost);
         }
         if (newTag != null) {
             for (int i = 0; i < newTag.size(); i++) {

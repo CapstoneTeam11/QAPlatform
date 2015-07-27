@@ -1064,7 +1064,7 @@
             var form = $('#closeOpenPostForm').submit();
             return false;
         });
-        var urlSuggest = 'http://localhost:8080/teacherInvitation/%QUERY/' +${post.id};
+        var urlSuggest = 'http://23.227.163.94:8080/teacherInvitation/%QUERY/' +${post.id};
         var teacherSuggest = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,

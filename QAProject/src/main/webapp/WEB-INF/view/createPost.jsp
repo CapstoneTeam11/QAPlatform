@@ -547,7 +547,7 @@
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             remote: {
-                url: 'http://localhost:8080/tag/%QUERY'
+                url: 'http://23.227.163.94:8080/tag/%QUERY'
             }
         });
         tag.initialize();
@@ -659,7 +659,7 @@
                 datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
                 queryTokenizer: Bloodhound.tokenizers.whitespace,
                 remote: {
-                    url: 'http://localhost:8080/tag/%QUERY'
+                    url: 'http://23.227.163.94:8080/tag/%QUERY'
                 }
             });
             tag.initialize();
@@ -815,7 +815,7 @@
                 datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
                 queryTokenizer: Bloodhound.tokenizers.whitespace,
                 remote: {
-                    url: 'http://localhost:8080/tag/%QUERY'
+                    url: 'http://23.227.163.94:8080/tag/%QUERY'
                 }
             });
             tag.initialize();

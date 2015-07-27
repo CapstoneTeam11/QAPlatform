@@ -16,7 +16,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
     private Integer id;
-    @Column(name = "AcceptedAnswerId")
+    @Column(name = "isAccepted")
     private Integer acceptedAnswerId;
     @Column(name = "ParentId")
     private Integer parentId;
@@ -33,8 +33,6 @@ public class Post {
     @Column(name = "LastEditedDate")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastEditedDate;
-    @Column(name = "ReplyCount")
-    private Integer replyCount;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "postId",orphanRemoval = true)
     private List<TagPost> tagPostList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "postId")
@@ -128,14 +126,6 @@ public class Post {
 
     public void setLastEditedDate(Date lastEditedDate) {
         this.lastEditedDate = lastEditedDate;
-    }
-
-    public Integer getReplyCount() {
-        return replyCount;
-    }
-
-    public void setReplyCount(Integer replyCount) {
-        this.replyCount = replyCount;
     }
 
     public List<TagPost> getTagPostList() {

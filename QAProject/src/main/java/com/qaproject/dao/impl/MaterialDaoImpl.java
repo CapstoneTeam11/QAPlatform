@@ -111,7 +111,7 @@ public class MaterialDaoImpl extends BaseDao<Material,Integer> implements Materi
     public List<Material> findMaterialLikeName(String searchKey, Integer lastId) {
         Query query;
         if (lastId==0){
-            query = entityManager.createQuery("Select m from Material m where m.name like :searchKey and " +
+            query = entityManager.createQuery("Select m from Material m where m.name like :searchKey and m.folderId = null " +
                     "order by m.id desc ");
         } else {
             query = entityManager.createQuery("Select m from Material m where m.name like :searchKey " +

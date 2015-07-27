@@ -555,7 +555,7 @@ public class PostDaoImpl extends BaseDao<Post,Integer> implements PostDao{
 
     @Override
     public Integer countSimilar(String title,Integer classroomId) {
-        Query query = entityManager.createNativeQuery("Select COUNT(p.id) from Post p where p.OwnerClassId = ? and p.postType=1 and p.status=1 and p.AcceptedAnswerId=0 and " +
+        Query query = entityManager.createNativeQuery("Select COUNT(p.id) from Post p where p.OwnerClassId = ? and p.postType=1 and p.status=1 and p.isAccepted=0 and " +
                 "MATCH (Title) AGAINST (? IN NATURAL LANGUAGE MODE) > 2");
         query.setParameter(new Integer(1),classroomId);
         query.setParameter(new Integer(2),title);
@@ -571,7 +571,7 @@ public class PostDaoImpl extends BaseDao<Post,Integer> implements PostDao{
     @Override
     public List<Post> listQuestionMerge(String title,Integer classroomId) {
         List<Post> posts = null;
-        Query query = entityManager.createNativeQuery("Select * from Post p where p.OwnerClassId = ? and p.postType=1 and p.status=1 and p.AcceptedAnswerId=0 and " +
+        Query query = entityManager.createNativeQuery("Select * from Post p where p.OwnerClassId = ? and p.postType=1 and p.status=1 and p.isAccepted=0 and " +
                 "MATCH (Title) AGAINST (? IN NATURAL LANGUAGE MODE) > 2",Post.class);
         query.setParameter(new Integer(1),classroomId);
         query.setParameter(new Integer(2),title);

@@ -48,7 +48,7 @@
                             <li><a href="/profile/view/${sessionScope.user.id}">Profile</a></li>
                             </c:if>
                             <c:if test="${sessionScope.user.roleId.id==3}">
-                                <li><a href="/search?filter=0&searchKey=''">Search</a></li>
+                                <li><a href="/search?filter=0&searchKey=">Search</a></li>
                                 <li><a href="/manage/1">Manage</a></li>
                             </c:if>
                             <li><a href="/logout">Logout</a></li>
