@@ -1036,7 +1036,10 @@
                     if(data != "OK" ){
                         $.growl.error({ message: "Please try again later or refesh website" });
                         CKEDITOR.instances['question-details'].setData("");
+                    } else {
+                        CKEDITOR.instances['question-details'].setData("");
                     }
+
                 }
             })
             }

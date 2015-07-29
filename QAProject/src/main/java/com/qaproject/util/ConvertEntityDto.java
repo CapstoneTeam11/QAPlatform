@@ -71,7 +71,7 @@ public class ConvertEntityDto {
             followerDto.setTeacherId(follower.getTeacherId().getId());
             followerDto.setTeacherName(follower.getTeacherId().getDisplayName());
             followerDto.setAboutTeacher(follower.getTeacherId().getAboutMe());
-            followerDto.setProfileImageURL(follower.getFollowerId().getProfileImageURL());
+            followerDto.setProfileImageURL(follower.getTeacherId().getProfileImageURL());
             followerDto.setFollowerId(follower.getFollowerId().getId());
         }
         return followerDto;

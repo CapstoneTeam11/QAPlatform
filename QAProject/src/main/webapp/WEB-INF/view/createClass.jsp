@@ -61,7 +61,12 @@
         <section class="container" style="height:70px; display: flex; align-items: center">
             <div class="row">
                 <div class="col-md-12">
+                    <c:if test="${classroom==null}">
                     <h3>Create classroom</h3>
+                    </c:if>
+                    <c:if test="${classroom!=null}">
+                        <h3>Update classroom</h3>
+                    </c:if>
                 </div>
             </div><!-- End row -->
         </section><!-- End container -->
