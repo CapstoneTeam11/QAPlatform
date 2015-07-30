@@ -361,7 +361,7 @@
     $(document).ready(function(){
         /*short test for list of posts - MinhKH*/
         $(".short-text").each(function () {
-            text = $(this).text();
+            text = $(this).html();
             if (text.length > 400) {
                 $(this).html(text.substr(0, 400) + '.......');
             }

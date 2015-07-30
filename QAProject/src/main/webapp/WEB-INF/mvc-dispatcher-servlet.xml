@@ -149,7 +149,7 @@
 
     <context:component-scan base-package="com.qaproject.util" />
     <task:scheduled-tasks>
-        <task:scheduled ref="scheduler" method="updateRedisDB" fixed-delay="1800000"/>
+        <task:scheduled ref="scheduler" method="updateRedisDB" fixed-delay="180000"/>
     </task:scheduled-tasks>
 
 </beans>

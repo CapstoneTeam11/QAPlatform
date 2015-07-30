@@ -43,6 +43,8 @@ public class ClassController {
     @Autowired
     ClassroomUtilities classroomUtilities;
     @Autowired
+    NewsFeedUtilities newsFeedUtilities;
+    @Autowired
     HttpSession session;
     @Autowired
     NotificationDao notificationDao;
@@ -778,6 +780,7 @@ public class ClassController {
         ClassroomUser classroomUser = classroomUserDao.findClassroomByClassroomAndUser(user.getId(),classroomId);
         try {
             classroomUserDao.delete(classroomUser);
+            newsFeedUtilities.removeQuestionsOfClassroom(user.getId(),classroomId);
         } catch (Exception e){
             return "NG";
         }

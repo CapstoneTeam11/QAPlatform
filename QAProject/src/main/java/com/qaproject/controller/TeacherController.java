@@ -9,6 +9,7 @@ import com.qaproject.dto.FollowerDto;
 import com.qaproject.dto.PostInvitationDto;
 import com.qaproject.entity.*;
 import com.qaproject.util.DashboardUtilities;
+import com.qaproject.util.NewsFeedUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,6 +36,8 @@ public class TeacherController {
     ClassroomUserDao classroomUserDao;
     @Autowired
     DashboardUtilities dashboardUtilities;
+    @Autowired
+    NewsFeedUtilities newsFeedUtilities;
 
     @RequestMapping(value = "/followTeacher/",method = RequestMethod.POST)
     @ResponseBody
@@ -67,6 +70,7 @@ public class TeacherController {
         Follower follower = followerDao.findByTeacherId(teacherId, user);
         try {
             followerDao.delete(follower);
+            newsFeedUtilities.removeQuestionsOfFollowedTeacher(user.getId(),teacherId);
         } catch (Exception e){
             return "NG";
         }

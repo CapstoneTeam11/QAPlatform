@@ -6,6 +6,7 @@ import com.qaproject.dto.StudentDto;
 import com.qaproject.entity.ClassroomUser;
 import com.qaproject.entity.User;
 import com.qaproject.util.ConvertEntityDto;
+import com.qaproject.util.NewsFeedUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -26,6 +27,8 @@ public class RequestInviteController {
     HttpSession session;
     @Autowired
     ClassroomUserDao classroomUserDao;
+    @Autowired
+    NewsFeedUtilities newsFeedUtilities;
 
     /**
      * TungTD: handelClass function
@@ -131,6 +134,7 @@ public class RequestInviteController {
         }
         ClassroomUser classroomUser = classroomUserDao.find(removeId);
         try {
+            newsFeedUtilities.removeQuestionsOfClassroom(user.getId(),classroomUser.getClassroomId().getId());
             classroomUserDao.delete(classroomUser);
         } catch (Exception e){
             return "NG";

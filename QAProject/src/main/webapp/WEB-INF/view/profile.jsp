@@ -82,10 +82,11 @@
                             <i class="icon-pencil"></i>Edit profile
                         </a>
                     </c:if>
-                    <c:if test="${userProfile.roleId.id==2 and sessionScope.user.id!=userProfile.id and !isFollow and userProfile.status==1}">
+                    <c:if test="${userProfile.roleId.id==2 and sessionScope.user.id!=userProfile.id and !isFollow
+                    and userProfile.status==0}">
                         <div id="follow"><a class="question-report" href="javascript:followTeacher(${userProfile.id});" style="margin-right: 20px;">Follow</a></div>
                     </c:if>
-                    <c:if test="${isFollow and userProfile.status==1}">
+                    <c:if test="${isFollow}">
                         <div id="follow"><a class="question-report" href="javascript:unfollowTeacher(${userProfile.id});" style="margin-right: 20px;">Unfollow</a></div>
                     </c:if>
                     <div class="user-profile-img"><img src="${userProfile.profileImageURL}"
@@ -369,6 +370,15 @@
 
 <!-- End js -->
 <script>
+$(document).ready(function(){
+    /*short test for list of posts - MinhKH*/
+    $(".short-text").each(function () {
+        text = $(this).html();
+        if (text.length > 400) {
+            $(this).html(text.substr(0, 400) + '.......');
+        }
+    });
+});
     function followTeacher(id){
         var url = "/followTeacher/";
         $.ajax({
