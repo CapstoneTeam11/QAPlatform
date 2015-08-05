@@ -151,6 +151,13 @@
                     <div class="question-desc" style="word-wrap: break-word;">
                         <p>${post.body}</p>
                     </div>
+                    <div class="question-details">
+                                                    <span class="question-answered question-answered-done">
+                                                        <c:if test="${post.acceptedAnswerId==1}">
+                                                            <i class="icon-ok"></i>Resolved
+                                                        </c:if>
+                                                    </span>
+                    </div>
                     <span class="question-date"><i class="icon-time"></i>${post.lastEditedDate}</span>
                     <span class="question-category"><a href="/classroom/${post.ownerClassId.id}"><i
                             class="icon-group"></i>Class: ${post.ownerClassId.classroomName}</a></span>

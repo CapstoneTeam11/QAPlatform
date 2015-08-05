@@ -49,8 +49,8 @@ public class NewsFeedUtilities {
     private final Integer STUDENT = 1;
     private final Integer TEACHER = 2;
     private final Integer ACCEPTED = 1;
-    private final String SERVER = "23.227.163.94";
-/*    private final String SERVER = "localhost";*/
+//    private final String SERVER = "23.227.163.94";
+    private final String SERVER = "localhost";
 
     public void setNewsFeed() {
         List<User> users = userDao.findAll();

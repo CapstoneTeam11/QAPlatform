@@ -43,6 +43,7 @@ $.ajax({
 $('#notifiDropdown').click(function(e) {
     if(($(e.currentTarget).attr('aria-expanded'))=='false' || ($(e.currentTarget).attr('aria-expanded'))==undefined) {
         var url = '/notification/'+userId;
+        var numberUnview = 0;
         $.ajax({
             type : "GET",
             url : url,
@@ -53,6 +54,9 @@ $('#notifiDropdown').click(function(e) {
                     for(var i = 0 ; i < notification.length ; i++) {
                         var divAppend = getNotificationDiv(notification[i].senderDisplayName,notification[i].content,notification[i].href,notification[i].senderAvatar,notification[i].isView)
                         $('#notificationAppend').append(divAppend);
+                        if(notification[i].isView==0) {
+                            numberUnview++;
+                        }
                     }
                 } else {
                     var divAppend = getEmptyNotificationDiv();
@@ -61,7 +65,9 @@ $('#notifiDropdown').click(function(e) {
 
             }
         })
-        $('#countNotifi').html("");
+        var currentCount = $('#countNotifi').html() * 1;
+        var afterView = currentCount - numberUnview;
+        $('#countNotifi').html(afterView);
         var url = '/notification/setview/' + userId;
         $.ajax({
             type: "POST",

@@ -1,8 +1,10 @@
 package com.qaproject.controller;
 
 import com.qaproject.dao.*;
+import com.qaproject.dto.FolderDto;
 import com.qaproject.entity.*;
 import com.qaproject.util.Constant;
+import com.qaproject.util.ConvertEntityDto;
 import com.qaproject.util.Utilities;
 import com.sun.deploy.net.HttpResponse;
 import org.apache.commons.io.IOUtils;
@@ -12,6 +14,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
@@ -293,7 +297,7 @@ public class MaterialController {
             return "NG";
         }
         if(user.getRoleId().getId()== Constant.TEACHER) {
-            return "403";
+            return "NG";
         }
         int error = 0;
         if (user == null) {
@@ -329,5 +333,26 @@ public class MaterialController {
         materialCopy.setSize(material.getSize());
         materialDao.persist(materialCopy);
         return "OK";
+    }
+    @RequestMapping(value = "/folders", method = RequestMethod.GET,produces = "application/json")
+    public @ResponseBody List<FolderDto> listFolder(HttpServletRequest request, HttpServletResponse response) {
+        User user = (User) session.getAttribute("user");
+        List<FolderDto> folderDtos = null;
+        if(user==null) {
+            try {
+                request.getRequestDispatcher("/WEB-INF/view/404.jsp").forward(request, response);
+            } catch (ServletException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return folderDtos;
+        }
+        List<Folder> folders = folderDao.findByUser(user);
+        folderDtos = new ArrayList<FolderDto>();
+        for (int i = 0; i < folders.size();i++) {
+            folderDtos.add(ConvertEntityDto.convertFolderToFolderDto(folders.get(i)));
+        }
+        return folderDtos;
     }
 }

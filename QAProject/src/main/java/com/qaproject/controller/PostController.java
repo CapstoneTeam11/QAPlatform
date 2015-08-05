@@ -96,8 +96,11 @@ public class PostController {
                     List<ClassroomUser> classroomUsers = parentId.getOwnerClassId().getClassroomUserList();
                     for (int i = 0; i < classroomUsers.size(); i++) {
                         if (user.getId() == classroomUsers.get(i).getUserId().getId()) {
-                            parentId.setIsComment(1);
-                            break;
+                            if(classroomUsers.get(i).getApproval()==Constant.IA_APPROVAL) {
+                                parentId.setIsComment(1);
+                                break;
+                            }
+
                         }
                     }
                 }
@@ -234,8 +237,10 @@ public class PostController {
                     List<ClassroomUser> classroomUsers = post.getOwnerClassId().getClassroomUserList();
                     for (int i = 0; i < classroomUsers.size(); i++) {
                         if (user.getId() == classroomUsers.get(i).getUserId().getId()) {
-                            post.setIsComment(1);
-                            break;
+                            if(classroomUsers.get(i).getApproval()==Constant.IA_APPROVAL) {
+                                post.setIsComment(1);
+                                break;
+                            }
                         }
                     }
                 }

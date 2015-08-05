@@ -234,4 +234,11 @@ public class ConvertEntityDto {
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
         return df.format(date);
     }
+
+    public static FolderDto convertFolderToFolderDto(Folder folder) {
+        FolderDto folderDto = new FolderDto();
+        folderDto.setId(folder.getId());
+        folderDto.setFolderName(folder.getName());
+        return folderDto;
+    }
 }

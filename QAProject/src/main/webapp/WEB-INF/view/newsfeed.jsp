@@ -65,7 +65,17 @@
         </c:forEach>
     </div>
 </div><!-- End add to folder -->
-
+<div class="panel-pop" id="add-to-folder">
+    <h2>Add to folder<i class="icon-remove"></i></h2>
+    <div style="height: auto; max-height: 300px; overflow-x: hidden;" id="folderList">
+        <c:forEach var="folder" items="${user.folderList}">
+            <input type="hidden" value="${folder.id}">
+            <a class="list-group-item listFolder">
+                <h4 class="list-group-item-heading">${folder.name} </h4>
+            </a>
+        </c:forEach>
+    </div>
+</div><!-- End add to folder -->
 
 <%@include file="header.jsp" %>
 
@@ -284,7 +294,7 @@
                                                 <td>${material.name}</td>
                                                 <td>${material.creationDate}</td>
                                                 <td>${material.size}</td>
-                                                <td><a id="add-to-folder-click" href="#">Folder</a> / <a href="/download/${material.id}"> Computer</a></td>
+                                                <td><c:if test="${sessionScope.user.roleId.id==1}"><input type="hidden" value="${material.id}" name="materialId"><a class="add-to-folder-click" onclick="GetListFolder(this);return false" href="#">Folder</a> / </c:if><a href="/download/${material.id}"> Computer</a></td>
                                             </tr>
                                         </c:forEach>
                                     </c:if>
@@ -295,7 +305,7 @@
                                                 <td>${material.name}</td>
                                                 <td>${material.creationDate}</td>
                                                 <td>${material.size}</td>
-                                                <td><a id="add-to-folder-click" href="#">Folder</a> / <a href="/download/${material.id}"> Computer</a></td>
+                                                <td><c:if test="${sessionScope.user.roleId.id==1}"><input type="hidden" value="${material.id}" name="materialId"><a class="add-to-folder-click" onclick="GetListFolder(this);return false" href="#">Folder</a> / </c:if><a href="/download/${material.id}"> Computer</a></td>
                                             </tr>
                                         </c:forEach>
                                     </c:if>
@@ -358,6 +368,58 @@
     </script>
 </c:if>
 <script>
+    var addToFolder = function(e){
+        e.preventDefault;
+        var idFolder = $(e).prev('input').val();
+        var url = "/library/add/"+idFolder+"/"+idAddMaterial;
+        $.ajax({
+            type: "POST",
+            url: url,
+            success: function (data) {
+                if(data != "NG" && data!="Exist"){
+                    $(".panel-pop h2 i").click();
+                } else if(data=="Exist") {
+                    $('#folderList').prepend('<label style="color: red;" class="errorFolder">This file is exist in this folder , choose another folder</label>')
+                    console.log("Error");
+                } else {
+                    $('#folderList').prepend('<label style="color: red;" class="errorFolder">Has a error , please try again</label>')
+                }
+            }
+        })
+        return false;
+    }
+    var GetListFolder = function (e) {
+        if($('.errorFolder').length > 0) {
+            $('.errorFolder').remove();
+        }
+        var folders = new Array() ;
+        var url = "/folders";
+        $.ajax({
+            type: "GET",
+            url : url,
+            success: function(data) {
+                folders = data;
+                $('#folderList').empty();
+                function getFolderDiv(folderId,folderName ) {
+                    var component = '<input type="hidden" value="'+ folderId +'"><a class="list-group-item listFolder" onclick="addToFolder(this);return false"><h4 class="list-group-item-heading">' +folderName+ '</h4></a>';
+                    return component;
+                }
+                if(folders.length > 0 ) {
+                    for(var i = 0 ; i < folders.length;i++) {
+                        $('#folderList').append(getFolderDiv(folders[i].id,folders[i].folderName));
+                    }
+                } else {
+                    $('#folderList').prepend('<label style="color: #0088cc;" class="errorFolder">You dont have any folder</label>')
+                }
+            }
+        })
+        $(".panel-pop").animate({"top":"-100%"},10).hide();
+        $("#add-to-folder").show().animate({"top":"50%"},500);
+        $("body").prepend("<div class='wrap-pop'></div>");
+        wrap_pop();
+        idAddMaterial = $(e).parents('td').find("[name='materialId']").val();
+        return false;
+    };
     $(document).ready(function(){
         /*short test for list of posts - MinhKH*/
         $(".short-text").each(function () {
@@ -371,6 +433,14 @@
     var questionPage = 2;
     var nextFromArticle = 10;
     var nextFromMaterial = 10;
+    function wrap_pop() {
+        $(".wrap-pop").click(function () {
+            $(".panel-pop").animate({"top":"-100%"},500).hide(function () {
+                $(this).animate({"top":"-100%"},500);
+            });
+            $(this).remove();
+        });
+    }
     $('#loadMoreQuestion').click(function (e) {
         var url = "newsFeed/question/" + questionPage;
         $.ajax({
