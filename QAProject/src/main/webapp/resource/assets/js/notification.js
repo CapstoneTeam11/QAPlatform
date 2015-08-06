@@ -7,7 +7,7 @@ function getNotificationDiv(senderName,content,href,avatar,isView) {
     var notificationDiv = '<li class="notification-li">' +
         '<a href="'+ href +'">' ;
         if(isView==0) {
-            notificationDiv = notificationDiv + '<div class="notification-all" style="background-color: rgb(85, 166, 188)">'
+            notificationDiv = notificationDiv + '<div class="notification-all" style="background-color: rgb(194, 214, 220)">'
         } else {
             notificationDiv = notificationDiv + '<div class="notification-all">'
         }
@@ -67,7 +67,12 @@ $('#notifiDropdown').click(function(e) {
         })
         var currentCount = $('#countNotifi').html() * 1;
         var afterView = currentCount - numberUnview;
-        $('#countNotifi').html(afterView);
+        if(afterView==0) {
+            $('#countNotifi').html("");
+        } else {
+            $('#countNotifi').html(afterView);
+        }
+
         var url = '/notification/setview/' + userId;
         $.ajax({
             type: "POST",

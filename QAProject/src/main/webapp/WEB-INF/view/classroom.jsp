@@ -743,12 +743,12 @@
                 $(this).remove();
             });
         }
-
+        urlTag = $(location).attr('origin')+"/tag/%QUERY";
         var tag = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             remote: {
-                url: 'http://23.227.163.94:8080/tag/%QUERY'
+                url: urlTag
             }
         });
         tag.initialize();
@@ -774,9 +774,9 @@
             var idTag = event.item.id;
             if(idTag < 0) {
                 var name = event.item.name;
-                hiddenTag.append("<input type='hidden' name='newTag' value=" + name + " id=tag" + idTag + ">");
+                hiddenTag.append("<input type='hidden' name='newTag' value='" + name + "' id=tag" + idTag + ">");
             } else {
-                hiddenTag.append("<input type='hidden' name='tagId' value=" + idTag + " id=tag" + idTag + ">");
+                hiddenTag.append("<input type='hidden' name='tagId' value='" + idTag + "' id=tag" + idTag + ">");
             }
         });
         elt.on('itemRemoved', function (event) {
@@ -784,12 +784,12 @@
             $(tagId).remove();
         });
 
-
+        urlFindStudent = $(location).attr('origin')+"/findAllStudentNotInClass/${classroom.id}/%QUERY";
         var student = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             remote: {
-                url: 'http://23.227.163.94:8080/findAllStudentNotInClass/${classroom.id}/%QUERY'
+                url: urlFindStudent
             }
         });
         student.initialize();
