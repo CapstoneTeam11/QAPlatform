@@ -146,10 +146,10 @@
                                     <input type="password" name="confirm_password" id="confirmPassword" value="${user.password}">
                                 </p>
                                 <p>
-                                    <label class="required">Knowledge about<span>*</span></label>
+                                    <label class="required">Specialty<span>*</span></label>
                                     <span class="styled-select" style="width: 100%;">
-                                    <select id="professional" name="cate" title="Please choose your area" required>
-                                        <option value="">Select a type</option>
+                                    <select id="professional" name="cate" title="Please choose your specialty" required>
+                                        <option value="">Select your specialty</option>
                                         <c:forEach var="parent" items="${categories}">
                                             <c:if test="${parent.parentId==0}">
                                                 <optgroup label="${parent.categoryName}">

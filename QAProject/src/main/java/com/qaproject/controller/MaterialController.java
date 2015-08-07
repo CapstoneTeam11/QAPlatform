@@ -241,7 +241,7 @@ public class MaterialController {
 
             }
         }
-        return "redirect:/classroom/"+classId;
+        return "redirect:/classroom/"+classId+"?tab=material";
     }
 
     @RequestMapping(value = "/download/{materialId}", method = RequestMethod.GET)

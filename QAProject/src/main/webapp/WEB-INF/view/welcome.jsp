@@ -101,7 +101,7 @@
                         <div class="row" style="color: #ffffff;padding-top: 10px;padding-left: 15px;">Password</div>
                         <input type="password" style="height: 30px; margin-bottom: 4px" id="password1" data-toggle="tooltip" name="password" tabindex="2">
                         <a href="#" style="color: white;font-size: 12px;" id="lost-password-click">
-                            Forget ?
+                            <%--Forget ?--%>
                         </a>
                     </div>
                     <div class="col-md-1" style="padding-top: 25px">
@@ -125,7 +125,7 @@
                             <span class="t_center icon_i"><span class="icon_circle" icon_size="50" span_bg="#1abc9c" span_hover="#34495e" style="height: 50px; width: 50px; font-size: 25px; line-height: 50px; background-color: rgb(26, 188, 156);"><i class="icon-bullhorn"></i></span></span>
                             <div class="t_center">
                                 <h3>Welcome to Ask me</h3>
-                                <p>This is website introduction. This is website introduction. This is website introduction. This is website introduction. This is website introduction.</p>
+                                <p>Ask me is a question and answer site for teachers and students.<br>It's built and run as a supported tool to help lack of dicussion time at school.<br> With your help, we're working together to build a library of detailed answers to every question</p>
                             </div>
                         </div>
                     </div>
@@ -189,15 +189,16 @@
                                 </div>
                                 <div class="row" style="margin-top: 10px;">
                                     <div class="form-group">
-                                        <label class="col-md-3 control-label" style="text-align: right">
-                                            Knowledge about<span style="color:red">*</span>
+                                        <label class="col-md-3 control-label" style="padding-top: 10px; text-align:
+                                         right">
+                                            Specialty<span style="color:red">*</span>
                                         </label>
                                         <div class="col-md-9">
                                             <div class="row" style="margin-top: 10px">
                                                 <span class="styled-select"  style="width: 100%">
                                                     <select id="professional" name="cate"
-                                                            title="Please choose your knowledge." required>
-                                                        <option value="">Select a type</option>
+                                                            title="Please choose your specialty." required>
+                                                        <option value="">Select your specialty</option>
                                                         <c:forEach var="parent" items="${categories}">
                                                             <c:if test="${parent.parentId==0}">
                                                                 <optgroup label="${parent.categoryName}">

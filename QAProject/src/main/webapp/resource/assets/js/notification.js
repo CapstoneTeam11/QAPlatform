@@ -12,7 +12,7 @@ function getNotificationDiv(senderName,content,href,avatar,isView) {
             notificationDiv = notificationDiv + '<div class="notification-all">'
         }
         notificationDiv = notificationDiv +
-        '<div style="min-width: 40px;">' +
+        '<div style="min-width: 40px; max-width: 320px">' +
         '<img src="'+avatar+'" class="mail-avatar">' +
         '<span class="notification-user">' + senderName +
         '<span class="notification-action">' + content +

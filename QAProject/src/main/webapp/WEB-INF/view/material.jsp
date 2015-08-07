@@ -85,14 +85,20 @@
     <h2>Create folder<i class="icon-remove"></i></h2>
     <div class="form-style form-style-3">
             <div class="form-inputs clearfix">
-                <p id="folderCreateP">
-                    <label class="required">Folder name<span></span></label>
+                <div id="folderCreateP">
+                    <div class="col-md-2">
+                    <label class="required">Folder name<span>*</span></label>
+                    </div>
+                    <div class="col-md-10">
                     <input type="text" name="name" id="folderName">
-                </p>
+                    </div>
+                </div>
             </div>
+            <div class="col-md-10 col-md-offset-2">
             <p class="form-submit">
                 <input type="submit" id="submitFolder" value="Create new folder" class="button color small submit">
             </p>
+            </div>
         <div class="clearfix"></div>
     </div>
 </div><!-- End create folder -->

@@ -94,7 +94,7 @@
                     <div class="ul_list ul_list-icon-ok about-user">
                         <ul>
                             <li><i class="icon-user"></i>Type : ${userProfile.roleId.roleName}</li>
-                            <li><i class="icon-book"></i>Know about : <span>${userProfile.categoryId.categoryName}</span></li>
+                            <li><i class="icon-book"></i>Specialty : <span>${userProfile.categoryId.categoryName}</span></li>
                             <li><i class="icon-plus"></i>Registered : <span>${userProfile.creationDate}</span></li>
                         </ul>
                     </div>

@@ -38,28 +38,35 @@
     <h2>Upload Material<i class="icon-remove"></i></h2>
     <div class="form-style form-style-3">
         <form method="post" action="/upload" enctype="multipart/form-data" id="formUpload">
-            <div style="display: flex;height: 42px;">
-                <p style="width: 18% !important;">
-                    <label class="required">Tag<span>*</span></label>
-                </p>
-                <div style="width: 82%" id="divTagSuggest">
+            <div style="display: flex; margin-bottom: 20px">
+                <div class="col-md-2">
+                    <label class="required" style="padding-top:10px">Tag<span>*</span></label>
+                </div>
+                <div class="col-md-10" id="divTagSuggest">
                     <input type="text" class="input" name="tag" id="tagsuggest"/>
                 </div>
                 <div id="hiddenTag"></div>
             </div>
-            <div class="form-inputs clearfix">
-                <p>
-                    <input type="file" name="fileUpload" size="50" required="true" id="fileUpload">
-                </p>
+            <div>
+                <div class="col-md-2">
+                    <label class="required">File<span>*</span></label>
+                </div>
+                <div class="col-md-10 form-inputs clearfix">
+                    <p>
+                        <input type="file" name="fileUpload" size="50" required="true" id="fileUpload">
+                    </p>
+                </div>
             </div>
             <div class="form-inputs clearfix" id="errorUpload">
             </div>
+            <div class="col-md-10 col-md-offset-2">
             <p class="form-submit">
                 <c:if test="${classroom.status == 1}">
                     <input type="submit" value="Upload" id="materialSubmit" class="button color small submit">
                 </c:if>
                 <input type="hidden" name="classId" value="${classroom.id}">
             </p>
+            </div>
         </form>
         <div class="clearfix"></div>
     </div>
@@ -151,10 +158,10 @@
     <li class="tab"><a href="#" class="current">Question</a></li>
     <li class="tab"><a href="#">Article</a></li>
     <li class="tab"><a href="#">Material</a></li>
+    <li class="tab"><a href="#">Student</a></li>
     <c:if test="${user.id==classroom.ownerUserId.id}">
         <li class="tab"><a href="#">Join Request</a></li>
     </c:if>
-    <li class="tab"><a href="#">Student</a></li>
 </ul>
 
 <div class="tab-inner-warp">
@@ -395,6 +402,61 @@
         </c:if>
     </div>
 </div>
+    <div class="tab-inner-warp">
+        <div class="tab-inner" id="students">
+            <c:if test="${not empty students}">
+                <c:if test="${fn:length(students)>10}">
+                    <c:forEach var="student" items="${students}" end="9">
+                        <div class="about-author clearfix" id="student${student.classroomUserId}">
+                            <div class="author-image">
+                                <a href="/profile/view/${student.studentId}" original-title="${student.studentName}"
+                                   class="tooltip-n">
+                                    <img alt="" src="${student.studentProfileImageURL}"></a>
+                            </div>
+                            <c:if test="${user.id==classroom.ownerUserId.id}">
+                                <a class="removeStudent" id="${student.classroomUserId}"
+                                   onclick="removeStudent(this); return false;"
+                                   style="float: right; cursor:pointer">Remove</a>
+                            </c:if>
+                            <div class="author-bio" style="margin-top: 25px">
+                                <h4><a href="/profile/view/${student.studentId}">${student.studentName}</a></h4>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </c:if>
+                <c:if test="${fn:length(students)<=10}">
+                    <c:forEach var="student" items="${students}">
+                        <div class="about-author clearfix" id="student${student.classroomUserId}">
+                            <div class="author-image">
+                                <a href="/profile/view/${student.studentId}" original-title="${student.studentName}"
+                                   class="tooltip-n">
+                                    <img alt="" src="${student.studentProfileImageURL}"></a>
+                            </div>
+                            <c:if test="${user.id==classroom.ownerUserId.id}">
+                                <a class="removeStudent" id="${student.classroomUserId}"
+                                   onclick="removeStudent(this); return false;"
+                                   style="float: right; cursor:pointer">Remove</a>
+                            </c:if>
+                            <div class="author-bio" style="margin-top: 25px">
+                                <h4><a href="/profile/view/${student.studentId}">${student.studentName}</a></h4>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </c:if>
+            </c:if>
+            <c:if test="${empty students}">
+                <div class="about-author clearfix" id="noStudent">
+                    No student.
+                </div>
+            </c:if>
+        </div>
+        <c:if test="${fn:length(students)>10}">
+            <div id="loadingS"
+                 style="text-align: center; display: none"><img src="/resource/assets/images/loader.GIF"></div>
+            <a class="post-read-more button color small"
+               style="margin-bottom: 5px;" id="loadMoreStudent">Load more</a>
+        </c:if>
+    </div>
 <c:if test="${user.id==classroom.ownerUserId.id}">
     <div class="tab-inner-warp">
         <div class="tab-inner" id="requests">
@@ -451,61 +513,6 @@
     </div>
 
 </c:if>
-    <div class="tab-inner-warp">
-        <div class="tab-inner" id="students">
-            <c:if test="${not empty students}">
-                <c:if test="${fn:length(students)>10}">
-                    <c:forEach var="student" items="${students}" end="9">
-                        <div class="about-author clearfix" id="student${student.classroomUserId}">
-                            <div class="author-image">
-                                <a href="/profile/view/${student.studentId}" original-title="${student.studentName}"
-                                   class="tooltip-n">
-                                    <img alt="" src="${student.studentProfileImageURL}"></a>
-                            </div>
-                            <c:if test="${user.id==classroom.ownerUserId.id}">
-                                <a class="removeStudent" id="${student.classroomUserId}"
-                                   onclick="removeStudent(this); return false;"
-                                   style="float: right; cursor:pointer">Remove</a>
-                            </c:if>
-                            <div class="author-bio" style="margin-top: 25px">
-                                <h4><a href="/profile/view/${student.studentId}">${student.studentName}</a></h4>
-                            </div>
-                        </div>
-                    </c:forEach>
-                </c:if>
-                <c:if test="${fn:length(students)<=10}">
-                    <c:forEach var="student" items="${students}">
-                        <div class="about-author clearfix" id="student${student.classroomUserId}">
-                            <div class="author-image">
-                                <a href="/profile/view/${student.studentId}" original-title="${student.studentName}"
-                                   class="tooltip-n">
-                                    <img alt="" src="${student.studentProfileImageURL}"></a>
-                            </div>
-                            <c:if test="${user.id==classroom.ownerUserId.id}">
-                                <a class="removeStudent" id="${student.classroomUserId}"
-                                   onclick="removeStudent(this); return false;"
-                                   style="float: right; cursor:pointer">Remove</a>
-                            </c:if>
-                            <div class="author-bio" style="margin-top: 25px">
-                                <h4><a href="/profile/view/${student.studentId}">${student.studentName}</a></h4>
-                            </div>
-                        </div>
-                    </c:forEach>
-                </c:if>
-            </c:if>
-            <c:if test="${empty students}">
-                <div class="about-author clearfix" id="noStudent">
-                    No student.
-                </div>
-            </c:if>
-        </div>
-        <c:if test="${fn:length(students)>10}">
-            <div id="loadingS"
-                 style="text-align: center; display: none"><img src="/resource/assets/images/loader.GIF"></div>
-            <a class="post-read-more button color small"
-               style="margin-bottom: 5px;" id="loadMoreStudent">Load more</a>
-        </c:if>
-    </div>
 </div><!-- End page-content -->
 </div><!-- End main -->
 <aside class="col-md-3 sidebar">
@@ -571,7 +578,7 @@
             <div class="widget widget_login" style="  min-height: 130px;">
                 <h3 class="widget_title">Invite student</h3>
                 <div class="pull-right" style="width: 100%;">
-                    <a href="#" id="create-folder-click" class="button medium color" style="width: 100%;text-align: center;"><i class="icon-plus-sign"></i> Invite</a>
+                    <a href="#" id="create-folder-click" class="button medium color" style="width: 100%;text-align: center;"><i class="icon-envelope"></i> Invite student</a>
                 </div>
             </div>
         </c:if>
@@ -591,15 +598,15 @@
 
 <div class="go-up"><i class="icon-chevron-up"></i></div>
 <div class="panel-pop" id="create-folder">
-    <h2>Invite student join to class<i class="icon-remove"></i></h2>
+    <h2>Invite student to join class<i class="icon-remove"></i></h2>
     <div class="form-style form-style-3">
         <form method="post" action="/folder/create">
             <div class="form-inputs clearfix">
-                <div style="display: flex;height: 42px;">
-                    <p style="width: 18% !important;">
-                        <label class="required">Student<span>*</span></label>
-                    </p>
-                    <div style="width: 82%">
+                <div style="display: flex;">
+                    <div class="col-md-2" >
+                        <label class="required" style="padding-top: 10px">Student<span>*</span></label>
+                    </div>
+                    <div class="col-md-10" style="width: 100%">
                         <input type="text" class="input" name="tag" id="tagsuggest1"/>
                     </div>
                     <div id="hiddenTag1"></div>
@@ -607,9 +614,11 @@
             </div>
             <div class="form-inputs clearfix" id="errorInvite">
             </div>
+            <div class="col-md-10 col-md-offset-2">
             <p class="form-submit">
                 <a href="javascript:inviteStudent(${classroom.id})" class="button color small submit" style="width: 100%;text-align: center;">Invite</a>
             </p>
+            </div>
         </form>
         <div class="clearfix"></div>
     </div>
@@ -721,6 +730,19 @@
     };
     var studentNameList = [];
     $(document).ready(function () {
+        var tab = '${param.tab}';
+        if (tab=='article') {
+            $("ul.tabs").data("tabs").click(1);
+        } else if (tab=='material') {
+            $("ul.tabs").data("tabs").click(2);
+        } else if (tab=='student') {
+            $("ul.tabs").data("tabs").click(3);
+        } else if (tab=='request') {
+            $("ul.tabs").data("tabs").click(4);
+        } else {
+            $("ul.tabs").data("tabs").click(0);
+        }
+
         $('#materialSubmit').click(function(e){
             var tagId = new Array();
             $("input[name=tagId]").each(function() {

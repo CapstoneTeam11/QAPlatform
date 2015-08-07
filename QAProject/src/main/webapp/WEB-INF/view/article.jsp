@@ -135,7 +135,7 @@
                 <h5 style="margin-top: 15px">
                     <a href="/search?filter=4&searchKey=" style="color: white;">Classroom</a> /
                     <a href="/classroom/${post.ownerClassId.id}" style="color: white;">${post.ownerClassId.classroomName}</a> /
-                    <a href="/classroom/${post.ownerClassId.id}" style="color: white;">Article</a> /
+                    <a href="/classroom/${post.ownerClassId.id}?tab=article" style="color: white;">Article</a> /
                     <span style="color: #2f3239;">${post.title}</span>
                 </h5>
             </div>
@@ -201,13 +201,13 @@
             </c:if>
             <c:if test="${post.isComment==1}">
                 <div id="respond" class="comment-respond page-content clearfix">
-                    <div class="boxedtitle page-title"><h2>Leave a reply</h2></div>
+                    <div class="boxedtitle page-title"><h2>Leave a comment</h2></div>
                     <form action="#" id="commentform" class="comment-form">
                         <div id="form-textarea">
                             <textarea id="question-details" aria-required="true" cols="58" rows="8"></textarea>
                         </div>
                         <p class="form-submit">
-                            <input name="submit" type="submit" id="submit" value="Submit your answer"
+                            <input name="submit" type="submit" id="submit" value="Submit your comment"
                                    class="button small color">
                         </p>
                     </form>
@@ -348,16 +348,31 @@
                     <a href="#">${tag.tagId.tagName}</a>
                 </c:forEach>
             </div>
-            <div class="widget">
-                <h3 class="widget_title">Related Posts</h3>
-                <ul class="related-posts">
-                    <c:forEach var="relatedPost" items="${relatedPosts}">
-                        <li class="related-item">
-                            <a href="${relatedPost.id}">${relatedPost.title}</a>
-                        </li>
-                    </c:forEach>
-                </ul>
-            </div>
+            <c:if test="${not empty relatedArticles}">
+                <div class="widget">
+                    <h3 class="widget_title">Related Articles</h3>
+                    <ul class="related-posts">
+                        <c:forEach var="relatedArticle" items="${relatedArticles}">
+                            <li class="related-item">
+                                <a href="/post/view/${relatedArticle.id}">${relatedArticle.title}</a>
+                            </li>
+                        </c:forEach>
+                    </ul>
+                </div>
+            </c:if>
+
+            <c:if test="${not empty relatedMaterials}">
+                <div class="widget">
+                    <h3 class="widget_title">Related Materials</h3>
+                    <ul class="related-posts">
+                        <c:forEach var="relatedMaterial" items="${relatedMaterials}">
+                            <li class="related-item">
+                                <a href="/download/${relatedMaterial.id}">${relatedMaterial.name}</a>
+                            </li>
+                        </c:forEach>
+                    </ul>
+                </div>
+            </c:if>
 
 
 

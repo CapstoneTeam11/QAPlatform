@@ -41,18 +41,20 @@
             <div id="hiddenTeacher"></div>
             <input type="hidden" name="postId" value="${post.id}">
             <div style="display: flex;">
-                <p style="width: 18% !important;margin-top: 3%">
-                    <label class="required">Teacher<span>*</span></label>
-                </p>
-                <div style="width: 82%">
+                <div class="col-md-2">
+                    <label class="required" style="padding-top: 10px">Teacher<span>*</span></label>
+                </div>
+                <div class="col-md-10" style="width: 100%">
                     <input type="text" name="name" id="teacherSuggest">
                 </div>
             </div>
             <div class="form-inputs clearfix" id="errorInvite">
             </div>
+            <div class="col-md-10 col-md-offset-2">
             <p class="form-submit">
                 <input type="submit" value="Invite" id="inviteTeacher-click" class="button color small submit">
             </p>
+            </div>
         </form>
         <div class="clearfix"></div>
     </div>
@@ -198,7 +200,7 @@
             </c:if>
             <c:if test="${post.isComment==1}">
             <div id="respond" class="comment-respond page-content clearfix">
-                <div class="boxedtitle page-title"><h2>Leave a reply</h2></div>
+                <div class="boxedtitle page-title"><h2>Leave an answer</h2></div>
                 <form action="#" id="commentform" class="comment-form">
                     <div id="form-textarea">
                         <textarea id="question-details" aria-required="true" cols="58" rows="8"></textarea>
@@ -369,9 +371,11 @@
             </div>
 
             <c:if test="${sessionScope.user.id==post.ownerClassId.ownerUserId.id && post.status!=0}">
-                <div class="widget">
+                <div class="widget" style="min-height: 130px">
                     <h3 class="widget_title">Ask Teacher</h3>
-                    <a href="" id="InviteTagClick" class="button small color" style="color: white"> Ask Someone</a>
+                    <div class="pull-right" style="width: 100%;">
+                    <a href="" id="InviteTagClick" class="button medium color"  style="width: 100%;text-align: center;"><i class="icon-envelope"></i> Invite teacher</a>
+                    </div>
                 </div>
             </c:if>
             

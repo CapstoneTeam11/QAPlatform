@@ -113,12 +113,14 @@
                                 </div>
                                 <div class="row" style="margin-bottom: 20px">
                                     <div class="col-md-2">
-                                    <label class="required">Category<span>*</span></label>
+                                    <label class="required">Specialty<span>*</span></label>
                                     </div>
                                     <div class="col-md-10">
 									<span class="styled-select" style="width: 40%">
-										<select id="professional" name="categoryId" title="Please select category" required>
-                                            <option value="">Select a type</option>
+										<select id="professional" name="categoryId"
+                                                title="Please select classroom's specialty"
+                                                required>
+                                            <option value="">Select classroom's specialty</option>
                                             <c:forEach var="category" items="${categories}">
                                                 <c:if test="${category.parentId==0}">
                                                     <optgroup label="${category.categoryName}">
@@ -203,12 +205,14 @@
                                 </div>
                                 <div class="row" style="margin-bottom: 20px">
                                     <div class="col-md-2">
-                                        <label class="required">Category<span>*</span></label>
+                                        <label class="required">Specialty<span>*</span></label>
                                     </div>
                                     <div class="col-md-10">
 									<span class="styled-select" style="width: 40%">
-										<select id="professional" name="categoryId" title="Please select category" required>
-                                            <option value="">Select a type</option>
+										<select id="professional" name="categoryId"
+                                                title="Please select classroom's specialty"
+                                                required>
+                                            <option value="">Select classroom's specialty</option>
                                             <c:forEach var="parent" items="${categories}">
                                                 <c:if test="${parent.parentId==0}">
                                                     <optgroup label="${parent.categoryName}">

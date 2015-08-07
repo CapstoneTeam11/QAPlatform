@@ -10,8 +10,10 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="widget widget_contact">
-                    <h3 class="widget_title">Where We Are ?</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi adipiscing gravida odio, sit amet suscipit risus ultrices eu.</p>
+                    <h3 class="widget_title">Contact Us</h3>
+                    <p>Tel: (+84) 1222000448 <br>
+                        Email: myemail@fpt.edu.vn
+                    </p>
                 </div>
             </div>
         </div><!-- End row -->
