@@ -103,12 +103,12 @@
     </div>
 </div><!-- End lost-password -->
 <div class="panel-Confirm" id="delete-post">
-    <h2>Delete Post</h2>
+    <h2>Delete Article</h2>
     <div>
-        <p class="panelMessage">Do you want delete this post ?</p>
+        <p class="panelMessage">Do you want delete this article?</p>
         <p>
-            <input type="submit" value="Cancel"  class="button color small cancel panelButton" >
-            <input type="submit" value="OK"  class="button color small OK panelButton" style="margin-left: 3%;">
+            <input type="submit" value="Cancel"  class="button color small cancel panelButtonDeletePost" >
+            <input type="submit" value="OK"  class="button color small OK panelButtonDeletePost" style="margin-left: 3%;">
         </p>
         <div class="clearfix"></div>
     </div>
@@ -116,7 +116,7 @@
 <div class="panel-Confirm" id="delete-comment">
     <h2>Delete Comment</h2>
     <div>
-        <p class="panelMessage">Do you want delete this Comment ?</p>
+        <p class="panelMessage">Do you want delete this comment?</p>
         <p>
             <input type="submit" value="Cancel"  class="button color small cancel panelButton" >
             <input type="submit" value="OK"  class="button color small OK panelButton" style="margin-left: 3%;">
@@ -215,7 +215,7 @@
             </c:if>
             <c:if test="${not empty postAnswers}">
                 <div id="commentlist" class="page-content">
-                    <div class="boxedtitle page-title"><h2>Answers ( <span class="color">${numberAnswer}</span> )
+                    <div class="boxedtitle page-title"><h2>Comments ( <span class="color">${numberAnswer}</span> )
                     </h2></div>
                     <ol class="commentlist clearfix" id="commentListDetail">
                         <c:if test="${fn:length(postAnswers) > 10}">
@@ -529,7 +529,7 @@
         var lastestId = listAnswer.last().val();
         function getListCommentDiv() {
             var listComment = '<div id="commentlist" class="page-content">'+
-                              '<div class="boxedtitle page-title"><h2>Answers ( <span class="color">1</span> )'+
+                              '<div class="boxedtitle page-title"><h2>Comments ( <span class="color">1</span> )'+
                               '</h2></div>'+
                               '<ol class="commentlist clearfix" id="commentListDetail">'+'</ol>'
             return listComment
@@ -903,7 +903,7 @@
             $("#delete-post").show().animate({"top":"34%"},500);
             $("body").prepend("<div class='wrap-pop'></div>");
             wrap_pop()
-            var flagPanel =  $('.panelButton').click(function(e) {
+            var flagPanel =  $('.panelButtonDeletePost').click(function(e) {
                 if ($(e.currentTarget).hasClass('OK')) {
                     var form = $('#deletePostForm').submit();
                 } else {

@@ -490,8 +490,14 @@ $(document).ready(function(){
                             '</div>' +
                             '</article>';
                     $('#questions').append(component);
-                    $(".tooltip-n").tipsy({fade:true,gravity:"s"});
                 }
+                $(".tooltip-n").tipsy({fade:true,gravity:"s"});
+                $(".short-text").each(function () {
+                    text = $(this).html();
+                    if (text.length > 400) {
+                        $(this).html(text.substr(0, 400) + '.......');
+                    }
+                });
             }
         })
     });
@@ -543,7 +549,12 @@ $(document).ready(function(){
                             '</article>';
                     $('#articles').append(component);
                 }
-                nextFromArticle = nextFromArticle + 10;
+                $(".short-text").each(function () {
+                    text = $(this).html();
+                    if (text.length > 400) {
+                        $(this).html(text.substr(0, 400) + '.......');
+                    }
+                });
             }
         })
     });

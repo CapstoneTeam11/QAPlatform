@@ -60,9 +60,9 @@
     </div>
 </div>
 <div class="panel-Confirm" id="delete-post">
-        <h2>Delete Post</h2>
+        <h2>Delete Question</h2>
         <div>
-            <p class="panelMessage">Do you want delete this post ?</p>
+            <p class="panelMessage">Do you want delete this question?</p>
             <p>
                 <input type="submit" value="Cancel"  class="button color small cancel panelButtonDeletePost" >
                 <input type="submit" value="OK"  class="button color small OK panelButtonDeletePost" style="margin-left: 3%;">
@@ -71,9 +71,9 @@
     </div>
 </div>
 <div class="panel-Confirm" id="delete-comment">
-    <h2>Delete Comment</h2>
+    <h2>Delete Answer</h2>
     <div>
-        <p class="panelMessage">Do you want delete this Comment ?</p>
+        <p class="panelMessage">Do you want delete this answer?</p>
         <p>
             <input type="submit" value="Cancel"  class="button color small cancel panelButton" >
             <input type="submit" value="OK"  class="button color small OK panelButton" style="margin-left: 3%;">

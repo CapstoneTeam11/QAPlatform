@@ -500,8 +500,14 @@
                             '</div>' +
                             '</article>';
                     $('#questions').append(component);
-                    $(".tooltip-n").tipsy({fade:true,gravity:"s"});
                 }
+                $(".tooltip-n").tipsy({fade:true,gravity:"s"});
+                $(".short-text").each(function () {
+                    text = $(this).html();
+                    if (text.length > 400) {
+                        $(this).html(text.substr(0, 400) + '.......');
+                    }
+                });
                 questionPage++;
             }
         })
@@ -551,6 +557,12 @@
                             '</article>';
                     $('#articles').append(component);
                 }
+                $(".short-text").each(function () {
+                    text = $(this).html();
+                    if (text.length > 400) {
+                        $(this).html(text.substr(0, 400) + '.......');
+                    }
+                });
                 nextFromArticle = nextFromArticle + 10;
             }
         })

@@ -107,7 +107,7 @@ public class NewsFeedController {
         }
         List<PostDto> articleDtos = null;
         try {
-            articleDtos = newsFeedUtilities.loadNewsFeedArticles(user.getCategoryId().getId(), nextFrom);
+            articleDtos = newsFeedUtilities.loadNewsFeedArticles(user.getId(), nextFrom);
         } catch (Exception e) {
             e.printStackTrace();
         }

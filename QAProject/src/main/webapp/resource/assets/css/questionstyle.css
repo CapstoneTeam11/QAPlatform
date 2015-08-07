@@ -80,7 +80,7 @@
     font-weight: bold;
     font-size: 14px;
 }
-.panelButton, .panelLeaveButton, .deleteMaterial {
+.panelButton, .panelLeaveButton, .deleteMaterial, .panelButtonDeletePost {
     float: left;
     width: 44%;
 }
