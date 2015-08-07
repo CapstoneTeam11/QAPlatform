@@ -1179,8 +1179,14 @@
                                             '</div>' +
                                             '</article>';
                     $('#questions').append(component);
-                    $(".tooltip-n").tipsy({fade:true,gravity:"s"});
                 }
+                $(".tooltip-n").tipsy({fade:true,gravity:"s"});
+                $(".short-text").each(function () {
+                    text = $(this).html();
+                    if (text.length > 400) {
+                        $(this).html(text.substr(0, 400) + '.......');
+                    }
+                });
             }
         })
     });
@@ -1231,8 +1237,13 @@
                             '</div>'+
                             '</article>';
                     $('#articles').append(component);
-                    $(".tooltip-n").tipsy({fade:true,gravity:"s"});
                 }
+                $(".short-text").each(function () {
+                    text = $(this).html();
+                    if (text.length > 400) {
+                        $(this).html(text.substr(0, 400) + '.......');
+                    }
+                });
             }
         })
     });
