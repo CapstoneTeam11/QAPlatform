@@ -50,10 +50,14 @@ public class NotificationController {
                     notification.getNotificationType()  == Constant.NT_REQUEST_TO_JOIN_CLASS) {
 
                 Object object = classroomDao.find(notification.getObjectId());
+                if(object!=null) {
                 notificationDtos.add(ConvertEntityDto.convertNotificationEntityToDto(notification,notification.getNotificationType(),object));
+                }
             } else {
                 Object object = postDao.find(notification.getObjectId());
+                if(object!=null) {
                 notificationDtos.add(ConvertEntityDto.convertNotificationEntityToDto(notification,notification.getNotificationType(),object));
+                }
             }
         }
         return notificationDtos;

@@ -67,6 +67,9 @@ public class PostController {
         if (parentId == null) {
             return "NG";
         }
+        if(parentId.getParentId()!=0) {
+            return "NG";
+        }
         if (user != null) {
             if (0 != parentId.getStatus()) {
                 //check user can comment or not .
@@ -134,6 +137,9 @@ public class PostController {
             Post parent = postDao.find(ids.get(i));
             if(parent==null){
                 return "404";
+            }
+            if(parent.getParentId()!=0) {
+                return "NG";
             }
             //authorize
             if (user.getId() != parent.getOwnerClassId().getOwnerUserId().getId()) {
@@ -665,8 +671,12 @@ public class PostController {
         if (user == null) {
             return "NG";
         }
+        Post post = postDao.find(wantAnswerDto.getPostId());
+        if(post==null || post.getPostType()!=1) {
+            return "NG";
+        }
         WantAnswerPost wantAnswerPost = new WantAnswerPost();
-        wantAnswerPost.setPostId(postDao.find(wantAnswerDto.getPostId()));
+        wantAnswerPost.setPostId(post);
         wantAnswerPost.setUserId(user);
         try {
             wantAnswerDao.persist(wantAnswerPost);
@@ -717,7 +727,7 @@ public class PostController {
             }
             Post parentPost;
             parentPost = postDao.find(post.getParentId());
-            if (parentPost == null) {
+            if (parentPost == null || parentPost.getPostType()!=1) {
                 return "NG";
             }
             if (user.getId()!=parentPost.getOwnerUserId().getId()) {
@@ -1026,6 +1036,19 @@ public class PostController {
             return "403";
         }
         List<Post> posts = new ArrayList<Post>();
+        int count = 0;
+        for(int i = 0 ; i < postMerges.size();i++) {
+            for(int j = 0 ; j < postMerges.size() ; j++) {
+                if(postMerges.get(i).compareTo(postMerges.get(j))==0) {
+                    count++;
+                    if(count==2) {
+                        return "404";
+                    }
+
+                }
+            }
+            count = 0;
+        }
         for(int i = 0 ; i < postMerges.size() ; i++) {
             Post post = postDao.find(postMerges.get(i));
             if(post==null) {

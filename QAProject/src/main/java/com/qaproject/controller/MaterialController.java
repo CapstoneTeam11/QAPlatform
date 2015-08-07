@@ -13,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +30,7 @@ import java.util.List;
  * Created by khangtnse60992 on 6/6/2015.
  */
 @Controller
-public class MaterialController {
+public class MaterialController implements HandlerExceptionResolver {
 
     @Autowired
     FolderDao folderDao;
@@ -354,5 +356,10 @@ public class MaterialController {
             folderDtos.add(ConvertEntityDto.convertFolderToFolderDto(folders.get(i)));
         }
         return folderDtos;
+    }
+
+    @Override
+    public ModelAndView resolveException(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) {
+        return null;
     }
 }

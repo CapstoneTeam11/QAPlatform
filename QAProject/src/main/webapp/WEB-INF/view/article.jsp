@@ -888,6 +888,8 @@
                     if(data != "OK" ){
                         console.log("Error");
                         CKEDITOR.instances['question-details'].setData("")
+                    } else {
+                        CKEDITOR.instances['question-details'].setData("")
                     }
                 }
             })

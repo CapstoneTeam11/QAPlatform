@@ -105,7 +105,7 @@
         <property name="jpaProperties">
             <props>
                 <!--<prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect</prop>-->
-                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.show_sql">false</prop>
                 <prop key="hibernate.format_sql">false</prop>
                 <prop key="hibernate.hbm2ddl.auto">update</prop>
                 <prop key="hibernate.enable_lazy_load_no_trans">true</prop>
@@ -140,8 +140,8 @@
         </property>
     </bean>
 
-    <websocket:message-broker application-destination-prefix="/app">
-        <websocket:stomp-endpoint path="/ws">
+    <websocket:message-broker application-destination-prefix="/app" >
+        <websocket:stomp-endpoint path="/ws" >
             <websocket:sockjs/>
         </websocket:stomp-endpoint>
         <websocket:simple-broker prefix="/topic"/>

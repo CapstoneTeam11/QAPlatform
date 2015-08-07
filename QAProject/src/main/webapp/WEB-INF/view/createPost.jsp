@@ -1,51 +1,4 @@
-<%--<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>--%>
-<%--<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>--%>
-<%--<!DOCTYPE html>--%>
-<%--<html lang="en">--%>
-<%--<head>--%>
 
-    <%--<!-- Basic Page Needs -->--%>
-    <%--<meta charset="utf-8">--%>
-    <%--<title>Ask me – Responsive Questions and Answers Template</title>--%>
-    <%--<meta name="description" content="Ask me Responsive Questions and Answers Template">--%>
-    <%--<meta name="author" content="2code.info">--%>
-
-
-    <%--<!-- Mobile Specific Metas -->--%>
-    <%--<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">--%>
-
-    <%--<!-- Main Style -->--%>
-    <%--<link rel="stylesheet" href="/resource/assets/css/style.css">--%>
-
-    <%--<!-- Skins -->--%>
-    <%--<link rel="stylesheet" href="/resource/assets/css/skins/skins.css">--%>
-
-    <%--<!-- Responsive Style -->--%>
-    <%--<link rel="stylesheet" href="/resource/assets/css/responsive.css">--%>
-
-    <%--<!-- Boostrap Style -->--%>
-    <%--<link rel="stylesheet" href="/resource/assets/css/bootstrap.min.css">--%>
-
-    <%--<!-- Boostrap Theme Style -->--%>
-    <%--<link rel="stylesheet" href="/resource/assets/css/bootstrap-theme.min.css">--%>
-
-    <%--<!-- Notification Style -->--%>
-    <%--<link rel="stylesheet" href="/resource/assets/css/notification.css">--%>
-    <%--<!-- Left Notification style -->--%>
-    <%--<link rel="stylesheet" href="/resource/assets/css/jquery.growl.css"/>--%>
-    <%--<!-- Favicons -->--%>
-    <%--<link rel="shortcut icon" href="http://2code.info/demo/html/ask-me/images/favicon.ico">--%>
-    <%--<!--TagInput-->--%>
-    <%--<link rel="stylesheet" href="/resource/assets/js/bootstrap-tagsinput.css">--%>
-    <%--<link rel="stylesheet" href="/resource/assets/css/tag.css">--%>
-
-<%--</head>--%>
-
-<%--<body>--%>
-
-<%--<div class="loader">--%>
-    <%--<div class="loader_html"></div>--%>
-<%--</div>--%>
 <%@include file="css.jsp" %>
 <div id="wrap">
 
@@ -118,11 +71,19 @@
         <section class="container" style="height:70px; display: flex; align-items: center">
             <div class="row">
                 <div class="col-md-12">
+                    <c:if test="${post==null && posts==null}">
                     <h3 style="margin-top:15px">Create Post</h3>
+                    </c:if>
+                    <c:if test="${postMerges!=null}"><h3 style="margin-top:15px">Create new merged question</h3></c:if>
+                    <c:if test="${post!=null}">Edit post</c:if>
                     <h5 style="margin-top: 15px">
                         <a href="/search?filter=4&searchKey=" style="color: white;">Classroom</a> /
                         <a href="/classroom/${classroom.id}" style="color: white;">${classroom.classroomName}</a> /
+                        <c:if test="${post==null && posts==null}">
                         <span style="color: #2f3239;">Create post</span>
+                        </c:if>
+                        <c:if test="${postMerges!=null}"><span style="color: #2f3239;">Create new merged question</span></c:if>
+                        <c:if test="${post!=null}"><span style="color: #2f3239;">Edit post</span></c:if>
                     </h5>
                 </div>
             </div><!-- End row -->
@@ -138,7 +99,7 @@
                     <div class="boxedtitle page-title">
                         <c:if test="${postMerges!=null}">
                             <h2>
-                                Merge posts
+                                Merged question
                             <span style="float: right;font-size: 12px;color: black;margin-top: 12px;">
                                 (<span style="color:red">*</span>) required filed
                             </span>
@@ -301,7 +262,7 @@
                     <c:if test="${posts!=null}">
                         <div class="boxedtitle page-title">
                             <h2>
-                                Merge post
+                                Create new merged question
                             <span style="float: right;font-size: 12px;color: black;margin-top: 12px;">
                                 (<span style="color:red">*</span>) required filed
                             </span>

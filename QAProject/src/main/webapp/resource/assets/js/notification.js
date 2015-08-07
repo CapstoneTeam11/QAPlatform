@@ -4,13 +4,13 @@
 $(document).ready(function () {
 
 function getNotificationDiv(senderName,content,href,avatar,isView) {
-    var notificationDiv = '<li class="notification-li">' +
-        '<a href="'+ href +'">' ;
-        if(isView==0) {
-            notificationDiv = notificationDiv + '<div class="notification-all" style="background-color: rgb(194, 214, 220)">'
-        } else {
-            notificationDiv = notificationDiv + '<div class="notification-all">'
-        }
+    var notificationDiv
+    if(isView==0) {
+        notificationDiv = '<li class="notification-li" style="background-color: rgb(194, 214, 220)">';
+    } else {
+        notificationDiv = '<li class="notification-li">';
+    }
+        notificationDiv = notificationDiv + '<a href="'+ href +'">' + '<div class="notification-all">';
         notificationDiv = notificationDiv +
         '<div style="min-width: 40px; max-width: 320px">' +
         '<img src="'+avatar+'" class="mail-avatar">' +
@@ -58,6 +58,13 @@ $('#notifiDropdown').click(function(e) {
                             numberUnview++;
                         }
                     }
+                    var currentCount = $('#countNotifi').html() * 1;
+                    var afterView = currentCount - numberUnview;
+                    if(afterView==0) {
+                        $('#countNotifi').html("");
+                    } else {
+                        $('#countNotifi').html(afterView);
+                    }
                 } else {
                     var divAppend = getEmptyNotificationDiv();
                     $('#notificationAppend').append(divAppend);
@@ -65,13 +72,6 @@ $('#notifiDropdown').click(function(e) {
 
             }
         })
-        var currentCount = $('#countNotifi').html() * 1;
-        var afterView = currentCount - numberUnview;
-        if(afterView==0) {
-            $('#countNotifi').html("");
-        } else {
-            $('#countNotifi').html(afterView);
-        }
 
         var url = '/notification/setview/' + userId;
         $.ajax({

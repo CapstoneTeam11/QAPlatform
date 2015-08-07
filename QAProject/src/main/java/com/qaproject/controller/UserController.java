@@ -227,10 +227,21 @@ public class UserController {
     public List<TeacherDto> teacherInvitation(@PathVariable("username") String username,
                                               @PathVariable("postId") Integer postId
                                                 , HttpServletResponse response) {
+        User user = (User) session.getAttribute("user");
+        int userId = 0;
+        if(user!=null) {
+           userId = user.getId();
+        }
         List<User> userList = userDao.findTeacherPostInvitation(username,postId);
         List<TeacherDto> userNameList = new ArrayList<TeacherDto>();
         for (int i = 0; i < userList.size(); i++) {
-            userNameList.add(new TeacherDto(userList.get(i).getId(), userList.get(i).getDisplayName(),userList.get(i).getProfileImageURL()));
+            if(userId!=0) {
+                if(userId!=userList.get(i).getId()) {
+                    userNameList.add(new TeacherDto(userList.get(i).getId(), userList.get(i).getDisplayName(),userList.get(i).getProfileImageURL()));
+                }
+            } else {
+                userNameList.add(new TeacherDto(userList.get(i).getId(), userList.get(i).getDisplayName(),userList.get(i).getProfileImageURL()));
+            }
         }
         response.addHeader("Access-Control-Allow-Origin", "*");
         return userNameList;
