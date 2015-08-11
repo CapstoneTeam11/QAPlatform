@@ -284,7 +284,7 @@
                                         <th>No</th>
                                         <th>File name</th>
                                         <th>Uploaded Date</th>
-                                        <th>File size</th>
+                                        <th>Size (KB)</th>
                                         <th>Save to</th>
                                     </tr>
                                     <c:if test="${fn:length(materials)>10}">

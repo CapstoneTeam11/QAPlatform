@@ -122,7 +122,7 @@
                                 <table class="table table-hover">
                                     <tr>
                                         <th>File name</th>
-                                        <th>File size</th>
+                                        <th>Size (KB)</th>
                                         <th></th>
                                     </tr>
                                     <c:forEach var="material" items="${materials}">

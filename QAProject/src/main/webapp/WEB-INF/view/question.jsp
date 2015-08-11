@@ -372,9 +372,9 @@
 
             <c:if test="${sessionScope.user.id==post.ownerClassId.ownerUserId.id && post.status!=0}">
                 <div class="widget" style="min-height: 130px">
-                    <h3 class="widget_title">Ask Teacher</h3>
+                    <h3 class="widget_title">Invite Teacher</h3>
                     <div class="pull-right" style="width: 100%;">
-                    <a href="" id="InviteTagClick" class="button medium color"  style="width: 100%;text-align: center;"><i class="icon-envelope"></i> Invite teacher</a>
+                    <a href="" id="InviteTagClick" class="button medium color"  style="width: 100%;text-align: center;"><i class="icon-envelope"></i> Invite</a>
                     </div>
                 </div>
             </c:if>
@@ -556,7 +556,7 @@
                         CKEDITOR.replace('editComment');
                         textBody = data;
                     } else {
-                        $.growl.error({ message: "Please try again later or refesh website" });
+                        $.growl.error({ message: "Please try again later or refresh website" });
                     }
                 }
             });
