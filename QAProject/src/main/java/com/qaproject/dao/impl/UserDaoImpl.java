@@ -125,7 +125,7 @@ public class UserDaoImpl extends BaseDao<User,Integer> implements UserDao {
     @Override
     public List<User> findUserNotificationByCreatePostTeacher(Integer teacherId,Integer classId) {
         Query query = null;
-        query = entityManager.createQuery("select distinct (u) from User u where u.id in (select c.userId from ClassroomUser c where c.classroomId.id=:classId) or " +
+        query = entityManager.createQuery("select distinct (u) from User u where u.id in (select c.userId from ClassroomUser c where c.classroomId.id=:classId and c.approval=1) or " +
                                           "u.id in (select f.followerId from Follower f where f.teacherId.id=:teacherId)", User.class);
         List<User> users = null;
         try {

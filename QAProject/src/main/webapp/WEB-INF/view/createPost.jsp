@@ -74,15 +74,15 @@
                     <c:if test="${post==null && posts==null}">
                     <h3 style="margin-top:15px">Create Post</h3>
                     </c:if>
-                    <c:if test="${postMerges!=null}"><h3 style="margin-top:15px">Create new merged question</h3></c:if>
-                    <c:if test="${post!=null}">Edit post</c:if>
+                    <c:if test="${posts!=null}"><h3 style="margin-top:15px">Create new merged question</h3></c:if>
+                    <c:if test="${post!=null}"><h3 style="margin-top:15px">Edit post</h3></c:if>
                     <h5 style="margin-top: 15px">
                         <a href="/search?filter=4&searchKey=" style="color: white;">Classroom</a> /
                         <a href="/classroom/${classroom.id}" style="color: white;">${classroom.classroomName}</a> /
                         <c:if test="${post==null && posts==null}">
                         <span style="color: #2f3239;">Create post</span>
                         </c:if>
-                        <c:if test="${postMerges!=null}"><span style="color: #2f3239;">Create new merged question</span></c:if>
+                        <c:if test="${posts!=null}"><span style="color: #2f3239;">Create new merged question</span></c:if>
                         <c:if test="${post!=null}"><span style="color: #2f3239;">Edit post</span></c:if>
                     </h5>
                 </div>

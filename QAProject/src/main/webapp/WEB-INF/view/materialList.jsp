@@ -122,12 +122,12 @@
                                 <table class="table table-hover">
                                     <tr>
                                         <th>File name</th>
-                                        <th>File size</th>
+                                        <th>File size(kb)</th>
                                         <th></th>
                                     </tr>
                                     <c:forEach var="material" items="${materials}">
                                     <tr>
-                                        <td><a href="/download/${material.id}"><i class="icon-download"></i> ${material.name}</a></td>
+                                        <td><input type="hidden" value="${material.id}"><a href="" onclick="downloadMaterial(this);return false;"><i class="icon-download"></i> ${material.name}</a></td>
                                         <td>${material.size}</td>
                                         <td><input type="hidden" name="materialId" value="${material.id}"><a href="#" onclick="removeMaterial(this);return false"><i class="icon-remove"></i> Delete</a></td>
                                     </tr>
@@ -190,6 +190,22 @@
 <script>
     var idDeleteMaterial
     var divDeleteMaterial
+    var downloadMaterial = function(e) {
+        e.preventDefault;
+        var idMaterial = $(e).parent('td').find('input').val();
+        var url = "/download/check/"+idMaterial;
+        $.ajax({
+            type: "GET",
+            url: url,
+            success:function(data) {
+                if(data=='error') {
+                    $.growl.error({ message: "This material is not exist or it was deleted by owner" });
+                } else {
+                    window.location = '/download/'+idMaterial;
+                }
+            }
+        })
+    }
     var removeMaterial = function(e) {
         idDeleteMaterial = $(e).parents('td').find('input').val();
         divDeleteMaterial = $(e).parents('tr');

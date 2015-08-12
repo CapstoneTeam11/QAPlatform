@@ -65,6 +65,17 @@ $('#notifiDropdown').click(function(e) {
                     } else {
                         $('#countNotifi').html(afterView);
                     }
+                    var url = '/notification/setview/' + userId;
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        success: function (data) {
+                            if(data!='OK') {
+                                console.log("Error");
+                            }
+                        }
+                    })
+
                 } else {
                     var divAppend = getEmptyNotificationDiv();
                     $('#notificationAppend').append(divAppend);
@@ -73,16 +84,7 @@ $('#notifiDropdown').click(function(e) {
             }
         })
 
-        var url = '/notification/setview/' + userId;
-        $.ajax({
-            type: "POST",
-            url: url,
-            success: function (data) {
-                if(data!='OK') {
-                    console.log("Error");
-                }
-            }
-        })
+
     } else {
         $('#notificationAppend').empty();
     }

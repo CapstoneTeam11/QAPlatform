@@ -9,6 +9,7 @@ import com.qaproject.util.Utilities;
 import com.sun.deploy.net.HttpResponse;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -222,6 +224,9 @@ public class MaterialController implements HandlerExceptionResolver {
                 }
                 try {
                     File fileServer = new File(dir.getAbsolutePath() + File.separator + aFile.getOriginalFilename());
+                    if(fileServer.exists()) {
+                        error = 1;
+                    }
                     BufferedOutputStream stream = new BufferedOutputStream(
                             new FileOutputStream(fileServer));
                     stream.write(aFile.getBytes());
@@ -245,26 +250,44 @@ public class MaterialController implements HandlerExceptionResolver {
         }
         return "redirect:/classroom/"+classId+"?tab=material";
     }
-
-    @RequestMapping(value = "/download/{materialId}", method = RequestMethod.GET)
-    public String downloadMaterialClass(@PathVariable Integer materialId,HttpServletResponse response ) {
-        //validate and authorize
+    @RequestMapping(value = "/download/check/{materialId}", method = RequestMethod.GET,produces = "application/json")
+    public @ResponseBody String checkMaterial(@PathVariable Integer materialId) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
-            return "redirect:/";
+            return "error";
         }
         Material material = materialDao.find(materialId);
         if(material==null){
-            return "404";
+            return "error";
         }
         File downloadFile = new File(material.getFileURL());
+        if(downloadFile.exists()==false) {
+            return "error";
+        }
+
+        return "OK";
+    }
+
+    @RequestMapping(value = "/download/{materialId}", method = RequestMethod.GET)
+    public String downloadMaterialClass(@PathVariable Integer materialId,HttpServletResponse response ,HttpServletRequest request) {
+        //validate and authorize
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/error";
+        }
+        Material material = materialDao.find(materialId);
+        if(material==null){
+            return "redirect:/error";
+        }
+        File downloadFile = new File(material.getFileURL());
+        ServletContext context = request.getServletContext();
         FileInputStream inputStream = null;
         OutputStream outStream = null;
         try {
             inputStream = new FileInputStream(downloadFile);
 
             response.setContentLength((int) downloadFile.length());
-            response.setContentType(material.getName());
+//            response.setContentType(context.getMimeType(material.getFileURL()));
 
             // response header
             String headerKey = "Content-Disposition";
@@ -274,10 +297,12 @@ public class MaterialController implements HandlerExceptionResolver {
             // Write response
             outStream = response.getOutputStream();
             IOUtils.copy(inputStream, outStream);
-
+        } catch (IOException io) {
+            return "redirect:/error";
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
+        }
+        finally {
             try {
                 if (null != inputStream)
                     inputStream.close();
@@ -288,7 +313,7 @@ public class MaterialController implements HandlerExceptionResolver {
             }
 
         }
-        return "classroom";
+        return "redirect:/error";
     }
     @RequestMapping(value = "/library/add/{folderId}/{materialId}", method = RequestMethod.POST,produces = "application/json")
     public @ResponseBody String copyMaterial(@PathVariable Integer folderId,
@@ -307,31 +332,31 @@ public class MaterialController implements HandlerExceptionResolver {
             return "NG";
         }
         //validate
-        String destPath = "C:\\User"+"\\"+user.getId()+"\\"+folderId;
-        String dest = "C:\\User"+"\\"+user.getId()+"\\"+folderId + "\\" + material.getName();
-        try {
-            File filePath = new File(destPath);
-            if(!filePath.exists()) {
-                filePath.mkdirs();
-            }
-            File fileDest = new File(dest);
-            File fileSource = new File(material.getFileURL());
-            Utilities.copyFileUsingJava7Files(fileSource, fileDest);
-        } catch (FileAlreadyExistsException f) {
-            f.printStackTrace();
-            error = 1;
-            return "Exist";
-        } catch (IOException e) {
-            e.printStackTrace();
-            error = 1;
-            return "NG";
-        }
+//        String destPath = "C:\\User"+"\\"+user.getId()+"\\"+folderId;
+//        String dest = "C:\\User"+"\\"+user.getId()+"\\"+folderId + "\\" + material.getName();
+//        try {
+//            File filePath = new File(destPath);
+//            if(!filePath.exists()) {
+//                filePath.mkdirs();
+//            }
+//            File fileDest = new File(dest);
+//            File fileSource = new File(material.getFileURL());
+//            Utilities.copyFileUsingJava7Files(fileSource, fileDest);
+//        } catch (FileAlreadyExistsException f) {
+//            f.printStackTrace();
+//            error = 1;
+//            return "Exist";
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            error = 1;
+//            return "NG";
+//        }
         //Send error to User
         Material materialCopy = new Material();
         materialCopy.setName(material.getName());
         materialCopy.setCreationDate(new Date());
         materialCopy.setFolderId(folderDao.find(folderId));
-        materialCopy.setFileURL(dest);
+        materialCopy.setFileURL(material.getFileURL());
         materialCopy.setSize(material.getSize());
         materialDao.persist(materialCopy);
         return "OK";

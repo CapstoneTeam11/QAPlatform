@@ -807,6 +807,7 @@ jQuery(document).ready(function($) {
         jQuery(".panel-pop").animate({"top":"-100%"},10).hide();
         jQuery("#invite-teacher").show().animate({"top":"50%"},500);
         jQuery("#errorInvite").empty()
+        elt.tagsinput('removeAll')
         jQuery("body").prepend("<div class='wrap-pop'></div>");
         wrap_pop();
         return false;

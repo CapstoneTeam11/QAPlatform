@@ -99,10 +99,10 @@
                 </c:if>
                 <form action="/post/merge" method="GET" id="mergeForm">
                 <input type="hidden" name="id" value="${classroom.id}">
-                <table class="table table-hover" style="margin-left: 10px">
+                <table class="table table-hover" style="margin-left: 10px" id="tableMerge">
                     <thead>
                     <tr>
-                        <th style="border-bottom: none; font-weight: bold">Question's Title</th>
+                        <th style="border-bottom: none; font-weight: bold"></th>
                         <th style="border-bottom: none"></th>
                     </tr>
                     </thead>
@@ -181,6 +181,8 @@
 
 <!-- js -->
 <%@include file="js.jsp" %>
+<script src="/resource/assets/js/jquery.dataTables.min.js"></script>
+<script src="/resource/assets/js/dataTables.bootstrap.js"></script>
 <c:if test="${sessionScope.user!=null}">
     <script src="/resource/assets/js/notification.js"></script>
 </c:if>
@@ -188,6 +190,16 @@
 <!-- End js -->
 <script type="text/javascript">
     $(document).ready(function () {
+        $('#tableMerge').dataTable({
+            "paging":   false,
+            "ordering": false,
+            "info":     false,
+            "oLanguage": {
+                "sSearch": "Filter by title : "
+            }
+        });
+        $('#tableMerge_filter').parent('div').prev('div').remove()
+        $('#tableMerge_filter').parent('div').css({'margin-left':'1%'})
         $('#mergeForm').validate();
         $('#commentform').validate({
             ignore: [],

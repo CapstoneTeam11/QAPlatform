@@ -54,6 +54,7 @@
                 <div class="col-md-10 form-inputs clearfix">
                     <p>
                         <input type="file" name="fileUpload" size="50" required="true" id="fileUpload">
+                        <label>If you want to update already material , just upload material has the same name and extension</label>
                     </p>
                 </div>
             </div>
@@ -356,7 +357,7 @@
                     <th>No</th>
                     <th>File name</th>
                     <th>Uploaded Date</th>
-                    <th>File size</th>
+                    <th>File size(kb)</th>
                     <th>Save to</th>
                     <th></th>
                 </tr>
@@ -367,7 +368,7 @@
                             <td>${material.name}</td>
                             <td>${material.creationDate}</td>
                             <td>${material.size}</td>
-                            <td><c:if test="${sessionScope.user.roleId.id==1}"><input type="hidden" value="${material.id}" name="materialId"><a class="add-to-folder-click" onclick="GetListFolder(this);return false" href="#">Folder</a> / </c:if><a href="/download/${material.id}"> Computer</a></td>
+                            <td><input type="hidden" value="${material.id}" name="materialId"><c:if test="${sessionScope.user.roleId.id==1}"><a class="add-to-folder-click" onclick="GetListFolder(this);return false" href="#">Folder</a> / </c:if><a href="" onclick="downloadMaterial(this);return false;"> Computer</a></td>
                             <c:if test="${user.id==classroom.ownerUserId.id}">
                                 <td><form action="/material/delete" method="post" style="display: none"><input type="hidden" name="materialId" value="${material.id}"></form><a href="#" onclick="removeMaterial(this)"><i class="icon-remove"></i> Delete</a></td>
                             </c:if>
@@ -380,7 +381,7 @@
                             <td>${material.name}</td>
                             <td>${material.creationDate}</td>
                             <td>${material.size}</td>
-                            <td><c:if test="${sessionScope.user.roleId.id==1}"><input type="hidden" value="${material.id}" name="materialId"><a class="add-to-folder-click" onclick="GetListFolder(this);return false" href="#">Folder</a> /</c:if> <a href="/download/${material.id}"> Computer</a></td>
+                            <td><input type="hidden" value="${material.id}" name="materialId"><c:if test="${sessionScope.user.roleId.id==1}"><a class="add-to-folder-click" onclick="GetListFolder(this);return false" href="#">Folder</a> /</c:if> <a href="" onclick="downloadMaterial(this);return false;"> Computer</a></td>
                             <c:if test="${user.id==classroom.ownerUserId.id}">
                                 <td><form action="/material/delete" method="post" style="display: none"><input type="hidden" name="materialId" value="${material.id}"></form><a href="#" onclick="removeMaterial(this)"><i class="icon-remove"></i> Delete</a></td>
                             </c:if>
@@ -633,6 +634,22 @@
     var idDeleteMaterial ;
     var divDeleteMaterial;
     var idAddMaterial;
+    var downloadMaterial = function(e) {
+        e.preventDefault;
+        var idMaterial = $(e).parent('td').find('input').val();
+        var url = "/download/check/"+idMaterial;
+        $.ajax({
+            type: "GET",
+            url: url,
+            success:function(data) {
+                if(data=='error') {
+                    $.growl.error({ message: "This material is not exist or it was deleted by owner" });
+                } else {
+                    window.location = '/download/'+idMaterial;
+                }
+            }
+        })
+    }
     var removeMaterial = function(e) {
         idDeleteMaterial = $(e).parents('td').find('input').val();
         divDeleteMaterial = $(e).parents('tr');
@@ -642,6 +659,7 @@
         wrap_pop();
         return false;
     }
+
     var addToFolder = function(e){
         e.preventDefault;
         var idFolder = $(e).prev('input').val();
@@ -717,7 +735,7 @@
                         $('#folderList').append(getFolderDiv(folders[i].id,folders[i].folderName));
                     }
                 } else {
-                    $('#folderList').prepend('<label style="color: #0088cc;" class="errorFolder">You dont have any folder</label>')
+                    $('#folderList').prepend('<label style="color: #0088cc;" class="errorFolder"><a href="/material">You dont have any folder</a></label>')
                 }
             }
         })
@@ -744,6 +762,7 @@
         }
 
         $('#materialSubmit').click(function(e){
+            $('#errorUpload').empty();
             var tagId = new Array();
             $("input[name=tagId]").each(function() {
                 tagId.push($(this).val());
@@ -1250,6 +1269,7 @@
     $('#loadMoreMaterial').click(function (e) {
         var currentUser = ${user.id};
         var ownedUser = ${classroom.ownerUserId.id};
+        var roleCurrentUser =  ${user.roleId.id};
         var url = "/classroom/material";
         var classroomId = ${classroom.id};
         $.ajax({
@@ -1280,9 +1300,12 @@
                             '<td>'+ materialCounter + '</td>' +
                     '<td>'+ materials[i].name + '</td>' +
                     '<td>'+ materials[i].creationDate + '</td>' +
-                    '<td>' + materials[i].size + '</td>' +
-                    '<td><a class="add-to-folder-click" onclick="GetListFolder(this);return false" href="#">Folder</a> / <a href="/download/'+ materials[i].id +
-                    '">Computer</a></td>';
+                    '<td>' + materials[i].size + '</td>' ;
+                     if(roleCurrentUser==1) {
+                         component = component + '<td><input type="hidden" name="materialId" value="'+ materials[i].id +'"><a id="add-to-folder-click" onclick="GetListFolder(this);return false" href="#">Folder</a> / <a href="" onclick="downloadMaterial(this);return false;">Computer</a></td>';
+                     } else {
+                         component = component + '<td><input type="hidden" name="materialId" value="'+ materials[i].id +'"><a href="" onclick="downloadMaterial(this);return false;">Computer</a></td>';
+                     }
                     if (currentUser==ownedUser){
                         component = component +
                                 '<td><form action="/material/delete" method="post" style="display: none">' +
