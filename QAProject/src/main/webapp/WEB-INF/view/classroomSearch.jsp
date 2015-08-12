@@ -343,7 +343,7 @@
                     <th>No</th>
                     <th>File name</th>
                     <th>Uploaded Date</th>
-                    <th>File size(kb)</th>
+                    <th>Size (KB)</th>
                     <th>Save to</th>
                     <th></th>
                 </tr>
