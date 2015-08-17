@@ -142,7 +142,13 @@ public class ConvertEntityDto {
                 }
                 Classroom classroom = (Classroom) object;
                 notificationDto.setObjectName(classroom.getClassroomName());
-                notificationDto.setHref("/classroom/"+String.valueOf(notification.getObjectId()));
+                if(notificationType == Constant.NT_TEACHER_CREATE_CLASS) {
+                    notificationDto.setHref("/classroom/"+String.valueOf(notification.getObjectId()));
+                } else {
+                    notificationDto.setHref("/classroom/"+String.valueOf(notification.getObjectId()) + "?tab=request");
+
+                }
+
             }
             if (notificationType == Constant.NT_TEACHER_CREATE_POST ||
                     notificationType == Constant.NT_USER_REPLY ||
@@ -168,9 +174,19 @@ public class ConvertEntityDto {
             } else if (notificationType==Constant.NT_REQUEST_TO_JOIN_CLASS) {
                 notificationDto.setContent(" requested to join "+notificationDto.getObjectName());
             } else if (notificationType==Constant.NT_TEACHER_CREATE_POST) {
-                notificationDto.setContent(" created new question / article");
+                Post postNotice = (Post) object;
+                if(postNotice.getPostType()==1) {
+                    notificationDto.setContent(" created new question ");
+                } else {
+                    notificationDto.setContent(" created new article ");
+                }
             } else if (notificationType==Constant.NT_STUDENT_CREATE_POST) {
-                notificationDto.setContent(" created new question / article");
+                Post postNotice = (Post) object;
+                if(postNotice.getPostType()==1) {
+                    notificationDto.setContent(" created new question ");
+                } else {
+                    notificationDto.setContent(" created new article ");
+                }
             } else if (notificationType==Constant.NT_USER_REPLY) {
                 notificationDto.setContent(" answered question "+notificationDto.getObjectName());
             } else if (notificationType==Constant.NT_INVITE_TO_ANSWER_POST) {

@@ -998,7 +998,7 @@ public class PostController {
             return "403";
         }
         Double rangeDou = range * 0.01;
-        List<Post> posts = postDao.listQuestionMerge(id,rangeDou);
+        List<Post> posts = postDao.listQuestionMerge(id,0.0);
         model.addAttribute("classroom", classroom);
         model.addAttribute("posts", posts);
         model.addAttribute("range",range);
