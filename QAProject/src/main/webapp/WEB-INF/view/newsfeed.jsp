@@ -340,7 +340,7 @@
 <%@include file="footer.jsp" %>
 </div><!-- End wrap -->
 <!-- End wrap -->
-<div class="go-up"><i class="icon-chevron-up"></i></div>
+
 
 <!-- js -->
 <%@include file="js.jsp" %>

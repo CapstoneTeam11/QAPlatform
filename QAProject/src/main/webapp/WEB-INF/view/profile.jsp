@@ -71,7 +71,7 @@
 
 <section class="container main-content page-left-sidebar">
 <div class="row">
-<div class="col-md-9">
+<div class="col-md-10 col-md-offset-1">
     <div class="row">
         <div class="user-profile">
             <div class="col-md-12">
@@ -341,19 +341,7 @@
         </div>
     </div><!-- End page-content -->
 </div><!-- End main -->
-<aside class="col-md-3 sidebar">
-    <div class="widget widget_stats">
-        <h3 class="widget_title">Stats</h3>
-        <div class="ul_list ul_list-icon-ok">
-            <ul>
-                <li><i class="icon-question-sign"></i>Questions ( <span>${questionCount}</span> )</li>
-                <li><i class="icon-edit"></i>Articles ( <span>${articleCount}</span> )</li>
-                <li><i class="icon-group"></i>Classrooms ( <span>${classroomCount}</span> )</li>
-            </ul>
-        </div>
-    </div>
 
-</aside><!-- End sidebar -->
 </div><!-- End row -->
 </section><!-- End container -->
 
