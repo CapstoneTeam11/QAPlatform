@@ -1179,7 +1179,7 @@
                             '<div class="question-desc short-text">'+ questions[i].body + '</div>' +
                             '<div class="question-details">' +
                             '<span class="question-answered question-answered-done">';
-                    if (questions[i].acceptedAnswerId==1) {
+                    if (questions[i].acceptedAnswerId===1) {
                         component = component + '<i class="icon-ok"></i>Resolved';
                     }
                     component = component + '</span>' +

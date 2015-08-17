@@ -144,7 +144,7 @@
                                     <div class="question-desc short-text">${question.body}</div>
                                     <div class="question-details">
                                                     <span class="question-answered question-answered-done">
-                                                        <c:if test="${question.acceptedAnswerId} != null">
+                                                        <c:if test="${question.acceptedAnswerId == 1}">
                                                             <i class="icon-ok"></i>Resolved
                                                         </c:if>
                                                     </span>
@@ -180,7 +180,7 @@
                                     <div class="question-desc short-text">${question.body}</div>
                                     <div class="question-details">
                                                     <span class="question-answered question-answered-done">
-                                                        <c:if test="${question.acceptedAnswerId} != null">
+                                                        <c:if test="${question.acceptedAnswerId==1}">
                                                             <i class="icon-ok"></i>Resolved
                                                         </c:if>
                                                     </span>
@@ -459,7 +459,7 @@ $(document).ready(function(){
                             '<div class="question-desc short-text">'+ questions[i].body + '</div>' +
                             '<div class="question-details">' +
                             '<span class="question-answered question-answered-done">';
-                    if (questions[i].acceptedAnswerId===undefined) {
+                    if (questions[i].acceptedAnswerId===1) {
                         component = component + '<i class="icon-ok"></i>Resolved';
                     }
                     component = component + '</span>' +
