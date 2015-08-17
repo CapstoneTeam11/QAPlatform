@@ -125,7 +125,8 @@
                             <span class="t_center icon_i"><span class="icon_circle" icon_size="50" span_bg="#1abc9c" span_hover="#34495e" style="height: 50px; width: 50px; font-size: 25px; line-height: 50px; background-color: rgb(26, 188, 156);"><i class="icon-bullhorn"></i></span></span>
                             <div class="t_center">
                                 <h3>Welcome to Ask me</h3>
-                                <p>Ask me is a question and answer site for teachers and students.<br>It's built and run as a supported tool to help lack of dicussion time at school.<br> With your help, we're working together to build a library of detailed answers to every question</p>
+                                <p>Ask me is a question and answer site for teachers and students.<br>It's built and
+                                    run as a supported tool to help lack of discussion time at school.<br> With your help, we're working together to build a library of detailed answers to every question</p>
                             </div>
                         </div>
                     </div>

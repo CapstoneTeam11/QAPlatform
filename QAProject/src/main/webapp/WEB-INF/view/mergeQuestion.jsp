@@ -79,23 +79,23 @@
                 <a class="button color small submit" href="/post/merge/${classroom.id}/${range}" id="suggestMergehref" style="margin-left: 5px">Group</a>
                 </div>--%>
                 <c:if test="${fulltext==null}">
-                <div class="col-md-12">
-                    <span style="font-weight: bold; font-size: 18px">
-                        Group questions have similar titles over
-                    </span>
-                    <span id="range"
-                      style="font-size: 20px; font-style:italic; font-weight: bold">
-                          ${range}%
-                    </span>
-                </div>
+                <%--<div class="col-md-12">--%>
+                    <%--<span style="font-weight: bold; font-size: 18px">--%>
+                        <%--Group questions have similar titles over--%>
+                    <%--</span>--%>
+                    <%--<span id="range"--%>
+                      <%--style="font-size: 20px; font-style:italic; font-weight: bold">--%>
+                          <%--${range}%--%>
+                    <%--</span>--%>
+                <%--</div>--%>
 
-                <div class="col-md-12">
-                    <div class="col-md-6" style="padding-left: 0px;">
-                        <input type="range" min="0" max="100" step="10" value="${range}" style="margin-top: 10px;"
-                               id="rangeMerge"></div>
-                    <div class="col-md-6">
-                        <a class="button color small submit" href="/post/merge/${classroom.id}/${range}" id="suggestMergehref">Group</a></div>
-                </div>
+                <%--<div class="col-md-12">--%>
+                    <%--<div class="col-md-6" style="padding-left: 0px;">--%>
+                        <%--<input type="range" min="0" max="100" step="10" value="${range}" style="margin-top: 10px;"--%>
+                               <%--id="rangeMerge"></div>--%>
+                    <%--<div class="col-md-6">--%>
+                        <%--<a class="button color small submit" href="/post/merge/${classroom.id}/${range}" id="suggestMergehref">Group</a></div>--%>
+                <%--</div>--%>
                 </c:if>
                 <form action="/post/merge" method="GET" id="mergeForm">
                 <input type="hidden" name="id" value="${classroom.id}">
