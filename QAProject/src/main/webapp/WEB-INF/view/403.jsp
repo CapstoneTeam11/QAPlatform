@@ -74,6 +74,7 @@
                     <div>
                         <h2>403</h2>
                         <h3>Not have permission</h3>
+                        <h4>${error}</h4>
                     </div>
                     <div class="clearfix"></div><br>
                     <c:if test="${not empty sessionScope.user && sessionScope.user.roleId.id!=3}">

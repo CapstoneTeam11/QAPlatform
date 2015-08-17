@@ -66,7 +66,7 @@ public class UserDaoImpl extends BaseDao<User,Integer> implements UserDao {
         Query query = null;
         query = entityManager.createQuery("select u from User u " +
                 "where u.id not in(select  cu.userId.id from ClassroomUser  cu where" +
-                " cu.classroomId.id = :classId) and u.displayName like :username and u.roleId.id = 1", User.class);
+                " cu.classroomId.id = :classId) and u.displayName like :username and u.roleId.id = 1 and u.status = 0", User.class);
 
         List<User> users = null;
         try {
@@ -83,7 +83,7 @@ public class UserDaoImpl extends BaseDao<User,Integer> implements UserDao {
     public List<User> findAllStudent(String username) {
         Query query = null;
         query = entityManager.createQuery("select u from User u " +
-                "where u.displayName like :username and u.roleId.id = 1", User.class);
+                "where u.displayName like :username and u.roleId.id = 1 and u.status = 0", User.class);
 
         List<User> users = null;
         try {
@@ -98,7 +98,7 @@ public class UserDaoImpl extends BaseDao<User,Integer> implements UserDao {
     @Override
     public List<User> findTeacherPostInvitation(String username,Integer postId) {
         Query query = null;
-        query = entityManager.createQuery("select u from User u where u.displayName like :username and u.roleId.id = 2 and u not in (select p.teacherId from PostInvitation p where p.postId.id =:postId ) ", User.class);
+        query = entityManager.createQuery("select u from User u where u.displayName like :username and u.roleId.id = 2 and u.status = 0 and u not in (select p.teacherId from PostInvitation p where p.postId.id =:postId ) ", User.class);
         List<User> users = null;
         try {
             query.setParameter("username", "%" + username + "%");

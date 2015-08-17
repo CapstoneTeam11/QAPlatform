@@ -34,6 +34,8 @@ public class Material {
     private String fileURL;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "materialId",orphanRemoval = true)
     private List<TagMaterial> tagMaterials;
+    @Transient
+    private int exist = 0;
 
     public Integer getId() {
         return id;
@@ -100,5 +102,13 @@ public class Material {
 
     public void setTagMaterials(List<TagMaterial> tagMaterials) {
         this.tagMaterials = tagMaterials;
+    }
+
+    public int getExist() {
+        return exist;
+    }
+
+    public void setExist(int exist) {
+        this.exist = exist;
     }
 }

@@ -123,6 +123,9 @@ public class MaterialController implements HandlerExceptionResolver {
             return "redirect:/";
         }
         List<Material> materials = folder.getMaterialList();
+        for (int i = 0 ; i < materials.size() ; i++) {
+
+        }
         model.addAttribute("folderName",folder.getName());
         model.addAttribute("materials", materials);
         return "materialList";
@@ -186,6 +189,9 @@ public class MaterialController implements HandlerExceptionResolver {
         }
         if (classroom.getOwnerUserId().getId() != user.getId()) {
             return "redirect:/";
+        }
+        if (classroom.getStatus()==0) {
+            return "redirect:/classroom/"+classId+"?tab=material";
         }
         List<TagMaterial> tagMaterials = new ArrayList<TagMaterial>();
         if(tagId!=null) {
@@ -331,6 +337,22 @@ public class MaterialController implements HandlerExceptionResolver {
             session.setAttribute("currentPage","redirect:/classroom/"+material.getOwnerClassId().getId());
             return "NG";
         }
+        Folder folder = folderDao.find(folderId);
+        if(folder==null) {
+            return  "NG";
+        }
+        if(folder.getManagerId().getId()!=user.getId()) {
+            return "NG";
+        }
+        List<Material> materials = folder.getMaterialList();
+        if(materials != null) {
+            for(int i = 0 ; i < materials.size() ; i++) {
+                if(material.getName().equals(materials.get(i).getName())) {
+                    return "Exist";
+                }
+            }
+        }
+
         //validate
 //        String destPath = "C:\\User"+"\\"+user.getId()+"\\"+folderId;
 //        String dest = "C:\\User"+"\\"+user.getId()+"\\"+folderId + "\\" + material.getName();
@@ -355,7 +377,7 @@ public class MaterialController implements HandlerExceptionResolver {
         Material materialCopy = new Material();
         materialCopy.setName(material.getName());
         materialCopy.setCreationDate(new Date());
-        materialCopy.setFolderId(folderDao.find(folderId));
+        materialCopy.setFolderId(folder);
         materialCopy.setFileURL(material.getFileURL());
         materialCopy.setSize(material.getSize());
         materialDao.persist(materialCopy);

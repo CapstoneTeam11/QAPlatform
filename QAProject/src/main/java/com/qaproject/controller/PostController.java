@@ -469,6 +469,9 @@ public class PostController {
         if (classroom == null) {
             return "404";
         }
+        if(classroom.getStatus()==0) {
+            return "/classroom" + classId;
+        }
         //Check User have joint to Class
         if (classroom.checkUserExist(user) == false) {
             return "/classroom/" + classId;

@@ -8,6 +8,7 @@ import com.qaproject.entity.Post;
 import com.qaproject.entity.User;
 import com.qaproject.util.Constant;
 import com.qaproject.util.ConvertEntityDto;
+import info.debatty.java.stringsimilarity.Jaccard;
 import info.debatty.java.stringsimilarity.NGram;
 import org.springframework.stereotype.Repository;
 import javax.persistence.NoResultException;
@@ -478,10 +479,10 @@ public class PostDaoImpl extends BaseDao<Post,Integer> implements PostDao{
             System.out.println("No post was accepted");
         }
         if(posts!=null) {
+                Jaccard nGram = new Jaccard(4);
             for(int i = 0 ; i < posts.size();i++) {
                 Integer flag = 0 ;
                 Post post = posts.get(i);
-                NGram nGram = new NGram(3);
                 for(int j = 0 ; j < posts.size() ; j++) {
                     Double score = nGram.distance(post.getTitle(),posts.get(j).getTitle());
                     if(score >= range) {
@@ -499,7 +500,7 @@ public class PostDaoImpl extends BaseDao<Post,Integer> implements PostDao{
                 public int compare(Post post, Post post2) {
                     if(post.getScore()==post2.getScore()) {
                         return 0;
-                    } else if(post.getScore() < post2.getScore()) {
+                    } else if(post.getScore() > post2.getScore()) {
                         return 1;
                     } else {
                         return -1;

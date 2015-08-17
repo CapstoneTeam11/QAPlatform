@@ -369,7 +369,7 @@
                             <td>${material.creationDate}</td>
                             <td>${material.size}</td>
                             <td><input type="hidden" value="${material.id}" name="materialId"><c:if test="${sessionScope.user.roleId.id==1}"><a class="add-to-folder-click" onclick="GetListFolder(this);return false" href="#">Folder</a> / </c:if><a href="" onclick="downloadMaterial(this);return false;"> Computer</a></td>
-                            <c:if test="${user.id==classroom.ownerUserId.id}">
+                            <c:if test="${user.id==classroom.ownerUserId.id || user.roleId.id == 3}">
                                 <td><form action="/material/delete" method="post" style="display: none"><input type="hidden" name="materialId" value="${material.id}"></form><a href="#" onclick="removeMaterial(this)"><i class="icon-remove"></i> Delete</a></td>
                             </c:if>
                     </c:forEach>
@@ -382,7 +382,7 @@
                             <td>${material.creationDate}</td>
                             <td>${material.size}</td>
                             <td><input type="hidden" value="${material.id}" name="materialId"><c:if test="${sessionScope.user.roleId.id==1}"><a class="add-to-folder-click" onclick="GetListFolder(this);return false" href="#">Folder</a> /</c:if> <a href="" onclick="downloadMaterial(this);return false;"> Computer</a></td>
-                            <c:if test="${user.id==classroom.ownerUserId.id}">
+                            <c:if test="${user.id==classroom.ownerUserId.id || user.roleId.id == 3}">
                                 <td><form action="/material/delete" method="post" style="display: none"><input type="hidden" name="materialId" value="${material.id}"></form><a href="#" onclick="removeMaterial(this)"><i class="icon-remove"></i> Delete</a></td>
                             </c:if>
                         </tr>
@@ -662,6 +662,9 @@
 
     var addToFolder = function(e){
         e.preventDefault;
+        if($('.errorFolder').length > 0) {
+            $('.errorFolder').remove();
+        }
         var idFolder = $(e).prev('input').val();
         var url = "/library/add/"+idFolder+"/"+idAddMaterial;
         $.ajax({
@@ -678,6 +681,7 @@
                 }
             }
         })
+
         return false;
     }
     $('.deleteMaterial').click(function(e) {
@@ -1306,7 +1310,7 @@
                      } else {
                          component = component + '<td><input type="hidden" name="materialId" value="'+ materials[i].id +'"><a href="" onclick="downloadMaterial(this);return false;">Computer</a></td>';
                      }
-                    if (currentUser==ownedUser){
+                    if (currentUser==ownedUser || roleCurrentUser==3){
                         component = component +
                                 '<td><form action="/material/delete" method="post" style="display: none">' +
                                 '<input type="hidden" name="materialId" value="'+ materials[i].id +'"></form>' +

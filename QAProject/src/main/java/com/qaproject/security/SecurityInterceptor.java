@@ -45,7 +45,8 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
                         request.getRequestURI().contains("classroom")==false && request.getRequestURI().contains("openCloseClass")==false
                                 && request.getRequestURI().contains("search")==false && request.getRequestURI().contains("/post/openPost")==false
                                 && request.getRequestURI().contains("/post/closePost")==false) {
-                        request.getRequestDispatcher("/WEB-INF/view/404.jsp").forward(request, response);
+                        request.getRequestDispatcher("/WEB-INF/view/403.jsp").forward(request, response);
+                        request.setAttribute("error","Admin cant do this action");
                         return false;
                         }
                     }

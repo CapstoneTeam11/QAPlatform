@@ -386,6 +386,9 @@
 }
     var addToFolder = function(e){
         e.preventDefault;
+        if($('.errorFolder').length > 0) {
+            $('.errorFolder').remove();
+        }
         var idFolder = $(e).prev('input').val();
         var url = "/library/add/"+idFolder+"/"+idAddMaterial;
         $.ajax({

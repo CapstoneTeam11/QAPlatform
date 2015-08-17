@@ -355,12 +355,12 @@
                             <td>${material.creationDate}</td>
                             <td>${material.size}</td>
                             <td><c:if test="${sessionScope.user.roleId.id==1}"><input type="hidden" value="${material.id}" name="materialId"><a class="add-to-folder-click" href="#">Folder</a> / </c:if><a href="/download/${material.id}"> Computer</a></td>
-                            <c:if test="${user.id==classroom.ownerUserId.id}">
+                            <c:if test="${user.id==classroom.ownerUserId.id || user.roleId.id == 3}">
                                 <td><form action="/material/delete" method="post" style="display: none"><input type="hidden" name="materialId" value="${material.id}"></form><a href="#" onclick="removeMaterial(this)"><i class="icon-remove"></i> Delete</a></td>
                             </c:if>
                     </c:forEach>
                 </c:if>
-                <c:if test="${fn:length(materials)<=10}">
+                <c:if test="${fn:length(materials)<=10 }">
                     <c:forEach var="material" items="${materials}" varStatus="counter">
                         <tr>
                             <td>${counter.count}</td>
@@ -368,7 +368,7 @@
                             <td>${material.creationDate}</td>
                             <td>${material.size}</td>
                             <td><c:if test="${sessionScope.user.roleId.id==1}"><input type="hidden" value="${material.id}" name="materialId"><a class="add-to-folder-click" href="#">Folder</a> / </c:if><a href="" onclick="downloadMaterial(this);return false;"> Computer</a></td>
-                            <c:if test="${user.id==classroom.ownerUserId.id}">
+                            <c:if test="${user.id==classroom.ownerUserId.id || user.roleId.id == 3}">
                                 <td><form action="/material/delete" method="post" style="display: none"><input type="hidden" name="materialId" value="${material.id}"></form><a href="#" onclick="removeMaterial(this)"><i class="icon-remove"></i> Delete</a></td>
                             </c:if>
                         </tr>
@@ -1196,6 +1196,7 @@ $('#loadMoreArticle').click(function (e) {
 });
 $('#loadMoreMaterial').click(function (e) {
     var currentUser = ${user.id};
+    var roleCurrentUser =  ${user.roleId.id};
     var ownedUser = ${classroom.ownerUserId.id};
     var url = "/classroom/search/material";
     var classroomId = ${classroom.id};
@@ -1233,7 +1234,7 @@ $('#loadMoreMaterial').click(function (e) {
                 } else {
                     component = component + '<td><input type="hidden" name="materialId" value="'+ materials[i].id +'"><a href="" onclick="downloadMaterial(this);return false;">Computer</a></td>';
                 }
-                if (currentUser==ownedUser){
+                if (currentUser==ownedUser || roleCurrentUser == 3){
                     component = component +
                             '<td><form action="/material/delete" method="post" style="display: none">' +
                             '<input type="hidden" name="materialId" value="'+ materials[i].id +'"></form>' +
