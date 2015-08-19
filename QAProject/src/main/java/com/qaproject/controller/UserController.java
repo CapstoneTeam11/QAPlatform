@@ -75,6 +75,9 @@ public class UserController {
             return "redirect:/";
         }
         user.setDisplayName(displayName);
+        if (user.getCategoryId().getId()!=cate) {
+            newsFeedUtilities.removeQuestionOfKnow(user.getId(),cate);
+        }
         user.setCategoryId(categoryDao.find(cate));
         user.setAboutMe(aboutMe);
         user.setProfileImageURL(profileUrl);
