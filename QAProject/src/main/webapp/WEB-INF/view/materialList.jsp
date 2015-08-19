@@ -99,7 +99,11 @@
         <section class="container" style="height:70px; display: flex; align-items: center">
             <div class="row">
                 <div class="col-md-12">
-                    <h3>Manage Material</h3>
+                    <h3 style="margin-top: 15px">${folderName}</h3>
+                    <h5 style="margin-top: 15px">
+                        <a href="/material" style="color: white;">Material</a> /
+                        <span style="color: #2f3239;">${folderName}</span>
+                    </h5>
                 </div>
             </div><!-- End row -->
         </section><!-- End container -->
@@ -199,7 +203,7 @@
             url: url,
             success:function(data) {
                 if(data=='error') {
-                    $.growl.error({ message: "This material is not exist or it was deleted by owner" });
+                    $.growl.error({ message: "This material is not exist or it was deleted by owner", location: "bl" });
                 } else {
                     window.location = '/download/'+idMaterial;
                 }

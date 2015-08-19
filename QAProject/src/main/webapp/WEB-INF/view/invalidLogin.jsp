@@ -12,8 +12,8 @@
 
     <!-- Basic Page Needs -->
     <meta charset="utf-8">
-    <title>Ask me – Responsive Questions and Answers Template</title>
-    <meta name="description" content="Ask me Responsive Questions and Answers Template">
+    <title>Ask me – Q&A Platform for Educators</title>
+    <meta name="description" content="Ask me Q&A Platform for Educators">
     <meta name="author" content="2code.info">
 
 

@@ -56,8 +56,8 @@
 
 <div class="panel-pop" id="suggested-classrooms">
     <input id="suggestedClassroomsVar" type="hidden" value="${suggestedClassrooms}"/>
-    <h2>Join your first class now!<i class="icon-remove"></i></h2>
-    <div style="height: auto; max-height: 300px; overflow-x: hidden;">
+    <h2>Join your first classroom now!<i class="icon-remove"></i></h2>
+    <div style="height: auto; max-height: 300px; overflow-x: hidden; cursor: pointer">
         <c:forEach var="suggestedClassroom" items="${suggestedClassrooms}">
             <a href="/classroom/${suggestedClassroom.id}" class="list-group-item">
                 <h4 class="list-group-item-heading">${suggestedClassroom.classroomName}</h4>
@@ -67,7 +67,7 @@
 </div><!-- End add to folder -->
 <div class="panel-pop" id="add-to-folder">
     <h2>Add to folder<i class="icon-remove"></i></h2>
-    <div style="height: auto; max-height: 300px; overflow-x: hidden;" id="folderList">
+    <div style="height: auto; max-height: 300px; overflow-x: hidden; cursor: pointer" id="folderList">
         <c:forEach var="folder" items="${user.folderList}">
             <input type="hidden" value="${folder.id}">
             <a class="list-group-item listFolder">
@@ -377,7 +377,7 @@
         url: url,
         success:function(data) {
             if(data=='error') {
-                $.growl.error({ message: "This material is not exist or it was deleted by owner" });
+                $.growl.error({ message: "This material is not exist or it was deleted by owner", location: "bl"  });
             } else {
                 window.location = '/download/'+idMaterial;
             }

@@ -396,22 +396,7 @@
     </section>
     <!-- End container -->
 
-    <footer id="footer">
-        <section class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="widget widget_contact">
-                        <h3 class="widget_title">Where We Are ?</h3>
-
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi adipiscing gravida odio, sit
-                            amet suscipit risus ultrices eu.</p>
-                    </div>
-                </div>
-            </div>
-            <!-- End row -->
-        </section>
-        <!-- End container -->
-    </footer>
+    <%@include file="footer.jsp" %>
     <!-- End footer -->
 </div>
 <!-- End wrap -->
@@ -525,9 +510,9 @@
                 source: tag.ttAdapter(),
                 templates: {
                     empty: [
-                        '<div style="display: flex"><span class="unableFind"> unable to find tag</span> <span><a class="button color small" id="createTag" onclick="createTag()" style="margin-left: 5px">Create Now</a></span></div>'
+                        '<div style="display: flex"><span class="unableFind"> Unable to find tag</span> <span><a class="button color small" id="createTag" onclick="createTag()" style="margin-left: 5px">Create Now</a></span></div>'
                     ].join('\n'),
-                    suggestion: Handlebars.compile('<div><span style="white-space: nowrap">{{name}}</span></div>')
+                    suggestion: Handlebars.compile('<div style="cursor: pointer"><span style="white-space: nowrap">{{name}}</span></div>')
                 }
             }
         });
@@ -638,9 +623,9 @@
                     source: tag.ttAdapter(),
                     templates: {
                         empty: [
-                            '<div style="display: flex"><span class="unableFind"> unable to find tag</span> <span><a class="button color small" id="createTag" onclick="createTag()" style="margin-left: 5px">Create Now</a></span></div>'
+                            '<div style="display: flex"><span class="unableFind"> Unable to find tag</span> <span><a class="button color small" id="createTag" onclick="createTag()" style="margin-left: 5px">Create Now</a></span></div>'
                         ].join('\n'),
-                        suggestion: Handlebars.compile('<div><span style="white-space: nowrap">{{name}}</span></div>')
+                        suggestion: Handlebars.compile('<div style="cursor: pointer"><span style="white-space: nowrap">{{name}}</span></div>')
                     }
                 }
             });
@@ -797,7 +782,7 @@
                         empty: [
                             '<div style="display: flex"><span class="unableFind"> unable to find tag</span> <span><a class="button color small" id="createTag" onclick="createTag()" style="margin-left: 5px">Create Now</a></span></div>'
                         ].join('\n'),
-                        suggestion: Handlebars.compile('<div><span style="white-space: nowrap">{{name}}</span></div>')
+                        suggestion: Handlebars.compile('<div style="cursor: pointer"><span style="white-space: nowrap">{{name}}</span></div>')
                     }
                 }
             });

@@ -310,9 +310,9 @@
                 source: tag.ttAdapter(),
                 templates: {
                     empty: [
-                        '<div style="display: flex"><span class="unableFind"> unable to find tag</span> <span><a class="button color small" id="createTag" onclick="createTag()" style="margin-left: 5px">Create Now</a></span></div>'
+                        '<div style="display: flex"><span class="unableFind"> Unable to find tag</span> <span><a class="button color small" id="createTag" onclick="createTag()" style="margin-left: 5px">Create Now</a></span></div>'
                     ].join('\n'),
-                    suggestion: Handlebars.compile('<div><span style="white-space: nowrap">{{name}}</span></div>')
+                    suggestion: Handlebars.compile('<div style="cursor: pointer"><span style="white-space: nowrap">{{name}}</span></div>')
                 }
             }
         });

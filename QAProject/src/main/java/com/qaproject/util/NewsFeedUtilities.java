@@ -38,6 +38,8 @@ public class NewsFeedUtilities {
     @Autowired
     TagPostDao tagPostDao;
     @Autowired
+    CategoryDao categoryDao;
+    @Autowired
     TagMaterialDao tagMaterialDao;
 
     private final String QUESTION = "QTN_";
@@ -62,8 +64,10 @@ public class NewsFeedUtilities {
             setQuestionsInClass(user, jedis);
             setQuestionsInFollower(user, jedis);
             setQuestionsInKnow(user, jedis);
+            jedis.del(ARTICLE + user.getId());
             setArticlesInTags(user,jedis);
             setArticlesInKnow(user,jedis);
+            jedis.del(MATERIAL + user.getId());
             setMaterialInTags(user,jedis);
             setMaterialInKnow(user,jedis);
         }
@@ -177,6 +181,16 @@ public class NewsFeedUtilities {
                 }
             }
 
+        }
+    }
+
+    public void removeQuestionOfKnow(Integer userId, Integer categoryId) {
+        if (categoryId!=null) {
+            Category category = categoryDao.find(categoryId);
+            if (category!=null) {
+                Jedis jedis= new Jedis(SERVER);
+                    jedis.del(QUESTION_IN_KNOW + userId);
+            }
         }
     }
 
@@ -418,11 +432,6 @@ public class NewsFeedUtilities {
             return;
         }
         Double fakeScore = 1000.0;
-        try {
-            jedis.zremrangeByRank(ARTICLE + user.getId(),0,1000);
-        } catch (Exception e){
-
-        }
         for (Integer articleId : articleIds) {
             try {
                 jedis.zadd(ARTICLE + user.getId(), fakeScore, Integer.toString(articleId));
@@ -486,11 +495,6 @@ public class NewsFeedUtilities {
         List<Integer> materialIds = tagMaterialDao.findMaterialIdsInTags(tagIds);
         if (materialIds==null) {
             return;
-        }
-        try {
-            jedis.zremrangeByRank(MATERIAL + user.getId(),0,1000);
-        } catch (Exception e){
-
         }
         Double fakeScore = 1000.0;
         for (Integer materialId : materialIds) {
