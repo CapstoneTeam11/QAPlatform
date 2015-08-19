@@ -396,7 +396,7 @@
             url: url,
             success: function (data) {
                 if(data != "NG" && data!="Exist"){
-                    $(".panel-pop h2 i").click();
+                    $('#folderList').prepend('<label style="color: #2e69ff;" class="errorFolder">Matertial was added</label>')
                 } else if(data=="Exist") {
                     $('#folderList').prepend('<label style="color: red;" class="errorFolder">This file is exist in this folder , choose another folder</label>')
                     console.log("Error");

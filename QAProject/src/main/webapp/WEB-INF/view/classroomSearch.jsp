@@ -354,7 +354,7 @@
                             <td>${material.name}</td>
                             <td>${material.creationDate}</td>
                             <td>${material.size}</td>
-                            <td><c:if test="${sessionScope.user.roleId.id==1}"><input type="hidden" value="${material.id}" name="materialId"><a class="add-to-folder-click" href="#">Folder</a> / </c:if><a href="/download/${material.id}"> Computer</a></td>
+                            <td><input type="hidden" value="${material.id}" name="materialId"><c:if test="${sessionScope.user.roleId.id==1}"><a class="add-to-folder-click" onclick="GetListFolder(this);return false" href="#">Folder</a> / </c:if><a href="" onclick="downloadMaterial(this);return false;"> Computer</a></td>
                             <c:if test="${user.id==classroom.ownerUserId.id || user.roleId.id == 3}">
                                 <td><form action="/material/delete" method="post" style="display: none"><input type="hidden" name="materialId" value="${material.id}"></form><a href="#" onclick="removeMaterial(this)"><i class="icon-remove"></i> Delete</a></td>
                             </c:if>
@@ -367,7 +367,7 @@
                             <td>${material.name}</td>
                             <td>${material.creationDate}</td>
                             <td>${material.size}</td>
-                            <td><c:if test="${sessionScope.user.roleId.id==1}"><input type="hidden" value="${material.id}" name="materialId"><a class="add-to-folder-click" href="#">Folder</a> / </c:if><a href="" onclick="downloadMaterial(this);return false;"> Computer</a></td>
+                            <td><input type="hidden" value="${material.id}" name="materialId"><c:if test="${sessionScope.user.roleId.id==1}"><a class="add-to-folder-click" onclick="GetListFolder(this);return false" href="#">Folder</a> / </c:if><a href="" onclick="downloadMaterial(this);return false;"> Computer</a></td>
                             <c:if test="${user.id==classroom.ownerUserId.id || user.roleId.id == 3}">
                                 <td><form action="/material/delete" method="post" style="display: none"><input type="hidden" name="materialId" value="${material.id}"></form><a href="#" onclick="removeMaterial(this)"><i class="icon-remove"></i> Delete</a></td>
                             </c:if>
@@ -620,6 +620,8 @@
 
 var idDeleteMaterial ;
 var divDeleteMaterial;
+var idAddMaterial;
+
 var downloadMaterial = function(e) {
     e.preventDefault;
     var idMaterial = $(e).parent('td').find('input').val();
@@ -635,6 +637,30 @@ var downloadMaterial = function(e) {
             }
         }
     })
+}
+var addToFolder = function(e){
+    e.preventDefault;
+    if($('.errorFolder').length > 0) {
+        $('.errorFolder').remove();
+    }
+    var idFolder = $(e).prev('input').val();
+    var url = "/library/add/"+idFolder+"/"+idAddMaterial;
+    $.ajax({
+        type: "POST",
+        url: url,
+        success: function (data) {
+            if(data != "NG" && data!="Exist"){
+                $('#folderList').prepend('<label style="color: #2e69ff;" class="errorFolder">Matertial was added</label>')
+            } else if(data=="Exist") {
+                $('#folderList').prepend('<label style="color: red;" class="errorFolder">This file is exist in this folder , choose another folder</label>')
+                console.log("Error");
+            } else {
+                $('#folderList').prepend('<label style="color: red;" class="errorFolder">Has a error , please try again</label>')
+            }
+        }
+    })
+
+    return false;
 }
 var removeMaterial = function(e) {
     idDeleteMaterial = $(e).parents('td').find('input').val();
@@ -678,6 +704,38 @@ var createTag = function(e){
         $('#tagsuggest').tagsinput('add', { id: Math.round((Math.random()*10000))*-1, name: $('.tt-input').val() });
         $('.tt-input').val("");
     }
+};
+var GetListFolder = function (e) {
+    if($('.errorFolder').length > 0) {
+        $('.errorFolder').remove();
+    }
+    var folders = new Array() ;
+    var url = "/folders";
+    $.ajax({
+        type: "GET",
+        url : url,
+        success: function(data) {
+            folders = data;
+            $('#folderList').empty();
+            function getFolderDiv(folderId,folderName ) {
+                var component = '<input type="hidden" value="'+ folderId +'"><a class="list-group-item listFolder" onclick="addToFolder(this);return false"><h4 class="list-group-item-heading">' +folderName+ '</h4></a>';
+                return component;
+            }
+            if(folders.length > 0 ) {
+                for(var i = 0 ; i < folders.length;i++) {
+                    $('#folderList').append(getFolderDiv(folders[i].id,folders[i].folderName));
+                }
+            } else {
+                $('#folderList').prepend('<label style="color: #0088cc;" class="errorFolder"><a href="/material">You dont have any folder</a></label>')
+            }
+        }
+    })
+    $(".panel-pop").animate({"top":"-100%"},10).hide();
+    $("#add-to-folder").show().animate({"top":"50%"},500);
+    $("body").prepend("<div class='wrap-pop'></div>");
+    wrap_pop();
+    idAddMaterial = $(e).parents('td').find("[name='materialId']").val();
+    return false;
 };
 var studentNameList = [];
 $(document).ready(function () {

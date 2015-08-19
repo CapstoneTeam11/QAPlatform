@@ -39,7 +39,7 @@ public class ClassroomUtilities {
                     if(role==Constant.TEACHER) {
                         if(question.getStatus()==1 && question.getAcceptedAnswerId()==0  ) {
                         Integer numSimilar = postDao.countSimilar(question.getTitle(),question.getOwnerClassId().getId());
-                        question.setSimilar(numSimilar);
+                        question.setSimilar(numSimilar - 1);
                         }
                     }
                     if (answers!=null) {

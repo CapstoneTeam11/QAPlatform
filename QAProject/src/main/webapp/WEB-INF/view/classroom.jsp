@@ -257,7 +257,7 @@
                                                         class="icon-comment"></i>${question.answerCount} Answer(s)</a></span>
                                                 <span class="question-view"><i
                                                         class="icon-eye-open"></i>${question.viewer} view(s)</span>
-                                                <c:if test="${question.similar != null and question.similar > 1 }">
+                                                <c:if test="${question.similar != null and question.similar > 0 }">
                                                     <span class="question-category"><a
                                                             href="/post/merge/${question.id}"><i
                                                             class="icon-sitemap"></i>${question.similar} similar question(s)</a></span>
@@ -672,7 +672,7 @@
             url: url,
             success: function (data) {
                 if(data != "NG" && data!="Exist"){
-                    $(".panel-pop h2 i").click();
+                    $('#folderList').prepend('<label style="color: #2e69ff;" class="errorFolder">Matertial was added</label>')
                 } else if(data=="Exist") {
                     $('#folderList').prepend('<label style="color: red;" class="errorFolder">This file is exist in this folder , choose another folder</label>')
                     console.log("Error");
