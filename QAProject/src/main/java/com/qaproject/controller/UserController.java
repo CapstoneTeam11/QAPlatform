@@ -106,6 +106,8 @@ public class UserController {
         if(tagUsers!=null) {
             user.getTagUserList().clear();
             user.getTagUserList().addAll(tagUsers);
+        } else {
+            user.getTagUserList().clear();
         }
         userDao.merge(user);
         session.setAttribute("user",userDao.find(user.getId()));
