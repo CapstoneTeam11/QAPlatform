@@ -80,7 +80,7 @@
 
 <div class="panel-pop" id="add-to-folder">
     <h2>Add to folder<i class="icon-remove"></i></h2>
-    <div style="height: auto; max-height: 300px; overflow-x: hidden;" id="folderList">
+    <div style="height: auto; max-height: 300px; overflow-x: hidden; cursor: pointer" id="folderList">
         <c:forEach var="folder" items="${user.folderList}">
             <a href="/library/add/${folder.id}/"  class="list-group-item">
                 <h4 class="list-group-item-heading">${folder.name} </h4>
@@ -351,7 +351,7 @@
                     <c:forEach var="material" items="${materials}" end="9" varStatus="counter">
                         <tr>
                             <td>${counter.count}</td>
-                            <td>${material.name}</td>
+                            <td style="width: 280px">${material.name}</td>
                             <td>${material.creationDate}</td>
                             <td>${material.size}</td>
                             <td><input type="hidden" value="${material.id}" name="materialId"><c:if test="${sessionScope.user.roleId.id==1}"><a class="add-to-folder-click" onclick="GetListFolder(this);return false" href="#">Folder</a> / </c:if><a href="" onclick="downloadMaterial(this);return false;"> Computer</a></td>
@@ -364,7 +364,7 @@
                     <c:forEach var="material" items="${materials}" varStatus="counter">
                         <tr>
                             <td>${counter.count}</td>
-                            <td>${material.name}</td>
+                            <td style="width: 280px">${material.name}</td>
                             <td>${material.creationDate}</td>
                             <td>${material.size}</td>
                             <td><input type="hidden" value="${material.id}" name="materialId"><c:if test="${sessionScope.user.roleId.id==1}"><a class="add-to-folder-click" onclick="GetListFolder(this);return false" href="#">Folder</a> / </c:if><a href="" onclick="downloadMaterial(this);return false;"> Computer</a></td>
@@ -631,7 +631,7 @@ var downloadMaterial = function(e) {
         url: url,
         success:function(data) {
             if(data=='error') {
-                $.growl.error({ message: "This material is not exist or it was deleted by owner" });
+                $.growl.error({ message: "This material is not exist or it was deleted by owner", location: "bl"  });
             } else {
                 window.location = '/download/'+idMaterial;
             }
@@ -798,7 +798,7 @@ $(document).ready(function () {
             source: tag.ttAdapter(),
             templates: {
                 empty: [
-                    '<div style="display: flex"><span class="unableFind"> unable to find tag</span> <span><a class="button color small" id="createTag" onclick="createTag()" style="margin-left: 5px">Create Now</a></span></div>'
+                    '<div style="display: flex"><span class="unableFind"> Unable to find tag</span> <span><a class="button color small" id="createTag" onclick="createTag()" style="margin-left: 5px">Create Now</a></span></div>'
                 ].join('\n'),
                 suggestion: Handlebars.compile('<div><span style="white-space: nowrap">{{name}}</span></div>')
             }
@@ -840,10 +840,10 @@ $(document).ready(function () {
             templates: {
                 empty: [
                     '<div class="empty-message">',
-                    'unable to find any student or this student was invited or request to your class',
+                    'Unable to find any student or this student was invited or request to your class',
                     '</div>'
                 ].join('\n'),
-                suggestion: Handlebars.compile('<div><span><img src="{{studentProfileImageURL}}" class="author-imgTag"></span> <span style="white-space: nowrap">{{studentName}}</span></div>')
+                suggestion: Handlebars.compile('<div style="cursor: pointer"><span><img src="{{studentProfileImageURL}}" class="author-imgTag"></span> <span style="white-space: nowrap">{{studentName}}</span></div>')
             }
         }
     });
@@ -1284,7 +1284,7 @@ $('#loadMoreMaterial').click(function (e) {
             for (var i = 0; i < length; i++) {
                 var component = '<tr>' +
                         '<td>'+ materialCounter + '</td>' +
-                        '<td>'+ materials[i].name + '</td>' +
+                        '<td style="width: 280px">'+ materials[i].name + '</td>' +
                         '<td>'+ materials[i].creationDate + '</td>' +
                         '<td>' + materials[i].size + '</td>' ;
                 if(roleCurrentUser==1) {

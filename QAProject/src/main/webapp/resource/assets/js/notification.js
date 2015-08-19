@@ -24,7 +24,7 @@ function getEmptyNotificationDiv() {
         '<a>' +
         '<div class="notification-all">' +
         '<div style="min-width: 40px;">' +
-        '<span class="notification-action">You dont have any notification'
+        '<span class="notification-action">You do not have any notification'
     '</span></span></div></div></a></li>'
     return notificationDiv;
 }

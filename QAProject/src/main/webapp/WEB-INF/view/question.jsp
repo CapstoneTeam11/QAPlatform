@@ -1045,7 +1045,7 @@
                 data : postDto,
                 success: function (data) {
                     if(data != "OK" ){
-                        $.growl.error({ message: "Please try again later or refesh website" });
+                        $.growl.error({ message: "Please try again later or refresh website" });
                     } else {
                     }
 
@@ -1098,10 +1098,10 @@
                 templates: {
                     empty: [
                         '<div class="empty-message">',
-                        'unable to find any teacher',
+                        ' Unable to find any teacher',
                         '</div>'
                     ].join('\n'),
-                    suggestion: Handlebars.compile('<div><span><img src="{{profilePicture}}" class="author-imgTag"></span> <span style="white-space: nowrap">{{name}}</span></div>')
+                    suggestion: Handlebars.compile('<div style="cursor: pointer"><span><img src="{{profilePicture}}" class="author-imgTag"></span> <span style="white-space: nowrap">{{name}}</span></div>')
                 }
             }
         });

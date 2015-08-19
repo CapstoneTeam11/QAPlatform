@@ -365,7 +365,7 @@
             url: url,
             success:function(data) {
                 if(data=='error') {
-                    $.growl.error({ message: "This material is not exist or it was deleted by owner" });
+                    $.growl.error({ message: "This material is not exist or it was deleted by owner", location: "bl"  });
                 } else {
                     window.location = '/download/'+idMaterial;
                 }

@@ -350,9 +350,9 @@
                 source: tag.ttAdapter(),
                 templates: {
                     empty: [
-                        '<div style="display: flex"><span class="unableFind"> unable to find tag</span> <span><a class="button color small" id="createTag" onclick="createTag()" style="margin-left: 5px">Create Now</a></span></div>'
+                        '<div style="display: flex"><span class="unableFind"> Unable to find tag</span> <span><a class="button color small" id="createTag" onclick="createTag()" style="margin-left: 5px">Create Now</a></span></div>'
                     ].join('\n'),
-                    suggestion: Handlebars.compile('<div><span style="white-space: nowrap">{{name}}</span></div>')
+                    suggestion: Handlebars.compile('<div style="cursor: pointer"><span style="white-space: nowrap">{{name}}</span></div>')
                 }
             }
         });
@@ -392,10 +392,10 @@
                 templates: {
                     empty: [
                         '<div class="empty-message">',
-                        'unable to find any student or this student was invited or request to your class',
+                        'Unable to find any student.',
                         '</div>'
                     ].join('\n'),
-                    suggestion: Handlebars.compile('<div><span><img src="{{studentProfileImageURL}}" class="author-imgTag"></span> <span style="white-space: nowrap">{{studentName}}</span></div>')
+                    suggestion: Handlebars.compile('<div style="cursor: pointer"><span><img src="{{studentProfileImageURL}}" class="author-imgTag"></span> <span style="white-space: nowrap">{{studentName}}</span></div>')
                 }
             }
         });
@@ -497,9 +497,9 @@
                     source: tag.ttAdapter(),
                     templates: {
                         empty: [
-                            '<div style="display: flex"><span class="unableFind"> unable to find tag</span> <span><a class="button color small" id="createTag" onclick="createTag()" style="margin-left: 5px">Create Now</a></span></div>'
+                            '<div style="display: flex"><span class="unableFind"> Unable to find tag</span> <span><a class="button color small" id="createTag" onclick="createTag()" style="margin-left: 5px">Create Now</a></span></div>'
                         ].join('\n'),
-                        suggestion: Handlebars.compile('<div><span style="white-space: nowrap">{{name}}</span></div>')
+                        suggestion: Handlebars.compile('<div style="cursor: pointer"><span style="white-space: nowrap">{{name}}</span></div>')
                     }
                 }
             });
