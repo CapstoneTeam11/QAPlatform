@@ -97,7 +97,7 @@
                         </h3>
                         <div class="question-type-main"><i class="icon-question-sign"></i>Question</div>
                         <div class="question-content">
-                            <div class="question-bottom">
+                            <div class="question-bottom short-text">
                                 ${question.body}
                             </div>
                         </div>
@@ -137,7 +137,7 @@
                                 </h3>
                                 <div class="question-type-main"><i class="icon-edit"></i>Article</div>
                                 <div class="question-content">
-                                    <div class="question-bottom">
+                                    <div class="question-bottom short-text">
                                         ${article.body}
                                     </div>
                                 </div>

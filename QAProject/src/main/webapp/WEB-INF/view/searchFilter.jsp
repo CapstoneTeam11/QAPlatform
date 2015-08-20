@@ -106,7 +106,7 @@
                                 </h3>
                                 <div class="question-type-main"><i class="icon-question-sign"></i>Question</div>
                                 <div class="question-content">
-                                    <div class="question-bottom">
+                                    <div class="question-bottom short-text">
                                         ${question.body}
                                     </div>
                                 </div>
@@ -121,7 +121,7 @@
                                 </h3>
                                 <div class="question-type-main"><i class="icon-question-sign"></i>Question</div>
                                 <div class="question-content">
-                                    <div class="question-bottom">
+                                    <div class="question-bottom short-text">
                                             ${question.body}
                                     </div>
                                 </div>
@@ -161,7 +161,7 @@
                             </h3>
                             <div class="question-type-main"><i class="icon-edit"></i>Article</div>
                             <div class="question-content">
-                                <div class="question-bottom">
+                                <div class="question-bottom short-text">
                                     ${article.body}
                                 </div>
                             </div>
@@ -176,7 +176,7 @@
                             </h3>
                             <div class="question-type-main"><i class="icon-edit"></i>Article</div>
                             <div class="question-content">
-                                <div class="question-bottom">
+                                <div class="question-bottom short-text">
                                         ${article.body}
                                 </div>
                             </div>
@@ -515,13 +515,19 @@ function wrap_pop() {
                             '</h3>' +
                             '<div class="question-type-main"><i class="icon-question-sign"></i>Question</div>' +
                             '<div class="question-content">' +
-                            '<div class="question-bottom">' +
+                            '<div class="question-bottom short-text">' +
                             questions[i].body +
                             '</div>' +
                             '</div>' +
                             '</article>';
                     $('#questions').append(component);
                 }
+                $(".short-text").each(function () {
+                    text = $(this).html();
+                    if (text.length > 400) {
+                        $(this).html(text.substr(0, 400) + '.......');
+                    }
+                });
             }
         })
     });
@@ -556,15 +562,21 @@ function wrap_pop() {
                             '<h3>' +
                             '<a href="/post/view/'+ articles[i].id+'">'+articles[i].title+'</a>' +
                             '</h3>' +
-                            '<div class="question-type-main"><i class="icon-edit"></i>Question</div>' +
+                            '<div class="question-type-main"><i class="icon-edit"></i>Article</div>' +
                             '<div class="question-content">' +
-                            '<div class="question-bottom">' +
+                            '<div class="question-bottom short-text">' +
                             articles[i].body +
                             '</div>' +
                             '</div>' +
                             '</article>';
                     $('#articles').append(component);
                 }
+                $(".short-text").each(function () {
+                    text = $(this).html();
+                    if (text.length > 400) {
+                        $(this).html(text.substr(0, 400) + '.......');
+                    }
+                });
             }
         })
     });
@@ -686,7 +698,7 @@ function wrap_pop() {
                             '<h3>' +
                             '<a href="/classroom/'+ classrooms[i].id+'">'+classrooms[i].classroomName+'</a>' +
                             '</h3>' +
-                            '<div class="question-type-main"><i class="icon-group"></i>Question</div>' +
+                            '<div class="question-type-main"><i class="icon-group"></i>Classroom</div>' +
                             '<div class="question-content">' +
                             '<div class="question-bottom">' +
                             classrooms[i].classroomDescription +
