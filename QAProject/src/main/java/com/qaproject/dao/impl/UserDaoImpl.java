@@ -162,7 +162,7 @@ public class UserDaoImpl extends BaseDao<User,Integer> implements UserDao {
     @Override
     public List<User> findAllUser(int page) {
         Query query;
-        query = entityManager.createQuery("select u from User u order by id asc", User.class);
+        query = entityManager.createQuery("select u from User u where u.roleId.id<>3 order by u.id asc", User.class);
         if (page < 1) {
             page = 1;
         }

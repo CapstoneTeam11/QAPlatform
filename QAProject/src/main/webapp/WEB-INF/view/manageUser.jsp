@@ -72,25 +72,28 @@
                 <form action="/manage/parent" method="POST">
                     <label>Create parent category</label>
                     <div style="display: flex">
-                        <input type="text" name="name"><input type="submit" class="button color small submit" value="create" style="margin-left: 3px;margin-top: 0%;height: 3%">
+                        <input type="text" name="name"><input type="submit" class="button color small submit"
+                                                              value="Create"
+                                                              style="margin-left: 3px;margin-top: 0%;height: 36px">
                     </div>
 
                 </form>
                 <form action="/manage/child" method="POST">
                     <label>Create child category</label>
                     <div style="display: flex">
-                    <select name="parentId" style="width: 30%;height: 36px">
+                    <select name="parentId" style="width: 30%;height: 36px; padding: 5px">
                        <c:forEach var="category" items="${categories}">
                            <option value="${category.id}">${category.categoryName}</option>
                        </c:forEach>
                     </select>
-                    <input type="text" name="name"><input type="submit" class="button color small submit" value="create" style="margin-left: 3px;margin-top: 0%;height: 3%">
+                    <input type="text" name="name"><input type="submit" class="button color small submit"
+                                                          value="Create" style="margin-left: 3px;margin-top: 0%;height: 36px">
                     </div>
                 </form>
                 <label>Manage User</label>
                 <table class="table table-hover">
                     <tr>
-                        <th>id</th>
+                        <th>Id</th>
                         <th>Username</th>
                         <th>Email</th>
                         <th></th>
@@ -101,9 +104,9 @@
                             <td>${user.displayName}</td>
                             <td>${user.email}</td>
                             <td><input type="hidden" name="userId" value="${user.id}"><c:if test="${user.status==0}">
-                                <a class="unlock actionUser"  style="font-size: 23px"><i class="icon-unlock"></i></a>
+                                <a class="unlock actionUser"  style="font-size: 23px; cursor: pointer"><i class="icon-unlock"></i></a>
                             </c:if><c:if test="${user.status!=0}">
-                               <a class="lock actionUser"  style="font-size: 23px"><i class="icon-lock"></i></a>
+                               <a class="lock actionUser"  style="font-size: 23px; cursor: pointer"><i class="icon-lock"></i></a>
                             </c:if></td>
                         </tr>
                     </c:forEach>

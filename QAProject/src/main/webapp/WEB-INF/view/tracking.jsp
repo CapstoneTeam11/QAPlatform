@@ -58,7 +58,7 @@
         <section class="container" style="height:70px; display: flex; align-items: center">
             <div class="row">
                 <div class="col-md-12">
-                    <h3>Top student's question topics</h3>
+                    <h3>Top topics of students' questions</h3>
                 </div>
             </div><!-- End row -->
         </section><!-- End container -->
@@ -73,7 +73,7 @@
                         <div id="noResult" style="text-align: center;font-size: 20px; display: none">
                             There is no question in your classrooms.
                         </div>
-                        <div id="chartContainer" style="height: 300px; width: 100%;">
+                        <div id="chartContainer" style="height: 400px; width: 100%;">
                         </div>
                     </div>
                 </div><!-- End page-content -->
@@ -130,10 +130,10 @@
                                 animationEnabled: true,
                                 animationDuration: 2000,
                                 axisY:{
-                                    title: "Number of topic"
+                                    title: "Number of questions"
                                 },
                                 title:{
-                                    text: "Top students' question topics"
+                                    text: "Top Topics"
                                 },
                                 data: [
                                     {
