@@ -231,7 +231,7 @@
                                class="tooltip-n"><span></span><img alt=""
                                                                    src="${question.ownerProfileImageURL}"></a>
                         </div>
-                        <c:if test="${question.similar != null and question.similar > 1}">
+                        <c:if test="${question.similar != null and question.similar > 0}">
                             <div class="similarQuestion">
                                 <span class="question-category"><a
                                         href="/post/merge/${question.id}"><i
@@ -257,11 +257,11 @@
                                                         class="icon-comment"></i>${question.answerCount} Answer(s)</a></span>
                                                 <span class="question-view"><i
                                                         class="icon-eye-open"></i>${question.viewer} view(s)</span>
-                                                <c:if test="${question.similar != null and question.similar > 0 }">
-                                                    <span class="question-category"><a
-                                                            href="/post/merge/${question.id}"><i
-                                                            class="icon-sitemap"></i>${question.similar} similar question(s)</a></span>
-                                                </c:if>
+                                                <%--<c:if test="${question.similar != null and question.similar > 0 }">--%>
+                                                    <%--<span class="question-category"><a--%>
+                                                            <%--href="/post/merge/${question.id}"><i--%>
+                                                            <%--class="icon-sitemap"></i>${question.similar} similar question(s)</a></span>--%>
+                                                <%--</c:if>--%>
                             <div class="clearfix"></div>
                         </div>
                     </article>
